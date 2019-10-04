@@ -108,6 +108,11 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
     }
     
 
+    /*
+        A mousePressed begins an Add, Move, or Resize. Call each one a Command that 
+        affects the model. A command can have one or more Operations.
+        
+    */
     @Override
     public void mousePressed(MouseEvent e) {
         move = false;
@@ -117,7 +122,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
         if(rectangleList != null) {
             for(Rectangle r:this.model.getPage().getRectangleList()) {
                 if(r.contains(e.getX(),e.getY())){
-                    this.model.getPage().setRectangle(r);
+//                    this.model.getPage().setRectangle(r);
                     move = true;
                     break;
                 }
@@ -140,7 +145,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
             this.y = e.getY();
         }else {
             if(image != null) {
-                image.setRectangle(new Rectangle());
+//                image.setRectangle(new Rectangle());
                 image.getRectangle().setX(e.getX());
                 image.getRectangle().setY(e.getY());
             }

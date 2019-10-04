@@ -48,7 +48,6 @@ public class Page {
     public String uuid;
     public Dimension dimension;
     private BufferedImage bufferedImage = null;
-    public org.retina.model.Rectangle rectangle = null;
     private List<org.retina.model.Rectangle> rectangleList = new ArrayList<>();
     private Data data;
     private List<Data> dataList = new LinkedList<>();
@@ -62,17 +61,8 @@ public class Page {
     
 //methods imported from Image/////////////////////////////
     @JsonProperty
-    public org.retina.model.Rectangle getRectangle(){
-        return this.rectangle;
-    }
-    @JsonProperty
     public List<org.retina.model.Rectangle> getRectangleList() {
         return this.rectangleList;
-    }
-    
-    @JsonProperty
-    public void setRectangle(org.retina.model.Rectangle rectangle){
-        this.rectangle = rectangle;
     }
     
     @JsonIgnore
@@ -82,11 +72,19 @@ public class Page {
         for(int i = 0; i < this.rectangleList.size(); i++){
             rectangle = this.rectangleList.get(i);
             if(rectangle.uuid.equals(uuid)){
-                this.rectangle = rectangle;
                 this.index = i;
                 break;
             }
         }
+    }
+    
+    @JsonIgnore
+    public Rectangle getRectangle() {
+        Rectangle rectangle = null;
+        if(this.index >= 0 && this.index < this.rectangleList.size()) {
+            rectangle = this.rectangleList.get(this.index);
+        }
+        return rectangle;
     }
     
 //    @JsonProperty

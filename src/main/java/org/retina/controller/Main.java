@@ -5,8 +5,11 @@
  */
 package org.retina.controller;
 
+import org.apache.cayenne.ObjectContext;
+import org.apache.cayenne.configuration.server.ServerRuntime;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.retina.model.cayenne.persistent.Model;
 import org.retina.view.window.Splash;
 
 /**
@@ -15,8 +18,9 @@ import org.retina.view.window.Splash;
  */
 public class Main {
 
-    static Logger logger = LogManager.getLogger(org.retina.view.frame.Main.class.getName());
-     /**
+	static Logger logger = LogManager.getLogger(org.retina.view.frame.Main.class.getName());
+
+	/**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -26,6 +30,14 @@ public class Main {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         logger.info("Retina starting...");
+        
+        ServerRuntime cayenneRuntime = ServerRuntime.builder()
+                .addConfig("cayenne-application-database.xml")
+                .build();
+        ObjectContext context = cayenneRuntime.newContext();
+        Model artist = context.newObject(Model.class);
+        artist.setUuid("test");
+        context.commitChanges();
         final org.retina.view.frame.Main main = new org.retina.view.frame.Main();
         Splash splash = new Splash("/splash.png", main, 4000);
         
@@ -54,5 +66,5 @@ public class Main {
             }
         });
     }
-    
+
 }

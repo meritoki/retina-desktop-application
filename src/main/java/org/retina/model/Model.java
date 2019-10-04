@@ -48,10 +48,8 @@ public class Model {
     }
     
     static Logger logger = LogManager.getLogger(Model.class.getName());
-    public File file = null;
     public Script script = new Script();
     public List<Page> pageList = new ArrayList<>();
-//    public Page page = null;
     public int index = 0;
     public String uuid = "";
     public Zooniverse zooniverse = new Zooniverse();
@@ -81,7 +79,6 @@ public class Model {
         r.setI(1);
         r.setJ(1);
         page.getRectangleList().add(r);
-        page.setRectangle(r);
         pageList.add(page);
         page = new Page();
         page.fileName = "02.jpg";
@@ -112,13 +109,6 @@ public class Model {
         page.filePath = "./data/page";
         pageList.add(page);
         this.setIndex(0);
-    }
-
-    
-    @JsonIgnore
-    public void setFile(File file){
-        logger.info("setFile("+file+")");
-        this.file = file;
     }
     
     @JsonIgnore
