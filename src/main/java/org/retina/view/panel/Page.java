@@ -66,8 +66,7 @@ public class Page extends JPanel implements MouseListener, MouseWheelListener, K
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D)g;
-        org.retina.model.Image image = (this.model!= null)?this.model.getImage():null;
-        org.retina.model.Page page = (image != null)?image.getPage():null;
+        org.retina.model.Page page = (this.model!= null)?this.model.getPage():null;
         List<LinkedList<Data>> dataMatrix = (page !=null)?page.getDataMatrix():null;
         int width = 0;
         int height = 0;

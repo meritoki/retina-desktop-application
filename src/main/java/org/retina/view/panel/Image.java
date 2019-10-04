@@ -62,9 +62,9 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
     @Override
     public Dimension getPreferredSize() {            
         Dimension size = new Dimension(1028, 512);
-        if (this.model != null && this.model.getImage() != null && this.model.getImage().getBufferedImage() != null) {            
-            size.width = Math.round(this.model.getImage().getBufferedImage().getWidth() * scale);
-            size.height = Math.round(this.model.getImage().getBufferedImage().getHeight() * scale);                
+        if (this.model != null && this.model.getPage() != null && this.model.getPage().getBufferedImage() != null) {            
+            size.width = Math.round(this.model.getPage().getBufferedImage().getWidth() * scale);
+            size.height = Math.round(this.model.getPage().getBufferedImage().getHeight() * scale);                
         }        
         return size;
     }
@@ -73,7 +73,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g.create();
-        org.retina.model.Image image = (this.model != null)?this.model.getImage():null;
+        org.retina.model.Page image = (this.model != null)?this.model.getPage():null;
         BufferedImage bufferedImage = (image != null)?image.getBufferedImage():null;
         AffineTransform at = new AffineTransform();
         at.scale(scale, scale);
@@ -108,24 +108,29 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
     }
     
 
+    /*
+        A mousePressed begins an Add, Move, or Resize. Call each one a Command that 
+        affects the model. A command can have one or more Operations.
+        
+    */
     @Override
     public void mousePressed(MouseEvent e) {
         move = false;
         resize=false;
-        org.retina.model.Image image = (this.model != null)? this.model.getImage():null;
+        org.retina.model.Page image = (this.model != null)? this.model.getPage():null;
         List<org.retina.model.Rectangle> rectangleList = (image != null)? image.getRectangleList():null;
         if(rectangleList != null) {
-            for(Rectangle r:this.model.getImage().getRectangleList()) {
+            for(Rectangle r:this.model.getPage().getRectangleList()) {
                 if(r.contains(e.getX(),e.getY())){
-                    this.model.getImage().setRectangle(r);
+//                    this.model.getPage().setRectangle(r);
                     move = true;
                     break;
                 }
             }
         }
-//        for(Rectangle r:this.model.getImage().getRectangleList()) {
+//        for(Rectangle r:this.model.getPage().getRectangleList()) {
 //            if(r.intersect(e.getX(),e.getY())){
-//                this.model.getImage().setRectangle(r);
+//                this.model.getPage().setRectangle(r);
 //                this.resize = true;
 //                break;
 //            }
@@ -140,7 +145,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
             this.y = e.getY();
         }else {
             if(image != null) {
-                image.setRectangle(new Rectangle());
+//                image.setRectangle(new Rectangle());
                 image.getRectangle().setX(e.getX());
                 image.getRectangle().setY(e.getY());
             }
@@ -155,14 +160,14 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
             System.out.println("move");
             this.i = e.getX();
             this.j = e.getY();
-            this.model.getImage().getRectangle().move(this.i-this.x,this.j-this.y);
+            this.model.getPage().getRectangle().move(this.i-this.x,this.j-this.y);
             
         }else{
-            this.model.getImage().getRectangle().setI(e.getX());
-            this.model.getImage().getRectangle().setJ(e.getY());
-            if(this.model.getImage().getRectangle().isValid()){
-                this.model.getImage().getRectangleList().add(this.model.getImage().getRectangle());
-                this.model.getImage().getPage().setRectangleList(this.model.getImage().getRectangleList());
+            this.model.getPage().getRectangle().setI(e.getX());
+            this.model.getPage().getRectangle().setJ(e.getY());
+            if(this.model.getPage().getRectangle().isValid()){
+                this.model.getPage().getRectangleList().add(this.model.getPage().getRectangle());
+                this.model.getPage().setRectangleList(this.model.getPage().getRectangleList());
                 this.main.rectangleDialog.setModel(this.model);
                 this.main.pageDialog.setModel(this.model);
             }

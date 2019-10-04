@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-map xmlns="http://cayenne.apache.org/schema/9/modelMap"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://cayenne.apache.org/schema/9/modelMap https://cayenne.apache.org/schema/9/modelMap.xsd"
+	 project-version="9">
+	<property name="defaultPackage" value="org.retina.model.cayenne.persistent"/>
+	<db-entity name="Model">
+		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
+		<db-attribute name="uuid" type="VARCHAR" isMandatory="true" length="128"/>
+	</db-entity>
+	<db-entity name="Page">
+		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
+		<db-attribute name="modelID" type="INTEGER" isMandatory="true"/>
+		<db-attribute name="uuid" type="VARCHAR" isMandatory="true" length="128"/>
+	</db-entity>
+	<db-entity name="Shape">
+		<db-attribute name="id" type="INTEGER" isPrimaryKey="true" isMandatory="true"/>
+		<db-attribute name="shapeID" type="INTEGER" isMandatory="true"/>
+		<db-attribute name="uuid" type="VARCHAR" isMandatory="true" length="128"/>
+	</db-entity>
+	<obj-entity name="Model" className="org.retina.model.cayenne.persistent.Model" dbEntityName="Model">
+		<obj-attribute name="uuid" type="java.lang.String" db-attribute-path="uuid"/>
+	</obj-entity>
+	<obj-entity name="Page" className="org.retina.model.cayenne.persistent.Page" dbEntityName="Page">
+		<obj-attribute name="uuid" type="java.lang.String" db-attribute-path="uuid"/>
+	</obj-entity>
+	<obj-entity name="Shape" className="org.retina.model.cayenne.persistent.Shape" dbEntityName="Shape">
+		<obj-attribute name="uuid" type="java.lang.String" db-attribute-path="uuid"/>
+	</obj-entity>
+	<db-relationship name="pageList" source="Model" target="Page" toMany="true">
+		<db-attribute-pair source="id" target="modelID"/>
+	</db-relationship>
+	<db-relationship name="model" source="Page" target="Model" toMany="false">
+		<db-attribute-pair source="modelID" target="id"/>
+	</db-relationship>
+	<db-relationship name="shapeList" source="Page" target="Shape" toMany="true">
+		<db-attribute-pair source="id" target="shapeID"/>
+	</db-relationship>
+	<db-relationship name="page" source="Shape" target="Page" toMany="false">
+		<db-attribute-pair source="shapeID" target="id"/>
+	</db-relationship>
+	<obj-relationship name="pageList" source="Model" target="Page" deleteRule="Deny" db-relationship-path="pageList"/>
+	<obj-relationship name="model" source="Page" target="Model" deleteRule="Nullify" db-relationship-path="model"/>
+	<obj-relationship name="shapeList" source="Page" target="Shape" deleteRule="Deny" db-relationship-path="shapeList"/>
+	<obj-relationship name="page" source="Shape" target="Page" deleteRule="Nullify" db-relationship-path="page"/>
+</data-map>

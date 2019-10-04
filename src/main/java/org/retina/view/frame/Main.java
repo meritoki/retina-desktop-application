@@ -50,6 +50,7 @@ public final class Main extends JFrame {
         Image image = Toolkit.getDefaultToolkit().getImage(url);
         logger.debug(image);
         this.setIconImage(image);
+        this.model.initTest();
         this.setModel();
         this.init();
     }
@@ -76,7 +77,7 @@ public final class Main extends JFrame {
     
     public void init(){
         logger.debug("init()");
-        this.setTitle("Retina");
+        this.setTitle("Retina Desktop Application");
         this.imagePanel.setMain(this);
         this.imagePanel.setFocusable(true);
         this.imagePanel.requestFocusInWindow();

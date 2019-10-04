@@ -50,7 +50,7 @@ public class Rectangle {
     }
     
     @JsonIgnore
-    public void setBufferedImage(org.retina.model.Image image){
+    public void setBufferedImage(org.retina.model.Page image){
        BufferedImage bufferedImage = null;
        if(image.getBufferedImage() != null){
            bufferedImage = image.getBufferedImage().getSubimage(this.getX(), this.getX(), (this.getI()-this.getX()), (this.getJ()-this.getY()));
@@ -121,10 +121,12 @@ public class Rectangle {
         return this.data;
     }
     
+    @JsonIgnore
     public int getCenterX(){
         return (this.x + this.i)/2;
     }
     
+    @JsonIgnore
     public int getCenterY(){
         return (this.y+this.j)/2;
     }
