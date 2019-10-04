@@ -50,6 +50,7 @@ public final class Main extends JFrame {
         Image image = Toolkit.getDefaultToolkit().getImage(url);
         logger.debug(image);
         this.setIconImage(image);
+        this.model.initTest();
         this.setModel();
         this.init();
     }

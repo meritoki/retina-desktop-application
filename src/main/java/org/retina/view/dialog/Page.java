@@ -29,7 +29,7 @@ public class Page extends javax.swing.JDialog {
 
     static org.apache.logging.log4j.Logger logger = LogManager.getLogger(Page.class.getName());
     private Model model;
-    private List<org.retina.model.Image> imageList;
+    private List<org.retina.model.Page> imageList;
      
     /**
      * Creates new form Page
@@ -53,19 +53,17 @@ public class Page extends javax.swing.JDialog {
     
     public void initLabel() {
         logger.debug("initLabel()");
-        org.retina.model.Image image = (this.model != null)?this.model.getImage():null;
-        org.retina.model.Page page = (image != null)?image.getPage():null;
+        org.retina.model.Page page = (this.model != null)?this.model.getPage():null;
         int imageIndex = (this.model != null)? this.model.getIndex():0;
-        List<org.retina.model.Image> imageList = this.model.getImageList();
+        List<org.retina.model.Page> imageList = this.model.getPageList();
         this.indexValueLabel.setText(imageIndex+"");
         this.uuidValueLabel.setText((page!=null)?page.uuid:"");
     }
     
     public void initList() {
         logger.debug("initList()");
-        org.retina.model.Image image = this.model.getImage();
-        org.retina.model.Page page = (image != null)?image.getPage():null;
-        int index = (image != null)?image.getIndex():0;
+        org.retina.model.Page page = this.model.getPage();
+        int index = (page != null)?page.getIndex():0;
         List<org.retina.model.Data> dataList = (page != null)?page.getDataList():null;
         this.initDataList(dataList);
         this.setDataListSelectedIndex(index);
@@ -212,22 +210,22 @@ public class Page extends javax.swing.JDialog {
 
     private void executePageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executePageScriptButtonActionPerformed
         String value = this.imageScriptTextArea.getText();
-        this.imageList = new ArrayList<>(this.model.getImageList());
-        this.model.getScript().setImageList(this.imageList);
+        this.imageList = new ArrayList<>(this.model.getPageList());
+        this.model.getScript().setPageList(this.imageList);
         try {
             this.model.getScript().page(value);
         } catch (Exception ex) {
             System.err.println(ex);
         }
-        this.initDataList(this.imageList.get(this.model.getIndex()).getPage().getDataList());
+        this.initDataList(this.imageList.get(this.model.getIndex()).getDataList());
     }//GEN-LAST:event_executePageScriptButtonActionPerformed
 
     private void resetPageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetPageScriptButtonActionPerformed
-        this.initDataList(this.model.getImageList().get(this.model.getIndex()).getPage().getDataList());
+        this.initDataList(this.model.getPageList().get(this.model.getIndex()).getDataList());
     }//GEN-LAST:event_resetPageScriptButtonActionPerformed
 
     private void setImageListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setImageListActionPerformed
-        this.model.setImageList(this.imageList);
+        this.model.setPageList(this.imageList);
         this.imageScriptTextArea.setText("");
     }//GEN-LAST:event_setImageListActionPerformed
 

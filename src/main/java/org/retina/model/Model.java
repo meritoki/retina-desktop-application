@@ -50,8 +50,8 @@ public class Model {
     static Logger logger = LogManager.getLogger(Model.class.getName());
     public File file = null;
     public Script script = new Script();
-    public List<Image> imageList = null;
-    public Image image = null;
+    public List<Page> pageList = new ArrayList<>();
+//    public Page page = null;
     public int index = 0;
     public String uuid = "";
     public Zooniverse zooniverse = new Zooniverse();
@@ -72,47 +72,48 @@ public class Model {
     
     @JsonIgnore
     public void initTest(){
-        this.image = new Image();
-        this.image.fileName = "01.jpg";
-        this.image.filePath = "./data/image";
+        Page page = new Page();
+        page.fileName = "01.jpg";
+        page.filePath = "./data/page";
         Rectangle r = new Rectangle();
         r.setX(0);
         r.setY(0);
         r.setI(1);
         r.setJ(1);
-        this.image.getRectangleList().add(r);
-        this.image.setRectangle(r);
-        this.imageList.add(this.image);
-        this.image = new Image();
-        this.image.fileName = "02.jpg";
-        this.image.filePath = "./data/image";
-        this.imageList.add(this.image);
-        this.image = new Image();
-        this.image.fileName = "03.jpg";
-        this.image.filePath = "./data/image";
-        this.imageList.add(this.image);
-        this.image = new Image();
-        this.image.fileName = "04.jpg";
-        this.image.filePath = "./data/image";
-        this.imageList.add(this.image);
-        this.image = new Image();
-        this.image.fileName = "05.jpg";
-        this.image.filePath = "./data/image";
-        this.imageList.add(this.image);
-        this.image = new Image();
-        this.image.fileName = "06.jpg";
-        this.image.filePath = "./data/image";
-        this.imageList.add(this.image);
-        this.image = new Image();
-        this.image.fileName = "07.jpg";
-        this.image.filePath = "./data/image";
-        this.imageList.add(this.image);
-        this.image = new Image();
-        this.image.fileName = "08.jpg";
-        this.image.filePath = "./data/image";
-        this.imageList.add(this.image);
+        page.getRectangleList().add(r);
+        page.setRectangle(r);
+        pageList.add(page);
+        page = new Page();
+        page.fileName = "02.jpg";
+        page.filePath = "./data/page";
+        pageList.add(page);
+        page = new Page();
+        page.fileName = "03.jpg";
+        page.filePath = "./data/page";
+        pageList.add(page);
+        page = new Page();
+        page.fileName = "04.jpg";
+        page.filePath = "./data/page";
+        pageList.add(page);
+        page = new Page();
+        page.fileName = "05.jpg";
+        page.filePath = "./data/page";
+        pageList.add(page);
+        page = new Page();
+        page.fileName = "06.jpg";
+        page.filePath = "./data/page";
+        pageList.add(page);
+        page = new Page();
+        page.fileName = "07.jpg";
+        page.filePath = "./data/page";
+        pageList.add(page);
+        page = new Page();
+        page.fileName = "08.jpg";
+        page.filePath = "./data/page";
+        pageList.add(page);
         this.setIndex(0);
     }
+
     
     @JsonIgnore
     public void setFile(File file){
@@ -159,22 +160,20 @@ public class Model {
         System.out.println("load()");
     }
     
-    @JsonProperty
-    public void setImage(Image image){
-        if(image!=null)
-            logger.info("setImage("+image.uuid+")");
-        this.image = image;
-        this.image.getPage().setRectangleList(this.image.getRectangleList());
-    }
-    
+//    @JsonProperty
+//    public void setPage(Page page){
+//        if(page!=null)
+//            logger.info("setPage("+page.uuid+")");
+//        this.page.setRectangleList(this.page.getRectangleList());
+//    }
+//    
     @JsonIgnore
-    public void setImage(String uuid) {
-        logger.debug("setImage("+uuid+")");
-        Image image = null;
-        for(int i = 0; i < this.imageList.size(); i++){
-            image = this.imageList.get(i);
-            if(image.uuid.equals(uuid)){
-                this.setImage(image);
+    public void setPage(String uuid) {
+        logger.debug("setPage("+uuid+")");
+        Page page = null;
+        for(int i = 0; i < this.pageList.size(); i++){
+            page = this.pageList.get(i);
+            if(page.uuid.equals(uuid)){
                 this.index = i;
                 break;
             }
@@ -182,27 +181,26 @@ public class Model {
     }
     
     @JsonProperty
-    public void setImageList(List<Image> imageList){
-        logger.info("setImageList("+imageList+")");
-        this.imageList = imageList;
+    public void setPageList(List<Page> pageList){
+        logger.info("setPageList("+pageList+")");
+        this.pageList = pageList;
     }
     
     @JsonProperty
-    public List<Image> getImageList(){
-        return this.imageList;
+    public List<Page> getPageList(){
+        return this.pageList;
     }
     
     @JsonProperty
-    public Image getImage() {
-        return this.image;
+    public Page getPage() {
+        return this.pageList.get(index);
     }
     
     @JsonIgnore
     public void setIndex(int index) {
         logger.debug("setIndex("+index+")");
-        if(index >= 0 && index < this.imageList.size()) {
+        if(index >= 0 && index < this.pageList.size()) {
             this.index = index;
-            this.setImage(this.imageList.get(this.index));
         }
     }
     

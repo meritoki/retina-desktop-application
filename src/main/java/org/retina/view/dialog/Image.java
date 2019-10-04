@@ -34,21 +34,21 @@ import org.retina.model.Model;
  */
 public class Image extends javax.swing.JDialog implements MouseListener, KeyListener{
 
-    static Logger logger = LogManager.getLogger(Image.class.getName());
+    static Logger logger = LogManager.getLogger(Page.class.getName());
     private Model model;
-    private List<org.retina.model.Image> sortedImageList;
+    private List<org.retina.model.Page> sortedPageList;
     
     /**
-     * Creates new form ImageDialog
+     * Creates new form PageDialog
      * @param parent
      * @param modal
      */
     public Image(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        this.setTitle("Image");
+        this.setTitle("Page");
         this.initComponents();
-        this.imageList.addMouseListener(this);
-        this.imageList.addKeyListener(this);
+        this.pageList.addMouseListener(this);
+        this.pageList.addKeyListener(this);
     }
     
     public void setModel(Model model){
@@ -65,56 +65,56 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
       
     public void initLabel(){
         logger.debug("initLabel()");
-        org.retina.model.Image image = (this.model != null)?this.model.getImage():null;
-        BufferedImage bufferedImage = (image != null)?image.getBufferedImage():null;
-        int imageIndex = (this.model != null)? this.model.getIndex():0;
-        List<org.retina.model.Image> imageList = this.model.getImageList();
-        this.indexValueLabel.setText(imageIndex+"");
-        if(image!=null){
-            this.nameValueLabel.setText(image.fileName);
-            this.pathValueLabel.setText(image.filePath);
-            this.uuidValueLabel.setText(image.uuid);
+        org.retina.model.Page page = (this.model != null)?this.model.getPage():null;
+        BufferedImage bufferedPage = (page != null)?page.getBufferedImage():null;
+        int pageIndex = (this.model != null)? this.model.getIndex():0;
+        List<org.retina.model.Page> pageList = this.model.getPageList();
+        this.indexValueLabel.setText(pageIndex+"");
+        if(page!=null){
+            this.nameValueLabel.setText(page.fileName);
+            this.pathValueLabel.setText(page.filePath);
+            this.uuidValueLabel.setText(page.uuid);
         }else{
             this.nameValueLabel.setText("null");
             this.pathValueLabel.setText("null");
             this.uuidValueLabel.setText("null");
         }
-        int size = (imageList != null)?imageList.size():0;
+        int size = (pageList != null)?pageList.size():0;
         this.listSizeValueLabel.setText(size+"");
-        int width = (bufferedImage != null)?bufferedImage.getWidth():0;
-        int height = (bufferedImage != null)?bufferedImage.getHeight():0;
+        int width = (bufferedPage != null)?bufferedPage.getWidth():0;
+        int height = (bufferedPage != null)?bufferedPage.getHeight():0;
         this.sizeValueLabel.setText(width+"p x "+height+"p");
     }
     
     public void initList(){
         logger.debug("initList()");
-        int imageIndex = (this.model != null)? this.model.getIndex():0;
-        List<org.retina.model.Image> imageList = this.model.getImageList();
-        this.initImageList(imageList);
-        this.setImageListSelectedIndex(imageIndex);
+        int pageIndex = (this.model != null)? this.model.getIndex():0;
+        List<org.retina.model.Page> pageList = this.model.getPageList();
+        this.initPageList(pageList);
+        this.setPageListSelectedIndex(pageIndex);
     }
     
-    public void initImageList(List<org.retina.model.Image> imageList) {
+    public void initPageList(List<org.retina.model.Page> pageList) {
         DefaultListModel defaultListModel = new DefaultListModel();
-        if(imageList != null){
-            for(int i=0;i<imageList.size(); i++) {
-                defaultListModel.addElement(imageList.get(i).uuid);    
+        if(pageList != null){
+            for(int i=0;i<pageList.size(); i++) {
+                defaultListModel.addElement(pageList.get(i).uuid);    
             }
         }
-        this.imageList.setModel(defaultListModel);
+        this.pageList.setModel(defaultListModel);
     }
     
-    public void setImageListSelectedIndex(int index){
-        logger.debug("setImageListSelectedIndex("+index+")");
-        this.imageList.setSelectedIndex(index);
+    public void setPageListSelectedIndex(int index){
+        logger.debug("setPageListSelectedIndex("+index+")");
+        this.pageList.setSelectedIndex(index);
     }
     
     
     
     public void mouseClicked(MouseEvent e) {
         if(e.getClickCount()==1){
-            String selectedItem = (String) this.imageList.getSelectedValue();
-            this.model.setImage(selectedItem);
+            String selectedItem = (String) this.pageList.getSelectedValue();
+            this.model.setPage(selectedItem);
             this.initLabel();
             this.getParent().repaint();
             ((Main)this.getParent()).rectangleDialog.init();
@@ -156,7 +156,7 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
                 index=index-1;
                 this.model.setIndex(index);
                 this.initLabel();
-                this.setImageListSelectedIndex(index);
+                this.setPageListSelectedIndex(index);
                 this.getParent().repaint();
                 ((Main)this.getParent()).rectangleDialog.init();
                 ((Main)this.getParent()).pageDialog.init();
@@ -168,7 +168,7 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
                 index=index+1;
                 this.model.setIndex(index);
                 this.initLabel();
-                this.setImageListSelectedIndex(index);
+                this.setPageListSelectedIndex(index);
                 this.getParent().repaint();
                 ((Main)this.getParent()).rectangleDialog.init();
                 ((Main)this.getParent()).pageDialog.init();
@@ -185,10 +185,10 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
 
     @Override
     public void keyReleased(KeyEvent e) {
-        String uuid = (String)imageList.getSelectedValue();
-        org.retina.model.Image image = this.model.getImage();
-        if(image != null && !uuid.equals(image.uuid)){
-            this.model.setImage(uuid);
+        String uuid = (String)pageList.getSelectedValue();
+        org.retina.model.Page page = this.model.getPage();
+        if(page != null && !uuid.equals(page.uuid)){
+            this.model.setPage(uuid);
             this.initLabel();
             this.getParent().repaint();
             ((Main)this.getParent()).rectangleDialog.init();
@@ -215,13 +215,13 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
         sizeLabel = new javax.swing.JLabel();
         indexValueLabel = new javax.swing.JLabel();
         sizeValueLabel = new javax.swing.JLabel();
-        setImageList = new javax.swing.JButton();
-        imageListScrollPane = new javax.swing.JScrollPane();
-        imageList = new javax.swing.JList();
-        imageScriptScrollPane = new javax.swing.JScrollPane();
-        imageScriptTextArea = new javax.swing.JTextArea();
-        executeImageScriptButton = new javax.swing.JButton();
-        resetImageScriptButton = new javax.swing.JButton();
+        setPageList = new javax.swing.JButton();
+        pageListScrollPane = new javax.swing.JScrollPane();
+        pageList = new javax.swing.JList();
+        pageScriptScrollPane = new javax.swing.JScrollPane();
+        pageScriptTextArea = new javax.swing.JTextArea();
+        executePageScriptButton = new javax.swing.JButton();
+        resetPageScriptButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -249,35 +249,35 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
 
         sizeValueLabel.setText("null");
 
-        setImageList.setText("Set");
-        setImageList.addActionListener(new java.awt.event.ActionListener() {
+        setPageList.setText("Set");
+        setPageList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setImageListActionPerformed(evt);
+                setPageListActionPerformed(evt);
             }
         });
 
-        imageList.setModel(new javax.swing.AbstractListModel() {
+        pageList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        imageListScrollPane.setViewportView(imageList);
+        pageListScrollPane.setViewportView(pageList);
 
-        imageScriptTextArea.setColumns(20);
-        imageScriptTextArea.setRows(5);
-        imageScriptScrollPane.setViewportView(imageScriptTextArea);
+        pageScriptTextArea.setColumns(20);
+        pageScriptTextArea.setRows(5);
+        pageScriptScrollPane.setViewportView(pageScriptTextArea);
 
-        executeImageScriptButton.setText("Execute");
-        executeImageScriptButton.addActionListener(new java.awt.event.ActionListener() {
+        executePageScriptButton.setText("Execute");
+        executePageScriptButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                executeImageScriptButtonActionPerformed(evt);
+                executePageScriptButtonActionPerformed(evt);
             }
         });
 
-        resetImageScriptButton.setText("Reset");
-        resetImageScriptButton.addActionListener(new java.awt.event.ActionListener() {
+        resetPageScriptButton.setText("Reset");
+        resetPageScriptButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                resetImageScriptButtonActionPerformed(evt);
+                resetPageScriptButtonActionPerformed(evt);
             }
         });
 
@@ -294,8 +294,8 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(imageScriptScrollPane, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(imageListScrollPane)
+                    .addComponent(pageScriptScrollPane, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(pageListScrollPane)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -325,11 +325,11 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
                         .addComponent(listSizeValueLabel))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(resetImageScriptButton, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(resetPageScriptButton, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(executeImageScriptButton, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(executePageScriptButton, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(setImageList, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(setPageList, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -363,40 +363,40 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
                     .addComponent(jLabel2)
                     .addComponent(listSizeValueLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(imageListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pageListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(imageScriptScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pageScriptScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(executeImageScriptButton)
-                    .addComponent(resetImageScriptButton)
-                    .addComponent(setImageList))
+                    .addComponent(executePageScriptButton)
+                    .addComponent(resetPageScriptButton)
+                    .addComponent(setPageList))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void setImageListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setImageListActionPerformed
-        this.model.imageList = this.sortedImageList;
-        this.imageScriptTextArea.setText("");
-    }//GEN-LAST:event_setImageListActionPerformed
+    private void setPageListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setPageListActionPerformed
+        this.model.pageList = this.sortedPageList;
+        this.pageScriptTextArea.setText("");
+    }//GEN-LAST:event_setPageListActionPerformed
 
-    private void executeImageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeImageScriptButtonActionPerformed
-        String value = this.imageScriptTextArea.getText();
-        this.sortedImageList = new ArrayList<>(this.model.getImageList());
-        this.model.getScript().setImageList(this.sortedImageList);
+    private void executePageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executePageScriptButtonActionPerformed
+        String value = this.pageScriptTextArea.getText();
+        this.sortedPageList = new ArrayList<>(this.model.getPageList());
+        this.model.getScript().setPageList(this.sortedPageList);
         try {
-            this.model.getScript().image(value);
+            this.model.getScript().page(value);
         } catch (Exception ex) {
             System.err.println(ex);
         }
-        this.initImageList(this.sortedImageList);
-    }//GEN-LAST:event_executeImageScriptButtonActionPerformed
+        this.initPageList(this.sortedPageList);
+    }//GEN-LAST:event_executePageScriptButtonActionPerformed
 
-    private void resetImageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetImageScriptButtonActionPerformed
-        this.initImageList(this.model.getImageList());
-    }//GEN-LAST:event_resetImageScriptButtonActionPerformed
+    private void resetPageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetPageScriptButtonActionPerformed
+        this.initPageList(this.model.getPageList());
+    }//GEN-LAST:event_resetPageScriptButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -415,13 +415,13 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Image.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Page.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Image.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Page.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Image.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Page.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Image.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Page.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -429,7 +429,7 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                Image dialog = new Image(new javax.swing.JFrame(), true);
+                Page dialog = new Page(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -442,11 +442,11 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton executeImageScriptButton;
-    private javax.swing.JList imageList;
-    private javax.swing.JScrollPane imageListScrollPane;
-    private javax.swing.JScrollPane imageScriptScrollPane;
-    private javax.swing.JTextArea imageScriptTextArea;
+    private javax.swing.JButton executePageScriptButton;
+    private javax.swing.JList pageList;
+    private javax.swing.JScrollPane pageListScrollPane;
+    private javax.swing.JScrollPane pageScriptScrollPane;
+    private javax.swing.JTextArea pageScriptTextArea;
     private javax.swing.JLabel indexLabel;
     private javax.swing.JLabel indexValueLabel;
     private javax.swing.JLabel jLabel1;
@@ -457,8 +457,8 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
     private javax.swing.JLabel nameValueLabel;
     private javax.swing.JLabel pathLabel;
     private javax.swing.JLabel pathValueLabel;
-    private javax.swing.JButton resetImageScriptButton;
-    private javax.swing.JButton setImageList;
+    private javax.swing.JButton resetPageScriptButton;
+    private javax.swing.JButton setPageList;
     private javax.swing.JLabel sizeLabel;
     private javax.swing.JLabel sizeValueLabel;
     private javax.swing.JLabel uuidLabel;

@@ -26,15 +26,15 @@ import java.util.List;
  */
 public class Script {
     
-    public List<Image> imageList = new ArrayList<>();
+    public List<Page> pageList = new ArrayList<>();
 //    public List<LinkedList<Data>> data = new ArrayList<>();
     
-    public void setImageList(List<Image> imageList){
-        this.imageList = imageList;
+    public void setPageList(List<Page> pageList){
+        this.pageList = pageList;
     }
     
-    public List<Image> getImageList(){
-        return this.imageList;
+    public List<Page> getPageList(){
+        return this.pageList;
     }
     
 //    public void setData(List<LinkedList<Data>> data) {
@@ -45,7 +45,7 @@ public class Script {
 //        return this.data;
 //    }
     
-    public void image(String value) throws Exception{
+    public void page(String value) throws Exception{
         value = value.replace("\n", "").replace("\r", "");
         String[] instructions = value.split(";");
         String instruction;
@@ -76,42 +76,42 @@ public class Script {
         }
     }
     
-    public void page(String value) throws Exception{
-        value = value.replace("\n", "").replace("\r", "");
-        String[] instructions = value.split(";");
-        String instruction;
-        String[] parameters;
-        String a;
-        String b;
-        for(String i: instructions){
-            System.out.println(i);
-            if(i.contains("SWAP")){//0:0 0:0;
-                instruction=i.replaceFirst("SWAP", "");
-                parameters=instruction.split(":");
-                a=parameters[0].trim();
-                b=parameters[1].trim();
-                this.swap(a, b);
-            } else if(i.contains("JOIN")){//0:0 0:0
-                instruction=i.replaceFirst("JOIN", "");
-                parameters=instruction.split(":");
-                a=parameters[0].trim();
-                b=parameters[1].trim();
-                this.interlace(a, b);
-            } else if(i.contains("INSERT")){//0:0 0:0
-                instruction=i.replaceFirst("INSERT", "");
-                parameters=instruction.split(":");
-                a=parameters[0].trim();
-                b=parameters[1].trim();
-                this.insert(a,b);
-            } else if(i.contains("MERGE")){
-                instruction=i.replaceFirst("MERGE", "");
-                parameters=instruction.split(":");
-                a=parameters[0].trim();
-                b=parameters[1].trim();
-                this.insert(a,b);
-            }
-        }
-    }
+//    public void page(String value) throws Exception{
+//        value = value.replace("\n", "").replace("\r", "");
+//        String[] instructions = value.split(";");
+//        String instruction;
+//        String[] parameters;
+//        String a;
+//        String b;
+//        for(String i: instructions){
+//            System.out.println(i);
+//            if(i.contains("SWAP")){//0:0 0:0;
+//                instruction=i.replaceFirst("SWAP", "");
+//                parameters=instruction.split(":");
+//                a=parameters[0].trim();
+//                b=parameters[1].trim();
+//                this.swap(a, b);
+//            } else if(i.contains("JOIN")){//0:0 0:0
+//                instruction=i.replaceFirst("JOIN", "");
+//                parameters=instruction.split(":");
+//                a=parameters[0].trim();
+//                b=parameters[1].trim();
+//                this.interlace(a, b);
+//            } else if(i.contains("INSERT")){//0:0 0:0
+//                instruction=i.replaceFirst("INSERT", "");
+//                parameters=instruction.split(":");
+//                a=parameters[0].trim();
+//                b=parameters[1].trim();
+//                this.insert(a,b);
+//            } else if(i.contains("MERGE")){
+//                instruction=i.replaceFirst("MERGE", "");
+//                parameters=instruction.split(":");
+//                a=parameters[0].trim();
+//                b=parameters[1].trim();
+//                this.insert(a,b);
+//            }
+//        }
+//    }
     
     public void swap(String a, String b) throws Exception {
         System.out.println("swap("+a+","+b+")");
@@ -148,7 +148,7 @@ public class Script {
     
     public void swap(int a, int b){
        System.out.println("swap("+a+","+b+")");
-       Collections.swap(this.imageList, a, b);
+       Collections.swap(this.pageList, a, b);
     }
     
     
@@ -197,22 +197,21 @@ public class Script {
     }
     
     public void insert(int a, int b){
-        Image image = this.imageList.remove(a);
-        this.imageList.add(b, image);
+        Page page = this.pageList.remove(a);
+        this.pageList.add(b, page);
     }
     
     public void insert(int index, int a, int b, int x, int y){
-        Image image = this.imageList.get(index);
-        Page page = image.getPage();
+        Page page = this.pageList.get(index);
         Data data = page.getDataMatrix().get(a).remove(b);
         page.getDataMatrix().get(x).add(y, data);
     }
     
     public void join(int a, int b) {
-        Image imageA = this.imageList.get(a);
-        Image imageB = this.imageList.get(b);
-        List<LinkedList<Data>> dataA = imageA.getPage().getDataMatrix();
-        List<LinkedList<Data>> dataB = imageB.getPage().getDataMatrix();
+        Page pageA = this.pageList.get(a);
+        Page pageB = this.pageList.get(b);
+        List<LinkedList<Data>> dataA = pageA.getDataMatrix();
+        List<LinkedList<Data>> dataB = pageB.getDataMatrix();
         List<LinkedList<Data>> data = new ArrayList<>((dataA.size()>dataB.size())?dataA.size():dataB.size());
         for(int i = 0; i < dataA.size(); i++){
             for(int j=0;j<dataA.get(i).size();j++){
@@ -224,7 +223,7 @@ public class Script {
                 data.get(i).add(dataB.get(i).get(j));
             }
         }
-        imageA.getPage().setDataMatrix(data);
-        imageB.getPage().setDataMatrix(null);
+        pageA.setDataMatrix(data);
+        pageB.setDataMatrix(null);
     }
 }

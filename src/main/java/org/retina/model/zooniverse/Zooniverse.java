@@ -35,7 +35,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.util.IOUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.retina.model.Credential;
-import org.retina.model.Image;
 import org.retina.controller.Shell;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;

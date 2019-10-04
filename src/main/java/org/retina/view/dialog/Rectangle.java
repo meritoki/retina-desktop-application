@@ -74,7 +74,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener,KeyL
     
     public void initLabel(){
         logger.debug("initLabel()");
-        org.retina.model.Image image = this.model.getImage();
+        org.retina.model.Page image = this.model.getPage();
         org.retina.model.Rectangle rectangle = (image != null)?image.getRectangle(): null;
         List<org.retina.model.Rectangle> rectangleList = (image != null)?image.getRectangleList():null;
         org.retina.model.Data data = (rectangle != null)?rectangle.data:null;
@@ -83,7 +83,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener,KeyL
     
     public void initList(){
         logger.debug("initList()");
-        org.retina.model.Image image = this.model.getImage();
+        org.retina.model.Page image = this.model.getPage();
         int index = (image != null)?image.getIndex():0;
         org.retina.model.Rectangle rectangle = (image != null)?image.getRectangle(): null;
         List<org.retina.model.Rectangle> rectangleList = (image != null)?image.getRectangleList():null;
@@ -95,7 +95,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener,KeyL
     
     public void initComboBox(){
         logger.debug("initComboBox()");
-        org.retina.model.Image image = this.model.getImage();
+        org.retina.model.Page image = this.model.getPage();
         org.retina.model.Rectangle rectangle = (image != null)?image.getRectangle(): null;
         org.retina.model.Data data = (rectangle != null)?rectangle.data:null;
         List<org.retina.model.Text> textList = (data != null)?data.getTextList():null;
@@ -206,7 +206,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener,KeyL
     @Override
     public void mouseClicked(MouseEvent e) {
         if(e.getClickCount()==1){
-            org.retina.model.Image image = this.model.getImage();
+            org.retina.model.Page image = this.model.getPage();
             if(image != null){
                 String selectedItem = (String) this.rectangleList.getSelectedValue();
                 image.setRectangle(selectedItem);
@@ -231,7 +231,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener,KeyL
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        org.retina.model.Image image = this.model.getImage();
+        org.retina.model.Page image = this.model.getPage();
         if(image != null){
             int index = image.getIndex();
             switch(keyCode) {
@@ -268,9 +268,9 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener,KeyL
     @Override
     public void keyReleased(KeyEvent e) {
         String uuid = (String)rectangleList.getSelectedValue();
-        org.retina.model.Image image = this.model.getImage();
+        org.retina.model.Page image = this.model.getPage();
         if(image != null && !uuid.equals(image.getRectangle().uuid)){
-            this.model.getImage().setRectangle(uuid);
+            this.model.getPage().setRectangle(uuid);
             this.init();
             this.getParent().repaint();
         }
@@ -495,14 +495,14 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener,KeyL
         String value = this.textInputTextField.getText().trim();
         Text text = new Text();
         text.value = value;
-        this.model.getImage().getRectangle().data.setText(text);
+        this.model.getPage().getRectangle().data.setText(text);
         this.setModel(this.model);
     }//GEN-LAST:event_inputAddButtonActionPerformed
 
     private void textValueDefaultCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textValueDefaultCheckBoxActionPerformed
         boolean flag = this.textValueDefaultCheckBox.isSelected();
         if(flag){
-            this.textValueComboBox.setSelectedItem(this.model.getImage().getRectangle().data.getDefaultText().value);
+            this.textValueComboBox.setSelectedItem(this.model.getPage().getRectangle().data.getDefaultText().value);
         }
     }//GEN-LAST:event_textValueDefaultCheckBoxActionPerformed
 
@@ -512,14 +512,14 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener,KeyL
 
     private void deleteRectangleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRectangleButtonActionPerformed
         int index = this.rectangleList.getSelectedIndex();
-        org.retina.model.Image image = this.model.getImage();
+        org.retina.model.Page image = this.model.getPage();
         image.getRectangleList().remove(index);
         this.init();
         ((Main)this.getParent()).repaint();
     }//GEN-LAST:event_deleteRectangleButtonActionPerformed
 
     private void applyUnitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyUnitButtonActionPerformed
-        org.retina.model.Image image = (this.model!=null)?this.model.getImage():null;
+        org.retina.model.Page image = (this.model!=null)?this.model.getPage():null;
         org.retina.model.Rectangle rectangle = (image!=null)?image.getRectangle():null;
         org.retina.model.Data data = (rectangle != null)?rectangle.getData():null;
         if(data != null){
