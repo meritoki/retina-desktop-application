@@ -33,336 +33,347 @@ import java.util.UUID;
 
 public class Image extends JPanel implements MouseListener, MouseWheelListener, KeyListener {
 
-    static Logger logger = LogManager.getLogger(com.meritoki.retina.application.desktop.view.dialog.Image.class.getName());
-    private static final long serialVersionUID = 3989576625299550361L;
-    private Project project;
-    private Point pressedPoint = new Point();
-    private Point releasedPoint = new Point();
-    private int selection = -1;
-    private Shape shape;
-    private Main main;
-    private boolean move = false;
-    private boolean resize = false;
-    private float scale = 1;
-    private int x;
-    private int y;
-    private int i;
-    private int j;
+	static Logger logger = LogManager
+			.getLogger(com.meritoki.retina.application.desktop.view.dialog.Image.class.getName());
+	private static final long serialVersionUID = 3989576625299550361L;
+	private Project project;
+	private Point pressedPoint = new Point();
+	private Point releasedPoint = new Point();
+	private int selection = -1;
+	private Shape shape;
+	private Main main;
+	private boolean move = false;
+	private boolean resize = false;
+	private float scale = 1;
+	private int x;
+	private int y;
+	private int i;
+	private int j;
 
-    public Image() {
-        super();
-        this.setBackground(Color.black);
-        this.addMouseListener(this);
-        this.addMouseWheelListener(this);
-        this.addKeyListener(this);
-    }
+	public Image() {
+		super();
+		this.setBackground(Color.black);
+		this.addMouseListener(this);
+		this.addMouseWheelListener(this);
+		this.addKeyListener(this);
+	}
 
-    public void setMain(Main main) {
-        this.main = main;
-    }
+	public void setMain(Main main) {
+		this.main = main;
+	}
 
-    public void setModel(Project model) {
-        logger.debug("setModel(" + model + ")");
-        this.project = model;
-        this.setPreferredSize(this.getPreferredSize());
-    }
+	public void setModel(Project model) {
+		logger.debug("setModel(" + model + ")");
+		this.project = model;
+		this.setPreferredSize(this.getPreferredSize());
+	}
 
-    @Override
-    public Dimension getPreferredSize() {
-        Dimension size = new Dimension(1028, 512);
-        if (this.project != null && this.project.getPage() != null && this.project.getPage().getBufferedImage() != null) {
-            size.width = Math.round(this.project.getPage().getBufferedImage().getWidth() * scale);
-            size.height = Math.round(this.project.getPage().getBufferedImage().getHeight() * scale);
-        }
-        return size;
-    }
+	@Override
+	public Dimension getPreferredSize() {
+		Dimension size = new Dimension(1028, 512);
+		if (this.project != null && this.project.getPage() != null
+				&& this.project.getPage().getBufferedImage() != null) {
+			size.width = Math.round(this.project.getPage().getBufferedImage().getWidth() * scale);
+			size.height = Math.round(this.project.getPage().getBufferedImage().getHeight() * scale);
+		}
+		return size;
+	}
 
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2d = (Graphics2D) g.create();
-        Page image = (this.project != null) ? this.project.getPage() : null;
-        BufferedImage bufferedImage = (image != null) ? image.getBufferedImage() : null;
-        AffineTransform at = new AffineTransform();
-        at.scale(scale, scale);
-        if (bufferedImage != null) {
-            g2d.drawImage(bufferedImage, at, this);
-            g2d.dispose();
-        }
-        Shape rectangle = (image != null) ? image.getShape() : null;
-        List<Shape> rectangleList = (image != null) ? image.getShapeList() : null;
-        if (rectangleList != null) {
-            for (Shape r : rectangleList) {
-                if (!r.removed) {
-                    if (rectangle != null && r.uuid.equals(rectangle.uuid)) {
-                        g.setColor(Color.RED);
-                    } else {
-                        g.setColor(Color.BLUE);
-                    }
-                    if(r.startPoint != null && r.stopPoint != null) {
-	                    int x = r.startPoint.x;
-	                    int y = r.startPoint.y;
-	                    int i = r.stopPoint.x;
-	                    int j = r.stopPoint.y;
-	                    int px = Math.min(x, i);
-	                    int py = Math.min(y, j);
-	                    int pw = Math.abs(x - i);
-	                    int ph = Math.abs(y - j);
-	                    px *= scale;
-	                    py *= scale;
-	                    pw *= scale;
-	                    ph *= scale;
-	                    g.drawRect(px, py, pw, ph);
-                    }
-                }
-            }
-        }
-    }
+	//Need to refactor this method so that it is much more simple
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Graphics2D g2d = (Graphics2D) g.create();
+		Page page = (this.project != null) ? this.project.getPage() : null;
+		BufferedImage bufferedImage = (page != null) ? page.getBufferedImage() : null;
+		AffineTransform at = new AffineTransform();
+		at.scale(scale, scale);
+//		if (bufferedImage != null) {
+//			g2d.drawImage(bufferedImage, at, this);
+//			g2d.dispose();
+//		}
+		Shape rectangle = (page != null) ? page.getShape() : null;
+		List<Shape> shapeList = (page != null) ? page.getShapeList() : null;
+		if (shapeList != null) {
+			for (Shape s : shapeList) {
+				if (!s.removed) {
+					if (rectangle != null && s.uuid.equals(rectangle.uuid)) {
+						g.setColor(Color.RED);
+					} else {
+						g.setColor(Color.BLUE);
+					}
+					if (s.startPoint != null && s.stopPoint != null) {
+						int x = s.startPoint.x;
+						int y = s.startPoint.y;
+						int i = s.stopPoint.x;
+						int j = s.stopPoint.y;
+						int px = Math.min(x, i);
+						int py = Math.min(y, j);
+						int pw = Math.abs(x - i);
+						int ph = Math.abs(y - j);
+						px *= scale;
+						py *= scale;
+						pw *= scale;
+						ph *= scale;
+						g.drawRect(px, py, pw, ph);
+					}
+				}
+			}
+		}
+	}
 
+	/*
+	 * A mousePressed begins an Add, Move, or Resize. Call each one a Command that
+	 * affects the model. A command can have one or more Operations.
+	 * 
+	 */
 
-    /*
-        A mousePressed begins an Add, Move, or Resize. Call each one a Command that 
-        affects the model. A command can have one or more Operations.
-        
-     */
-    
-    public Shape shapeContains(Point point) {
-    	Shape shape = null;
-        Page image = (this.project != null) ? this.project.getPage() : null;
-        List<Shape> shapeList = (image != null) ? image.getShapeList() : null;
-        if (shapeList != null) {
-            for (Shape s : this.project.getPage().getShapeList()) {
-                if (s.contains(point)) {
-                    shape = s;
-                    break;
-                }
-            }
-        }
-        return shape;
-    }
-    
-    public int shapeIntersects(Point point) {
-    	int selection = -1;
-        Page image = (this.project != null) ? this.project.getPage() : null;
-        List<Shape> shapeList = (image != null) ? image.getShapeList() : null;
-        if (shapeList != null) {
-            for (Shape s : this.project.getPage().getShapeList()) {
-                if (s.intersects(point)) {
-                    selection = s.intersect(point);
-                    break;
-                }
-            }
-        }
-        return selection;
-    }
-    
-    @Override
-    public void mousePressed(MouseEvent e) {
-    	//Here is mouse is pressed, this is the start of many operations.
-    	//Here we know what page is selected, if the event lies in or outside of a shape,etc.
-    	//Commands we need to support include Add, Select, Move, Resize, and Remove Shape
-    	//the commands that we need to support require checking the current page for 
-    	//a contains or intersect with respect to Shapes.
-    	//if contains or intersect are false, we have an Add.
-    	//Every other case is a Select followed by a Move, Resize, or Remove
-    	//Looking for a general architecture to capture these possibilities that is 
-    	//maintable and supports the Do/Undo/Redo system
-    	//An undo/redo also remembers the Page where something happened, taking us to 
-    	//the page where something is undone if necessary.
-    	System.out.println("mousePressed");
-    	this.pressedPoint = new Point();
-    	this.pressedPoint.x = e.getX();
-    	this.pressedPoint.y = e.getY();
-		//Here we know that we are choosing an existing Shape
-		//This can be used for Select, Remove, Move,  
-		//If point pressed and point released are equal we have a select,
-		//once we have a select we can Remove.
-		//if pressed point does not equal released, we have a move.
-    	this.shape = this.shapeContains(this.pressedPoint);
-		//Here we know we are choosing an edge to resize, and we know what edge or corner 
-		//is selected based on the selection integer value, all we need now
+	public Shape shapeContains(Point point) {
+		Shape shape = null;
+		Page image = (this.project != null) ? this.project.getPage() : null;
+		List<Shape> shapeList = (image != null) ? image.getShapeList() : null;
+		if (shapeList != null) {
+			for (Shape s : this.project.getPage().getShapeList()) {
+				if (s.contains(point)) {
+					shape = s;
+					break;
+				}
+			}
+		}
+		return shape;
+	}
+
+	public int shapeIntersects(Point point) {
+		int selection = -1;
+		Page image = (this.project != null) ? this.project.getPage() : null;
+		List<Shape> shapeList = (image != null) ? image.getShapeList() : null;
+		if (shapeList != null) {
+			for (Shape s : this.project.getPage().getShapeList()) {
+				if (s.intersects(point)) {
+					selection = s.intersect(point);
+					break;
+				}
+			}
+		}
+		return selection;
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// Here is mouse is pressed, this is the start of many operations.
+		// Here we know what page is selected, if the event lies in or outside of a
+		// shape,etc.
+		// Commands we need to support include Add, Select, Move, Resize, and Remove
+		// Shape
+		// the commands that we need to support require checking the current page for
+		// a contains or intersect with respect to Shapes.
+		// if contains or intersect are false, we have an Add.
+		// Every other case is a Select followed by a Move, Resize, or Remove
+		// Looking for a general architecture to capture these possibilities that is
+		// maintable and supports the Do/Undo/Redo system
+		// An undo/redo also remembers the Page where something happened, taking us to
+		// the page where something is undone if necessary.
+		System.out.println("mousePressed");
+		this.pressedPoint = new Point();
+		this.pressedPoint.x = e.getX();
+		this.pressedPoint.y = e.getY();
+		// Here we know that we are choosing an existing Shape
+		// This can be used for Select, Remove, Move,
+		// If point pressed and point released are equal we have a select,
+		// once we have a select we can Remove.
+		// if pressed point does not equal released, we have a move.
+		this.shape = this.shapeContains(this.pressedPoint);
+		// Here we know we are choosing an edge to resize, and we know what edge or
+		// corner
+		// is selected based on the selection integer value, all we need now
 		// is the release point.
-    	this.selection = this.shapeIntersects(this.pressedPoint);
-    	System.out.println(this.shape);
-    	System.out.println(this.selection);
-    }
-    
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    	///Here a mouse is released, telling us where an Add, Move, Resize, and Remove ends
-    	System.out.println("mouseReleased");
-    	this.releasedPoint = new Point();
-    	this.releasedPoint.x = e.getX();
-    	this.releasedPoint.y = e.getY();
-    	if(this.pressedPoint.x == this.releasedPoint.x && this.pressedPoint.y == this.releasedPoint.y) {
-    		if(this.shape != null) {
-	    		System.out.println("Selected...");
-	    		//Select
-	    		//Set index in Page to the selected Shape;
-	    		this.project.getPage().setShape(this.shape.uuid);//Done
-    		} else {
-    			System.out.println("Nothing...");
-    		}
-    	} else {
-    		//Move, Add, or Resize 
-    		if(this.selection > -1) {
-    			//Resize
-    			System.out.println("Resizing...");
-    			this.shape.resize(this.releasedPoint, this.selection);
-    		} else {
-    			//Move or Add
-    			if(this.shape != null) {
-    				System.out.println("Moving...");
-    				this.project.getPage().setShape(this.shape.uuid);
-    				this.project.getPage().getShape().move(this.releasedPoint);
-    			} else {
-    				//Add
-    				//Finish making shape
-    				System.out.println("Adding...");
-    				this.shape = new Shape();
-    				this.shape.startPoint = this.pressedPoint;
-    				this.shape.stopPoint = this.releasedPoint;
-    				this.project.getPage().getShapeList().add(this.shape);
-                    this.project.getPage().setShape(this.shape.uuid);
-    			}
-    		}
-    	}
-    	
-        this.main.shapeDialog.setModel(this.project);
-        this.main.pageDialog.setModel(this.project);
+		this.selection = this.shapeIntersects(this.pressedPoint);
+		System.out.println(this.shape);
+		System.out.println(this.selection);
+		this.repaint();
+	}
 
-//                Command command = new Command();
-//                Operation operation = new Operation();
-//                operation.object = this.shape;
-//                operation.sign = 1;
-//                operation.id = UUID.randomUUID().toString();
-//                operation.uuid = this.shape.uuid;
-//                command.operationList.push(operation);
-//                this.main.undoStack.push(command);
+	
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		/// Here a mouse is released, telling us where an Add, Move, Resize, and Remove
+		/// ends
+		System.out.println("mouseReleased");
+		this.releasedPoint = new Point();
+		this.releasedPoint.x = e.getX();
+		this.releasedPoint.y = e.getY();
+		if (this.pressedPoint.x == this.releasedPoint.x && this.pressedPoint.y == this.releasedPoint.y) {
+			if (this.shape != null) {
+				System.out.println("Selected...");
+				// Select
+				// Set index in Page to the selected Shape;
+				this.project.getPage().setShape(this.shape.uuid);// Done
+			} else {
+				System.out.println("Nothing...");
+			}
+		} else {
+			// Move, Add, or Resize
+			if (this.selection > -1) {
+				// Resize
+				System.out.println("Resizing...");
+				this.shape.resize(this.releasedPoint, this.selection);
+				//use a copy constructor to remake shape then rezize the copy,
+				//save the old one and add a reference to its new id in the
+				//operation as id.
+			} else {
+				// Move or Add
+				if (this.shape != null) {
+					System.out.println("Moving...");
+					Point movePoint = new Point();
+					movePoint.x = this.releasedPoint.x-this.pressedPoint.x;
+					movePoint.y = this.releasedPoint.y-this.pressedPoint.y;
+					this.shape.move(movePoint);
+				} else {
+					// Add
+					// Finish making shape
+					System.out.println("Adding...");
+					this.shape = new Shape();
+					this.shape.startPoint = this.pressedPoint;
+					this.shape.stopPoint = this.releasedPoint;
+					this.project.getPage().getShapeList().add(this.shape);
+					this.project.getPage().setShape(this.shape.uuid);
+					Command command = new Command();
+					Operation operation = new Operation();
+					operation.object = this.shape;
+					operation.sign = 1;
+					operation.id = UUID.randomUUID().toString();
+					operation.uuid = this.shape.uuid;
+					command.operationList.push(operation);
+					this.main.undoStack.push(command);
+				}
+			}
+		}
 
-        this.shape = null;
-        repaint();
-    }
+		this.main.shapeDialog.setModel(this.project);
+		this.main.pageDialog.setModel(this.project);
 
-    public void mouseDragged(MouseEvent e) {
-    }
+		repaint();
+	}
 
+	public void mouseDragged(MouseEvent e) {
+	}
 
+	@Override
+	public void mouseClicked(MouseEvent e) {
+	}
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-    }
+	@Override
+	public void mouseEntered(MouseEvent e) {
+	}
 
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
+	@Override
+	public void mouseExited(MouseEvent e) {
+	}
 
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		double delta = 0.05f * e.getPreciseWheelRotation();
+		scale += delta;
+		revalidate();
+		repaint();
+	}
 
-    @Override
-    public void mouseWheelMoved(MouseWheelEvent e) {
-        double delta = 0.05f * e.getPreciseWheelRotation();
-        scale += delta;
-        revalidate();
-        repaint();
-    }
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if ((e.getKeyCode() == KeyEvent.VK_Z) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+			System.out.println("undo");
+			if (this.main.undoStack.size() > 0) {
+				Command command = this.main.undoStack.pop();
+				Operation operation = null;
+				for (int i = 0; i < command.operationList.size(); i++) {
+					operation = command.operationList.get(i);
+					if (operation.sign == 1) {
+						if (operation.object instanceof Shape) {
+							this.project.getPage().removeShape((Shape) operation.object);
+						}
+					} else if (operation.sign == 0) {
+						if (operation.object instanceof Shape) {
+							this.project.getPage().addShape((Shape) operation.object);
+						}
+					}
+				}
+				this.main.redoStack.push(command);
+				repaint();
+			}
+		} else if ((e.getKeyCode() == KeyEvent.VK_Y) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+			System.out.println("redo");
+			if (this.main.redoStack.size() > 0) {
+				Command command = this.main.redoStack.pop();
+				Operation operation = null;
+				for (int i = command.operationList.size()-1; i >= 0; i--) {
+					operation = command.operationList.get(i);
+					if (operation.sign == 1) {
+						if (operation.object instanceof Shape) {
+							this.project.getPage().addShape((Shape) operation.object);
+						}
+					} else if (operation.sign == 0) {
+						if (operation.object instanceof Shape) {
+							this.project.getPage().removeShape((Shape) operation.object);
+						}
+					}
+				}
+				this.main.undoStack.push(command);
+				repaint();
+			}
+		} else {
+			int keyCode = e.getKeyCode();
+			int index = this.project.getIndex();
+			switch (keyCode) {
+			case KeyEvent.VK_BACK_SPACE: {
+				System.out.println("BackSpace");
+				// Here support removing Shapes
+				break;
+			}
+			case KeyEvent.VK_LEFT: {
+				logger.debug("keyPressed(LEFT)");
+				this.project.setIndex(--index);
+				this.main.imageDialog.init();
+				this.main.shapeDialog.init();
+				this.main.pageDialog.init();
+				this.repaint();
+				break;
+			}
+			case KeyEvent.VK_RIGHT: {
+				logger.debug("keyPressed(RIGHT)");
+				this.project.setIndex(++index);
+				this.main.imageDialog.init();
+				this.main.shapeDialog.init();
+				this.main.pageDialog.init();
+				this.repaint();
+				break;
+			}
+			case KeyEvent.VK_UP: {
+				logger.debug("keyPressed(UP)");
+				this.project.setIndex(--index);
+				this.main.imageDialog.init();
+				this.main.shapeDialog.init();
+				this.main.pageDialog.init();
+				this.repaint();
+				break;
+			}
+			case KeyEvent.VK_DOWN: {
+				logger.debug("keyPressed(DOWN)");
+				this.project.setIndex(++index);
+				this.main.imageDialog.init();
+				this.main.shapeDialog.init();
+				this.main.pageDialog.init();
+				this.repaint();
+				break;
+			}
+			}
+		}
+	}
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if ((e.getKeyCode() == KeyEvent.VK_Z) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
-            System.out.println("undo");
-            if (this.main.undoStack.size() > 0) {
-                Command command = this.main.undoStack.pop();
-                Operation operation = null;
-                for (int i = 0; i < command.operationList.size(); i++) {
-                    operation = command.operationList.get(i);
-                    if (operation.sign == 1) {
-                        if (operation.object instanceof Shape) {
-                            this.project.getPage().removeShape((Shape) operation.object);
-                        }
-                    } else if (operation.sign == 0) {
-                        if (operation.object instanceof Shape) {
-                            this.project.getPage().addShape((Shape) operation.object);
-                        }
-                    }
-                }
-                this.main.redoStack.push(command);
-                repaint();
-            }
-        } else if ((e.getKeyCode() == KeyEvent.VK_Y) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
-            System.out.println("redo");
-            if (this.main.redoStack.size() > 0) {
-                Command command = this.main.redoStack.pop();
-                Operation operation = null;
-                for (int i = command.operationList.size(); i >= 0; i--) {
-                    operation = command.operationList.get(i);
-                    if (operation.sign == 1) {
-                        if (operation.object instanceof Shape) {
-                            this.project.getPage().addShape((Shape) operation.object);
-                        }
-                    }else if (operation.sign == 0) {
-                        if (operation.object instanceof Shape) {
-                            this.project.getPage().removeShape((Shape) operation.object);
-                        }
-                    }
-                }
-                this.main.undoStack.push(command);
-                repaint();
-            }
-        } else {
-            int keyCode = e.getKeyCode();
-            int index = this.project.getIndex();
-            switch (keyCode) {
-	            case KeyEvent.VK_BACK_SPACE: {
-	            	break;
-	            }
-                case KeyEvent.VK_LEFT: {
-                    logger.debug("keyPressed(LEFT)");
-                    this.project.setIndex(--index);
-                    this.main.imageDialog.init();
-                    this.main.shapeDialog.init();
-                    this.main.pageDialog.init();
-                    this.repaint();
-                    break;
-                }
-                case KeyEvent.VK_RIGHT: {
-                    logger.debug("keyPressed(RIGHT)");
-                    this.project.setIndex(++index);
-                    this.main.imageDialog.init();
-                    this.main.shapeDialog.init();
-                    this.main.pageDialog.init();
-                    this.repaint();
-                    break;
-                }
-                case KeyEvent.VK_UP: {
-                    logger.debug("keyPressed(UP)");
-                    this.project.setIndex(--index);
-                    this.main.imageDialog.init();
-                    this.main.shapeDialog.init();
-                    this.main.pageDialog.init();
-                    this.repaint();
-                    break;
-                }
-                case KeyEvent.VK_DOWN: {
-                    logger.debug("keyPressed(DOWN)");
-                    this.project.setIndex(++index);
-                    this.main.imageDialog.init();
-                    this.main.shapeDialog.init();
-                    this.main.pageDialog.init();
-                    this.repaint();
-                    break;
-                }
-            }
-        }
-    }
+	@Override
+	public void keyTyped(KeyEvent e) {
+	}
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-    }
+	@Override
+	public void keyReleased(KeyEvent e) {
+	}
 }

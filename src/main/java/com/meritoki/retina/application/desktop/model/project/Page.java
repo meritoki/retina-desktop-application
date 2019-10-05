@@ -34,8 +34,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 /**
  *
  * @author osvaldo.rodriguez

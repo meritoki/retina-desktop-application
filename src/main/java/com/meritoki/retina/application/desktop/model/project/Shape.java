@@ -26,10 +26,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
-/**
- *
- * @author osvaldo.rodriguez
- */
 public class Shape {
     
     static org.apache.logging.log4j.Logger logger = LogManager.getLogger(Shape.class.getName());
@@ -46,13 +42,8 @@ public class Shape {
     public static final int CIRCLE = 1;
     public static final int OVAL = 2;
     public int CLASSIFICATION = RECTANGLE;
-//    private int x = 0;
-//    private int y = 0;
-//    private int i = 0;
-//    private int j = 0;
     public Point startPoint = new Point();
     public Point stopPoint = new Point();
-    public int radius = 0;
     public String uuid = "";
     private BufferedImage bufferedImage = null;
     public Data data = null; 
@@ -61,6 +52,13 @@ public class Shape {
     public Shape(){
          UUID uuid = UUID.randomUUID();
          this.uuid = uuid.toString();
+    }
+    
+    public Shape(Shape shape) {
+    	this.uuid = shape.uuid;
+    	this.startPoint = shape.startPoint;
+    	this.stopPoint = shape.stopPoint;
+    	this.data = shape.data;
     }
 
     @JsonIgnore
@@ -92,40 +90,6 @@ public class Shape {
     public String getUUID(){
         return this.uuid;
     }
-    
-//
-//    @JsonProperty
-//    public int getX() {
-//        return x;
-//    }
-//    @JsonProperty
-//    public void setX(int x) {
-//        this.x = x;
-//    }
-//    @JsonProperty
-//    public int getY() {
-//        return y;
-//    }
-//    @JsonProperty
-//    public void setY(int y) {
-//        this.y = y;
-//    }
-//    @JsonProperty
-//    public int getI() {
-//        return i;
-//    }
-//    @JsonProperty
-//    public void setI(int i) {
-//        this.i = i;
-//    }
-//    @JsonProperty
-//    public int getJ() {
-//        return j;
-//    }
-//    @JsonProperty
-//    public void setJ(int j) {
-//        this.j = j;
-//    }
     
     @JsonProperty
     public void setData(Data data){
@@ -236,6 +200,7 @@ public class Shape {
   
     @JsonIgnore
     public void move(Point point){
+    	logger.info("move("+point+")");
         this.startPoint.x = this.startPoint.x + point.x;
         this.startPoint.y = this.startPoint.y + point.y;
         this.stopPoint.x = this.stopPoint.x + point.x;
