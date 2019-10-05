@@ -137,7 +137,7 @@ public class Page {
     }
 
     @JsonIgnore
-    public BufferedImage getRectangleImage(Shape r) {
+    public BufferedImage getShapeImage(Shape r) {
         BufferedImage bufferedImage = null;
         if (this.getBufferedImage() != null) {
 //            bufferedImage = this.getBufferedImage().getSubimage(r.getX(), r.getX(), (r.getI() - r.getX()),
@@ -151,7 +151,7 @@ public class Page {
             List<Shape> rList) {
         List<BufferedImage> imageList = new ArrayList<>();
         for (Shape r : rList) {
-            imageList.add(this.getRectangleImage(r));
+            imageList.add(this.getShapeImage(r));
         }
         return imageList;
     }
@@ -195,38 +195,39 @@ public class Page {
 
     @JsonIgnore
     public List<LinkedList<Data>> getDataMatrix() {
-        logger.info("getDataMatrix()");
+    	logger.info("getDataMatrix()");
         List<LinkedList<Data>> dataMatrix = null;
         if (this.shapeList != null && this.shapeList.size() > 0) {
+        	logger.info("getDataMatrix() this.shapeList = "+this.shapeList);
             ArrayList<Shape> shapeList = new ArrayList<>(this.shapeList);
-            Shape a = null;
+            Shape shape = null;
             int averageY;
             int threshold = 32;
             List<Shape> columnList;
             List<List<Shape>> rowList = new ArrayList<>();
             boolean flag = true;
             for (int i = 0; i < shapeList.size(); i++) {
-                a = shapeList.get(i);
+                shape = shapeList.get(i);
                 columnList = new ArrayList<>();
                 if (!rowList.isEmpty()) {
                     for (List<Shape> cList : rowList) {
-                        averageY = this.getShapeListYAverage(cList, a);
+                        averageY = this.getShapeListYAverage(cList, shape);
                         columnList = new ArrayList<>(cList);
-                        columnList.add(a);
+                        columnList.add(shape);
                         if (this.isShapeListYInThreshold(columnList, averageY, threshold)) {
-                            cList.add(a);
+                            cList.add(shape);
                             flag = false;
                         }
                     }
                     if (flag) {
                         columnList = new ArrayList<>();
-                        columnList.add(a);
+                        columnList.add(shape);
                         rowList.add(columnList);
                     } else {
                         flag = true;
                     }
                 } else {
-                    columnList.add(a);
+                    columnList.add(shape);
                     rowList.add(columnList);
                 }
             }
@@ -244,9 +245,9 @@ public class Page {
             for (int i = 0; i < row; i++) {
                 dataMatrix.add(i, new LinkedList<Data>());
                 for (int j = 0; j < rowList.get(i).size(); j++) {
-                    a = rowList.get(i).get(j);
-                    if (a.data != null) {
-                        dataMatrix.get(i).add(j, a.data);
+                    shape = rowList.get(i).get(j);
+                    if (shape.data != null) {
+                        dataMatrix.get(i).add(j, shape.data);
                     }
                 }
             }
@@ -271,6 +272,7 @@ public class Page {
     }
 
     public void printDataMatrix(List<LinkedList<Data>> data) {
+    	logger.info("printDataMatrix(...)");
         String string = null;
         if (data != null && data.size() > 0) {
             string = "\n";
@@ -294,8 +296,8 @@ public class Page {
         logger.debug("isShapeListYInThreshold(" + shapeList + ", " + averageY + ", " + threshold + ")");
         boolean flag = true;
         int a = 0;
-        for (Shape r : shapeList) {
-            a = r.getCenterY();
+        for (Shape shape : shapeList) {
+            a = shape.getCenterY();
             a = Math.abs(averageY - a);
             if (a > threshold) {
                 flag = false;
@@ -345,20 +347,20 @@ public class Page {
         return shapeList;
     }
 
-    public boolean columnListContains(List<Shape> shapeList, Shape rectangle) {
+    public boolean columnListContains(List<Shape> shapeList, Shape shape) {
         boolean flag = false;
-        for (Shape r : shapeList) {
-            if (r.uuid.equals(rectangle.uuid)) {
+        for (Shape s : shapeList) {
+            if (s.uuid.equals(shape.uuid)) {
                 flag = true;
             }
         }
         return flag;
     }
 
-    public boolean rowListContains(List<List<Shape>> rowList, Shape rectangle) {
+    public boolean rowListContains(List<List<Shape>> shapeList, Shape shape) {
         boolean flag = false;
-        for (List<Shape> r : rowList) {
-            flag = this.columnListContains(r, rectangle);
+        for (List<Shape> s : shapeList) {
+            flag = this.columnListContains(s, shape);
             if (flag) {
                 break;
             }

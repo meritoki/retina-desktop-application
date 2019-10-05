@@ -43,7 +43,7 @@ import com.meritoki.retina.application.desktop.view.frame.Main;
 public class Matrix extends JPanel implements MouseListener, MouseWheelListener, KeyListener {
 
     static Logger logger = LogManager.getLogger(Data.class.getName());
-    private Project model;
+    private Project project;
     private Main main;
     
     public Matrix(){
@@ -59,7 +59,7 @@ public class Matrix extends JPanel implements MouseListener, MouseWheelListener,
     
     public void setModel(Project model) {
         logger.debug("setModel("+model+")");
-        this.model = model;
+        this.project = model;
         this.setPreferredSize(this.getPreferredSize());
     }
     
@@ -67,7 +67,7 @@ public class Matrix extends JPanel implements MouseListener, MouseWheelListener,
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D)g;
-        com.meritoki.retina.application.desktop.model.project.Page page = (this.model!= null)?this.model.getPage():null;
+        com.meritoki.retina.application.desktop.model.project.Page page = (this.project!= null)?this.project.getPage():null;
         List<LinkedList<Data>> dataMatrix = (page !=null)?page.getDataMatrix():null;
         int width = 0;
         int height = 0;

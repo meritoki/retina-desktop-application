@@ -75,8 +75,6 @@ public class Project implements Serializable {
         Page page = new Page();
         page.fileName = "01.jpg";
         page.filePath = "./data/page";
-        Shape r = new Shape();
-        page.getShapeList().add(r);
         pageList.add(page);
         page = new Page();
         page.fileName = "02.jpg";

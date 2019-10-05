@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class Configuration {
-	public void save() {
+	public void save(Properties properties) {
 		
 		
 	}
@@ -15,7 +15,6 @@ public class Configuration {
         Properties properties = new Properties();
 		try (InputStream input = new FileInputStream(fileName)) {
             properties.load(input);
-            System.out.println(properties.getProperty("service.web.gateway.url"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }

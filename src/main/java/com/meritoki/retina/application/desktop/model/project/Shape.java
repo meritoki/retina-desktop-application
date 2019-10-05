@@ -44,9 +44,11 @@ public class Shape {
     public int CLASSIFICATION = RECTANGLE;
     public Point startPoint = new Point();
     public Point stopPoint = new Point();
+    public float scale = 1;
     public String uuid = "";
     private BufferedImage bufferedImage = null;
-    public Data data = null; 
+    //If null, then the data matrix will be populated with null.
+    public Data data = new Data(); 
     public boolean removed = false;
     
     public Shape(){
@@ -70,12 +72,17 @@ public class Shape {
        this.bufferedImage = bufferedImage;
     }
     
-//    public int compareTo(Object u) {
-//      if (x == 0 || ((Shape)u).x == 0) {
-//        return 0;
-//      }
-//      return ((Integer)x).compareTo(((Shape)u).getX());
-//    }
+    /**
+     * Used by data Matrix algorithm
+     * @param u
+     * @return
+     */
+    public int compareTo(Object u) {
+      if (this.startPoint.x == 0 || ((Shape)u).startPoint.x == 0) {
+        return 0;
+      }
+      return ((Integer)this.startPoint.x).compareTo(((Shape)u).startPoint.x);
+    }
     
     @JsonIgnore
     public boolean isValid(){
