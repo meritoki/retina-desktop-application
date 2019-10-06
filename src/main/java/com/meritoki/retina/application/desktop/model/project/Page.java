@@ -295,7 +295,7 @@ public class Page {
     public boolean isShapeListYInThreshold(List<Shape> shapeList, int averageY, int threshold) {
         logger.debug("isShapeListYInThreshold(" + shapeList + ", " + averageY + ", " + threshold + ")");
         boolean flag = true;
-        int a = 0;
+        double a = 0;
         for (Shape shape : shapeList) {
             a = shape.getCenterY();
             a = Math.abs(averageY - a);

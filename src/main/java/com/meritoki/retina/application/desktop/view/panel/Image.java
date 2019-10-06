@@ -9,11 +9,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
 
 import javax.swing.JPanel;
 import java.awt.event.MouseEvent;
@@ -37,7 +35,7 @@ import java.util.UUID;
 public class Image extends JPanel implements MouseListener, MouseWheelListener, KeyListener {
 
 	static Logger logger = LogManager.getLogger(Image.class.getName());
-	
+
 	private static final long serialVersionUID = 3989576625299550361L;
 	private Project project = null;
 	private Point pressedPoint = new Point();
@@ -81,45 +79,25 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		super.paintComponent(g);
 		Graphics2D graphics2D = (Graphics2D) g.create();
 		Page page = (this.project != null) ? this.project.getPage() : null;
-		BufferedImage bufferedImage = (page != null) ? page.getBufferedImage() : null;
 		AffineTransform affineTransform = new AffineTransform();
 		affineTransform.scale(this.scale, this.scale);
+		BufferedImage bufferedImage = (page != null) ? page.getBufferedImage() : null;
 		if (bufferedImage != null) {
-		graphics2D.drawImage(bufferedImage, affineTransform, this);
-//		graphics2D.dispose();
-	}
+			graphics2D.drawImage(bufferedImage, affineTransform, this);
+		}
 		List<Shape> shapeList = (page != null) ? page.getShapeList() : null;
 		if (shapeList != null) {
 			for (Shape s : shapeList) {
-				logger.info("painComponent(...) shape="+s);
-				if (!s.removed) {
-					if (page.getShape() != null && s.uuid.equals(page.getShape().uuid)) {
-						graphics2D.setColor(Color.RED);
-					} else {
-						graphics2D.setColor(Color.BLUE);
-					}
-					if (s.startPoint != null && s.stopPoint != null) {
-						int x = s.startPoint.x;
-						int y = s.startPoint.y;
-						int i = s.stopPoint.x;
-						int j = s.stopPoint.y;
-						int px = Math.min(x, i);
-						int py = Math.min(y, j);
-						int pw = Math.abs(x - i);
-						int ph = Math.abs(y - j);
-						//Here scale is applied and it works, do not touch
-						px *= s.scale;
-						py *= s.scale;
-						pw *= s.scale;
-						ph *= s.scale;
-//						graphics2D.drawRect(px, py, pw, ph);
-						Rectangle2D.Double rect = new Rectangle2D.Double(px, py, pw, ph);
-						graphics2D.draw(rect);
-					}
+				if (s.uuid.equals(page.getShape().uuid)) {
+					graphics2D.setColor(Color.RED);
+				} else {
+					graphics2D.setColor(Color.BLUE);
+				}
+				if (s.startPoint != null && s.stopPoint != null) {
+					s.draw(graphics2D);
 				}
 			}
 		}
-
 	}
 
 	/*
@@ -197,7 +175,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				logger.info("Selected...");
 				this.project.getPage().setShape(this.shape.uuid);// Done
 			} else {
-				logger.info("***********"+this.pressedPoint);
+				logger.info("***********" + this.pressedPoint);
 				logger.info("Nothing...");
 			}
 		} else {
@@ -218,7 +196,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				} else {
 					logger.info("Adding...");
 					this.shape = new Shape();
-					this.shape.addScale = this.round(this.scale,6);
+					this.shape.addScale = this.round(this.scale, 6);
 					this.shape.startPoint = this.pressedPoint;
 					this.shape.stopPoint = this.releasedPoint;
 					this.project.getPage().getShapeList().add(this.shape);
@@ -259,21 +237,24 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		double delta = 0.05f * e.getPreciseWheelRotation();
 		this.scale += delta;
 		this.scale = this.round(this.scale, 6);
-		logger.info("mouseWheelMoved(...) scale = "+this.scale);
-		for(Shape shape:this.project.getPage().getShapeList()) {
-			shape.scale(scale);
+		if(scale >= 0 && scale<=2) {
+			logger.info("mouseWheelMoved(...) scale = " + this.scale);
+			for (Shape shape : this.project.getPage().getShapeList()) {
+				shape.scale(scale);
+			}
+			revalidate();
+			repaint();
 		}
-		revalidate();
-		repaint();
 	}
-	
-	public double round(double value, int places) {
-	    if (places < 0) throw new IllegalArgumentException();
 
-	    long factor = (long) Math.pow(10, places);
-	    value = value * factor;
-	    long tmp = Math.round(value);
-	    return (double) tmp / factor;
+	public double round(double value, int places) {
+		if (places < 0)
+			throw new IllegalArgumentException();
+
+		long factor = (long) Math.pow(10, places);
+		value = value * factor;
+		long tmp = Math.round(value);
+		return (double) tmp / factor;
 	}
 
 	@Override

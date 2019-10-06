@@ -15,6 +15,8 @@
  */
 package com.meritoki.retina.application.desktop.model.project;
 
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.UUID;
@@ -63,6 +65,23 @@ public class Shape {
     	this.stopPoint = shape.stopPoint;
     	this.data = shape.data;
     }
+    
+    @JsonIgnore
+    public void draw(Graphics2D graphics2D) {
+    	if(!removed) {
+			double x = Math.min(startPoint.x, stopPoint.x);
+			double y = Math.min(startPoint.y, stopPoint.y);
+			double width = Math.abs(startPoint.x - stopPoint.x);
+			double height = Math.abs(startPoint.y - stopPoint.y);
+			//When addScale is 1 this scale multiplier works correctly.
+			x *= scale;
+			y *= scale;
+			width *= scale;
+			height *= scale;
+			Rectangle2D.Double rect = new Rectangle2D.Double(x, y, width, height);
+			graphics2D.draw(rect);
+    	}
+    }
 
     @JsonIgnore
     public void setBufferedImage(Page page){
@@ -78,12 +97,12 @@ public class Shape {
      * @param u
      * @return
      */
-    public int compareTo(Object u) {
-      if (this.startPoint.x == 0 || ((Shape)u).startPoint.x == 0) {
-        return 0;
-      }
-      return ((Integer)this.startPoint.x).compareTo(((Shape)u).startPoint.x);
-    }
+//    public int compareTo(Object u) {
+//      if (this.startPoint.x == 0 || ((Shape)u).startPoint.x == 0) {
+//        return 0;
+//      }
+//      return ((Integer)this.startPoint.x).compareTo(((Shape)u).startPoint.x);
+//    }
     
     @JsonIgnore
     public boolean isValid(){
@@ -109,18 +128,19 @@ public class Shape {
     }
     
     @JsonIgnore
-    public int getCenterX(){
+    public double getCenterX(){
         return (this.startPoint.x + this.stopPoint.x)/2;
     }
     
     @JsonIgnore
-    public int getCenterY(){
+    public double getCenterY(){
         return (this.startPoint.y+this.stopPoint.y)/2;
     }
     
     @JsonIgnore
     public void scale(double scale) {
-    	this.scale = this.round((scale - this.addScale)+1,6);
+//    	this.scale = this.round((scale - this.addScale)+1,6);
+    	this.scale = scale*(1/this.addScale);
     }
     
 	public double round(double value, int places) {
