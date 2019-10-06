@@ -20,10 +20,10 @@ package com.meritoki.retina.application.desktop.model.project;
  * @author osvaldo.rodriguez
  */
 public class Unit {
-    public static final int DATA = 0;
-    public static final int TIME = 1;
-    public static final int SPACE = 2;
-    public static final int ENERGY = 3;
-    public int type = 0;
+    public static final String DATA = "data";
+    public static final String TIME = "time";
+    public static final String SPACE = "space";
+    public static final String ENERGY = "energy";
+    public String type;
     public String value;
 }

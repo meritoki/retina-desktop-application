@@ -28,19 +28,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meritoki.retina.application.desktop.model.client.Status;
 
-public class ModelClient {
-	
-	public static void main(String[] args) {
-		ModelClient modelClient = new ModelClient();
-		System.out.println(modelClient.checkHealth());
-	}
+public class FileClient {
 
-    private static final Logger log = LoggerFactory.getLogger(ModelClient.class);
-    private String url = "http://localhost:8301";
+    private static final Logger log = LoggerFactory.getLogger(FileClient.class);
+    private String url = "http://localhost:8302";
     private Properties properties = null;
     
     public void setProperties(Properties properties) {

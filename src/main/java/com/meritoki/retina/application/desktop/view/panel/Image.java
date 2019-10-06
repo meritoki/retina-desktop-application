@@ -189,6 +189,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 			} else {
 				if (this.shape != null) {
 					logger.info("Moving...");
+					this.project.getPage().setShape(this.shape.uuid);
 					Point movePoint = new Point();
 					movePoint.x = this.releasedPoint.x - this.pressedPoint.x;
 					movePoint.y = this.releasedPoint.y - this.pressedPoint.y;
@@ -238,7 +239,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		this.scale += delta;
 		this.scale = this.round(this.scale, 6);
 		if(scale >= 0 && scale<=2) {
-			logger.info("mouseWheelMoved(...) scale = " + this.scale);
+			logger.debug("mouseWheelMoved(...) scale = " + this.scale);
 			for (Shape shape : this.project.getPage().getShapeList()) {
 				shape.scale(scale);
 			}

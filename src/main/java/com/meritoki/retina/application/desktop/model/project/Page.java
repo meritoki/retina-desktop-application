@@ -15,18 +15,14 @@
  */
 package com.meritoki.retina.application.desktop.model.project;
 
-import java.awt.Dimension;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
-
 import javax.imageio.ImageIO;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -35,25 +31,22 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
 /**
+ * The Page class is used to hold a list of shapes.
+ * The list of shapes can be loaded from a Layout.
+ * @author jorodriguez
  *
- * @author osvaldo.rodriguez
  */
 public class Page {
-
+	@JsonIgnore
     static Logger logger = LogManager.getLogger(Page.class.getName());
-    public String fileName = null;
-    public String filePath = null;
-    public String localURL;
-    public String remoteURL;
+    public File file;
     public String uuid;
-    public Dimension dimension;
-    private BufferedImage bufferedImage = null;
     private List<Shape> shapeList = new ArrayList<>();
+    @JsonIgnore
     public int index = 0;
 
     public Page() {
-        UUID uuid = UUID.randomUUID();
-        this.uuid = uuid.toString();
+        this.uuid = UUID.randomUUID().toString();
     }
 
     @JsonIgnore
@@ -111,7 +104,6 @@ public class Page {
             }
         }
     }
-    
 
     @JsonIgnore
     public Data getData() {
@@ -137,11 +129,11 @@ public class Page {
     }
 
     @JsonIgnore
-    public BufferedImage getShapeImage(Shape r) {
+    public BufferedImage getShapeImage(Shape shape) {
         BufferedImage bufferedImage = null;
         if (this.getBufferedImage() != null) {
-//            bufferedImage = this.getBufferedImage().getSubimage(r.getX(), r.getX(), (r.getI() - r.getX()),
-//                    (r.getJ() - r.getY()));
+//            bufferedImage = this.getBufferedImage().getSubimage(shape.getX(), shape.getX(), (shape.getI() - shape.getX()),
+//                    (shape.getJ() - shape.getY()));
         }
         return bufferedImage;
     }
@@ -158,10 +150,10 @@ public class Page {
 
     @JsonIgnore
     public void loadBufferedImage() {
-        logger.debug("loadBufferedImage() file=" + this.filePath + "/" + this.fileName);
-        if (this.filePath != null && this.fileName != null) {
+        logger.debug("loadBufferedImage() file=" + this.file.path + "/" + this.file.name);
+        if (this.file.path != null && this.file.name != null) {
             try {
-                this.bufferedImage = ImageIO.read(new File(this.filePath + "/" + this.fileName));
+                this.file.bufferedImage = ImageIO.read(new java.io.File(this.file.path + "/" + this.file.name));
             } catch (IOException ex) {
                 logger.error(ex);
             }
@@ -170,10 +162,10 @@ public class Page {
 
     @JsonIgnore
     public BufferedImage getBufferedImage() {
-        if (this.bufferedImage == null) {
+        if (this.file.bufferedImage == null) {
             this.loadBufferedImage();
         }
-        return this.bufferedImage;
+        return this.file.bufferedImage;
     }
 
     @JsonIgnore

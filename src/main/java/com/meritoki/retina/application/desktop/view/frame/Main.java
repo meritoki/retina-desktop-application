@@ -22,6 +22,8 @@ import javax.swing.JFrame;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.meritoki.retina.application.desktop.controller.client.FileClient;
+import com.meritoki.retina.application.desktop.controller.client.ModelClient;
 import com.meritoki.retina.application.desktop.model.project.Project;
 import com.meritoki.retina.application.desktop.model.system.Command;
 import java.util.LinkedList;
@@ -38,6 +40,8 @@ public final class Main extends JFrame {
     private boolean test = true;
     private Properties properties = null;
     private Project project = null;
+    public ModelClient modelClient = new ModelClient();
+    public FileClient fileClient = new FileClient();
     public LinkedList<Command> undoStack = new LinkedList<>();
     public LinkedList<Command> redoStack = new LinkedList<>();
     public com.meritoki.retina.application.desktop.view.dialog.Image imageDialog = new com.meritoki.retina.application.desktop.view.dialog.Image(this, false);
@@ -79,7 +83,7 @@ public final class Main extends JFrame {
     public void setProject() {
         logger.debug("setProject()");
         this.imagePanel.setModel(this.project);
-        this.matrixPanel.setModel(this.project);
+        this.matrixPanel.setProject(this.project);
         this.imageDialog.setModel(this.project);
         this.shapeDialog.setModel(this.project);
         this.openDialog.setModel(this.project);

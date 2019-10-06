@@ -74,8 +74,8 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
         List<com.meritoki.retina.application.desktop.model.project.Page> pageList = this.model.getPageList();
         this.indexValueLabel.setText(pageIndex+"");
         if(page!=null){
-            this.nameValueLabel.setText(page.fileName);
-            this.pathValueLabel.setText(page.filePath);
+            this.nameValueLabel.setText(page.file.name);
+            this.pathValueLabel.setText(page.file.path);
             this.uuidValueLabel.setText(page.uuid);
         }else{
             this.nameValueLabel.setText("null");

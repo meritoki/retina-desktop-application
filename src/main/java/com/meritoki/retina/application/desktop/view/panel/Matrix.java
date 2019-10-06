@@ -57,9 +57,9 @@ public class Matrix extends JPanel implements MouseListener, MouseWheelListener,
         this.main = main;
     }
     
-    public void setModel(Project model) {
-        logger.debug("setModel("+model+")");
-        this.project = model;
+    public void setProject(Project project) {
+        logger.debug("setProject("+project+")");
+        this.project = project;
         this.setPreferredSize(this.getPreferredSize());
     }
     
@@ -96,7 +96,7 @@ public class Matrix extends JPanel implements MouseListener, MouseWheelListener,
                    
                     data = dataMatrix.get(i).get(j);
                     if(data != null){
-                        int unitType = data.unit.type;
+                        String unitType = data.unit.type;
                         switch(unitType) {
                             case Unit.DATA:{
                                 g2.setColor(Color.BLACK);

@@ -1,4 +1,4 @@
-package com.meritoki.retina.application.desktop.model.properties;
+package com.meritoki.retina.application.desktop.model.system;
 
 import java.io.FileInputStream;
 import java.io.IOException;

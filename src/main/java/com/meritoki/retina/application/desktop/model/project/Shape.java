@@ -31,17 +31,27 @@ import org.codehaus.jackson.map.ObjectWriter;
 public class Shape {
     
     static org.apache.logging.log4j.Logger logger = LogManager.getLogger(Shape.class.getName());
-    
+    @JsonIgnore
     public static final int TOP = 0;
+    @JsonIgnore
     public static final int BOTTOM = 1;
+    @JsonIgnore
     public static final int LEFT = 2;
+    @JsonIgnore
     public static final int RIGHT = 3;
+    @JsonIgnore
     public static final int TOP_LEFT = 4;
+    @JsonIgnore
     public static final int TOP_RIGHT = 5;
+    @JsonIgnore
     public static final int BOTTOM_LEFT = 6;
+    @JsonIgnore
     public static final int BOTTOM_RIGHT = 7;
+    @JsonIgnore
     public static final int RECTANGLE = 0;
+    @JsonIgnore
     public static final int CIRCLE = 1;
+    @JsonIgnore
     public static final int OVAL = 2;
     public int CLASSIFICATION = RECTANGLE;
     public Point startPoint = new Point();
@@ -49,7 +59,7 @@ public class Shape {
     public double addScale = 1;
     public double scale = 1;
     public String uuid = "";
-    private BufferedImage bufferedImage = null;
+//    private BufferedImage bufferedImage = null;
     //If null, then the data matrix will be populated with null.
     public Data data = new Data(); 
     public boolean removed = false;
@@ -74,10 +84,10 @@ public class Shape {
 			double width = Math.abs(startPoint.x - stopPoint.x);
 			double height = Math.abs(startPoint.y - stopPoint.y);
 			//When addScale is 1 this scale multiplier works correctly.
-			x *= scale;
-			y *= scale;
-			width *= scale;
-			height *= scale;
+			x *= this.scale;
+			y *= this.scale;
+			width *= this.scale;
+			height *= this.scale;
 			Rectangle2D.Double rect = new Rectangle2D.Double(x, y, width, height);
 			graphics2D.draw(rect);
     	}
@@ -89,7 +99,7 @@ public class Shape {
        if(page.getBufferedImage() != null){
            //bufferedImage = page.getBufferedImage().getSubimage(this.getX(), this.getX(), (this.getI()-this.getX()), (this.getJ()-this.getY()));
        }
-       this.bufferedImage = bufferedImage;
+//       this.bufferedImage = bufferedImage;
     }
     
     /**
@@ -139,8 +149,12 @@ public class Shape {
     
     @JsonIgnore
     public void scale(double scale) {
-//    	this.scale = this.round((scale - this.addScale)+1,6);
+    	logger.debug("scale("+scale+")");
     	this.scale = scale*(1/this.addScale);
+//    	this.startPoint.x*=this.scale;
+//    	this.startPoint.y*=this.scale;
+//    	this.stopPoint.y*=this.scale;
+//    	this.stopPoint.x*=this.scale;
     }
     
 	public double round(double value, int places) {
@@ -155,12 +169,19 @@ public class Shape {
     @JsonIgnore
     public boolean contains(Point point){
         boolean flag = false;
-        if(this.startPoint.x < this.stopPoint.x && this.startPoint.y < this.stopPoint.y) {
-            if(this.startPoint.x <= point.x && point.x <= this.stopPoint.x && this.startPoint.y <= point.y && point.y <= this.stopPoint.y){
+        Point startPoint = new Point();
+        Point stopPoint = new Point();
+        startPoint.x = this.startPoint.x*this.scale;
+        startPoint.y = this.startPoint.y*this.scale;
+        stopPoint.x = this.stopPoint.x*this.scale;
+        stopPoint.y = this.stopPoint.y*this.scale;
+        
+        if(startPoint.x < stopPoint.x && startPoint.y < stopPoint.y) {
+            if(startPoint.x <= point.x && point.x <= stopPoint.x && startPoint.y <= point.y && point.y <= stopPoint.y){
                 flag = true;
             }
-        } else if (this.stopPoint.x < this.startPoint.x && this.stopPoint.y < this.startPoint.y) {
-            if(this.stopPoint.x <= point.x && point.x <= this.startPoint.x && this.stopPoint.y <= point.y && point.y <= this.startPoint.y){
+        } else if (stopPoint.x < startPoint.x && stopPoint.y < startPoint.y) {
+            if(stopPoint.x <= point.x && point.x <= startPoint.x && stopPoint.y <= point.y && point.y <= startPoint.y){
                 flag = true;
             }
         }
@@ -177,31 +198,71 @@ public class Shape {
     
     @JsonIgnore
     public int intersect(Point point){
-        int flag = -1;
+    	logger.info("intersect("+point+")");
+        int selection = -1;
+        Point startPoint = new Point();
+        Point stopPoint = new Point();
+        startPoint.x = this.startPoint.x*this.scale;
+        startPoint.y = this.startPoint.y*this.scale;
+        stopPoint.x = this.stopPoint.x*this.scale;
+        stopPoint.y = this.stopPoint.y*this.scale;
         //introduce the idea of a buffer where a user does not have to press exactly on line
         //TOP
-        if(point.y == this.startPoint.y && point.x > this.startPoint.x && point.x < this.stopPoint.x) {
-        	flag = TOP;
-        } else if(point.y == this.stopPoint.y && point.x > this.startPoint.x && point.x < this.stopPoint.x) {
-        	flag = BOTTOM;
-        } else if(point.x == this.startPoint.x && point.y > this.startPoint.y && point.y < this.stopPoint.y) {
-        	flag = LEFT;
-        } else if(point.x == this.stopPoint.x && point.y > this.startPoint.y && point.y < this.stopPoint.y) {
-        	flag = RIGHT;
-        } else if(point.x == this.startPoint.x && point.y == this.startPoint.y) {
-        	flag = TOP_LEFT;
-        } else if(point.x == this.stopPoint.x && point.y == this.stopPoint.y) {
-        	flag = BOTTOM_RIGHT;
-        } else if(point.x == this.stopPoint.x && point.y == this.startPoint.y) {
-        	flag = TOP_RIGHT;
-        } else if(point.x == this.startPoint.x && point.y == this.stopPoint.y) {
-        	flag = BOTTOM_LEFT;
+        int margin = 20;
+        if(point.x == startPoint.x && point.y == startPoint.y) {
+        	//Works
+        	selection = TOP_LEFT;
+        } else if(point.x > (stopPoint.x-margin) && point.x<(stopPoint.x+margin) && point.y > (stopPoint.y-margin) && point.y < (stopPoint.y+margin)) {//(point.x == stopPoint.x && point.y == stopPoint.y) {
+        	//Works
+        	selection = BOTTOM_RIGHT;
+        } else if(point.x > (stopPoint.x-margin) && point.x < (stopPoint.x+margin) && point.y > (startPoint.y-margin) && point.y < (startPoint.y + margin)) {
+        	//Works
+        	selection = TOP_RIGHT;
+        } else if(point.x > (startPoint.x-margin) && point.x < (startPoint.x+margin) && point.y > (stopPoint.y - margin) && point.y < (stopPoint.y + margin)) {
+        	//Works
+        	selection = BOTTOM_LEFT;
+        } else if(point.y > (startPoint.y-margin) && point.y < (startPoint.y+margin) && point.x > startPoint.x && point.x < stopPoint.x) {
+        	//Works
+        	selection = TOP;
+        } else if(point.y > (startPoint.y-margin) && point.y < (startPoint.y+margin) && point.x > startPoint.x && point.x < stopPoint.x) {
+        	//Not working
+        	selection = BOTTOM;
+        } else if(point.x > (startPoint.x-margin) && point.x < (startPoint.x+margin) && point.y > startPoint.y && point.y < stopPoint.y) {
+        	//Works
+        	selection = LEFT;
+        } else if(point.x > (startPoint.x-margin) && point.x < (startPoint.x+margin) && point.y > startPoint.y && point.y < stopPoint.y) {
+        	//Not working
+        	selection = RIGHT;
         }
-        return flag;
+        
+//        if(point.y == startPoint.y && point.x > startPoint.x && point.x < stopPoint.x) {
+//        	selection = TOP;
+//        } else if(point.y == stopPoint.y && point.x > startPoint.x && point.x < stopPoint.x) {
+//        	selection = BOTTOM;
+//        } else if(point.x == startPoint.x && point.y > startPoint.y && point.y < stopPoint.y) {
+//        	selection = LEFT;
+//        } else if(point.x == stopPoint.x && point.y > startPoint.y && point.y < stopPoint.y) {
+//        	selection = RIGHT;
+//        } else if(point.x == startPoint.x && point.y == startPoint.y) {
+//        	selection = TOP_LEFT;
+//        } else if(point.x == stopPoint.x && point.y == stopPoint.y) {
+//        	selection = BOTTOM_RIGHT;
+//        } else if(point.x == stopPoint.x && point.y == startPoint.y) {
+//        	selection = TOP_RIGHT;
+//        } else if(point.x == startPoint.x && point.y == stopPoint.y) {
+//        	selection = BOTTOM_LEFT;
+//        }
+        return selection;
     }
     
     public void resize(Point point, int selection) {
     	logger.info("resize("+point+", "+selection+")");
+    	Point startPoint = new Point();
+        Point stopPoint = new Point();
+        startPoint.x = this.startPoint.x*this.scale;
+        startPoint.y = this.startPoint.y*this.scale;
+        stopPoint.x = this.stopPoint.x*this.scale;
+        stopPoint.y = this.stopPoint.y*this.scale;
     	switch(selection) {
 	    	case TOP:{
 	    		this.startPoint.y = point.y;

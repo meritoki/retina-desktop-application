@@ -107,27 +107,27 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         List<Text> textList = (data != null) ? data.getTextList() : null;
         this.initTextValueComboBox(textList);
         List<String> unitTypeList = new ArrayList<>();
-        unitTypeList.add("Data");
-        unitTypeList.add("Time");
-        unitTypeList.add("Space");
-        unitTypeList.add("Energy");
+        unitTypeList.add("data");
+        unitTypeList.add("time");
+        unitTypeList.add("space");
+        unitTypeList.add("energy");
         this.initUnitTypeComboBox(unitTypeList);
         if (data != null) {
-            this.unitTypeComboBox.setSelectedIndex(data.unit.type);
+            this.unitTypeComboBox.setSelectedItem(data.unit.type);
             switch (data.unit.type) {
-                case 0: {
+                case "data": {
                     this.initUnitValueComboBox(this.emptyList);
                     break;
                 }
-                case 1: {
+                case "time": {
                     this.initUnitValueComboBox(this.timeList);
                     break;
                 }
-                case 2: {
+                case "space": {
                     this.initUnitValueComboBox(this.spaceList);
                     break;
                 }
-                case 3: {
+                case "energy": {
                     this.initUnitValueComboBox(this.energyList);
                     break;
                 }
