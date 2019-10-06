@@ -9,9 +9,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
+
 import javax.swing.JPanel;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -41,7 +44,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 	private Point releasedPoint = new Point();
 	private Shape shape = null;
 	private Main main = null;
-	private float scale = 1;
+	private double scale = 1;
 
 	public Image() {
 		super();
@@ -66,8 +69,8 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		Dimension size = new Dimension(1028, 512);
 		if (this.project != null && this.project.getPage() != null
 				&& this.project.getPage().getBufferedImage() != null) {
-			size.width = Math.round(this.project.getPage().getBufferedImage().getWidth() * scale);
-			size.height = Math.round(this.project.getPage().getBufferedImage().getHeight() * scale);
+			size.width = (int) Math.round(this.project.getPage().getBufferedImage().getWidth() * scale);
+			size.height = (int) Math.round(this.project.getPage().getBufferedImage().getHeight() * scale);
 		}
 		return size;
 	}
@@ -82,17 +85,18 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		AffineTransform affineTransform = new AffineTransform();
 		affineTransform.scale(this.scale, this.scale);
 		if (bufferedImage != null) {
-			graphics2D.drawImage(bufferedImage, affineTransform, this);
-			graphics2D.dispose();
-		}
+		graphics2D.drawImage(bufferedImage, affineTransform, this);
+//		graphics2D.dispose();
+	}
 		List<Shape> shapeList = (page != null) ? page.getShapeList() : null;
 		if (shapeList != null) {
 			for (Shape s : shapeList) {
+				logger.info("painComponent(...) shape="+s);
 				if (!s.removed) {
 					if (page.getShape() != null && s.uuid.equals(page.getShape().uuid)) {
-						g.setColor(Color.RED);
+						graphics2D.setColor(Color.RED);
 					} else {
-						g.setColor(Color.BLUE);
+						graphics2D.setColor(Color.BLUE);
 					}
 					if (s.startPoint != null && s.stopPoint != null) {
 						int x = s.startPoint.x;
@@ -103,15 +107,19 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 						int py = Math.min(y, j);
 						int pw = Math.abs(x - i);
 						int ph = Math.abs(y - j);
+						//Here scale is applied and it works, do not touch
 						px *= s.scale;
 						py *= s.scale;
 						pw *= s.scale;
 						ph *= s.scale;
-						g.drawRect(px, py, pw, ph);
+//						graphics2D.drawRect(px, py, pw, ph);
+						Rectangle2D.Double rect = new Rectangle2D.Double(px, py, pw, ph);
+						graphics2D.draw(rect);
 					}
 				}
 			}
 		}
+
 	}
 
 	/*
@@ -210,6 +218,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				} else {
 					logger.info("Adding...");
 					this.shape = new Shape();
+					this.shape.addScale = this.round(this.scale,6);
 					this.shape.startPoint = this.pressedPoint;
 					this.shape.stopPoint = this.releasedPoint;
 					this.project.getPage().getShapeList().add(this.shape);
@@ -248,13 +257,23 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		double delta = 0.05f * e.getPreciseWheelRotation();
-		scale += delta;
-		logger.info("mouseWheelMoved(...) scale = "+scale);
+		this.scale += delta;
+		this.scale = this.round(this.scale, 6);
+		logger.info("mouseWheelMoved(...) scale = "+this.scale);
 		for(Shape shape:this.project.getPage().getShapeList()) {
-			shape.scale = scale;
+			shape.scale(scale);
 		}
 		revalidate();
 		repaint();
+	}
+	
+	public double round(double value, int places) {
+	    if (places < 0) throw new IllegalArgumentException();
+
+	    long factor = (long) Math.pow(10, places);
+	    value = value * factor;
+	    long tmp = Math.round(value);
+	    return (double) tmp / factor;
 	}
 
 	@Override

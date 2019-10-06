@@ -31,7 +31,7 @@ public class Desktop {
         Configuration configuration = new Configuration();
         Properties properties = configuration.open("./desktop.properties");
         final Main main = new Main(properties);
-        final Splash splash = new Splash("/splash.png", main, 4000);
+//        final Splash splash = new Splash("/splash.png", main, 4000);
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {

@@ -44,7 +44,8 @@ public class Shape {
     public int CLASSIFICATION = RECTANGLE;
     public Point startPoint = new Point();
     public Point stopPoint = new Point();
-    public float scale = 1;
+    public double addScale = 1;
+    public double scale = 1;
     public String uuid = "";
     private BufferedImage bufferedImage = null;
     //If null, then the data matrix will be populated with null.
@@ -116,6 +117,20 @@ public class Shape {
     public int getCenterY(){
         return (this.startPoint.y+this.stopPoint.y)/2;
     }
+    
+    @JsonIgnore
+    public void scale(double scale) {
+    	this.scale = this.round((scale - this.addScale)+1,6);
+    }
+    
+	public double round(double value, int places) {
+	    if (places < 0) throw new IllegalArgumentException();
+
+	    long factor = (long) Math.pow(10, places);
+	    value = value * factor;
+	    long tmp = Math.round(value);
+	    return (double) tmp / factor;
+	}
     
     @JsonIgnore
     public boolean contains(Point point){
@@ -226,7 +241,7 @@ public class Shape {
                 Logger.getLogger(Shape.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            string = this.uuid;
+            string = "uuid="+this.uuid+", scale="+this.scale;
         }
         return string;
     }
