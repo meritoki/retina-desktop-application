@@ -39,7 +39,7 @@ import org.codehaus.jackson.map.ObjectWriter;
 public class Page {
 	@JsonIgnore
     static Logger logger = LogManager.getLogger(Page.class.getName());
-    public File file;
+    public File file = new File();
     public String uuid;
     private List<Shape> shapeList = new ArrayList<>();
     @JsonIgnore

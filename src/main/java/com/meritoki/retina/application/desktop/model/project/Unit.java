@@ -24,6 +24,6 @@ public class Unit {
     public static final String TIME = "time";
     public static final String SPACE = "space";
     public static final String ENERGY = "energy";
-    public String type;
+    public String type = DATA;
     public String value;
 }
