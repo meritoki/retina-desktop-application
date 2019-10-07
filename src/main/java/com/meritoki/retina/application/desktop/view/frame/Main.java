@@ -50,7 +50,7 @@ public final class Main extends JFrame {
     public com.meritoki.retina.application.desktop.view.dialog.New newDialog = new com.meritoki.retina.application.desktop.view.dialog.New(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.Open openDialog = new com.meritoki.retina.application.desktop.view.dialog.Open(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.Save saveDialog = new com.meritoki.retina.application.desktop.view.dialog.Save(this, false);
-    public com.meritoki.retina.application.desktop.view.dialog.output.Zooniverse exportZooniverseDialog = new com.meritoki.retina.application.desktop.view.dialog.output.Zooniverse(this, false);
+    public com.meritoki.retina.application.desktop.view.dialog.zooniverse.Export exportZooniverseDialog = new com.meritoki.retina.application.desktop.view.dialog.zooniverse.Export(this, false);
 
     public Main(Properties properties) {
         initComponents();

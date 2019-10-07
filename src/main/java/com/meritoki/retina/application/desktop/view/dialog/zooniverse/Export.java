@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meritoki.retina.application.desktop.view.dialog.output;
+package com.meritoki.retina.application.desktop.view.dialog.zooniverse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,14 +27,14 @@ import com.meritoki.retina.application.desktop.model.provider.zooniverse.Workflo
  *
  * @author osvaldo.rodriguez
  */
-public class Zooniverse extends javax.swing.JDialog {
+public class Export extends javax.swing.JDialog {
 
     public Project model;
 
     /**
      * Creates new form Zooniverse
      */
-    public Zooniverse(java.awt.Frame parent, boolean modal) {
+    public Export(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }

@@ -30,7 +30,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meritoki.retina.application.desktop.model.client.Status;
+import com.meritoki.retina.application.desktop.model.system.Status;
 
 public class ModelClient {
 	

@@ -41,7 +41,7 @@ public class Data {
     //use index instead of keep text JSON twice
     public int index = 0;
     public List<Text> textList = new ArrayList<>();
-    public Map<String,Integer> textMap = new HashMap<>();
+//    public Map<String,Integer> textMap = new HashMap<>();
     
     public Data(){
         UUID uuid = UUID.randomUUID();
@@ -53,24 +53,29 @@ public class Data {
     }
     
     @JsonProperty
-    public void setText(Text text){
-        logger.debug("setText("+text.value+")");
-        this.text = text;
-        this.addTextMap(this.text);
+    public void addText(Text text){
+        logger.debug("addText("+text.value+")");
+//        this.text = text;
+//        this.addTextMap(this.text);
+        this.textList.add(text);
     }
     
-    @JsonIgnore
-    public void addTextMap(Text text){
-        int count = (this.textMap.get(text.value)!=null)?this.textMap.get(text.value):0;
-        ++count;
-        this.textMap.put(text.value, count);
+    public Map<String, Integer> getTextMap() {
+    	int count = 0;
+    	Map<String,Integer> textMap = new HashMap<>();
+    	for(Text text: this.textList) {
+          count = (textMap.get(text.value)!=null)?textMap.get(text.value):0;
+          ++count;
+          textMap.put(text.value, count);
+    	}
+    	return textMap;
     }
     
     @JsonIgnore
     public Text getDefaultText(){
         int max = 0;
         Text text = new Text();
-        for(Map.Entry<String, Integer> entry : this.textMap.entrySet()){
+        for(Map.Entry<String, Integer> entry : this.getTextMap().entrySet()){
             if(entry.getValue().intValue() > max){
                 text = new Text();
                 text.value = entry.getKey();
@@ -81,14 +86,14 @@ public class Data {
     
     @JsonProperty
     public List<Text> getTextList(){
-        List<Text> textList = new ArrayList<Text>();
-        Text text = null;
-        for(Map.Entry<String, Integer> entry : this.textMap.entrySet()){
-            text = new Text();
-            text.value = entry.getKey();
-            textList.add(text);
-        }
-        return textList;
+//        List<Text> textList = new ArrayList<Text>();
+//        Text text = null;
+//        for(Map.Entry<String, Integer> entry : this.textMap.entrySet()){
+//            text = new Text();
+//            text.value = entry.getKey();
+//            textList.add(text);
+//        }
+        return this.textList;
     }
     
     @JsonProperty

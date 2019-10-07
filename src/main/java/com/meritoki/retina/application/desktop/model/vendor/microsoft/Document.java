@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 osvaldo.rodriguez.
+ * Copyright 2019 jorodriguez.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@ package com.meritoki.retina.application.desktop.model.vendor.microsoft;
 
 /**
  *
- * @author osvaldo.rodriguez
+ * @author jorodriguez
  */
 public class Document {
-    public String fileName;
+    
 }

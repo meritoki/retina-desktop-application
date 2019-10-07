@@ -504,7 +504,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         String value = this.textInputTextField.getText().trim();
         Text text = new Text();
         text.value = value;
-        this.project.getPage().getShape().data.setText(text);
+        this.project.getPage().getShape().data.addText(text);
         this.setModel(this.project);
     }//GEN-LAST:event_inputAddButtonActionPerformed
 

@@ -38,13 +38,11 @@ import org.codehaus.jackson.map.SerializationConfig;
 
 import com.meritoki.retina.application.desktop.controller.client.ModelClient;
 
-/**
- *
- * @author osvaldo.rodriguez
- */
 public class Project implements Serializable {
     
-    public static void main(String[] args) throws IOException{
+	private static final long serialVersionUID = 1L;
+
+	public static void main(String[] args) throws IOException{
         Project project = new Project();
         File file = new File("./data/model.json");
         project.initTest();
