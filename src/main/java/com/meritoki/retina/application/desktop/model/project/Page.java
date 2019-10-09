@@ -248,6 +248,7 @@ public class Page {
         return dataMatrix;
     }
 
+    @JsonIgnore
     public List<Data> getDataList() {
         logger.debug("getDataList()");
         List<Data> dataList = null;

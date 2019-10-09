@@ -85,7 +85,7 @@ public final class Main extends JFrame {
         this.imagePanel.setModel(this.project);
         this.matrixPanel.setProject(this.project);
         this.imageDialog.setModel(this.project);
-        this.shapeDialog.setModel(this.project);
+        this.shapeDialog.setProject(this.project);
         this.openDialog.setModel(this.project);
         this.saveDialog.setModel(this.project);
         this.pageDialog.setModel(this.project);
@@ -99,7 +99,7 @@ public final class Main extends JFrame {
         this.imagePanel.setFocusable(true);
         this.imagePanel.requestFocusInWindow();
 //        this.imageDialog.setVisible(true);
-//        this.shapeDialog.setVisible(true);
+        this.shapeDialog.setVisible(true);
     }
 
     /**

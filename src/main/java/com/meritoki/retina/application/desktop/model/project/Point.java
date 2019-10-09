@@ -5,12 +5,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
 public class Point {
-	
+	@JsonProperty
 	public double x = 0;
+	@JsonProperty
 	public double y = 0;
 	
     @JsonIgnore

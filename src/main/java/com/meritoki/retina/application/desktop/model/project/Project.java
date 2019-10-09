@@ -44,13 +44,14 @@ public class Project implements Serializable {
 
 	public static void main(String[] args) throws IOException{
         Project project = new Project();
-        File file = new File("./data/model.json");
-        project.initTest();
+//        File file = new File("~/test.json");
+//        project.initTest();
         ObjectMapper mapper = new ObjectMapper();
-        mapper.setVisibility(JsonMethod.FIELD, Visibility.ANY);
-        mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
-        mapper.writeValue(file, project);
-        project = mapper.readValue(file, Project.class);
+        project = project.open(new File("/home/jorodriguez/test.json"));
+//        mapper.setVisibility(JsonMethod.FIELD, Visibility.ANY);
+//        mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
+//        mapper.writeValue(file, project);
+//        project = mapper.readValue(file, Project.class);
         String jsonInString = mapper.writeValueAsString(project);
         System.out.println(jsonInString);
         ModelClient modelClient = new ModelClient();
@@ -59,10 +60,18 @@ public class Project implements Serializable {
     }
     
     static Logger logger = LogManager.getLogger(Project.class.getName());
+    @JsonProperty
     public String uuid = "";
+    @JsonProperty
     public List<Page> pageList = new ArrayList<>();
+    @JsonIgnore
     public int index = 0;
+    @JsonProperty
     public List<Layout> layoutList = new ArrayList<>();
+    @JsonIgnore
+    public boolean rectangle = true;
+    @JsonIgnore
+    public boolean ellipse = true;
     
     public Project(){ 
         this.uuid = UUID.randomUUID().toString();
@@ -138,13 +147,13 @@ public class Project implements Serializable {
         return model;
     }
     
-    @JsonProperty
+    @JsonIgnore
     public void setPageList(List<Page> pageList){
         logger.info("setPageList("+pageList+")");
         this.pageList = pageList;
     }
     
-    @JsonProperty
+    @JsonIgnore
     public List<Page> getPageList(){
         return this.pageList;
     }
@@ -176,7 +185,7 @@ public class Project implements Serializable {
         }
     }
     
-    @JsonProperty
+    @JsonIgnore
     public Page getPage() {
         return this.pageList.get(index);
     }

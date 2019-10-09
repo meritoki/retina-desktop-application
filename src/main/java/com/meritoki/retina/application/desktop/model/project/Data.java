@@ -29,25 +29,18 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
-/**
- *
- * @author osvaldo.rodriguez
- */
 public class Data {
     static Logger logger = LogManager.getLogger(Data.class.getName());
     public String uuid;
     public Unit unit = new Unit();
     public Text text = new Text();
-    //use index instead of keep text JSON twice
-    public int index = 0;
     public List<Text> textList = new ArrayList<>();
-//    public Map<String,Integer> textMap = new HashMap<>();
     
     public Data(){
-        UUID uuid = UUID.randomUUID();
-        this.uuid = uuid.toString();
+        this.uuid = UUID.randomUUID().toString();
     }
     
+    @JsonIgnore
     public void setUUID(String uuid){
         this.uuid = uuid;
     }
@@ -55,11 +48,15 @@ public class Data {
     @JsonProperty
     public void addText(Text text){
         logger.debug("addText("+text.value+")");
-//        this.text = text;
-//        this.addTextMap(this.text);
         this.textList.add(text);
     }
     
+    /**
+     * Function creates a Map from the textList that shows the frequency that a text value
+     * has been input by a user
+     * @return
+     */
+    @JsonIgnore
     public Map<String, Integer> getTextMap() {
     	int count = 0;
     	Map<String,Integer> textMap = new HashMap<>();
@@ -71,12 +68,19 @@ public class Data {
     	return textMap;
     }
     
+    /**
+     * Function returns the text value with the highest frequency of input
+     * @return
+     */
     @JsonIgnore
     public Text getDefaultText(){
         int max = 0;
         Text text = new Text();
+        int value = 0;
         for(Map.Entry<String, Integer> entry : this.getTextMap().entrySet()){
-            if(entry.getValue().intValue() > max){
+        	value = entry.getValue().intValue();
+            if(value > max){
+            	max = value;
                 text = new Text();
                 text.value = entry.getKey();
             }
@@ -86,14 +90,14 @@ public class Data {
     
     @JsonProperty
     public List<Text> getTextList(){
-//        List<Text> textList = new ArrayList<Text>();
-//        Text text = null;
-//        for(Map.Entry<String, Integer> entry : this.textMap.entrySet()){
-//            text = new Text();
-//            text.value = entry.getKey();
-//            textList.add(text);
-//        }
-        return this.textList;
+        List<Text> textList = new ArrayList<>();
+        Text text = null;
+        for(Map.Entry<String, Integer> entry : this.getTextMap().entrySet()){
+            text = new Text();
+            text.value = entry.getKey();
+            textList.add(text);
+        }
+        return textList;
     }
     
     @JsonProperty

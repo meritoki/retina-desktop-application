@@ -16,9 +16,12 @@
 package com.meritoki.retina.application.desktop.model.project;
 
 import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,29 +51,35 @@ public class Shape {
     @JsonIgnore
     public static final int BOTTOM_RIGHT = 7;
     @JsonIgnore
-    public static final int RECTANGLE = 0;
+    public static final String RECTANGLE = "rectangle";
     @JsonIgnore
-    public static final int CIRCLE = 1;
-    @JsonIgnore
-    public static final int OVAL = 2;
-    public int CLASSIFICATION = RECTANGLE;
+    public static final String ELLIPSE = "ellipse";
+    @JsonProperty
+    public String classification = null;
+    @JsonProperty
+    List<Point> pointList = new ArrayList<>(2);
+    @JsonProperty
     public Point startPoint = new Point();
+    @JsonProperty
     public Point stopPoint = new Point();
+    @JsonProperty
     public double addScale = 1;
+    @JsonProperty
     public double scale = 1;
-    public String uuid = "";
+    @JsonProperty
+    public String uuid = null;
 //    private BufferedImage bufferedImage = null;
     //If null, then the data matrix will be populated with null.
     public Data data = new Data(); 
     public boolean removed = false;
     
     public Shape(){
-         UUID uuid = UUID.randomUUID();
-         this.uuid = uuid.toString();
+         this.uuid = UUID.randomUUID().toString();
     }
     
     public Shape(Shape shape) {
     	this.uuid = shape.uuid;
+    	this.pointList = shape.pointList;
     	this.startPoint = shape.startPoint;
     	this.stopPoint = shape.stopPoint;
     	this.data = shape.data;
@@ -88,8 +97,13 @@ public class Shape {
 			y *= this.scale;
 			width *= this.scale;
 			height *= this.scale;
-			Rectangle2D.Double rect = new Rectangle2D.Double(x, y, width, height);
-			graphics2D.draw(rect);
+			if(this.classification.equals(ELLIPSE)) {
+				Ellipse2D.Double ellipse = new Ellipse2D.Double(x, y, width, height);
+				graphics2D.draw(ellipse);
+			} else if(this.classification.equals(RECTANGLE)) {
+				Rectangle2D.Double rectangle = new Rectangle2D.Double(x, y, width, height);
+				graphics2D.draw(rectangle);
+			}
     	}
     }
 

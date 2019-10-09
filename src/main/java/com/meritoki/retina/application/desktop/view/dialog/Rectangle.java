@@ -64,8 +64,8 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         this.rectangleList.addKeyListener(this);
     }
 
-    public void setModel(Project model) {
-        logger.debug("setModel(" + model + ")");
+    public void setProject(Project model) {
+        logger.debug("setProject(" + model + ")");
         this.project = model;
         this.init();
     }
@@ -89,11 +89,11 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
 
     public void initList() {
         logger.debug("initList()");
-        Page image = this.project.getPage();
-        int index = (image != null) ? image.getIndex() : 0;
-        Shape rectangle = (image != null) ? image.getShape() : null;
-        List<Shape> shapeList = (image != null) ? image.getShapeList() : null;
-        Data data = (rectangle != null) ? rectangle.data : null;
+        Page page = this.project.getPage();
+        int index = (page != null) ? page.getIndex() : 0;
+        Shape shape = (page != null) ? page.getShape() : null;
+        List<Shape> shapeList = (page != null) ? page.getShapeList() : null;
+        Data data = (shape != null) ? shape.data : null;
         List<Text> textList = (data != null) ? data.getTextList() : null;
         this.initRectangleList(shapeList);
         this.setRectangleListSelectedIndex(index);
@@ -137,6 +137,10 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         }
     }
 
+    /**
+     * 
+     * @param textList
+     */
     public void initTextValueComboBox(List<Text> textList) {
         String[] array = new String[0];
         if (textList != null) {
@@ -146,6 +150,15 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
             }
         }
         this.textValueComboBox.setModel(new DefaultComboBoxModel(array));
+        boolean flag = this.textValueDefaultCheckBox.isSelected();
+        if (flag) {
+        	Page page = this.project.getPage();
+            Shape shape = (page != null)?page.getShape():null;
+            Data data = (shape != null)?shape.getData():null;
+            if(data != null) {
+            	this.textValueComboBox.setSelectedItem(data.getDefaultText().value);
+            }
+        }
     }
 
     public void initUnitTypeComboBox(List<String> unitTypeList) {
@@ -315,6 +328,8 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         deleteRectangleButton = new javax.swing.JButton();
         applyUnitButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        rectangleButton = new javax.swing.JButton();
+        ellipseButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -385,6 +400,20 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
 
         jLabel1.setText("List");
 
+        rectangleButton.setText("Rectangle");
+        rectangleButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rectangleButtonActionPerformed(evt);
+            }
+        });
+
+        ellipseButton.setText("Ellipse");
+        ellipseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ellipseButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -437,7 +466,11 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(noInputCheckBox)
                                     .addComponent(textValueDefaultCheckBox)))
-                            .addComponent(jLabel1))
+                            .addComponent(jLabel1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(rectangleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ellipseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -445,6 +478,10 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rectangleButton)
+                    .addComponent(ellipseButton))
+                .addGap(19, 19, 19)
                 .addComponent(textLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -475,7 +512,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
                 .addComponent(unitRectangleSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(deleteRectangleButton, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(rectangleScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -504,14 +541,26 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         String value = this.textInputTextField.getText().trim();
         Text text = new Text();
         text.value = value;
-        this.project.getPage().getShape().data.addText(text);
-        this.setModel(this.project);
+        Page page = this.project.getPage();
+        Shape shape = (page != null)?page.getShape():null;
+        Data data = (shape != null)?shape.getData():null;
+        if(data != null) {
+        	data.addText(text);
+        	System.out.println(data.getTextMap());
+        	this.setProject(this.project);
+        }
+        
     }//GEN-LAST:event_inputAddButtonActionPerformed
 
     private void textValueDefaultCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textValueDefaultCheckBoxActionPerformed
         boolean flag = this.textValueDefaultCheckBox.isSelected();
         if (flag) {
-            this.textValueComboBox.setSelectedItem(this.project.getPage().getShape().data.getDefaultText().value);
+        	Page page = this.project.getPage();
+            Shape shape = (page != null)?page.getShape():null;
+            Data data = (shape != null)?shape.getData():null;
+            if(data != null) {
+            	this.textValueComboBox.setSelectedItem(data.getDefaultText().value);
+            }
         }
     }//GEN-LAST:event_textValueDefaultCheckBoxActionPerformed
 
@@ -528,9 +577,10 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     }//GEN-LAST:event_deleteRectangleButtonActionPerformed
 
     private void applyUnitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyUnitButtonActionPerformed
-        Page image = (this.project != null) ? this.project.getPage() : null;
-        Shape rectangle = (image != null) ? image.getShape() : null;
-        Data data = (rectangle != null) ? rectangle.getData() : null;
+        logger.info("applyUnitButtonActionPerformed(...)");
+    	Page page = (this.project != null) ? this.project.getPage() : null;
+        Shape shape = (page != null) ? page.getShape() : null;
+        Data data = (shape != null) ? shape.getData() : null;
         if (data != null) {
             String unitType = (String) this.unitTypeComboBox.getSelectedItem();
             switch (unitType) {
@@ -552,8 +602,19 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
                 }
             }
             data.unit.value = (String) this.unitValueComboBox.getSelectedItem();
+            System.out.println(data.unit.value);
         }
     }//GEN-LAST:event_applyUnitButtonActionPerformed
+
+    private void rectangleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rectangleButtonActionPerformed
+        this.project.rectangle = true;
+        this.project.ellipse = false;
+    }//GEN-LAST:event_rectangleButtonActionPerformed
+
+    private void ellipseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ellipseButtonActionPerformed
+        this.project.rectangle = false;
+        this.project.ellipse = true;
+    }//GEN-LAST:event_ellipseButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -603,10 +664,12 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton applyUnitButton;
     private javax.swing.JButton deleteRectangleButton;
+    private javax.swing.JButton ellipseButton;
     private javax.swing.JButton inputAddButton;
     private javax.swing.JLabel inputLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JCheckBox noInputCheckBox;
+    private javax.swing.JButton rectangleButton;
     private javax.swing.JList rectangleList;
     private javax.swing.JScrollPane rectangleScrollPane;
     private javax.swing.JTextField textInputTextField;

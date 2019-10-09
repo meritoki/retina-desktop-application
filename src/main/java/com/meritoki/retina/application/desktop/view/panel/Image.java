@@ -93,6 +93,13 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				} else {
 					graphics2D.setColor(Color.BLUE);
 				}
+				if(s.classification == null) {
+					if(this.project.rectangle) {
+						s.classification = Shape.RECTANGLE;
+					} else if(this.project.ellipse) {
+						s.classification = Shape.ELLIPSE;
+					}
+				}
 				if (s.startPoint != null && s.stopPoint != null) {
 					s.draw(graphics2D);
 				}
@@ -181,11 +188,13 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		} else {
 			int selection = this.shapeIntersects(this.pressedPoint);
 			if (selection > -1) {
-				logger.info("Resizing...");
-				this.shape.resize(this.releasedPoint, selection);
-				// use a copy constructor to remake shape then rezize the copy,
-				// save the old one and add a reference to its new id in the
-				// operation as id.
+				if(this.shape != null) {
+					logger.info("Resizing...");
+					this.shape.resize(this.releasedPoint, selection);
+					// use a copy constructor to remake shape then rezize the copy,
+					// save the old one and add a reference to its new id in the
+					// operation as id.
+				}
 			} else {
 				if (this.shape != null) {
 					logger.info("Moving...");
@@ -213,7 +222,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				}
 			}
 		}
-		this.main.shapeDialog.setModel(this.project);
+		this.main.shapeDialog.setProject(this.project);
 		this.main.pageDialog.setModel(this.project);
 		repaint();
 	}
