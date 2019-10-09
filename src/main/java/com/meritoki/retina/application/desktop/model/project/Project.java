@@ -37,6 +37,8 @@ import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.map.SerializationConfig;
 
 import com.meritoki.retina.application.desktop.controller.client.ModelClient;
+import com.meritoki.retina.application.desktop.model.provider.Provider;
+import com.meritoki.retina.application.desktop.model.vendor.Vendor;
 
 public class Project implements Serializable {
     
@@ -72,6 +74,10 @@ public class Project implements Serializable {
     public boolean rectangle = true;
     @JsonIgnore
     public boolean ellipse = true;
+    @JsonIgnore
+    public List<Provider> providerList = new ArrayList<>();
+    @JsonIgnore
+    public List<Vendor> vendorList = new ArrayList<>();
     
     public Project(){ 
         this.uuid = UUID.randomUUID().toString();
