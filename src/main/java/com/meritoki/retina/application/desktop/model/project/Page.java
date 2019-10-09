@@ -330,7 +330,7 @@ public class Page {
     public List<Shape> sortColumnList(List<Shape> shapeList) {
         for (int i = 0; i < shapeList.size(); i++) {
             for (int j = shapeList.size() - 1; j > i; j--) {
-                if (shapeList.get(i).startPoint.x > shapeList.get(j).startPoint.x) {
+                if (shapeList.get(i).pointList.get(0).x > shapeList.get(j).pointList.get(0).x) {
                     Shape tmp = shapeList.get(i);
                     shapeList.set(i, shapeList.get(j));
                     shapeList.set(j, tmp);

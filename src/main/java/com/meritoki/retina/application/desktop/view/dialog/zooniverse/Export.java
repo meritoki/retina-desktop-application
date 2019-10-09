@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 
-import com.meritoki.retina.application.desktop.model.Credential;
 import com.meritoki.retina.application.desktop.model.project.Project;
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.Workflow;
 

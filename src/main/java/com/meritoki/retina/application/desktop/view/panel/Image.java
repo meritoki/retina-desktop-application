@@ -100,7 +100,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 						s.classification = Shape.ELLIPSE;
 					}
 				}
-				if (s.startPoint != null && s.stopPoint != null) {
+				if (s.pointList.size() > 1) {
 					s.draw(graphics2D);
 				}
 			}
@@ -207,8 +207,9 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 					logger.info("Adding...");
 					this.shape = new Shape();
 					this.shape.addScale = this.round(this.scale, 6);
-					this.shape.startPoint = this.pressedPoint;
-					this.shape.stopPoint = this.releasedPoint;
+					this.shape.pointList.add(this.pressedPoint);
+					this.shape.pointList.add(this.releasedPoint);
+					this.shape.sortPointList();
 					this.project.getPage().getShapeList().add(this.shape);
 					this.project.getPage().setShape(this.shape.uuid);
 					Command command = new Command();
