@@ -57,11 +57,7 @@ public class Shape {
     @JsonProperty
     public String classification = null;
     @JsonProperty
-    List<Point> pointList = new ArrayList<>(2);
-    @JsonProperty
-    public Point startPoint = new Point();
-    @JsonProperty
-    public Point stopPoint = new Point();
+    public List<Point> pointList = new ArrayList<>(2);
     @JsonProperty
     public double addScale = 1;
     @JsonProperty
@@ -80,18 +76,16 @@ public class Shape {
     public Shape(Shape shape) {
     	this.uuid = shape.uuid;
     	this.pointList = shape.pointList;
-    	this.startPoint = shape.startPoint;
-    	this.stopPoint = shape.stopPoint;
     	this.data = shape.data;
     }
     
     @JsonIgnore
     public void draw(Graphics2D graphics2D) {
     	if(!removed) {
-			double x = Math.min(startPoint.x, stopPoint.x);
-			double y = Math.min(startPoint.y, stopPoint.y);
-			double width = Math.abs(startPoint.x - stopPoint.x);
-			double height = Math.abs(startPoint.y - stopPoint.y);
+			double x = Math.min(this.pointList.get(0).x, this.pointList.get(1).x);
+			double y = Math.min(this.pointList.get(0).y, this.pointList.get(1).y);
+			double width = Math.abs(this.pointList.get(0).x - this.pointList.get(1).x);
+			double height = Math.abs(this.pointList.get(0).y - this.pointList.get(1).y);
 			//When addScale is 1 this scale multiplier works correctly.
 			x *= this.scale;
 			y *= this.scale;
@@ -104,6 +98,25 @@ public class Shape {
 				Rectangle2D.Double rectangle = new Rectangle2D.Double(x, y, width, height);
 				graphics2D.draw(rectangle);
 			}
+    	}
+    }
+    
+    @JsonIgnore
+    public void sortPointList() {
+    	Point pointZero = this.pointList.get(0);
+    	Point pointOne = this.pointList.get(1);
+    	//Case B
+    	if(pointZero.x > pointOne.x && pointZero.y < pointOne.y) {
+    		this.pointList.set(0, new Point(pointOne.x,pointZero.y));
+    		this.pointList.set(1, new Point(pointZero.x,pointOne.y));
+    	//Case C
+    	} else if(pointZero.x < pointOne.x && pointZero.y > pointOne.y) {
+    		this.pointList.set(0, new Point(pointZero.x,pointOne.y));
+    		this.pointList.set(1, new Point(pointOne.x,pointZero.y));
+    	//Case D
+    	} else if(pointZero.x < pointOne.x && pointZero.y < pointOne.y) {
+    		this.pointList.set(0, pointOne);
+    		this.pointList.set(1, pointZero);
     	}
     }
 
@@ -122,16 +135,16 @@ public class Shape {
      * @return
      */
 //    public int compareTo(Object u) {
-//      if (this.startPoint.x == 0 || ((Shape)u).startPoint.x == 0) {
+//      if (this.pointList.get(0).x == 0 || ((Shape)u).startPoint.x == 0) {
 //        return 0;
 //      }
-//      return ((Integer)this.startPoint.x).compareTo(((Shape)u).startPoint.x);
+//      return ((Integer)this.pointList.get(0).x).compareTo(((Shape)u).startPoint.x);
 //    }
     
     @JsonIgnore
     public boolean isValid(){
         boolean flag = true;
-        if(this.startPoint.x==this.stopPoint.x && this.startPoint.y==this.stopPoint.y){
+        if(this.pointList.get(0).x==this.pointList.get(1).x && this.pointList.get(0).y==this.pointList.get(1).y){
             flag = false;
         }
         return flag;
@@ -153,22 +166,22 @@ public class Shape {
     
     @JsonIgnore
     public double getCenterX(){
-        return (this.startPoint.x + this.stopPoint.x)/2;
+        return (this.pointList.get(0).x + this.pointList.get(1).x)/2;
     }
     
     @JsonIgnore
     public double getCenterY(){
-        return (this.startPoint.y+this.stopPoint.y)/2;
+        return (this.pointList.get(0).y+this.pointList.get(1).y)/2;
     }
     
     @JsonIgnore
     public void scale(double scale) {
     	logger.debug("scale("+scale+")");
     	this.scale = scale*(1/this.addScale);
-//    	this.startPoint.x*=this.scale;
-//    	this.startPoint.y*=this.scale;
-//    	this.stopPoint.y*=this.scale;
-//    	this.stopPoint.x*=this.scale;
+//    	this.pointList.get(0).x*=this.scale;
+//    	this.pointList.get(0).y*=this.scale;
+//    	this.pointList.get(1).y*=this.scale;
+//    	this.pointList.get(1).x*=this.scale;
     }
     
 	public double round(double value, int places) {
@@ -185,10 +198,10 @@ public class Shape {
         boolean flag = false;
         Point startPoint = new Point();
         Point stopPoint = new Point();
-        startPoint.x = this.startPoint.x*this.scale;
-        startPoint.y = this.startPoint.y*this.scale;
-        stopPoint.x = this.stopPoint.x*this.scale;
-        stopPoint.y = this.stopPoint.y*this.scale;
+        startPoint.x = this.pointList.get(0).x*this.scale;
+        startPoint.y = this.pointList.get(0).y*this.scale;
+        stopPoint.x = this.pointList.get(1).x*this.scale;
+        stopPoint.y = this.pointList.get(1).y*this.scale;
         
         if(startPoint.x < stopPoint.x && startPoint.y < stopPoint.y) {
             if(startPoint.x <= point.x && point.x <= stopPoint.x && startPoint.y <= point.y && point.y <= stopPoint.y){
@@ -216,10 +229,10 @@ public class Shape {
         int selection = -1;
         Point startPoint = new Point();
         Point stopPoint = new Point();
-        startPoint.x = this.startPoint.x*this.scale;
-        startPoint.y = this.startPoint.y*this.scale;
-        stopPoint.x = this.stopPoint.x*this.scale;
-        stopPoint.y = this.stopPoint.y*this.scale;
+        startPoint.x = this.pointList.get(0).x*this.scale;
+        startPoint.y = this.pointList.get(0).y*this.scale;
+        stopPoint.x = this.pointList.get(1).x*this.scale;
+        stopPoint.y = this.pointList.get(1).y*this.scale;
         //introduce the idea of a buffer where a user does not have to press exactly on line
         //TOP
         int margin = 20;
@@ -273,43 +286,43 @@ public class Shape {
     	logger.info("resize("+point+", "+selection+")");
     	Point startPoint = new Point();
         Point stopPoint = new Point();
-        startPoint.x = this.startPoint.x*this.scale;
-        startPoint.y = this.startPoint.y*this.scale;
-        stopPoint.x = this.stopPoint.x*this.scale;
-        stopPoint.y = this.stopPoint.y*this.scale;
+        startPoint.x = this.pointList.get(0).x*this.scale;
+        startPoint.y = this.pointList.get(0).y*this.scale;
+        stopPoint.x = this.pointList.get(1).x*this.scale;
+        stopPoint.y = this.pointList.get(1).y*this.scale;
     	switch(selection) {
 	    	case TOP:{
-	    		this.startPoint.y = point.y;
+	    		this.pointList.get(0).y = point.y;
 	    		break;
 	    	}
 	    	case BOTTOM:{
-	    		this.stopPoint.y = point.y;
+	    		this.pointList.get(1).y = point.y;
 	    		break;
 	    	}
 	    	case LEFT:{
-	    		this.startPoint.x = point.x;
+	    		this.pointList.get(0).x = point.x;
 	    		break;
 	    	}
 	    	case RIGHT:{
-	    		this.stopPoint.x = point.x;
+	    		this.pointList.get(1).x = point.x;
 	    		break;
 	    	}
 	    	case TOP_LEFT:{
-	    		this.startPoint = point;
+	    		this.pointList.set(0, point);
 	    		break;
 	    	}
 	    	case TOP_RIGHT:{
-	    		this.startPoint.y = point.y;
-	    		this.stopPoint.x = point.x;
+	    		this.pointList.get(0).y = point.y;
+	    		this.pointList.get(1).x = point.x;
 	    		break;
 	    	}
 	    	case BOTTOM_LEFT:{
-	    		this.startPoint.x = point.x;
-	    		this.stopPoint.y = point.y;
+	    		this.pointList.get(0).x = point.x;
+	    		this.pointList.get(1).y = point.y;
 	    		break;
 	    	}
 	    	case BOTTOM_RIGHT:{
-	    		this.stopPoint = point;
+	    		this.pointList.set(1, point);
 	    		break;
 	    	}
     	}
@@ -318,10 +331,10 @@ public class Shape {
     @JsonIgnore
     public void move(Point point){
     	logger.info("move("+point+")");
-        this.startPoint.x = this.startPoint.x + point.x;
-        this.startPoint.y = this.startPoint.y + point.y;
-        this.stopPoint.x = this.stopPoint.x + point.x;
-        this.stopPoint.y = this.stopPoint.y + point.y;
+        this.pointList.get(0).x = this.pointList.get(0).x + point.x;
+        this.pointList.get(0).y = this.pointList.get(0).y + point.y;
+        this.pointList.get(1).x = this.pointList.get(1).x + point.x;
+        this.pointList.get(1).y = this.pointList.get(1).y + point.y;
     }
     
     @JsonIgnore
