@@ -83,37 +83,37 @@ public class Model {
     @JsonIgnore
     public void save() {
         logger.info("save()");
-        if(this.file != null) {
         ObjectMapper mapper = new ObjectMapper();
-//        if(!this.modelClient.checkHealth()) {
-	        mapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY);
-	        mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
-	        try {
-	            mapper.writeValue(this.file, this.project);
-	            logger.info("saved...");
-	        } catch (IOException ex) {
-	           logger.error(ex);
-	        }
+        if(!this.modelClient.checkHealth()) {
+        	if(this.file != null) {
+		        mapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY);
+		        mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
+		        try {
+		            mapper.writeValue(this.file, this.project);
+		            logger.info("saved...");
+		        } catch (IOException ex) {
+		           logger.error(ex);
+		        }
+        	}
+        } else {
+        	try {
+				this.modelClient.importProject(mapper.writeValueAsString(this.project));
+			} catch (JsonGenerationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
-//        } else {
-//        	try {
-//				this.modelClient.importProject(mapper.writeValueAsString(this.project));
-//			} catch (JsonGenerationException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (JsonMappingException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//        }
     }
     
     @JsonIgnore
     public void saveAs(File file) {
-        logger.info("save("+file+")");
+        logger.info("saveAs("+file+")");
         ObjectMapper mapper = new ObjectMapper();
         if(!this.modelClient.checkHealth()) {
 	        mapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY);
