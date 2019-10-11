@@ -21,6 +21,7 @@ import org.apache.logging.log4j.LogManager;
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.project.Data;
 import com.meritoki.retina.application.desktop.model.project.Page;
+import com.meritoki.retina.application.desktop.model.project.Project;
 
 /**
  *
@@ -58,15 +59,17 @@ public class Matrix extends javax.swing.JDialog {
 
     public void initLabel() {
         logger.debug("initLabel()");
-        Page page = (this.model.project != null) ? this.model.project.getPage() : null;
-        int pageIndex = (this.model.project != null) ? this.model.project.getIndex() : 0;
+        Project project = (this.model != null) ? this.model.project : null;
+        Page page = (project != null) ? project.getPage() : null;
+        int pageIndex = (project != null) ? project.getIndex() : 0;
         this.indexValueLabel.setText(pageIndex + "");
         this.uuidValueLabel.setText((page != null) ? page.uuid : "");
     }
 
     public void initList() {
         logger.debug("initList()");
-        Page page = this.model.project.getPage();
+        Project project = (this.model != null) ? this.model.project : null;
+        Page page = project.getPage();
         int index = (page != null) ? page.getIndex() : 0;
         List<Data> dataList = (page != null) ? page.getDataList() : null;
         this.initDataList(dataList);
@@ -75,13 +78,13 @@ public class Matrix extends javax.swing.JDialog {
 
     public void initDataList(List<Data> dataList) {
         logger.info("initDataList(" + dataList + ")");
+        DefaultListModel<String> defaultListModel = new DefaultListModel<>();
         if (dataList != null && dataList.size() > 0) {
-            DefaultListModel<String> defaultListModel = new DefaultListModel<>();
             for (int i = 0; i < dataList.size(); i++) {
                 defaultListModel.addElement(dataList.get(i).uuid);
             }
-            this.dataList.setModel(defaultListModel);
         }
+        this.dataList.setModel(defaultListModel);
     }
 
     public void setDataListSelectedIndex(int index) {
@@ -221,7 +224,7 @@ public class Matrix extends javax.swing.JDialog {
         String value = this.imageScriptTextArea.getText();
         this.model.script.setPageList(this.model.project.getPageList());
         try {
-//            this.model.script.sortDataMatrix(value);
+            this.model.script.sortDataMatrix(value);
         } catch (Exception ex) {
             System.err.println(ex);
         }

@@ -69,6 +69,8 @@ public class Project implements Serializable {
     @JsonProperty
     public List<Page> pageList = new ArrayList<>();
     @JsonIgnore
+    public List<Sheet> sheetList = new ArrayList<>();
+    @JsonIgnore
     public int index = 0;
     @JsonProperty
     public List<Layout> layoutList = new ArrayList<>();

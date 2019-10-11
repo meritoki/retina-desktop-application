@@ -40,13 +40,13 @@ public class Script {
         return this.pageList;
     }
     
-    public void setData(List<LinkedList<Data>> dataMatrix) {
-        this.dataMatrix = dataMatrix;
-    }
+//    public void setDataMatrix(List<LinkedList<Data>> dataMatrix) {
+//        this.dataMatrix = dataMatrix;
+//    }
     
-    public List<LinkedList<Data>> getDataMatrix() {
-        return this.dataMatrix;
-    }
+//    public List<LinkedList<Data>> getDataMatrix() {
+//        return this.dataMatrix;
+//    }
     
 //Page Sort
     
@@ -189,8 +189,10 @@ public class Script {
      * SWAP 0-n 1,2:3,4 | SWAP 0 1,2:3,4
      * INSERT 0-n 1,2:3,4 | INSERT 0 1,2:3,4
      * MERGE 0-n 1,1:1,2 | MERGE 0 1,1:1,2
+     * COMMAND PAGE(S) RANGE:RANGE
+     * JOIN 0-n 1:1 | JOIN 0-1 1-6:2-7 | JOIN even-odd RANGE:RANGE
      * COMMAND PAGE(S) COL/ROW RANGE:RANGE 
-     * JOIN 0-n ROW 1:1 | JOIN 0-1 ROW 1-6:2-7 | JOIN even-odd RANGE:RANGE
+     * JOIN 0-n ROW 1:1 | JOIN 0-1 ROW 1-6:2-7
      * 
      * @param value
      * @throws Exception
@@ -206,7 +208,8 @@ public class Script {
             System.out.println(i);
             if(i.contains("SWAP")){//0:0 0:0;
                 instruction=i.replaceFirst("SWAP", "");
-                parameters=instruction.split(":");
+                instruction = instruction.trim();
+                parameters=instruction.split(" ");
                 a=parameters[0].trim();
                 b=parameters[1].trim();
                 this.swapData(a, b);
@@ -233,7 +236,30 @@ public class Script {
     }
     
     public void swapData(String a, String b) {
-    	
+    	String[] pageArray = new String[1];
+    	int[] pageIntArray = new int [0];
+    	if(a.contains("-")) {
+    		pageArray = a.split("-");
+    		int startInt = Integer.parseInt(pageArray[0]);
+    		int stopInt = Integer.parseInt(pageArray[1]);
+    		int count = stopInt - startInt;
+    		pageIntArray = new int[count];
+    		for(int i=0;i<count;i++) {
+    			pageIntArray[i] = startInt + i;
+    		}
+    	} else if(a.contains(",")) {
+    		pageArray = a.split(",");
+    	} else {
+    		pageArray[0] = a;
+    	}
+    	String[] coordinateArray = b.split(":");
+    	String[] coordinateZero = coordinateArray[0].split(",");
+    	String[] coordinateOne = coordinateArray[1].split(",");
+    	Page page = null;
+    	for(int i=0;i<pageIntArray.length;i++) {
+    		page = this.pageList.get(pageIntArray[i]);
+    		
+    	}
     }
     
     public void insertData(String a, String b) {
