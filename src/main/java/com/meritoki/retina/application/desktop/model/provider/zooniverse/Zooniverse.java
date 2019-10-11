@@ -32,7 +32,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.util.IOUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;

@@ -74,8 +74,8 @@ public final class Main extends JFrame {
         this.imagePanel.setMain(this);
         this.imagePanel.setFocusable(true);
         this.imagePanel.requestFocusInWindow();
-//        this.imageDialog.setVisible(true);
-        this.shapeDialog.setVisible(true);
+        this.imageDialog.setVisible(true);
+//        this.shapeDialog.setVisible(true);
     }
 
     /**

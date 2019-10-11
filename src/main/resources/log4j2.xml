@@ -1,26 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Configuration status="info">
-    <Properties>
-        <Property name="layout">%d [%t] %-5level %logger - %m%n</Property>
-    </Properties>
-  
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
     <Appenders>
-  
-        <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="${layout}" />
-        </Console>     
-
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout
+                pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
+        </Console>
     </Appenders>
-    
     <Loggers>
-
-        <Logger name="org" level="info" additivity="false" >
-            <AppenderRef ref="Console" />
-        </Logger>
-    
-        <Root level="error">
-            <AppenderRef ref="Console" />
-        </Root>    
-
+        <Root level="INFO" additivity="false">
+            <AppenderRef ref="console" />
+        </Root>
     </Loggers>
 </Configuration>

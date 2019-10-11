@@ -15,6 +15,8 @@
  */
 package com.meritoki.retina.application.desktop.model.project;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,7 +41,8 @@ import org.codehaus.jackson.map.ObjectWriter;
 public class Page {
 	@JsonIgnore
     static Logger logger = LogManager.getLogger(Page.class.getName());
-    public File file = new File();
+//    public File file = new File();
+    public List<File> fileList = new ArrayList<File>();
     public String uuid;
     private List<Shape> shapeList = new ArrayList<>();
     @JsonIgnore
@@ -151,22 +154,32 @@ public class Page {
 
     @JsonIgnore
     public void loadBufferedImage() {
-        logger.debug("loadBufferedImage() file=" + this.file.path + "/" + this.file.name);
-        if (this.file.path != null && this.file.name != null) {
-            try {
-                this.file.bufferedImage = ImageIO.read(new java.io.File(this.file.path + "/" + this.file.name));
-            } catch (IOException ex) {
-                logger.error(ex);
-            }
+//        logger.debug("loadBufferedImage() file=" + this.file.path + "/" + this.file.name);
+//        if (this.file.path != null && this.file.name != null) {
+//            try {
+//                this.file.bufferedImage = ImageIO.read(new java.io.File(this.file.path + "/" + this.file.name));
+//            } catch (IOException ex) {
+//                logger.error(ex);
+//            }
+//        }
+        for(File file: this.fileList) {
+        	file.loadBufferedImage();
         }
     }
 
     @JsonIgnore
     public BufferedImage getBufferedImage() {
-        if (this.file.bufferedImage == null) {
-            this.loadBufferedImage();
-        }
-        return this.file.bufferedImage;
+    	logger.info("getBufferedImage()");
+    	this.loadBufferedImage();
+    	BufferedImage bufferedImage = null;
+    	if(this.fileList.size() == 2) {
+    		BufferedImage bufferedImageA = this.fileList.get(0).bufferedImage;
+    		BufferedImage bufferedImageB = this.fileList.get(1).bufferedImage;
+    		bufferedImage = this.joinBufferedImage(bufferedImageA, bufferedImageB);
+    	} else {
+    		bufferedImage = this.fileList.get(0).bufferedImage;
+    	}
+        return bufferedImage;
     }
 
     @JsonIgnore
@@ -360,5 +373,26 @@ public class Page {
             }
         }
         return flag;
+    }
+
+    public BufferedImage joinBufferedImage(BufferedImage img1,BufferedImage img2) {
+    	logger.info("joinBufferedImage("+img1+","+img2+")");
+        //do some calculate first
+        int offset  = 5;
+        int wid = img1.getWidth()+img2.getWidth()+offset;
+        int height = Math.max(img1.getHeight(),img2.getHeight())+offset;
+        //create a new buffer and draw two image into the new image
+        BufferedImage newImage = new BufferedImage(wid,height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = newImage.createGraphics();
+        Color oldColor = g2.getColor();
+        //fill background
+        g2.setPaint(Color.WHITE);
+        g2.fillRect(0, 0, wid, height);
+        //draw image
+        g2.setColor(oldColor);
+        g2.drawImage(img1, null, 0, 0);
+        g2.drawImage(img2, null, img1.getWidth()+offset, 0);
+        g2.dispose();
+        return newImage;
     }
 }

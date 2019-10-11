@@ -35,7 +35,7 @@ import com.meritoki.retina.application.desktop.view.frame.Main;
  *
  * @author osvaldo.rodriguez
  */
-public class Image extends javax.swing.JDialog implements MouseListener, KeyListener{
+public class Image extends javax.swing.JDialog implements MouseListener, KeyListener {
 
     /**
 	 * 
@@ -43,8 +43,6 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
 	private static final long serialVersionUID = 8390605747809634118L;
 	private static Logger logger = LogManager.getLogger(Image.class.getName());
     private Model model;
-//    private PageScript pageScript = new PageScript();
-//    private List<com.meritoki.retina.application.desktop.model.project.Page> sortedPageList;
     
     /**
      * Creates new form PageDialog
@@ -79,8 +77,13 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
         List<com.meritoki.retina.application.desktop.model.project.Page> pageList = this.model.project.getPageList();
         this.indexValueLabel.setText(pageIndex+"");
         if(page!=null){
-            this.nameValueLabel.setText(page.file.name);
-            this.pathValueLabel.setText(page.file.path);
+        	if(page.fileList.size() == 1) {
+	            this.nameValueLabel.setText(page.fileList.get(0).name);
+	            this.pathValueLabel.setText(page.fileList.get(0).path);
+        	} else {
+        		this.nameValueLabel.setText("NA");
+	            this.pathValueLabel.setText("NA");
+        	}
             this.uuidValueLabel.setText(page.uuid);
         }else{
             this.nameValueLabel.setText("null");

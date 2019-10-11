@@ -22,6 +22,7 @@ import java.util.List;
 
 import com.meritoki.retina.application.desktop.model.project.Data;
 import com.meritoki.retina.application.desktop.model.project.Page;
+import com.meritoki.retina.application.desktop.model.project.Sheet;
 
 /**
  *
@@ -54,6 +55,7 @@ public class Script {
      * SWAP 1-2:3-4
      * INTERLACE 1-2:3-4
      * INSERT 1-2:3-4
+     * SHEET even:odd | SHEET odd:even | SHEET 1:2 | SHEET 2:3
      * @param value
      * @throws Exception
      */
@@ -84,8 +86,23 @@ public class Script {
                 a=parameters[0].trim();
                 b=parameters[1].trim();
                 this.insertPage(a,b);
+            } else if(i.contains("JOIN")){
+                instruction=i.replaceFirst("JOIN", "");
+                parameters=instruction.split(":");
+                a=parameters[0].trim();
+                b=parameters[1].trim();
+                this.joinPage(a,b);
             }
         }
+    }
+    
+    public void joinPage(String a, String b) {
+    	int x = Integer.parseInt(a);
+    	int y = Integer.parseInt(b);
+    	Page pageA = this.pageList.get(x);
+    	Page pageB = this.pageList.get(y);
+    	pageA.fileList.addAll(pageB.fileList);
+    	this.pageList.remove(y);
     }
     
     public void swapPage(String a, String b) throws Exception {

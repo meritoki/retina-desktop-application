@@ -123,9 +123,9 @@ public class Shape {
     @JsonIgnore
     public void setBufferedImage(Page page){
        BufferedImage bufferedImage = null;
-       if(page.getBufferedImage() != null){
-           //bufferedImage = page.getBufferedImage().getSubimage(this.getX(), this.getX(), (this.getI()-this.getX()), (this.getJ()-this.getY()));
-       }
+//       if(page.getBufferedImage() != null){
+//           //bufferedImage = page.getBufferedImage().getSubimage(this.getX(), this.getX(), (this.getI()-this.getX()), (this.getJ()-this.getY()));
+//       }
 //       this.bufferedImage = bufferedImage;
     }
     
