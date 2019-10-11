@@ -55,6 +55,7 @@ public class Model {
     public FileClient fileClient = new FileClient();
     public LinkedList<Command> undoStack = new LinkedList<>();
     public LinkedList<Command> redoStack = new LinkedList<>();
+    public File file = null;
 	public Project project;
 	public Script script = new Script();
 	//Project helpers
@@ -80,7 +81,38 @@ public class Model {
 	}
 	
     @JsonIgnore
-    public void save(File file) {
+    public void save() {
+        logger.info("save()");
+        if(this.file != null) {
+        ObjectMapper mapper = new ObjectMapper();
+//        if(!this.modelClient.checkHealth()) {
+	        mapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY);
+	        mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
+	        try {
+	            mapper.writeValue(this.file, this.project);
+	            logger.info("saved...");
+	        } catch (IOException ex) {
+	           logger.error(ex);
+	        }
+        }
+//        } else {
+//        	try {
+//				this.modelClient.importProject(mapper.writeValueAsString(this.project));
+//			} catch (JsonGenerationException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (JsonMappingException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//        }
+    }
+    
+    @JsonIgnore
+    public void saveAs(File file) {
         logger.info("save("+file+")");
         ObjectMapper mapper = new ObjectMapper();
         if(!this.modelClient.checkHealth()) {
@@ -116,6 +148,7 @@ public class Model {
 	        mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
 	        try {
 	            this.project = mapper.readValue(file, Project.class);
+	            this.file = file;
 	            logger.info("opened...");
 	        } catch (JsonGenerationException e) {
 	            logger.error(e);
