@@ -44,6 +44,7 @@ public class Page {
     private List<Shape> shapeList = new ArrayList<>();
     @JsonIgnore
     public int index = 0;
+    public String script = null;
 
     public Page() {
         this.uuid = UUID.randomUUID().toString();

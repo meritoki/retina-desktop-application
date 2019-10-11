@@ -36,7 +36,8 @@ import org.apache.logging.log4j.core.util.IOUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
-import com.meritoki.retina.application.desktop.model.system.Shell;
+
+import com.meritoki.retina.application.desktop.controller.system.Shell;
 
 /**
  *

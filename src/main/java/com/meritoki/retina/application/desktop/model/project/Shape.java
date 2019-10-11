@@ -178,10 +178,6 @@ public class Shape {
     public void scale(double scale) {
     	logger.debug("scale("+scale+")");
     	this.scale = scale*(1/this.addScale);
-//    	this.pointList.get(0).x*=this.scale;
-//    	this.pointList.get(0).y*=this.scale;
-//    	this.pointList.get(1).y*=this.scale;
-//    	this.pointList.get(1).x*=this.scale;
     }
     
 	public double round(double value, int places) {

@@ -15,10 +15,16 @@
  */
 package com.meritoki.retina.application.desktop.view.panel;
 
+import javax.swing.JPanel;
+
 /**
- *
- * @author jorodriguez
+ * Table class displays a table with data parsed from a page, using the matrix
  */
-public class Table {
+public class Table extends JPanel {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1150207383197799895L;
     
 }

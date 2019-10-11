@@ -21,29 +21,19 @@ import java.net.URL;
 import javax.swing.JFrame;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.meritoki.retina.application.desktop.controller.client.FileClient;
-import com.meritoki.retina.application.desktop.controller.client.ModelClient;
-import com.meritoki.retina.application.desktop.model.project.Project;
-import com.meritoki.retina.application.desktop.model.system.Command;
-import java.util.LinkedList;
-import java.util.Properties;
-
+import com.meritoki.retina.application.desktop.model.Model;
 /**
  *
  * @author osvaldo.rodriguez
  */
 public final class Main extends JFrame {
 
-    static Logger logger = LogManager.getLogger(Main.class.getName());
-
-    private boolean test = true;
-    private Properties properties = null;
-    private Project project = null;
-    public ModelClient modelClient = new ModelClient();
-    public FileClient fileClient = new FileClient();
-    public LinkedList<Command> undoStack = new LinkedList<>();
-    public LinkedList<Command> redoStack = new LinkedList<>();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4699683145704846741L;
+	private static Logger logger = LogManager.getLogger(Main.class.getName());
+    public Model model = null;
     public com.meritoki.retina.application.desktop.view.dialog.Image imageDialog = new com.meritoki.retina.application.desktop.view.dialog.Image(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.Rectangle shapeDialog = new com.meritoki.retina.application.desktop.view.dialog.Rectangle(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.Matrix pageDialog = new com.meritoki.retina.application.desktop.view.dialog.Matrix(this, false);
@@ -52,44 +42,28 @@ public final class Main extends JFrame {
     public com.meritoki.retina.application.desktop.view.dialog.Save saveDialog = new com.meritoki.retina.application.desktop.view.dialog.Save(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.zooniverse.Export exportZooniverseDialog = new com.meritoki.retina.application.desktop.view.dialog.zooniverse.Export(this, false);
 
-    public Main(Properties properties) {
+    public Main() {
         initComponents();
-        this.properties = properties;
         URL url = getClass().getResource("/icon.gif");
         logger.debug(url);
         Image image = Toolkit.getDefaultToolkit().getImage(url);
         logger.debug(image);
         this.setIconImage(image);
-        if (this.test) {
-            this.initTest();
-        }
-    }
-
-    public void initTest() {
-        this.project = new Project();
-        this.project.initTest();
-        this.setProject();
         this.init();
+        this.setModel(new Model());
     }
 
-    public Project getProject() {
-        return this.project;
-    }
-
-    public void setProject(Project model) {
-        this.project = model;
-    }
-
-    public void setProject() {
-        logger.debug("setProject()");
-        this.imagePanel.setModel(this.project);
-        this.matrixPanel.setProject(this.project);
-        this.imageDialog.setModel(this.project);
-        this.shapeDialog.setProject(this.project);
-        this.openDialog.setModel(this.project);
-        this.saveDialog.setModel(this.project);
-        this.pageDialog.setModel(this.project);
-        this.exportZooniverseDialog.setModel(this.project);
+    public void setModel(Model model) {
+    	logger.debug("setModel("+model+")");
+        this.model = model;
+        this.imagePanel.setModel(this.model);
+        this.matrixPanel.setModel(this.model);
+        this.imageDialog.setModel(this.model);
+        this.shapeDialog.setModel(this.model);
+        this.openDialog.setModel(this.model);
+        this.saveDialog.setModel(this.model);
+        this.pageDialog.setModel(this.model);
+        this.exportZooniverseDialog.setModel(this.model);
     }
 
     public void init() {

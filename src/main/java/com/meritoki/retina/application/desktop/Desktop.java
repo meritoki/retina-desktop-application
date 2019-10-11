@@ -18,7 +18,7 @@ package com.meritoki.retina.application.desktop;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.meritoki.retina.application.desktop.view.window.Splash;
-import com.meritoki.retina.application.desktop.model.system.Configuration;
+import com.meritoki.retina.application.desktop.model.Configuration;
 import com.meritoki.retina.application.desktop.view.frame.Main;
 import java.util.Properties;
 
@@ -27,10 +27,8 @@ public class Desktop {
     static Logger logger = LogManager.getLogger(Desktop.class.getName());
 
     public static void main(String args[]) {
-        logger.info("Starting Retina Desktop Application...");
-        Configuration configuration = new Configuration();
-        Properties properties = configuration.open("./desktop.properties");
-        final Main main = new Main(properties);
+        logger.info("Starting Retina Desktop Application..."); 
+        final Main main = new Main();
 //        final Splash splash = new Splash("/splash.png", main, 4000);
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meritoki.retina.application.desktop.controller.script;
+package com.meritoki.retina.application.desktop.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,10 +27,10 @@ import com.meritoki.retina.application.desktop.model.project.Page;
  *
  * @author osvaldo.rodriguez
  */
-public class PageScript {
+public class Script {
     
     public List<Page> pageList = new ArrayList<>();
-//    public List<LinkedList<Data>> data = new ArrayList<>();
+    public List<LinkedList<Data>> dataMatrix = new ArrayList<>();
     
     public void setPageList(List<Page> pageList){
         this.pageList = pageList;
@@ -40,15 +40,24 @@ public class PageScript {
         return this.pageList;
     }
     
-//    public void setData(List<LinkedList<Data>> data) {
-//        this.data = data;
-//    }
-//    
-//    public List<LinkedList<Data>> getData() {
-//        return this.data;
-//    }
+    public void setData(List<LinkedList<Data>> dataMatrix) {
+        this.dataMatrix = dataMatrix;
+    }
     
-    public void page(String value) throws Exception{
+    public List<LinkedList<Data>> getDataMatrix() {
+        return this.dataMatrix;
+    }
+    
+//Page Sort
+    
+    /**
+     * SWAP 1-2:3-4
+     * INTERLACE 1-2:3-4
+     * INSERT 1-2:3-4
+     * @param value
+     * @throws Exception
+     */
+    public void sortPageList(String value) throws Exception{
         value = value.replace("\n", "").replace("\r", "");
         String[] instructions = value.split(";");
         String instruction;
@@ -62,61 +71,24 @@ public class PageScript {
                 parameters=instruction.split(":");
                 a=parameters[0].trim();
                 b=parameters[1].trim();
-                this.swap(a, b);
+                this.swapPage(a, b);
             } else if(i.contains("INTERLACE")){
                 instruction=i.replaceFirst("INTERLACE", "");
                 parameters=instruction.split(":");
                 a=parameters[0].trim();
                 b=parameters[1].trim();
-                this.interlace(a, b);
+                this.interlacePage(a, b);
             } else if(i.contains("INSERT")){
                 instruction=i.replaceFirst("INSERT", "");
                 parameters=instruction.split(":");
                 a=parameters[0].trim();
                 b=parameters[1].trim();
-                this.insert(a,b);
+                this.insertPage(a,b);
             }
         }
     }
     
-//    public void page(String value) throws Exception{
-//        value = value.replace("\n", "").replace("\r", "");
-//        String[] instructions = value.split(";");
-//        String instruction;
-//        String[] parameters;
-//        String a;
-//        String b;
-//        for(String i: instructions){
-//            System.out.println(i);
-//            if(i.contains("SWAP")){//0:0 0:0;
-//                instruction=i.replaceFirst("SWAP", "");
-//                parameters=instruction.split(":");
-//                a=parameters[0].trim();
-//                b=parameters[1].trim();
-//                this.swap(a, b);
-//            } else if(i.contains("JOIN")){//0:0 0:0
-//                instruction=i.replaceFirst("JOIN", "");
-//                parameters=instruction.split(":");
-//                a=parameters[0].trim();
-//                b=parameters[1].trim();
-//                this.interlace(a, b);
-//            } else if(i.contains("INSERT")){//0:0 0:0
-//                instruction=i.replaceFirst("INSERT", "");
-//                parameters=instruction.split(":");
-//                a=parameters[0].trim();
-//                b=parameters[1].trim();
-//                this.insert(a,b);
-//            } else if(i.contains("MERGE")){
-//                instruction=i.replaceFirst("MERGE", "");
-//                parameters=instruction.split(":");
-//                a=parameters[0].trim();
-//                b=parameters[1].trim();
-//                this.insert(a,b);
-//            }
-//        }
-//    }
-    
-    public void swap(String a, String b) throws Exception {
+    public void swapPage(String a, String b) throws Exception {
         System.out.println("swap("+a+","+b+")");
         String[] A;
         String[] B;
@@ -145,18 +117,18 @@ public class PageScript {
             j = b;
             x = Integer.parseInt(i);
             y = Integer.parseInt(j);
-            this.swap(x, y);
+            this.swapPage(x, y);
         }
     }
     
-    public void swap(int a, int b){
+    public void swapPage(int a, int b){
        System.out.println("swap("+a+","+b+")");
        Collections.swap(this.pageList, a, b);
     }
     
     
     
-    public void interlace(String a, String b) throws Exception {
+    public void interlacePage(String a, String b) throws Exception {
         System.out.println("interlace("+a+","+b+")");
         String[] A;
         String[] B;
@@ -166,7 +138,7 @@ public class PageScript {
         }
     }
     
-    public void insert(String a, String b) throws Exception {
+    public void insertPage(String a, String b) throws Exception {
         System.out.println("insert("+a+","+b+")");
         String[] A;
         String[] B;
@@ -195,11 +167,11 @@ public class PageScript {
             j = b;
             x = Integer.parseInt(i);
             y = Integer.parseInt(j);
-            this.insert(x, y);
+            this.insertPage(x, y);
         }
     }
     
-    public void insert(int a, int b){
+    public void insertPage(int a, int b){
         Page page = this.pageList.remove(a);
         this.pageList.add(b, page);
     }
@@ -210,23 +182,89 @@ public class PageScript {
         page.getDataMatrix().get(x).add(y, data);
     }
     
-//    public void join(int a, int b) {
-//        Page pageA = this.pageList.get(a);
-//        Page pageB = this.pageList.get(b);
-//        List<LinkedList<Data>> dataA = pageA.getDataMatrix();
-//        List<LinkedList<Data>> dataB = pageB.getDataMatrix();
-//        List<LinkedList<Data>> data = new ArrayList<>((dataA.size()>dataB.size())?dataA.size():dataB.size());
-//        for(int i = 0; i < dataA.size(); i++){
-//            for(int j=0;j<dataA.get(i).size();j++){
-//                data.get(i).add(dataA.get(i).get(j));
-//            }
-//        }
-//        for(int i = 0; i < dataB.size(); i++){
-//            for(int j=0;j<dataB.get(i).size();j++){
-//                data.get(i).add(dataB.get(i).get(j));
-//            }
-//        }
+//Data Matrix Sort
+    
+    /**
+     * COMMAND PAGE(S) ROW,COLUMN:ROW,COLUMN
+     * SWAP 0-n 1,2:3,4 | SWAP 0 1,2:3,4
+     * INSERT 0-n 1,2:3,4 | INSERT 0 1,2:3,4
+     * MERGE 0-n 1,1:1,2 | MERGE 0 1,1:1,2
+     * COMMAND PAGE(S) COL/ROW RANGE:RANGE 
+     * JOIN 0-n ROW 1:1 | JOIN 0-1 ROW 1-6:2-7 | JOIN even-odd RANGE:RANGE
+     * 
+     * @param value
+     * @throws Exception
+     */
+    public void sortDataMatrix(String value) throws Exception{
+        value = value.replace("\n", "").replace("\r", "");
+        String[] instructions = value.split(";");
+        String instruction;
+        String[] parameters;
+        String a;
+        String b;
+        for(String i: instructions){
+            System.out.println(i);
+            if(i.contains("SWAP")){//0:0 0:0;
+                instruction=i.replaceFirst("SWAP", "");
+                parameters=instruction.split(":");
+                a=parameters[0].trim();
+                b=parameters[1].trim();
+                this.swapData(a, b);
+            }else if(i.contains("INSERT")){//0:0 0:0
+                instruction=i.replaceFirst("INSERT", "");
+                parameters=instruction.split(":");
+                a=parameters[0].trim();
+                b=parameters[1].trim();
+                this.insertData(a,b);
+            } else if(i.contains("MERGE")){
+                instruction=i.replaceFirst("MERGE", "");
+                parameters=instruction.split(":");
+                a=parameters[0].trim();
+                b=parameters[1].trim();
+                this.mergeData(a,b);
+            } else if(i.contains("JOIN")){//0:0 0:0
+                instruction=i.replaceFirst("JOIN", "");
+                parameters=instruction.split(":");
+                a=parameters[0].trim();
+                b=parameters[1].trim();
+                this.joinData(a, b);
+            } 
+        }
+    }
+    
+    public void swapData(String a, String b) {
+    	
+    }
+    
+    public void insertData(String a, String b) {
+    	
+    }
+    
+    public void mergeData(String a, String b) {
+    	
+    }
+    
+   public void joinData(String a, String b) {
+    	
+    }
+    
+    public void joinData(int a, int b) {
+        Page pageA = this.pageList.get(a);
+        Page pageB = this.pageList.get(b);
+        List<LinkedList<Data>> dataA = pageA.getDataMatrix();
+        List<LinkedList<Data>> dataB = pageB.getDataMatrix();
+        List<LinkedList<Data>> data = new ArrayList<>((dataA.size()>dataB.size())?dataA.size():dataB.size());
+        for(int i = 0; i < dataA.size(); i++){
+            for(int j=0;j<dataA.get(i).size();j++){
+                data.get(i).add(dataA.get(i).get(j));
+            }
+        }
+        for(int i = 0; i < dataB.size(); i++){
+            for(int j=0;j<dataB.get(i).size();j++){
+                data.get(i).add(dataB.get(i).get(j));
+            }
+        }
 //        pageA.setDataMatrix(data);
 //        pageB.setDataMatrix(null);
-//    }
+    }
 }

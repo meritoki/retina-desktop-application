@@ -31,8 +31,8 @@ import javax.swing.JPanel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.project.Data;
-import com.meritoki.retina.application.desktop.model.project.Project;
 import com.meritoki.retina.application.desktop.model.project.Unit;
 import com.meritoki.retina.application.desktop.view.frame.Main;
 
@@ -42,10 +42,14 @@ import com.meritoki.retina.application.desktop.view.frame.Main;
  */
 public class Matrix extends JPanel implements MouseListener, MouseWheelListener, KeyListener {
 
-    static Logger logger = LogManager.getLogger(Data.class.getName());
-    private Project project;
-    private Main main;
+	private static final long serialVersionUID = 6483831845668642285L;
+	private static Logger logger = LogManager.getLogger(Data.class.getName());
+    private Main main = null;
+    private Model model = null;
     
+    /**
+     * Instantiate new Matrix Panel
+     */
     public Matrix(){
         super();
         this.setOpaque(true);
@@ -53,21 +57,28 @@ public class Matrix extends JPanel implements MouseListener, MouseWheelListener,
         
     }
     
+    /**
+     * Set the parent component Main
+     * @param main
+     */
     public void setMain(Main main){
         this.main = main;
     }
     
-    public void setProject(Project project) {
-        logger.debug("setProject("+project+")");
-        this.project = project;
-        this.setPreferredSize(this.getPreferredSize());
+    /**
+     * Set the Model for use in the Panel
+     * @param model
+     */
+    public void setModel(Model model) {
+        logger.debug("setModel("+model+")");
+        this.model = model;
     }
     
     
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D)g;
-        com.meritoki.retina.application.desktop.model.project.Page page = (this.project!= null)?this.project.getPage():null;
+        com.meritoki.retina.application.desktop.model.project.Page page = (this.model.project!= null)?this.model.project.getPage():null;
         List<LinkedList<Data>> dataMatrix = (page !=null)?page.getDataMatrix():null;
         int width = 0;
         int height = 0;

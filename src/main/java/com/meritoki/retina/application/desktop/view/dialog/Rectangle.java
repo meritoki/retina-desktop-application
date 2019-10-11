@@ -29,6 +29,7 @@ import javax.swing.DefaultListModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.project.Data;
 import com.meritoki.retina.application.desktop.model.project.Page;
 import com.meritoki.retina.application.desktop.model.project.Project;
@@ -44,7 +45,8 @@ import com.meritoki.retina.application.desktop.view.frame.Main;
 public class Rectangle extends javax.swing.JDialog implements MouseListener, KeyListener {
 
     static Logger logger = LogManager.getLogger(Rectangle.class.getName());
-    private Project project;
+//    private Project project;
+    private Model model = null;
     private List<String> emptyList = new ArrayList<>();
     private List<String> timeList = Arrays.asList("year", "month", "week", "day", "hour", "minute", "second");
     private List<String> spaceList = Arrays.asList("latitude", "longitude", "locale", "location");
@@ -64,14 +66,14 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         this.rectangleList.addKeyListener(this);
     }
 
-    public void setProject(Project model) {
-        logger.debug("setProject(" + model + ")");
-        this.project = model;
+    public void setModel(Model model) {
+        logger.debug("setModel(" + model + ")");
+        this.model = model;
         this.init();
     }
 
     public void init() {
-        if (this.project != null) {
+        if (this.model.project != null) {
             this.initLabel();
             this.initList();
             this.initComboBox();
@@ -80,7 +82,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
 
     public void initLabel() {
         logger.debug("initLabel()");
-        Page image = this.project.getPage();
+        Page image = this.model.project.getPage();
         Shape rectangle = (image != null) ? image.getShape() : null;
         List<Shape> shapeList = (image != null) ? image.getShapeList() : null;
         Data data = (rectangle != null) ? rectangle.data : null;
@@ -89,7 +91,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
 
     public void initList() {
         logger.debug("initList()");
-        Page page = this.project.getPage();
+        Page page = this.model.project.getPage();
         int index = (page != null) ? page.getIndex() : 0;
         Shape shape = (page != null) ? page.getShape() : null;
         List<Shape> shapeList = (page != null) ? page.getShapeList() : null;
@@ -101,7 +103,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
 
     public void initComboBox() {
         logger.debug("initComboBox()");
-        Page image = this.project.getPage();
+        Page image = this.model.project.getPage();
         Shape rectangle = (image != null) ? image.getShape() : null;
         Data data = (rectangle != null) ? rectangle.data : null;
         List<Text> textList = (data != null) ? data.getTextList() : null;
@@ -152,7 +154,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         this.textValueComboBox.setModel(new DefaultComboBoxModel(array));
         boolean flag = this.textValueDefaultCheckBox.isSelected();
         if (flag) {
-        	Page page = this.project.getPage();
+        	Page page = this.model.project.getPage();
             Shape shape = (page != null)?page.getShape():null;
             Data data = (shape != null)?shape.getData():null;
             if(data != null) {
@@ -225,7 +227,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 1) {
-            Page image = this.project.getPage();
+            Page image = this.model.project.getPage();
             if (image != null) {
                 String selectedItem = (String) this.rectangleList.getSelectedValue();
                 image.setShape(selectedItem);
@@ -254,7 +256,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        Page image = this.project.getPage();
+        Page image = this.model.project.getPage();
         if (image != null) {
             int index = image.getIndex();
             switch (keyCode) {
@@ -291,9 +293,9 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     @Override
     public void keyReleased(KeyEvent e) {
         String uuid = (String) rectangleList.getSelectedValue();
-        Page image = this.project.getPage();
+        Page image = this.model.project.getPage();
         if (image != null && !uuid.equals(image.getShape().uuid)) {
-            this.project.getPage().setShape(uuid);
+            this.model.project.getPage().setShape(uuid);
             this.init();
             this.getParent().repaint();
         }
@@ -541,13 +543,13 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         String value = this.textInputTextField.getText().trim();
         Text text = new Text();
         text.value = value;
-        Page page = this.project.getPage();
+        Page page = this.model.project.getPage();
         Shape shape = (page != null)?page.getShape():null;
         Data data = (shape != null)?shape.getData():null;
         if(data != null) {
         	data.addText(text);
         	System.out.println(data.getTextMap());
-        	this.setProject(this.project);
+        	this.setModel(this.model);
         }
         
     }//GEN-LAST:event_inputAddButtonActionPerformed
@@ -555,7 +557,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     private void textValueDefaultCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textValueDefaultCheckBoxActionPerformed
         boolean flag = this.textValueDefaultCheckBox.isSelected();
         if (flag) {
-        	Page page = this.project.getPage();
+        	Page page = this.model.project.getPage();
             Shape shape = (page != null)?page.getShape():null;
             Data data = (shape != null)?shape.getData():null;
             if(data != null) {
@@ -570,7 +572,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
 
     private void deleteRectangleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRectangleButtonActionPerformed
         int index = this.rectangleList.getSelectedIndex();
-        Page image = this.project.getPage();
+        Page image = this.model.project.getPage();
         image.getShapeList().remove(index);
         this.init();
         ((Main) this.getParent()).repaint();
@@ -578,7 +580,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
 
     private void applyUnitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyUnitButtonActionPerformed
         logger.info("applyUnitButtonActionPerformed(...)");
-    	Page page = (this.project != null) ? this.project.getPage() : null;
+    	Page page = (this.model.project != null) ? this.model.project.getPage() : null;
         Shape shape = (page != null) ? page.getShape() : null;
         Data data = (shape != null) ? shape.getData() : null;
         if (data != null) {
@@ -607,13 +609,13 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     }//GEN-LAST:event_applyUnitButtonActionPerformed
 
     private void rectangleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rectangleButtonActionPerformed
-        this.project.rectangle = true;
-        this.project.ellipse = false;
+        this.model.rectangle = true;
+        this.model.ellipse = false;
     }//GEN-LAST:event_rectangleButtonActionPerformed
 
     private void ellipseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ellipseButtonActionPerformed
-        this.project.rectangle = false;
-        this.project.ellipse = true;
+        this.model.rectangle = false;
+        this.model.ellipse = true;
     }//GEN-LAST:event_ellipseButtonActionPerformed
 
     /**

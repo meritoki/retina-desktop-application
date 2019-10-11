@@ -16,8 +16,7 @@
 package com.meritoki.retina.application.desktop.view.dialog;
 
 import java.io.File;
-
-import com.meritoki.retina.application.desktop.model.project.Project;
+import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.view.frame.Main;
 
 /**
@@ -26,7 +25,11 @@ import com.meritoki.retina.application.desktop.view.frame.Main;
  */
 public class Open extends javax.swing.JDialog {
 
-    private Project model = null;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6241323189102604811L;
+	private Model model = null;
     /**
      * Creates new form Open
      * @param parent
@@ -37,7 +40,7 @@ public class Open extends javax.swing.JDialog {
         initComponents();
     }
     
-    public void setModel(Project model){
+    public void setModel(Model model){
         this.model = model;
     }
 
@@ -76,8 +79,9 @@ public class Open extends javax.swing.JDialog {
 
     private void openFileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openFileChooserActionPerformed
         File file = this.openFileChooser.getSelectedFile();
-        ((Main)this.getParent()).setProject(((Main)this.getParent()).getProject().open(file));
-        ((Main)this.getParent()).setProject();
+        Model model = new Model();
+        model.open(file);
+        ((Main)this.getParent()).setModel(model);
         ((Main)this.getParent()).init();
         ((Main)this.getParent()).repaint();
         this.setVisible(false);

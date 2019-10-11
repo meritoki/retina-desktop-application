@@ -30,7 +30,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meritoki.retina.application.desktop.model.system.Status;
 
 public class ModelClient {
 	
@@ -79,6 +78,14 @@ public class ModelClient {
     	HttpEntity<String> entity = new HttpEntity<String>(project, headers);
     	String string = restTemplate.postForObject(uri, entity, String.class);
     	System.out.println(string);
+    }
+    
+    public String downloadProject(String uuid) {
+    	String string = null;
+    	RestTemplate restTemplate = new RestTemplate();
+    	String uri = new String(url+"/project/"+uuid);
+    	string = restTemplate.getForObject(uri, String.class);
+    	return string;
     }
     
     

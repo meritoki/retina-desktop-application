@@ -15,15 +15,12 @@
  */
 package com.meritoki.retina.application.desktop.view.dialog;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import org.apache.logging.log4j.LogManager;
-
-import com.meritoki.retina.application.desktop.controller.script.MatrixScript;
+import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.project.Data;
 import com.meritoki.retina.application.desktop.model.project.Page;
-import com.meritoki.retina.application.desktop.model.project.Project;
 
 /**
  *
@@ -31,42 +28,45 @@ import com.meritoki.retina.application.desktop.model.project.Project;
  */
 public class Matrix extends javax.swing.JDialog {
 
-    static org.apache.logging.log4j.Logger logger = LogManager.getLogger(Matrix.class.getName());
-    public MatrixScript matrixScript = new MatrixScript();
-    private Project project;
-    private List<Page> pageList;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2052352120762179195L;
+	private static org.apache.logging.log4j.Logger logger = LogManager.getLogger(Matrix.class.getName());
+    private Model model = null;
 
     /**
      * Creates new form Page
      */
     public Matrix(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        this.setTitle("Page");
+        this.setTitle("Matrix");
         initComponents();
     }
 
-    public void setModel(Project model) {
+    public void setModel(Model model) {
         logger.debug("setModel(" + model + ")");
-        this.project = model;
+        this.model = model;
         this.init();
     }
 
     public void init() {
+    	logger.debug("init()");
         this.initLabel();
         this.initList();
     }
 
     public void initLabel() {
         logger.debug("initLabel()");
-        Page page = (this.project != null) ? this.project.getPage() : null;
-        int pageIndex = (this.project != null) ? this.project.getIndex() : 0;
+        Page page = (this.model.project != null) ? this.model.project.getPage() : null;
+        int pageIndex = (this.model.project != null) ? this.model.project.getIndex() : 0;
         this.indexValueLabel.setText(pageIndex + "");
         this.uuidValueLabel.setText((page != null) ? page.uuid : "");
     }
 
     public void initList() {
         logger.debug("initList()");
-        Page page = this.project.getPage();
+        Page page = this.model.project.getPage();
         int index = (page != null) ? page.getIndex() : 0;
         List<Data> dataList = (page != null) ? page.getDataList() : null;
         this.initDataList(dataList);
@@ -76,7 +76,7 @@ public class Matrix extends javax.swing.JDialog {
     public void initDataList(List<Data> dataList) {
         logger.info("initDataList(" + dataList + ")");
         if (dataList != null && dataList.size() > 0) {
-            DefaultListModel defaultListModel = new DefaultListModel();
+            DefaultListModel<String> defaultListModel = new DefaultListModel<>();
             for (int i = 0; i < dataList.size(); i++) {
                 defaultListModel.addElement(dataList.get(i).uuid);
             }
@@ -219,22 +219,21 @@ public class Matrix extends javax.swing.JDialog {
 
     private void executePageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executePageScriptButtonActionPerformed
         String value = this.imageScriptTextArea.getText();
-        this.pageList = new ArrayList<>(this.project.getPageList());
-        this.matrixScript.setPageList(this.pageList);
+        this.model.script.setPageList(this.model.project.getPageList());
         try {
-            this.matrixScript.page(value);
+//            this.model.script.sortDataMatrix(value);
         } catch (Exception ex) {
             System.err.println(ex);
         }
-        this.initDataList(this.pageList.get(this.project.getIndex()).getDataList());
+//        this.initDataList(this.pageList.get(this.model.project.getIndex()).getDataList());
     }//GEN-LAST:event_executePageScriptButtonActionPerformed
 
     private void resetPageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetPageScriptButtonActionPerformed
-        this.initDataList(this.project.getPageList().get(this.project.getIndex()).getDataList());
+        this.initDataList(this.model.project.getPageList().get(this.model.project.getIndex()).getDataList());
     }//GEN-LAST:event_resetPageScriptButtonActionPerformed
 
     private void setImageListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setImageListActionPerformed
-        this.project.setPageList(this.pageList);
+        this.model.project.setPageList(this.model.pageList);
         this.imageScriptTextArea.setText("");
     }//GEN-LAST:event_setImageListActionPerformed
 
