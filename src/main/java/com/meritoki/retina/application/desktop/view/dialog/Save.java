@@ -17,6 +17,7 @@ package com.meritoki.retina.application.desktop.view.dialog;
 
 import java.io.File;
 
+import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.project.Project;
 import com.meritoki.retina.application.desktop.view.frame.Main;
 
@@ -26,13 +27,18 @@ import com.meritoki.retina.application.desktop.view.frame.Main;
  */
 public class Save extends javax.swing.JDialog {
 
-    private Project model;
+    private Model model = null;
     /**
      * Creates new form Save
      */
     public Save(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.saveFileChooser.setApproveButtonText("Save");
+        // Set the mnemonic
+        this.saveFileChooser.setApproveButtonMnemonic('S');
+        // Set the tool tip
+        this.saveFileChooser.setApproveButtonToolTipText("Save Tool Tip");
     }
 
     /**
@@ -72,7 +78,7 @@ public class Save extends javax.swing.JDialog {
 
     private void saveFileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveFileChooserActionPerformed
         File file = this.saveFileChooser.getSelectedFile();
-        ((Main)this.getParent()).getProject().save(file);
+        ((Main)this.getParent()).model.save(file);
         this.setVisible(false);
     }//GEN-LAST:event_saveFileChooserActionPerformed
 
@@ -122,7 +128,7 @@ public class Save extends javax.swing.JDialog {
     private javax.swing.JFileChooser saveFileChooser;
     // End of variables declaration//GEN-END:variables
 
-    public void setModel(Project model) {
+    public void setModel(Model model) {
         this.model = model;
     }
 }

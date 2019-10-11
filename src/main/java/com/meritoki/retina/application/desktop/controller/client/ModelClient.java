@@ -30,58 +30,61 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meritoki.retina.application.desktop.model.system.Status;
 
 public class ModelClient {
-	
-	public static void main(String[] args) {
-		ModelClient modelClient = new ModelClient();
-		System.out.println(modelClient.checkHealth());
-	}
+
+    public static void main(String[] args) {
+        ModelClient modelClient = new ModelClient();
+        System.out.println(modelClient.checkHealth());
+    }
 
     private static final Logger log = LoggerFactory.getLogger(ModelClient.class);
     private String url = "http://localhost:8301";
     private Properties properties = null;
-    
+
     public void setProperties(Properties properties) {
-    	this.properties = properties;
+        this.properties = properties;
     }
-    
+
     public boolean checkHealth() {
-    	boolean flag = false;
-    	RestTemplate restTemplate = new RestTemplate();
-    	String uri = new String(url+"/actuator/health");
-    	String responseJson = restTemplate.getForObject(uri, String.class);
-    	ObjectMapper mapper = new ObjectMapper();
-		Status status = null;
-		try {
-			status = mapper.readValue(responseJson, Status.class);
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if(status.status.equals("UP")) {
-			flag = true;
-		}
-		return flag;
+        boolean flag = false;
+        RestTemplate restTemplate = new RestTemplate();
+        String uri = new String(url + "/actuator/health");
+        String responseJson = restTemplate.getForObject(uri, String.class);
+        ObjectMapper mapper = new ObjectMapper();
+        Status status = null;
+        try {
+            status = mapper.readValue(responseJson, Status.class);
+        } catch (JsonParseException e) {
+            e.printStackTrace();
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (status.status.equals("UP")) {
+            flag = true;
+        }
+        return flag;
     }
-    
-    
-    
+
     public void importProject(String project) {
-    	RestTemplate restTemplate = new RestTemplate();
-    	String uri = new String(url+"/import");
-    	HttpHeaders headers = new HttpHeaders();
-    	headers.setContentType(MediaType.APPLICATION_JSON);
-    	HttpEntity<String> entity = new HttpEntity<String>(project, headers);
-    	String string = restTemplate.postForObject(uri, entity, String.class);
-    	System.out.println(string);
+        RestTemplate restTemplate = new RestTemplate();
+        String uri = new String(url + "/import");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<String>(project, headers);
+        String string = restTemplate.postForObject(uri, entity, String.class);
+        System.out.println(string);
     }
-    
-    
+
+    public String downloadProject(String uuid) {
+        String string = null;
+        RestTemplate restTemplate = new RestTemplate();
+        String uri = new String(url + "/project/" + uuid);
+        string = restTemplate.getForObject(uri, String.class);
+        return string;
+    }
 
 //    public static void main(String args[]) {
 //        Map<String, String> vars = new HashMap<String, String>();

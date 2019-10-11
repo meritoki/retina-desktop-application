@@ -30,7 +30,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
 public class Data {
-    static Logger logger = LogManager.getLogger(Data.class.getName());
+    private static Logger logger = LogManager.getLogger(Data.class.getName());
     public String uuid;
     public Unit unit = new Unit();
     public Text text = new Text();

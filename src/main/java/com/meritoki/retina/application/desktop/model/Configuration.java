@@ -1,4 +1,4 @@
-package com.meritoki.retina.application.desktop.model.system;
+package com.meritoki.retina.application.desktop.model;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -6,12 +6,12 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class Configuration {
-	public void save(Properties properties) {
+	public static void save(Properties properties) {
 		
 		
 	}
 	
-	public Properties open(String fileName) {
+	public static Properties open(String fileName) {
         Properties properties = new Properties();
 		try (InputStream input = new FileInputStream(fileName)) {
             properties.load(input);

@@ -37,6 +37,7 @@ import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.map.SerializationConfig;
 
 import com.meritoki.retina.application.desktop.controller.client.ModelClient;
+import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.provider.Provider;
 import com.meritoki.retina.application.desktop.model.vendor.Vendor;
 
@@ -49,12 +50,13 @@ public class Project implements Serializable {
 //        File file = new File("~/test.json");
 //        project.initTest();
         ObjectMapper mapper = new ObjectMapper();
-        project = project.open(new File("/home/jorodriguez/test.json"));
+        Model model = new Model();
+        model.open(new File("/home/jorodriguez/test.json"));
 //        mapper.setVisibility(JsonMethod.FIELD, Visibility.ANY);
 //        mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
 //        mapper.writeValue(file, project);
 //        project = mapper.readValue(file, Project.class);
-        String jsonInString = mapper.writeValueAsString(project);
+        String jsonInString = mapper.writeValueAsString(model.project);
         System.out.println(jsonInString);
         ModelClient modelClient = new ModelClient();
         modelClient.importProject(jsonInString);
@@ -70,14 +72,7 @@ public class Project implements Serializable {
     public int index = 0;
     @JsonProperty
     public List<Layout> layoutList = new ArrayList<>();
-    @JsonIgnore
-    public boolean rectangle = true;
-    @JsonIgnore
-    public boolean ellipse = true;
-    @JsonIgnore
-    public List<Provider> providerList = new ArrayList<>();
-    @JsonIgnore
-    public List<Vendor> vendorList = new ArrayList<>();
+
     
     public Project(){ 
         this.uuid = UUID.randomUUID().toString();
@@ -118,39 +113,6 @@ public class Project implements Serializable {
         page.file.path = "./data/page";
         pageList.add(page);
         this.setIndex(0);
-    }
-    
-    @JsonIgnore
-    public void save(File file) {
-        logger.info("save("+file+")");
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY);
-        mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
-        try {
-            mapper.writeValue(file, this);
-            logger.info("saved...");
-        } catch (IOException ex) {
-           logger.error(ex);
-        }
-    }
-    
-    @JsonIgnore
-    public Project open(File file) {
-        logger.info("open("+file+")");
-        Project model = null;
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
-        try {
-            model = mapper.readValue(file, Project.class);
-            logger.info("opened...");
-        } catch (JsonGenerationException e) {
-            logger.error(e);
-        } catch (JsonMappingException e) {
-            logger.error(e);
-        } catch (IOException e) {
-            logger.error(e);
-        }
-        return model;
     }
     
     @JsonIgnore

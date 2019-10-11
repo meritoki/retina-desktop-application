@@ -22,7 +22,12 @@ package com.meritoki.retina.application.desktop.view.dialog.zooniverse;
 public class Import extends javax.swing.JDialog {
 
     /**
-     * Creates new form Zooniverse
+	 * 
+	 */
+	private static final long serialVersionUID = 6833970920926871138L;
+
+	/**
+     * Instantiate neew Zooniverse Import Dialog
      */
     public Import(java.awt.Frame parent, boolean modal) {
         super(parent, modal);

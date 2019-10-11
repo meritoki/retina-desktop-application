@@ -19,8 +19,15 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 
-import com.meritoki.retina.application.desktop.model.project.Project;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.meritoki.retina.application.desktop.model.Model;
+import com.meritoki.retina.application.desktop.model.provider.Provider;
+import com.meritoki.retina.application.desktop.model.provider.zooniverse.Project;
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.Workflow;
+import com.meritoki.retina.application.desktop.model.provider.zooniverse.Zooniverse;
+import com.meritoki.retina.application.desktop.model.provider.zooniverse.ZooniverseProvider;
 
 /**
  *
@@ -28,31 +35,39 @@ import com.meritoki.retina.application.desktop.model.provider.zooniverse.Workflo
  */
 public class Export extends javax.swing.JDialog {
 
-    public Project model;
+	private static final long serialVersionUID = 3200033012988617201L;
+	private static Logger logger = LogManager.getLogger(Export.class.getName());
+	public Model model;
 
     /**
-     * Creates new form Zooniverse
+     * Instantiate new Zooniverse Export Dialog
      */
     public Export(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
 
-    public void setModel(Project model) {
+    public void setModel(Model model) {
+    	logger.debug("setModel("+model+")");
         this.model = model;
         this.init();
     }
 
     public void init() {
+    	logger.debug("init()");
         this.initComboBox();
     }
 
     public void initComboBox() {
-//        com.meritoki.retina.application.desktop.model.provider.zooniverse.Zooniverse zooniverse = (this.model != null) ? this.model.getZooniverse() : null;
-//        List<com.meritoki.retina.application.desktop.model.provider.zooniverse.Project> projectList = (zooniverse != null) ? zooniverse.getProjectList() : null;
-//        this.initProjectComboBox(projectList);
-//        this.initSearchProjectComboBox(new ArrayList<com.meritoki.retina.application.desktop.model.provider.zooniverse.Project>());
-//        this.initProjectWorkflowComboBox(new ArrayList<com.meritoki.retina.application.desktop.model.provider.zooniverse.Workflow>());
+    	for(Provider provider: this.model.providerList) {
+    		if(provider instanceof ZooniverseProvider) {
+		        Zooniverse zooniverse = ((ZooniverseProvider)provider).zooniverse;
+		        List<com.meritoki.retina.application.desktop.model.provider.zooniverse.Project> projectList = (zooniverse != null) ? zooniverse.getProjectList() : null;
+		        this.initProjectComboBox(projectList);
+		        this.initSearchProjectComboBox(new ArrayList<Project>());
+		        this.initProjectWorkflowComboBox(new ArrayList<Workflow>());
+    		}
+    	}
     }
 
     public void initProjectComboBox(List<com.meritoki.retina.application.desktop.model.provider.zooniverse.Project> projectList) {

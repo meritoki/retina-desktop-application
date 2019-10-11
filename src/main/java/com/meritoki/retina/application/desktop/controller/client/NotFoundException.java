@@ -13,18 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meritoki.retina.application.desktop.view.panel;
-
-import javax.swing.JPanel;
+package com.meritoki.retina.application.desktop.controller.client;
 
 /**
- * Table class displays a table with data parsed from a page, using the matrix
+ *
+ * @author jorodriguez
  */
-public class Table extends JPanel {
+public class NotFoundException extends Exception {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1150207383197799895L;
+    public NotFoundException() {
+    }
     
 }
