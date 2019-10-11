@@ -35,7 +35,7 @@
                 </transformer>
                 <transformer />
                 <transformer>
-                  <mainClass>com.meritoki.retina.application.desktop.controller.Desktop</mainClass>
+                  <mainClass>com.meritoki.retina.application.desktop.Desktop</mainClass>
                 </transformer>
               </transformers>
             </configuration>
@@ -64,7 +64,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>com.meritoki.retina.application.desktop.controller.Desktop</mainClass>
+              <mainClass>com.meritoki.retina.application.desktop.Desktop</mainClass>
             </manifest>
           </archive>
         </configuration>
@@ -148,12 +148,6 @@
       <groupId>org.apache.cayenne</groupId>
       <artifactId>cayenne-java8</artifactId>
       <version>4.0.1</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
-      <version>1.7.25</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
