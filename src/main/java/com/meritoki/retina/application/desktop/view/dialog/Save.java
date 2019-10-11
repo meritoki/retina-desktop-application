@@ -34,6 +34,11 @@ public class Save extends javax.swing.JDialog {
     public Save(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.saveFileChooser.setApproveButtonText("Save");
+        // Set the mnemonic
+        this.saveFileChooser.setApproveButtonMnemonic('S');
+        // Set the tool tip
+        this.saveFileChooser.setApproveButtonToolTipText("Save Tool Tip");
     }
 
     /**
