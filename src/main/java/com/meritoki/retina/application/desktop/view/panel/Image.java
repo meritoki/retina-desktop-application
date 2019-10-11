@@ -40,7 +40,6 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 	private Main main = null;
 	private Model model = null;
 
-
 	public Image() {
 		super();
 		this.setBackground(Color.black);
@@ -64,8 +63,10 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		Dimension size = new Dimension(1028, 512);
 		if (this.model != null && this.model.project != null && this.model.project.getPage() != null
 				&& this.model.project.getPage().getBufferedImage() != null) {
-			size.width = (int) Math.round(this.model.project.getPage().getBufferedImage().getWidth() * this.model.scale);
-			size.height = (int) Math.round(this.model.project.getPage().getBufferedImage().getHeight() * this.model.scale);
+			size.width = (int) Math
+					.round(this.model.project.getPage().getBufferedImage().getWidth() * this.model.scale);
+			size.height = (int) Math
+					.round(this.model.project.getPage().getBufferedImage().getHeight() * this.model.scale);
 		}
 		return size;
 	}
@@ -76,31 +77,34 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		Graphics2D graphics2D = (Graphics2D) g.create();
-		Page page = (this.model.project != null) ? this.model.project.getPage() : null;
-		AffineTransform affineTransform = new AffineTransform();
-		affineTransform.scale(this.model.scale, this.model.scale);
-		BufferedImage bufferedImage = (page != null) ? page.getBufferedImage() : null;
-		if (bufferedImage != null) {
-			graphics2D.drawImage(bufferedImage, affineTransform, this);
-		}
-		List<Shape> shapeList = (page != null) ? page.getShapeList() : null;
-		if (shapeList != null) {
-			for (Shape shape : shapeList) {
-				if (shape.uuid.equals(page.getShape().uuid)) {
-					graphics2D.setColor(Color.RED);
-				} else {
-					graphics2D.setColor(Color.BLUE);
-				}
-				if(shape.classification == null) {
-					if(this.model.rectangle) {
-						shape.classification = Shape.RECTANGLE;
-					} else if(this.model.ellipse) {
-						shape.classification = Shape.ELLIPSE;
+		if (this.model != null) {
+			Graphics2D graphics2D = (Graphics2D) g.create();
+			Project project = this.model.project;
+			Page page = (project != null) ? project.getPage() : null;
+			AffineTransform affineTransform = new AffineTransform();
+			affineTransform.scale(this.model.scale, this.model.scale);
+			BufferedImage bufferedImage = (page != null) ? page.getBufferedImage() : null;
+			if (bufferedImage != null) {
+				graphics2D.drawImage(bufferedImage, affineTransform, this);
+			}
+			List<Shape> shapeList = (page != null) ? page.getShapeList() : null;
+			if (shapeList != null) {
+				for (Shape shape : shapeList) {
+					if (shape.uuid.equals(page.getShape().uuid)) {
+						graphics2D.setColor(Color.RED);
+					} else {
+						graphics2D.setColor(Color.BLUE);
 					}
-				}
-				if (shape.pointList.size() > 1) {
-					shape.draw(graphics2D);
+					if (shape.classification == null) {
+						if (this.model.rectangle) {
+							shape.classification = Shape.RECTANGLE;
+						} else if (this.model.ellipse) {
+							shape.classification = Shape.ELLIPSE;
+						}
+					}
+					if (shape.pointList.size() > 1) {
+						shape.draw(graphics2D);
+					}
 				}
 			}
 		}
@@ -109,6 +113,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 	/**
 	 * A mousePressed begins an Add, Move, or Resize. Call each one a Command that
 	 * affects the model. A command can have one or more Operations.
+	 * 
 	 * @param point
 	 * @return
 	 */
@@ -130,6 +135,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 
 	/**
 	 * Consider moving
+	 * 
 	 * @param point
 	 * @return
 	 */
@@ -182,7 +188,8 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		this.model.releasedPoint = new Point();
 		this.model.releasedPoint.x = e.getX();
 		this.model.releasedPoint.y = e.getY();
-		if (this.model.pressedPoint.x == this.model.releasedPoint.x && this.model.pressedPoint.y == this.model.releasedPoint.y) {
+		if (this.model.pressedPoint.x == this.model.releasedPoint.x
+				&& this.model.pressedPoint.y == this.model.releasedPoint.y) {
 			if (this.model.shape != null) {
 				logger.info("Selected...");
 				this.model.project.getPage().setShape(this.model.shape.uuid);// Done
@@ -193,7 +200,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		} else {
 			int selection = this.shapeIntersects(this.model.pressedPoint);
 			if (selection > -1) {
-				if(this.model.shape != null) {
+				if (this.model.shape != null) {
 					logger.info("Resizing...");
 					this.model.shape.resize(this.model.releasedPoint, selection);
 					// use a copy constructor to remake shape then rezize the copy,
@@ -253,7 +260,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		double delta = 0.05f * e.getPreciseWheelRotation();
 		this.model.scale += delta;
 		this.model.scale = this.round(this.model.scale, 6);
-		if(this.model.scale >= 0 && this.model.scale<=2) {
+		if (this.model.scale >= 0 && this.model.scale <= 2) {
 			logger.debug("mouseWheelMoved(...) scale = " + this.model.scale);
 			for (Shape shape : this.model.project.getPage().getShapeList()) {
 				shape.scale(this.model.scale);

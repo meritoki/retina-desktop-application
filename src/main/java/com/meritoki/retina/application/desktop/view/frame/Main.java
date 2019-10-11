@@ -22,6 +22,8 @@ import javax.swing.JFrame;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.meritoki.retina.application.desktop.model.Model;
+import java.io.File;
+
 /**
  *
  * @author osvaldo.rodriguez
@@ -29,17 +31,17 @@ import com.meritoki.retina.application.desktop.model.Model;
 public final class Main extends JFrame {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 4699683145704846741L;
-	private static Logger logger = LogManager.getLogger(Main.class.getName());
+     *
+     */
+    private static final long serialVersionUID = 4699683145704846741L;
+    private static Logger logger = LogManager.getLogger(Main.class.getName());
     public Model model = null;
     public com.meritoki.retina.application.desktop.view.dialog.Image imageDialog = new com.meritoki.retina.application.desktop.view.dialog.Image(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.Rectangle shapeDialog = new com.meritoki.retina.application.desktop.view.dialog.Rectangle(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.Matrix pageDialog = new com.meritoki.retina.application.desktop.view.dialog.Matrix(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.New newDialog = new com.meritoki.retina.application.desktop.view.dialog.New(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.Open openDialog = new com.meritoki.retina.application.desktop.view.dialog.Open(this, false);
-    public com.meritoki.retina.application.desktop.view.dialog.Save saveDialog = new com.meritoki.retina.application.desktop.view.dialog.Save(this, false);
+    public com.meritoki.retina.application.desktop.view.dialog.SaveAs saveAsDialog = new com.meritoki.retina.application.desktop.view.dialog.SaveAs(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.zooniverse.Export exportZooniverseDialog = new com.meritoki.retina.application.desktop.view.dialog.zooniverse.Export(this, false);
 
     public Main() {
@@ -54,14 +56,14 @@ public final class Main extends JFrame {
     }
 
     public void setModel(Model model) {
-    	logger.debug("setModel("+model+")");
+        logger.debug("setModel(" + model + ")");
         this.model = model;
         this.imagePanel.setModel(this.model);
         this.matrixPanel.setModel(this.model);
         this.imageDialog.setModel(this.model);
         this.shapeDialog.setModel(this.model);
         this.openDialog.setModel(this.model);
-        this.saveDialog.setModel(this.model);
+        this.saveAsDialog.setModel(this.model);
         this.pageDialog.setModel(this.model);
         this.exportZooniverseDialog.setModel(this.model);
     }
@@ -164,6 +166,11 @@ public final class Main extends JFrame {
         fileMenu.add(saveMenuItem);
 
         saveAsMenuItem.setText("Save As");
+        saveAsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveAsMenuItemActionPerformed(evt);
+            }
+        });
         fileMenu.add(saveAsMenuItem);
 
         jMenu1.setText("Import");
@@ -256,7 +263,10 @@ public final class Main extends JFrame {
     }//GEN-LAST:event_newMenuItemActionPerformed
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
-        this.saveDialog.setVisible(true);
+        File file = this.model.file;
+        if (file != null) {
+            this.model.save();
+        }
     }//GEN-LAST:event_saveMenuItemActionPerformed
 
     private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
@@ -278,6 +288,10 @@ public final class Main extends JFrame {
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         this.exportZooniverseDialog.setVisible(true);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void saveAsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsMenuItemActionPerformed
+        this.saveAsDialog.setVisible(true);
+    }//GEN-LAST:event_saveAsMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
