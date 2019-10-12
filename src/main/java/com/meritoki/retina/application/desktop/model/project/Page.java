@@ -65,17 +65,15 @@ public class Page {
 	 */
     @JsonIgnore
     public int index = 0;
+    
+    @JsonIgnore
+    public BufferedImage bufferedImage = null;
 
     /**
      * Page class retains references to one or more files
      */
     public Page() {
         this.uuid = UUID.randomUUID().toString();
-    }
-    
-    public void addShapeList(List<Shape> shapeList) {
-    	logger.info("addShapeList("+shapeList+")");
-    	this.shapeList.addAll(shapeList);
     }
 
     /**
@@ -144,7 +142,10 @@ public class Page {
         }
     }
     
-    
+    /**
+     * Functions adds shape to shapeList.
+     * @param shape
+     */
     @JsonIgnore
     public void addShape(Shape shape) {
         for(Shape s: this.shapeList) {
@@ -154,73 +155,52 @@ public class Page {
             }
         }
     }
-
-    @JsonIgnore
-    public Data getData() {
-        Data data = null;
-        Shape shape = null;
-        if (this.index >= 0 && this.index < this.shapeList.size()) {
-            shape = this.shapeList.get(this.index);
-        }
-        if (shape != null) {
-            data = shape.data;
-        }
-        return data;
+    
+    public void addShapeList(List<Shape> shapeList) {
+    	logger.info("addShapeList("+shapeList+")");
+    	this.shapeList.addAll(shapeList);
     }
 
-    @JsonProperty
-    public List<Shape> getShapeList() {
-        return this.shapeList;
-    }
+//    @JsonIgnore
+//    public BufferedImage getShapeImage(Shape shape) {
+//        BufferedImage bufferedImage = null;
+//        if (this.getBufferedImage() != null) {
+////            bufferedImage = this.getBufferedImage().getSubimage(shape.getX(), shape.getX(), (shape.getI() - shape.getX()),
+////                    (shape.getJ() - shape.getY()));
+//        }
+//        return bufferedImage;
+//    }
 
-    @JsonIgnore
-    public void setShapeList(List<Shape> shapeList) {
-        this.shapeList = shapeList;
-    }
-
-    @JsonIgnore
-    public BufferedImage getShapeImage(Shape shape) {
-        BufferedImage bufferedImage = null;
-        if (this.getBufferedImage() != null) {
-//            bufferedImage = this.getBufferedImage().getSubimage(shape.getX(), shape.getX(), (shape.getI() - shape.getX()),
-//                    (shape.getJ() - shape.getY()));
-        }
-        return bufferedImage;
-    }
-
-    @JsonIgnore
-    public List<BufferedImage> getShapeListImageList(
-            List<Shape> rList) {
-        List<BufferedImage> imageList = new ArrayList<>();
-        for (Shape r : rList) {
-            imageList.add(this.getShapeImage(r));
-        }
-        return imageList;
-    }
-
+//    @JsonIgnore
+//    public List<BufferedImage> getShapeListImageList(
+//            List<Shape> rList) {
+//        List<BufferedImage> imageList = new ArrayList<>();
+//        for (Shape r : rList) {
+//            imageList.add(this.getShapeImage(r));
+//        }
+//        return imageList;
+//    }
+    
     /**
-     * Function loads the bufferedImage variable for all files in the fileList.
+     * Function loads the bufferedImage instantiated using the fileList.
      */
-    @JsonIgnore
-    public void loadFileListBufferedImage() {
-    	logger.info("loadFileListBufferedImage()");
-        for(File file: this.fileList) {
-        	if(file.bufferedImage == null) {
-        		file.loadBufferedImage();
-        	}
-        }
+    public void loadBufferedImage() {
+    	if(this.bufferedImage == null) {
+    		logger.info("loadBufferedImage() bufferedImage=null");
+    		this.bufferedImage = this.initBufferedImage();
+    	}
     }
-
+    
     /**
      * Function gets a bufferedImage with all the files from fileList as one.
      * @return
      */
     @JsonIgnore
-    public BufferedImage getBufferedImage() {
-    	logger.debug("getBufferedImage()");
-    	this.loadFileListBufferedImage();
+    public BufferedImage initBufferedImage() {
+    	logger.debug("initBufferedImage()");
     	BufferedImage bufferedImage = null;
     	for(File file: this.fileList) {
+    		file.loadBufferedImage();
     		if(bufferedImage == null) {
     			bufferedImage = file.bufferedImage;
     		} else {
@@ -256,7 +236,7 @@ public class Page {
             ArrayList<Shape> shapeList = new ArrayList<>(this.shapeList);
             Shape shape = null;
             int averageY;
-            int threshold = 32;
+            int threshold = 64;
             List<Shape> columnList;
             List<List<Shape>> rowList = new ArrayList<>();
             boolean flag = true;
@@ -424,7 +404,7 @@ public class Page {
     }
 
     public BufferedImage joinBufferedImage(BufferedImage img1,BufferedImage img2) {
-    	logger.info("joinBufferedImage("+img1+","+img2+")");
+    	logger.info("joinBufferedImage(...,...)");
         //do some calculate first
         int offset  = 5;
         int wid = img1.getWidth()+img2.getWidth()+offset;

@@ -90,7 +90,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         Project project = this.model.project;
         Page image = (project != null) ? this.model.project.getPage() : null;
         Shape shape = (image != null) ? image.getShape() : null;
-        List<Shape> shapeList = (image != null) ? image.getShapeList() : null;
+        List<Shape> shapeList = (image != null) ? image.shapeList : null;
         Data data = (shape != null) ? shape.data : null;
         List<Text> textList = (data != null) ? data.getTextList() : null;
     }
@@ -100,7 +100,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         Page page = this.model.project.getPage();
         int index = (page != null) ? page.getIndex() : 0;
 //        Shape shape = (page != null) ? page.getShape() : null;
-        List<Shape> shapeList = (page != null) ? page.getShapeList() : null;
+        List<Shape> shapeList = (page != null) ? page.shapeList : null;
 //        Data data = (shape != null) ? shape.data : null;
 //        List<Text> textList = (data != null) ? data.getTextList() : null;
         this.initRectangleList(shapeList);
@@ -592,7 +592,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     private void deleteRectangleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRectangleButtonActionPerformed
         int index = this.rectangleList.getSelectedIndex();
         Page image = this.model.project.getPage();
-        image.getShapeList().remove(index);
+        image.shapeList.remove(index);
         this.init();
         ((Main) this.getParent()).repaint();
     }//GEN-LAST:event_deleteRectangleButtonActionPerformed

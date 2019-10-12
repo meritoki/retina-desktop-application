@@ -86,6 +86,14 @@ public class Shape {
     public void setDisplacement(double displacement) {
     	logger.info("setDisplacement("+displacement+")");
     	this.displacement = displacement;
+    	for(Point point: this.pointList) {
+    		point.x += this.displacement;
+    	}
+    	
+    }
+    
+    public double getDisplacement() {
+    	return this.displacement;
     }
     
     /**
@@ -99,15 +107,17 @@ public class Shape {
 			double y = Math.min(this.pointList.get(0).y, this.pointList.get(1).y);
 			double width = Math.abs(this.pointList.get(0).x - this.pointList.get(1).x);
 			double height = Math.abs(this.pointList.get(0).y - this.pointList.get(1).y);
+//			double displacement = this.displacement;
 			x *= this.scale;
 			y *= this.scale;
 			width *= this.scale;
 			height *= this.scale;
+//			displacement *= this.scale;
 			if(this.classification.equals(ELLIPSE)) {
-				Ellipse2D.Double ellipse = new Ellipse2D.Double(this.displacement+x, y, width, height);
+				Ellipse2D.Double ellipse = new Ellipse2D.Double(x, y, width, height);
 				graphics2D.draw(ellipse);
 			} else if(this.classification.equals(RECTANGLE)) {
-				Rectangle2D.Double rectangle = new Rectangle2D.Double(this.displacement+x, y, width, height);
+				Rectangle2D.Double rectangle = new Rectangle2D.Double(x, y, width, height);
 				graphics2D.draw(rectangle);
 			}
     	}

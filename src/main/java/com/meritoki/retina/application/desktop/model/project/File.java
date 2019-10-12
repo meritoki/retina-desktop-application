@@ -2,6 +2,8 @@ package com.meritoki.retina.application.desktop.model.project;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
@@ -13,7 +15,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 public class File {
 	@JsonIgnore
-    static Logger logger = LogManager.getLogger(Page.class.getName());
+    static Logger logger = LogManager.getLogger(File.class.getName());
 	@JsonProperty
 	public String uuid;
 	@JsonProperty
@@ -28,6 +30,11 @@ public class File {
     public int width = 0;
     @JsonProperty
     public int height = 0;
+	/**
+	 * List of Shapes drawn by user.
+	 */
+	@JsonProperty
+    public List<Shape> shapeList = new ArrayList<>();
     
     /**
      * Instantiate new instance of File
@@ -38,7 +45,6 @@ public class File {
     
     @JsonIgnore
     public void loadBufferedImage() {
-        logger.info("loadBufferedImage()");
         if (this.path != null && this.name != null) {
             try {
             	logger.info("loadBufferedImage() "+this.path + "/" + this.name);

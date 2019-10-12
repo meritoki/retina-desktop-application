@@ -106,9 +106,15 @@ public class Script {
     	for(File file: pageA.fileList) {
     		displacement += file.width;
     	}
+    	double scale = 1;
+    	if(pageB.shapeList.size()>0) {
+    		scale = pageB.shapeList.get(0).scale;
+    	}
     	for(Shape shape: pageB.shapeList) {
-			shape.displacement += displacement;
+			shape.setDisplacement(shape.getDisplacement()+displacement);
+			shape.scale = scale;
 		}
+    	pageA.bufferedImage = null;
     	pageA.fileList.addAll(pageB.fileList);
     	pageA.addShapeList(pageB.shapeList);
     	this.pageList.remove(y);

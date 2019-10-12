@@ -62,11 +62,11 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 	public Dimension getPreferredSize() {
 		Dimension size = new Dimension(1028, 512);
 		if (this.model != null && this.model.project != null && this.model.project.getPage() != null
-				&& this.model.project.getPage().getBufferedImage() != null) {
+				&& this.model.project.getPage().bufferedImage != null) {
 			size.width = (int) Math
-					.round(this.model.project.getPage().getBufferedImage().getWidth() * this.model.scale);
+					.round(this.model.project.getPage().bufferedImage.getWidth() * this.model.scale);
 			size.height = (int) Math
-					.round(this.model.project.getPage().getBufferedImage().getHeight() * this.model.scale);
+					.round(this.model.project.getPage().bufferedImage.getHeight() * this.model.scale);
 		}
 		return size;
 	}
@@ -83,11 +83,12 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 			Page page = (project != null) ? project.getPage() : null;
 			AffineTransform affineTransform = new AffineTransform();
 			affineTransform.scale(this.model.scale, this.model.scale);
-			BufferedImage bufferedImage = (page != null) ? page.getBufferedImage() : null;
+			page.loadBufferedImage();
+			BufferedImage bufferedImage = (page != null) ? page.bufferedImage : null;
 			if (bufferedImage != null) {
 				graphics2D.drawImage(bufferedImage, affineTransform, this);
 			}
-			List<Shape> shapeList = (page != null) ? page.getShapeList() : null;
+			List<Shape> shapeList = (page != null) ? page.shapeList : null;
 			if (shapeList != null) {
 				for (Shape shape : shapeList) {
 					if (shape.uuid.equals(page.getShape().uuid)) {
@@ -121,9 +122,9 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		Shape shape = null;
 		Project project = (this.model != null) ? this.model.project : null;
 		Page image = (project != null) ? this.model.project.getPage() : null;
-		List<Shape> shapeList = (image != null) ? image.getShapeList() : null;
+		List<Shape> shapeList = (image != null) ? image.shapeList : null;
 		if (shapeList != null) {
-			for (Shape s : this.model.project.getPage().getShapeList()) {
+			for (Shape s : this.model.project.getPage().shapeList) {
 				if (s.contains(point)) {
 					shape = s;
 					break;
@@ -142,9 +143,9 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 	public int shapeIntersects(Point point) {
 		int selection = -1;
 		Page image = (this.model.project != null) ? this.model.project.getPage() : null;
-		List<Shape> shapeList = (image != null) ? image.getShapeList() : null;
+		List<Shape> shapeList = (image != null) ? image.shapeList : null;
 		if (shapeList != null) {
-			for (Shape s : this.model.project.getPage().getShapeList()) {
+			for (Shape s : this.model.project.getPage().shapeList) {
 				if (s.intersects(point)) {
 					selection = s.intersect(point);
 					break;
@@ -194,7 +195,6 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				logger.info("Selected...");
 				this.model.project.getPage().setShape(this.model.shape.uuid);// Done
 			} else {
-				logger.info("***********" + this.model.pressedPoint);
 				logger.info("Nothing...");
 			}
 		} else {
@@ -222,7 +222,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 					this.model.shape.pointList.add(this.model.pressedPoint);
 					this.model.shape.pointList.add(this.model.releasedPoint);
 					this.model.shape.sortPointList();
-					this.model.project.getPage().getShapeList().add(this.model.shape);
+					this.model.project.getPage().shapeList.add(this.model.shape);
 					this.model.project.getPage().setShape(this.model.shape.uuid);
 					Command command = new Command();
 					Operation operation = new Operation();
@@ -262,7 +262,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		this.model.scale = this.round(this.model.scale, 6);
 		if (this.model.scale >= 0 && this.model.scale <= 2) {
 			logger.debug("mouseWheelMoved(...) scale = " + this.model.scale);
-			for (Shape shape : this.model.project.getPage().getShapeList()) {
+			for (Shape shape : this.model.project.getPage().shapeList) {
 				shape.scale(this.model.scale);
 			}
 			revalidate();
