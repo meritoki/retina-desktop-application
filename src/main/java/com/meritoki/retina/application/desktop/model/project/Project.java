@@ -15,7 +15,6 @@
  */
 package com.meritoki.retina.application.desktop.model.project;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -51,7 +50,7 @@ public class Project implements Serializable {
 //        project.initTest();
         ObjectMapper mapper = new ObjectMapper();
         Model model = new Model();
-        model.open(new File("/home/jorodriguez/test.json"));
+        model.open(new java.io.File("/home/jorodriguez/test.json"));
 //        mapper.setVisibility(JsonMethod.FIELD, Visibility.ANY);
 //        mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
 //        mapper.writeValue(file, project);
@@ -69,8 +68,6 @@ public class Project implements Serializable {
     @JsonProperty
     public List<Page> pageList = new ArrayList<>();
     @JsonIgnore
-    public List<Sheet> sheetList = new ArrayList<>();
-    @JsonIgnore
     public int index = 0;
     @JsonProperty
     public List<Layout> layoutList = new ArrayList<>();
@@ -83,38 +80,44 @@ public class Project implements Serializable {
     @JsonIgnore
     public void initTest(){
         Page page = new Page();
-        page.file.name = "01.jpg";
-        page.file.path = "./data/page";
+        File file = new File();
+        file.name = "01.jpg";
+        file.path = "./data/page";
+        page.fileList.add(file);
         pageList.add(page);
         page = new Page();
-        page.file.name = "02.jpg";
-        page.file.path = "./data/page";
+        file = new File();
+        file.name = "02.jpg";
+        file.path = "./data/page";
+        page.fileList.add(file);
         pageList.add(page);
         page = new Page();
-        page.file.name = "03.jpg";
-        page.file.path = "./data/page";
+        file = new File();
+        file.name = "03.jpg";
+        file.path = "./data/page";
+        page.fileList.add(file);
         pageList.add(page);
-        page = new Page();
-        page.file.name = "04.jpg";
-        page.file.path = "./data/page";
-        pageList.add(page);
-        page = new Page();
-        page.file.name = "05.jpg";
-        page.file.path = "./data/page";
-        pageList.add(page);
-        page = new Page();
-        page.file.name = "06.jpg";
-        page.file.path = "./data/page";
-        pageList.add(page);
-        page = new Page();
-        page.file.name = "07.jpg";
-        page.file.path = "./data/page";
-        pageList.add(page);
-        page = new Page();
-        page.file.name = "08.jpg";
-        page.file.path = "./data/page";
-        pageList.add(page);
-        this.setIndex(0);
+//        page = new Page();
+//        page.file.name = "04.jpg";
+//        page.file.path = "./data/page";
+//        pageList.add(page);
+//        page = new Page();
+//        page.file.name = "05.jpg";
+//        page.file.path = "./data/page";
+//        pageList.add(page);
+//        page = new Page();
+//        page.file.name = "06.jpg";
+//        page.file.path = "./data/page";
+//        pageList.add(page);
+//        page = new Page();
+//        page.file.name = "07.jpg";
+//        page.file.path = "./data/page";
+//        pageList.add(page);
+//        page = new Page();
+//        page.file.name = "08.jpg";
+//        page.file.path = "./data/page";
+//        pageList.add(page);
+//        this.setIndex(0);
     }
     
     @JsonIgnore
@@ -144,7 +147,7 @@ public class Project implements Serializable {
     
     @JsonIgnore
     public void setPage(String uuid) {
-        logger.debug("setPage("+uuid+")");
+        logger.info("setPage("+uuid+")");
         Page page = null;
         for(int i = 0; i < this.pageList.size(); i++){
             page = this.pageList.get(i);
@@ -157,7 +160,7 @@ public class Project implements Serializable {
     
     @JsonIgnore
     public Page getPage() {
-        return this.pageList.get(index);
+        return (this.pageList.size() > 0) ? this.pageList.get(index) : null;
     }
     
     @JsonIgnore

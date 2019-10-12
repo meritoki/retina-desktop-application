@@ -74,8 +74,8 @@ public final class Main extends JFrame {
         this.imagePanel.setMain(this);
         this.imagePanel.setFocusable(true);
         this.imagePanel.requestFocusInWindow();
-//        this.imageDialog.setVisible(true);
-        this.shapeDialog.setVisible(true);
+        this.imageDialog.setVisible(true);
+//        this.shapeDialog.setVisible(true);
     }
 
     /**
@@ -88,7 +88,9 @@ public final class Main extends JFrame {
     private void initComponents() {
 
         imagePageTabbedPane = new javax.swing.JTabbedPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
         imagePanel = new com.meritoki.retina.application.desktop.view.panel.Image();
+        jScrollPane2 = new javax.swing.JScrollPane();
         matrixPanel = new com.meritoki.retina.application.desktop.view.panel.Matrix();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -117,27 +119,31 @@ public final class Main extends JFrame {
         imagePanel.setLayout(imagePanelLayout);
         imagePanelLayout.setHorizontalGroup(
             imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1020, Short.MAX_VALUE)
+            .addGap(0, 1028, Short.MAX_VALUE)
         );
         imagePanelLayout.setVerticalGroup(
             imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 647, Short.MAX_VALUE)
+            .addGap(0, 632, Short.MAX_VALUE)
         );
 
-        imagePageTabbedPane.addTab("Image", imagePanel);
+        jScrollPane1.setViewportView(imagePanel);
+
+        imagePageTabbedPane.addTab("Image", jScrollPane1);
 
         javax.swing.GroupLayout matrixPanelLayout = new javax.swing.GroupLayout(matrixPanel);
         matrixPanel.setLayout(matrixPanelLayout);
         matrixPanelLayout.setHorizontalGroup(
             matrixPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1020, Short.MAX_VALUE)
+            .addGap(0, 1028, Short.MAX_VALUE)
         );
         matrixPanelLayout.setVerticalGroup(
             matrixPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 647, Short.MAX_VALUE)
+            .addGap(0, 512, Short.MAX_VALUE)
         );
 
-        imagePageTabbedPane.addTab("Matrix", matrixPanel);
+        jScrollPane2.setViewportView(matrixPanel);
+
+        imagePageTabbedPane.addTab("Matrix", jScrollPane2);
 
         fileMenu.setText("File");
 
@@ -248,7 +254,7 @@ public final class Main extends JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(imagePageTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 1028, Short.MAX_VALUE)
+            .addComponent(imagePageTabbedPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -347,6 +353,8 @@ public final class Main extends JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private com.meritoki.retina.application.desktop.view.panel.Matrix matrixPanel;
     private javax.swing.JMenuItem newMenuItem;
     private javax.swing.JMenuItem openMenuItem;

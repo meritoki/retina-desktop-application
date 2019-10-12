@@ -15,6 +15,8 @@
  */
 package com.meritoki.retina.application.desktop.model.project;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,19 +39,49 @@ import org.codehaus.jackson.map.ObjectWriter;
  *
  */
 public class Page {
+	/**
+	 * Logger for Page class.
+	 */
 	@JsonIgnore
     static Logger logger = LogManager.getLogger(Page.class.getName());
-    public File file = new File();
+
+	/**
+	 * Identifier for Page class
+	 */
+	@JsonProperty
     public String uuid;
-    private List<Shape> shapeList = new ArrayList<>();
+	/** 
+	 * List of Files loaded by user.
+	 */
+	@JsonProperty
+    public List<File> fileList = new ArrayList<File>();
+	/**
+	 * List of Shapes drawn by user.
+	 */
+	@JsonProperty
+    public List<Shape> shapeList = new ArrayList<>();
+	/**
+	 * Currently index selected by user.
+	 */
     @JsonIgnore
     public int index = 0;
-    public String script = null;
 
+    /**
+     * Page class retains references to one or more files
+     */
     public Page() {
         this.uuid = UUID.randomUUID().toString();
     }
+    
+    public void addShapeList(List<Shape> shapeList) {
+    	logger.info("addShapeList("+shapeList+")");
+    	this.shapeList.addAll(shapeList);
+    }
 
+    /**
+     * Function sets the current index selected by user.
+     * @param index
+     */
     @JsonIgnore
     public void setIndex(int index) {
         logger.debug("setIndex(" + index + ")");
@@ -58,12 +90,20 @@ public class Page {
         }
     }
 
+    /**
+     * Function gets the current index selected by user.
+     * @return
+     */
     @JsonIgnore
     public int getIndex() {
         logger.debug("getIndex() this.index=" + this.index);
         return this.index;
     }
 
+    /**
+     * Functions sets current index by uuid.
+     * @param uuid
+     */
     @JsonIgnore
     public void setShape(String uuid) {
         logger.debug("setShape(" + uuid + ")");
@@ -77,6 +117,10 @@ public class Page {
         }
     }
 
+    /**
+     * Functions gets shape for index.
+     * @return
+     */
     @JsonIgnore
     public Shape getShape() {
         Shape shape = null;
@@ -86,6 +130,10 @@ public class Page {
         return shape;
     }
     
+    /**
+     * Function sets removed variable for Shape equal to true;
+     * @param shape
+     */
     @JsonIgnore
     public void removeShape(Shape shape) {
         for(Shape s: this.shapeList) {
@@ -95,6 +143,7 @@ public class Page {
             }
         }
     }
+    
     
     @JsonIgnore
     public void addShape(Shape shape) {
@@ -149,24 +198,36 @@ public class Page {
         return imageList;
     }
 
+    /**
+     * Function loads the bufferedImage variable for all files in the fileList.
+     */
     @JsonIgnore
-    public void loadBufferedImage() {
-        logger.debug("loadBufferedImage() file=" + this.file.path + "/" + this.file.name);
-        if (this.file.path != null && this.file.name != null) {
-            try {
-                this.file.bufferedImage = ImageIO.read(new java.io.File(this.file.path + "/" + this.file.name));
-            } catch (IOException ex) {
-                logger.error(ex);
-            }
+    public void loadFileListBufferedImage() {
+    	logger.info("loadFileListBufferedImage()");
+        for(File file: this.fileList) {
+        	if(file.bufferedImage == null) {
+        		file.loadBufferedImage();
+        	}
         }
     }
 
+    /**
+     * Function gets a bufferedImage with all the files from fileList as one.
+     * @return
+     */
     @JsonIgnore
     public BufferedImage getBufferedImage() {
-        if (this.file.bufferedImage == null) {
-            this.loadBufferedImage();
-        }
-        return this.file.bufferedImage;
+    	logger.debug("getBufferedImage()");
+    	this.loadFileListBufferedImage();
+    	BufferedImage bufferedImage = null;
+    	for(File file: this.fileList) {
+    		if(bufferedImage == null) {
+    			bufferedImage = file.bufferedImage;
+    		} else {
+    			bufferedImage = this.joinBufferedImage(bufferedImage, file.bufferedImage);
+    		}
+    	}
+        return bufferedImage;
     }
 
     @JsonIgnore
@@ -360,5 +421,26 @@ public class Page {
             }
         }
         return flag;
+    }
+
+    public BufferedImage joinBufferedImage(BufferedImage img1,BufferedImage img2) {
+    	logger.info("joinBufferedImage("+img1+","+img2+")");
+        //do some calculate first
+        int offset  = 5;
+        int wid = img1.getWidth()+img2.getWidth()+offset;
+        int height = Math.max(img1.getHeight(),img2.getHeight())+offset;
+        //create a new buffer and draw two image into the new image
+        BufferedImage newImage = new BufferedImage(wid,height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = newImage.createGraphics();
+        Color oldColor = g2.getColor();
+        //fill background
+        g2.setPaint(Color.WHITE);
+        g2.fillRect(0, 0, wid, height);
+        //draw image
+        g2.setColor(oldColor);
+        g2.drawImage(img1, null, 0, 0);
+        g2.drawImage(img2, null, img1.getWidth()+offset, 0);
+        g2.dispose();
+        return newImage;
     }
 }

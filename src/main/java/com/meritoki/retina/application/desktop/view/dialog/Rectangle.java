@@ -22,7 +22,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -39,18 +38,24 @@ import com.meritoki.retina.application.desktop.model.project.Unit;
 import com.meritoki.retina.application.desktop.view.frame.Main;
 
 /**
- *
- * @author osvaldo.rodriguez
+ * Class is used to interact with Shapes on a Page.
  */
 public class Rectangle extends javax.swing.JDialog implements MouseListener, KeyListener {
 
+	/**
+	 * Serial Version UID
+	 */
+	private static final long serialVersionUID = 8920899275256865747L;
+	/**
+	 * Logger for class.
+	 */
     static Logger logger = LogManager.getLogger(Rectangle.class.getName());
-//    private Project project;
+    /**
+     * Model for class.
+     */
     private Model model = null;
-    private List<String> emptyList = new ArrayList<>();
-    private List<String> timeList = Arrays.asList("year", "month", "week", "day", "hour", "minute", "second");
-    private List<String> spaceList = Arrays.asList("latitude", "longitude", "locale", "location");
-    private List<String> energyList = Arrays.asList("letter", "word", "sentance", "temperature", "pressure");
+    
+    
 
     /**
      * Creates new form Rectangle
@@ -82,10 +87,11 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
 
     public void initLabel() {
         logger.debug("initLabel()");
-        Page image = this.model.project.getPage();
-        Shape rectangle = (image != null) ? image.getShape() : null;
+        Project project = this.model.project;
+        Page image = (project != null) ? this.model.project.getPage() : null;
+        Shape shape = (image != null) ? image.getShape() : null;
         List<Shape> shapeList = (image != null) ? image.getShapeList() : null;
-        Data data = (rectangle != null) ? rectangle.data : null;
+        Data data = (shape != null) ? shape.data : null;
         List<Text> textList = (data != null) ? data.getTextList() : null;
     }
 
@@ -93,10 +99,10 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         logger.debug("initList()");
         Page page = this.model.project.getPage();
         int index = (page != null) ? page.getIndex() : 0;
-        Shape shape = (page != null) ? page.getShape() : null;
+//        Shape shape = (page != null) ? page.getShape() : null;
         List<Shape> shapeList = (page != null) ? page.getShapeList() : null;
-        Data data = (shape != null) ? shape.data : null;
-        List<Text> textList = (data != null) ? data.getTextList() : null;
+//        Data data = (shape != null) ? shape.data : null;
+//        List<Text> textList = (data != null) ? data.getTextList() : null;
         this.initRectangleList(shapeList);
         this.setRectangleListSelectedIndex(index);
     }
@@ -118,24 +124,24 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
             this.unitTypeComboBox.setSelectedItem(data.unit.type);
             switch (data.unit.type) {
                 case "data": {
-                    this.initUnitValueComboBox(this.emptyList);
+                    this.initUnitValueComboBox(this.model.emptyList);
                     break;
                 }
                 case "time": {
-                    this.initUnitValueComboBox(this.timeList);
+                    this.initUnitValueComboBox(this.model.timeList);
                     break;
                 }
                 case "space": {
-                    this.initUnitValueComboBox(this.spaceList);
+                    this.initUnitValueComboBox(this.model.spaceList);
                     break;
                 }
                 case "energy": {
-                    this.initUnitValueComboBox(this.energyList);
+                    this.initUnitValueComboBox(this.model.energyList);
                     break;
                 }
             }
         } else {
-            this.initUnitValueComboBox(this.emptyList);
+            this.initUnitValueComboBox(this.model.emptyList);
         }
     }
 
@@ -177,19 +183,19 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
                 int selectedIndex = unitTypeComboBox.getSelectedIndex();
                 switch (selectedIndex) {
                     case 0: {
-                        initUnitValueComboBox(emptyList);
+                        initUnitValueComboBox(model.emptyList);
                         break;
                     }
                     case 1: {
-                        initUnitValueComboBox(timeList);
+                        initUnitValueComboBox(model.timeList);
                         break;
                     }
                     case 2: {
-                        initUnitValueComboBox(spaceList);
+                        initUnitValueComboBox(model.spaceList);
                         break;
                     }
                     case 3: {
-                        initUnitValueComboBox(energyList);
+                        initUnitValueComboBox(model.energyList);
                         break;
                     }
                 }
@@ -239,20 +245,27 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
 
     @Override
     public void mousePressed(MouseEvent e) {
+    	//TODO
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+    	//TODO
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
+    	//TODO
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
+    	//TODO
     }
 
+    /**
+     * Function response to keyPressed Event.
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
@@ -285,11 +298,17 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         }
     }
 
+    /**
+     * Function responds to keyTyped Event.
+     */
     @Override
     public void keyTyped(KeyEvent e) {
-
+    	//TODO
     }
 
+    /**
+     * Function responds to keyReleased Event.
+     */
     @Override
     public void keyReleased(KeyEvent e) {
         String uuid = (String) rectangleList.getSelectedValue();

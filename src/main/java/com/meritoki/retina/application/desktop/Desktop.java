@@ -17,10 +17,9 @@ package com.meritoki.retina.application.desktop;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import com.meritoki.retina.application.desktop.view.window.Splash;
-import com.meritoki.retina.application.desktop.model.Configuration;
 import com.meritoki.retina.application.desktop.view.frame.Main;
-import java.util.Properties;
 
 public class Desktop {
 

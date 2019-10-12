@@ -35,19 +35,23 @@ import com.meritoki.retina.application.desktop.view.frame.Main;
  *
  * @author osvaldo.rodriguez
  */
-public class Image extends javax.swing.JDialog implements MouseListener, KeyListener{
+public class Image extends javax.swing.JDialog implements MouseListener, KeyListener {
 
     /**
-	 * 
+	 * Serial Version UID
 	 */
 	private static final long serialVersionUID = 8390605747809634118L;
+	/**
+	 * Logger for class.
+	 */
 	private static Logger logger = LogManager.getLogger(Image.class.getName());
+	/**
+	 * Reference to Model class.
+	 */
     private Model model;
-//    private PageScript pageScript = new PageScript();
-//    private List<com.meritoki.retina.application.desktop.model.project.Page> sortedPageList;
     
     /**
-     * Creates new form PageDialog
+     * Image dialog class.
      * @param parent
      * @param modal
      */
@@ -59,12 +63,19 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
         this.pageList.addKeyListener(this);
     }
     
+    /**
+     * Function set Model for instance.
+     * @param model
+     */
     public void setModel(Model model){
         logger.debug("setModel("+model+")");
         this.model = model;
         this.init();
     }
-      
+    
+    /**
+     * Function instantiates view. 
+     */
     public void init(){
         logger.debug("init()");
         this.initLabel();
@@ -79,8 +90,13 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
         List<com.meritoki.retina.application.desktop.model.project.Page> pageList = this.model.project.getPageList();
         this.indexValueLabel.setText(pageIndex+"");
         if(page!=null){
-            this.nameValueLabel.setText(page.file.name);
-            this.pathValueLabel.setText(page.file.path);
+        	if(page.fileList.size() == 1) {
+	            this.nameValueLabel.setText(page.fileList.get(0).name);
+	            this.pathValueLabel.setText(page.fileList.get(0).path);
+        	} else {
+        		this.nameValueLabel.setText("NA");
+	            this.pathValueLabel.setText("NA");
+        	}
             this.uuidValueLabel.setText(page.uuid);
         }else{
             this.nameValueLabel.setText("null");
@@ -103,7 +119,8 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
     }
     
     public void initPageList(List<com.meritoki.retina.application.desktop.model.project.Page> pageList) {
-        DefaultListModel<String> defaultListModel = new DefaultListModel<>();
+        logger.debug("initPageList(...)");
+    	DefaultListModel<String> defaultListModel = new DefaultListModel<>();
         if(pageList != null){
             for(int i=0;i<pageList.size(); i++) {
                 defaultListModel.addElement(pageList.get(i).uuid);    
@@ -118,7 +135,7 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
     }
     
     
-    
+    @Override
     public void mouseClicked(MouseEvent e) {
         if(e.getClickCount()==1){
             String selectedItem = (String) this.pageList.getSelectedValue();
@@ -132,25 +149,22 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
     
      @Override
     public void mousePressed(MouseEvent e) {
-//        System.out.println("mousePressed");
-//        String selectedItem = (String) jList1.getSelectedValue();
-//        System.out.println(selectedItem);
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    	//TODO
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void mouseReleased(MouseEvent e) {	
+    	//TODO
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    	//TODO
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    	//TODO
     }
     
     @Override
