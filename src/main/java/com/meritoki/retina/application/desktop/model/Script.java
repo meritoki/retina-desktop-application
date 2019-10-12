@@ -21,8 +21,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.meritoki.retina.application.desktop.model.project.Data;
+import com.meritoki.retina.application.desktop.model.project.File;
 import com.meritoki.retina.application.desktop.model.project.Page;
-import com.meritoki.retina.application.desktop.model.project.Sheet;
+import com.meritoki.retina.application.desktop.model.project.Shape;
 
 /**
  *
@@ -101,7 +102,15 @@ public class Script {
     	int y = Integer.parseInt(b);
     	Page pageA = this.pageList.get(x);
     	Page pageB = this.pageList.get(y);
+    	double displacement = 0;
+    	for(File file: pageA.fileList) {
+    		displacement += file.width;
+    	}
+    	for(Shape shape: pageB.shapeList) {
+			shape.displacement += displacement;
+		}
     	pageA.fileList.addAll(pageB.fileList);
+    	pageA.addShapeList(pageB.shapeList);
     	this.pageList.remove(y);
     }
     

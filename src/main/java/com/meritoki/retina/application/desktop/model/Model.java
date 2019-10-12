@@ -3,6 +3,7 @@ package com.meritoki.retina.application.desktop.model;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -68,6 +69,11 @@ public class Model {
 	public Point pressedPoint = new Point();
 	public Point releasedPoint = new Point();
 	public double scale = 1;
+	
+	public List<String> emptyList = new ArrayList<>();
+    public List<String> timeList = Arrays.asList("year", "month", "week", "day", "hour", "minute", "second");
+    public List<String> spaceList = Arrays.asList("latitude", "longitude", "locale", "location");
+    public List<String> energyList = Arrays.asList("letter", "word", "sentance", "temperature", "pressure");
 	
 	public Model() {
 		this.properties = Configuration.open("./retina-desktop.properties");

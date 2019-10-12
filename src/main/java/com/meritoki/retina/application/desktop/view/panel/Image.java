@@ -30,7 +30,6 @@ import com.meritoki.retina.application.desktop.model.project.Page;
 import com.meritoki.retina.application.desktop.model.project.Point;
 import com.meritoki.retina.application.desktop.model.project.Project;
 import com.meritoki.retina.application.desktop.model.project.Shape;
-import com.meritoki.retina.application.desktop.model.project.Sheet;
 import com.meritoki.retina.application.desktop.view.frame.Main;
 import java.util.UUID;
 

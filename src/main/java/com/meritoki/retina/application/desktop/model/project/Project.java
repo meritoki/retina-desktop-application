@@ -86,11 +86,13 @@ public class Project implements Serializable {
         page.fileList.add(file);
         pageList.add(page);
         page = new Page();
+        file = new File();
         file.name = "02.jpg";
         file.path = "./data/page";
         page.fileList.add(file);
         pageList.add(page);
         page = new Page();
+        file = new File();
         file.name = "03.jpg";
         file.path = "./data/page";
         page.fileList.add(file);
@@ -145,7 +147,7 @@ public class Project implements Serializable {
     
     @JsonIgnore
     public void setPage(String uuid) {
-        logger.debug("setPage("+uuid+")");
+        logger.info("setPage("+uuid+")");
         Page page = null;
         for(int i = 0; i < this.pageList.size(); i++){
             page = this.pageList.get(i);

@@ -24,6 +24,10 @@ public class File {
     public String cachePath = null;
     @JsonIgnore
     public BufferedImage bufferedImage = null;
+    @JsonProperty
+    public int width = 0;
+    @JsonProperty
+    public int height = 0;
     
     /**
      * Instantiate new instance of File
@@ -34,10 +38,13 @@ public class File {
     
     @JsonIgnore
     public void loadBufferedImage() {
-        logger.debug("loadBufferedImage()");
+        logger.info("loadBufferedImage()");
         if (this.path != null && this.name != null) {
             try {
+            	logger.info("loadBufferedImage() "+this.path + "/" + this.name);
                 this.bufferedImage = ImageIO.read(new java.io.File(this.path + "/" + this.name));
+                this.width = this.bufferedImage.getWidth();
+                this.height = this.bufferedImage.getHeight();
             } catch (IOException ex) {
                 logger.error(ex);
             }

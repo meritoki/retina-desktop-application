@@ -39,20 +39,49 @@ import org.codehaus.jackson.map.ObjectWriter;
  *
  */
 public class Page {
+	/**
+	 * Logger for Page class.
+	 */
 	@JsonIgnore
     static Logger logger = LogManager.getLogger(Page.class.getName());
-//    public File file = new File();
-    public List<File> fileList = new ArrayList<File>();
+
+	/**
+	 * Identifier for Page class
+	 */
+	@JsonProperty
     public String uuid;
-    private List<Shape> shapeList = new ArrayList<>();
+	/** 
+	 * List of Files loaded by user.
+	 */
+	@JsonProperty
+    public List<File> fileList = new ArrayList<File>();
+	/**
+	 * List of Shapes drawn by user.
+	 */
+	@JsonProperty
+    public List<Shape> shapeList = new ArrayList<>();
+	/**
+	 * Currently index selected by user.
+	 */
     @JsonIgnore
     public int index = 0;
-    public String script = null;
 
+    /**
+     * Page class retains references to one or more files
+     */
     public Page() {
         this.uuid = UUID.randomUUID().toString();
     }
+    
+    public void addShapeList(List<Shape> shapeList) {
+    	logger.info("addShapeList("+shapeList+")");
+    	this.shapeList.addAll(shapeList);
+    }
 
+    /**
+     * Function sets the current index selected by user.
+     * @param index
+     */
     @JsonIgnore
     public void setIndex(int index) {
         logger.debug("setIndex(" + index + ")");
@@ -61,12 +90,20 @@ public class Page {
         }
     }
 
+    /**
+     * Function gets the current index selected by user.
+     * @return
+     */
     @JsonIgnore
     public int getIndex() {
         logger.debug("getIndex() this.index=" + this.index);
         return this.index;
     }
 
+    /**
+     * Functions sets current index by uuid.
+     * @param uuid
+     */
     @JsonIgnore
     public void setShape(String uuid) {
         logger.debug("setShape(" + uuid + ")");
@@ -80,6 +117,10 @@ public class Page {
         }
     }
 
+    /**
+     * Functions gets shape for index.
+     * @return
+     */
     @JsonIgnore
     public Shape getShape() {
         Shape shape = null;
@@ -89,6 +130,10 @@ public class Page {
         return shape;
     }
     
+    /**
+     * Function sets removed variable for Shape equal to true;
+     * @param shape
+     */
     @JsonIgnore
     public void removeShape(Shape shape) {
         for(Shape s: this.shapeList) {
@@ -98,6 +143,7 @@ public class Page {
             }
         }
     }
+    
     
     @JsonIgnore
     public void addShape(Shape shape) {
@@ -152,32 +198,34 @@ public class Page {
         return imageList;
     }
 
+    /**
+     * Function loads the bufferedImage variable for all files in the fileList.
+     */
     @JsonIgnore
-    public void loadBufferedImage() {
-//        logger.debug("loadBufferedImage() file=" + this.file.path + "/" + this.file.name);
-//        if (this.file.path != null && this.file.name != null) {
-//            try {
-//                this.file.bufferedImage = ImageIO.read(new java.io.File(this.file.path + "/" + this.file.name));
-//            } catch (IOException ex) {
-//                logger.error(ex);
-//            }
-//        }
+    public void loadFileListBufferedImage() {
+    	logger.info("loadFileListBufferedImage()");
         for(File file: this.fileList) {
-        	file.loadBufferedImage();
+        	if(file.bufferedImage == null) {
+        		file.loadBufferedImage();
+        	}
         }
     }
 
+    /**
+     * Function gets a bufferedImage with all the files from fileList as one.
+     * @return
+     */
     @JsonIgnore
     public BufferedImage getBufferedImage() {
-    	logger.info("getBufferedImage()");
-    	this.loadBufferedImage();
+    	logger.debug("getBufferedImage()");
+    	this.loadFileListBufferedImage();
     	BufferedImage bufferedImage = null;
-    	if(this.fileList.size() == 2) {
-    		BufferedImage bufferedImageA = this.fileList.get(0).bufferedImage;
-    		BufferedImage bufferedImageB = this.fileList.get(1).bufferedImage;
-    		bufferedImage = this.joinBufferedImage(bufferedImageA, bufferedImageB);
-    	} else {
-    		bufferedImage = this.fileList.get(0).bufferedImage;
+    	for(File file: this.fileList) {
+    		if(bufferedImage == null) {
+    			bufferedImage = file.bufferedImage;
+    		} else {
+    			bufferedImage = this.joinBufferedImage(bufferedImage, file.bufferedImage);
+    		}
     	}
         return bufferedImage;
     }
