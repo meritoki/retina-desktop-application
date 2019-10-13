@@ -66,11 +66,11 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 	public Dimension getPreferredSize() {
 		Dimension size = new Dimension(1028, 512);
 		if (this.model != null && this.model.project != null && this.model.project.getPage() != null
-				&& this.model.project.getPage().bufferedImage != null) {
+				&& this.model.project.getPage().getBufferedImage() != null) {
 			size.width = (int) Math
-					.round(this.model.project.getPage().bufferedImage.getWidth() * this.model.scale);
+					.round(this.model.project.getPage().getBufferedImage().getWidth() * this.model.scale);
 			size.height = (int) Math
-					.round(this.model.project.getPage().bufferedImage.getHeight() * this.model.scale);
+					.round(this.model.project.getPage().getBufferedImage().getHeight() * this.model.scale);
 		}
 		return size;
 	}
@@ -80,7 +80,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 	 */
 	@Override
 	protected void paintComponent(Graphics graphics) {
-		logger.info("paintComponent("+graphics+")");
+		logger.trace("paintComponent("+graphics+")");
 		super.paintComponent(graphics);
 		if (this.model != null) {
 			Graphics2D graphics2D = (Graphics2D) graphics.create();
@@ -88,27 +88,24 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 			Page page = project.getPage();
 			AffineTransform affineTransform = new AffineTransform();
 			affineTransform.scale(this.model.scale, this.model.scale);
-			page.loadBufferedImage();
-			BufferedImage bufferedImage = page.bufferedImage;
+			BufferedImage bufferedImage = page.getBufferedImage();
 			if (bufferedImage != null) {
 				graphics2D.drawImage(bufferedImage, affineTransform, null);
-				double displacement = 0;
-				
 				for(File file:page.fileList) {
 					if(file.uuid.equals(page.getFile().uuid)) {
 						graphics2D.setColor(Color.RED);
 					} else {
 						graphics2D.setColor(Color.YELLOW);
 					}
-					Rectangle2D.Double image = new Rectangle2D.Double(displacement*model.scale, 0, file.width*model.scale, file.height*model.scale);
+					Rectangle2D.Double image = new Rectangle2D.Double(file.offset*model.scale, 0, file.width*model.scale, file.height*model.scale);
 					graphics2D.draw(image);
-					displacement+=file.width;
 				}
 			}
-			List<Shape> shapeList = page.getShapeList();
+			List<Shape> shapeList = project.getShapeList();
+			Shape s = project.getShape();
 			if (shapeList != null) {
 				for (Shape shape : shapeList) {
-					if (shape.uuid.equals(page.getFile().getShape().uuid)) {
+					if (s != null && shape.uuid.equals(s.uuid)) {
 						graphics2D.setColor(Color.RED);
 					} else {
 						graphics2D.setColor(Color.BLUE);
@@ -126,17 +123,15 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 							double y = Math.min(shape.pointList.get(0).y, shape.pointList.get(1).y);
 							double width = Math.abs(shape.pointList.get(0).x - shape.pointList.get(1).x);
 							double height = Math.abs(shape.pointList.get(0).y - shape.pointList.get(1).y);
-							double displacement = shape.displacement;
-							x *= this.model.scale;
-							y *= this.model.scale;
-							width *= this.model.scale;
-							height *= this.model.scale;
-							displacement *= this.model.scale;
+							x *= shape.scale;//this.model.scale;
+							y *= shape.scale;//this.model.scale;
+							width *= shape.scale;//this.model.scale;
+							height *= shape.scale;//this.model.scale;
 							if(shape.classification.equals(shape.ELLIPSE)) {
-								Ellipse2D.Double ellipse = new Ellipse2D.Double(displacement+x, y, width, height);
+								Ellipse2D.Double ellipse = new Ellipse2D.Double(x, y, width, height);
 								graphics2D.draw(ellipse);
 							} else if(shape.classification.equals(shape.RECTANGLE)) {
-								Rectangle2D.Double rectangle = new Rectangle2D.Double(displacement+x, y, width, height);
+								Rectangle2D.Double rectangle = new Rectangle2D.Double(x, y, width, height);
 								graphics2D.draw(rectangle);
 							}
 				    	}
@@ -198,8 +193,8 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		this.model.pressedPoint = new Point();
 		this.model.pressedPoint.x = e.getX();
 		this.model.pressedPoint.y = e.getY();
-		this.model.shape = this.model.project.shapeContains(this.model.pressedPoint);
-		this.model.file = this.model.project.fileContains(this.model.pressedPoint);
+		this.model.shape = this.model.project.getShape(this.model.pressedPoint);// returns new Shape if shape not found.
+		this.model.file = this.model.project.getFile(this.model.pressedPoint);
 	}
 
 	/**
@@ -218,7 +213,9 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				this.model.project.setShape(this.model.shape.uuid);// Done
 			} else {
 				logger.info("Nothing...");
-				this.model.project.setFile(this.model.file.uuid);
+				if(this.model.file != null) {
+					this.model.project.setFile(this.model.file.uuid);
+				}
 			}
 		} else {
 			int selection = this.shapeIntersects(this.model.pressedPoint);
@@ -284,9 +281,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		this.model.scale = this.round(this.model.scale, 6);
 		if (this.model.scale >= 0 && this.model.scale <= 2) {
 			logger.debug("mouseWheelMoved(...) scale = " + this.model.scale);
-			for (Shape shape : this.model.project.getPage().getFile().shapeList) {
-				shape.scale(this.model.scale);
-			}
+			this.model.project.setScale(this.model.scale);
 			revalidate();
 			repaint();
 		}

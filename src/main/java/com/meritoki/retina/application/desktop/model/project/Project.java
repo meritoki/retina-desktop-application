@@ -142,14 +142,35 @@ public class Project implements Serializable {
         this.setIndex(0);
     }
     
-    public void addFile(File file) {
-    	logger.info("addFile("+file+")");
-    	Page page = this.getPage();
-    	if(page != null) {
-    		page.addFile(file);
-    	}
-    }
-    
+    @JsonIgnore
+	public int getIndex(){
+	    logger.debug("getIndex() this.index="+this.index);
+	    return this.index;
+	}
+
+	@JsonIgnore
+	public Page getPage() {
+	    return (this.pageList.size() > 0) ? this.pageList.get(index) : null;
+	}
+	
+	@JsonIgnore
+	public List<Page> getPageList(){
+	    return this.pageList;
+	}
+
+	@JsonIgnore
+	public File getFile() {
+		Page page = this.getPage();
+		File file = (page != null) ? page.getFile(): null;
+		return file;
+	}
+
+	public File getFile(Point point) {
+		Page page = this.getPage();
+		File shape = (page != null) ? page.getFile(point) : null;
+		return shape;
+	}
+
 	/**
 	 * A mousePressed begins an Add, Move, or Resize. Call each one a Command that
 	 * affects the model. A command can have one or more Operations.
@@ -157,35 +178,26 @@ public class Project implements Serializable {
 	 * @param point
 	 * @return
 	 */
-	public Shape shapeContains(Point point) {
-		Shape shape = null;
-		Page image = this.getPage();
-		List<Shape> shapeList = (image != null) ? image.getFile().shapeList : null;
-		if (shapeList != null) {
-			for (Shape s : this.getPage().getFile().shapeList) {
-				if (s.contains(point)) {
-					shape = s;
-					break;
-				}
-			}
-		}
+	public Shape getShape(Point point) {
+		Page page = this.getPage();
+		Shape shape = (page != null) ? page.getShape(point) : null;
 		return shape;
 	}
 	
-	public File fileContains(Point point) {
+	public Shape getShape() {
 		Page page = this.getPage();
-		return (page != null) ? page.getFile(point) : null;
+		File file = (page != null) ? page.getFile() : null;
+		Shape shape = (file != null) ? file.getShape() : null;
+		return shape;
 	}
-    
-    public void addShape(Shape shape) {
-    	logger.info("addShape("+shape+")");
-    	Page page = this.getPage();
-    	if(page != null) {
-    		page.addShape(shape);
-    	}
-    }
-    
-    public void setShape(String uuid) {
+	
+	public List<Shape> getShapeList() {
+		Page page = this.getPage();
+		List<Shape> shapeList = (page != null) ? page.getShapeList():null;
+		return shapeList;
+	}
+
+	public void setShape(String uuid) {
     	logger.info("setShape("+uuid+")");
     	Page page = this.getPage();
     	page.setShape(uuid);
@@ -204,11 +216,6 @@ public class Project implements Serializable {
     }
     
     @JsonIgnore
-    public List<Page> getPageList(){
-        return this.pageList;
-    }
-    
-    @JsonIgnore
     public void setIndex(int index) {
         logger.debug("setIndex("+index+")");
         if(index >= 0 && index < this.pageList.size()) {
@@ -217,9 +224,12 @@ public class Project implements Serializable {
     }
     
     @JsonIgnore
-    public int getIndex(){
-        logger.debug("getIndex() this.index="+this.index);
-        return this.index;
+    public void setScale(double scale) {
+    	logger.debug("setScale("+scale+")");
+    	Page page = this.getPage();
+    	if(page != null) {
+    		page.setScale(scale);
+    	}
     }
     
     @JsonIgnore
@@ -235,12 +245,24 @@ public class Project implements Serializable {
         }
     }
     
-    @JsonIgnore
-    public Page getPage() {
-        return (this.pageList.size() > 0) ? this.pageList.get(index) : null;
-    }
-    
-    @JsonIgnore
+    public void addShape(Shape shape) {
+		logger.info("addShape("+shape+")");
+		Page page = this.getPage();
+		if(page != null) {
+			page.addShape(shape);
+		}
+	}
+
+
+	public void addFile(File file) {
+		logger.info("addFile("+file+")");
+		Page page = this.getPage();
+		if(page != null) {
+			page.addFile(file);
+		}
+	}
+
+	@JsonIgnore
     @Override
     public String toString(){
         String string = "";

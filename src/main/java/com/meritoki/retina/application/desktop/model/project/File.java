@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
 
@@ -12,6 +13,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
 
 public class File {
 	@JsonIgnore
@@ -31,9 +34,11 @@ public class File {
     @JsonProperty
     public int height = 0;
     @JsonProperty 
-    public int scale = 1;
+    public double scale = 1;
     @JsonProperty
-    public int margin = 0;
+    public double margin = 0;
+    @JsonProperty
+    public double offset = 0;
     /**
      * Current index of the shapeList.
      */
@@ -53,6 +58,37 @@ public class File {
     }
     
     /**
+	 * Function gets the current index selected by user.
+	 * @return
+	 */
+	@JsonIgnore
+	public int getIndex() {
+	    logger.debug("getIndex() this.index=" + this.index);
+	    return this.index;
+	}
+
+	/**
+	 * Functions gets shape for index.
+	 * @return
+	 */
+	@JsonIgnore
+	public Shape getShape() {
+	    Shape shape = null;
+	    if (this.index >= 0 && this.index < this.shapeList.size()) {
+	        shape = this.shapeList.get(this.index);
+	    }
+	    return shape;
+	}
+
+	/**
+	 * Function transforms the 
+	 * @return
+	 */
+	public List<Shape> getShapeList() {
+		return this.shapeList;
+	}
+
+	/**
      * Function sets the current index selected by user.
      * @param index
      */
@@ -64,14 +100,14 @@ public class File {
         }
     }
     
-    /**
-     * Function gets the current index selected by user.
-     * @return
-     */
-    @JsonIgnore
-    public int getIndex() {
-        logger.debug("getIndex() this.index=" + this.index);
-        return this.index;
+    public void setScale(double scale) {
+        logger.debug("setScale(" + scale + ")");
+        if (scale >= 0) {
+            this.scale = scale;
+        }
+        for(Shape shape:this.shapeList) {
+        	shape.setScale(this.scale);
+        }
     }
     
     /**
@@ -93,18 +129,17 @@ public class File {
         }
         return flag;
     }
-//    @JsonIgnore
-//    public void setShape(String uuid) {
-//        logger.debug("setShape(" + uuid + ")");
-//        Shape shape = null;
-//        for (int i = 0; i < this.shapeList.size(); i++) {
-//            shape = this.shapeList.get(i);
-//            if (shape.uuid.equals(uuid)) {
-//                this.index = i;
-//                break;
-//            }
-//        }
-//    }
+    
+    public void setOffset(double offset) {
+    	logger.info("setOffset("+offset+")");
+    	this.offset = offset;
+    }
+    
+    public void setMargin(double margin) {
+    	logger.info("setOMargin("+margin+")");
+    	this.margin = margin;
+    }
+    
     
     /**
      * Function sets removed variable for Shape equal to true;
@@ -120,39 +155,6 @@ public class File {
         }
     }
     
-//  @JsonIgnore
-//  public BufferedImage getShapeImage(Shape shape) {
-//      BufferedImage bufferedImage = null;
-//      if (this.getBufferedImage() != null) {
-////          bufferedImage = this.getBufferedImage().getSubimage(shape.getX(), shape.getX(), (shape.getI() - shape.getX()),
-////                  (shape.getJ() - shape.getY()));
-//      }
-//      return bufferedImage;
-//  }
-
-//  @JsonIgnore
-//  public List<BufferedImage> getShapeListImageList(
-//          List<Shape> rList) {
-//      List<BufferedImage> imageList = new ArrayList<>();
-//      for (Shape r : rList) {
-//          imageList.add(this.getShapeImage(r));
-//      }
-//      return imageList;
-//  }
-    
-    /**
-     * Functions gets shape for index.
-     * @return
-     */
-    @JsonIgnore
-    public Shape getShape() {
-        Shape shape = null;
-        if (this.index >= 0 && this.index < this.shapeList.size()) {
-            shape = this.shapeList.get(this.index);
-        }
-        return shape;
-    }
-    
     /**
      * Functions adds shape to shapeList.
      * @param shape
@@ -160,30 +162,57 @@ public class File {
     @JsonIgnore
     public void addShape(Shape shape) {
     	logger.info("addShape("+shape+")");
-    	boolean flag = false;
-        for(Shape s: this.shapeList) {
-            if(s.uuid.equals(shape.uuid)) {
-                s.removed =false;
-                flag = this.setShape(s.uuid);
-                break;
-            } 
-        }
-        if(!flag) {
-        	this.shapeList.add(shape);
-        }
+		this.shapeList.add(shape);
     }
     
     @JsonIgnore
     public void loadBufferedImage() {
-        if (this.path != null && this.name != null) {
+    	if(this.bufferedImage == null) {
+	        if (this.path != null && this.name != null) {
+	            try {
+	            	logger.info("loadBufferedImage() "+this.path + "/" + this.name);
+	                this.bufferedImage = ImageIO.read(new java.io.File(this.path + "/" + this.name));
+	                this.width = this.bufferedImage.getWidth();
+	                this.height = this.bufferedImage.getHeight();
+	            } catch (IOException ex) {
+	                logger.error(ex);
+	            }
+	        }
+    	}
+    }
+    @JsonIgnore
+    @Override
+    public String toString() {
+        String string = "";
+        if (logger.isTraceEnabled()) {
+            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             try {
-            	logger.info("loadBufferedImage() "+this.path + "/" + this.name);
-                this.bufferedImage = ImageIO.read(new java.io.File(this.path + "/" + this.name));
-                this.width = this.bufferedImage.getWidth();
-                this.height = this.bufferedImage.getHeight();
+                string = ow.writeValueAsString(this);
             } catch (IOException ex) {
-                logger.error(ex);
+                java.util.logging.Logger.getLogger(Shape.class.getName()).log(Level.SEVERE, null, ex);
             }
+        } else {
+            string = this.uuid;
         }
+        return string;
     }
 }
+//@JsonIgnore
+//public BufferedImage getShapeImage(Shape shape) {
+//  BufferedImage bufferedImage = null;
+//  if (this.getBufferedImage() != null) {
+////      bufferedImage = this.getBufferedImage().getSubimage(shape.getX(), shape.getX(), (shape.getI() - shape.getX()),
+////              (shape.getJ() - shape.getY()));
+//  }
+//  return bufferedImage;
+//}
+
+//@JsonIgnore
+//public List<BufferedImage> getShapeListImageList(
+//      List<Shape> rList) {
+//  List<BufferedImage> imageList = new ArrayList<>();
+//  for (Shape r : rList) {
+//      imageList.add(this.getShapeImage(r));
+//  }
+//  return imageList;
+//}

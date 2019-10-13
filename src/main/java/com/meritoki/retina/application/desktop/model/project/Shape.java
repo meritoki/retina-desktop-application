@@ -70,8 +70,14 @@ public class Shape {
     public Data data = new Data();
     @JsonIgnore
     public boolean removed = false;
-    @JsonProperty
-    public double displacement = 0;
+    @JsonIgnore
+    public double x = 0;
+    @JsonIgnore
+    public double y = 0;
+    @JsonIgnore
+    public double width = 0;
+    @JsonIgnore
+    public double height = 0;
     
     public Shape(){
          this.uuid = UUID.randomUUID().toString();
@@ -81,19 +87,6 @@ public class Shape {
     	this.uuid = shape.uuid;
     	this.pointList = shape.pointList;
     	this.data = shape.data;
-    }
-    
-    public void setDisplacement(double displacement) {
-    	logger.info("setDisplacement("+displacement+")");
-    	this.displacement = displacement;
-    	for(Point point: this.pointList) {
-    		point.x += this.displacement;
-    	}
-    	
-    }
-    
-    public double getDisplacement() {
-    	return this.displacement;
     }
     
     @JsonIgnore
@@ -170,8 +163,8 @@ public class Shape {
     }
     
     @JsonIgnore
-    public void scale(double scale) {
-    	logger.debug("scale("+scale+")");
+    public void setScale(double scale) {
+    	logger.info("setScale("+scale+")");
     	this.scale = scale*(1/this.addScale);
     }
     
