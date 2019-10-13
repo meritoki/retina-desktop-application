@@ -17,6 +17,8 @@ package com.meritoki.retina.application.desktop.model.project;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,6 +33,8 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
+
+import com.meritoki.retina.application.desktop.model.Model;
 
 /**
  * The Page class is used to hold a list of shapes.
@@ -56,18 +60,21 @@ public class Page {
 	@JsonProperty
     public List<File> fileList = new ArrayList<File>();
 	/**
-	 * List of Shapes drawn by user.
-	 */
-	@JsonProperty
-    public List<Shape> shapeList = new ArrayList<>();
-	/**
 	 * Currently index selected by user.
 	 */
     @JsonIgnore
     public int index = 0;
-    
+    /**
+     * Cached copy of joined bufferedImage from one or more files.
+     */
     @JsonIgnore
     public BufferedImage bufferedImage = null;
+    
+    /**
+     * Scale of the entire page, applied to all files.
+     */
+    @JsonIgnore
+    public double scale = 1;
 
     /**
      * Page class retains references to one or more files
@@ -82,10 +89,32 @@ public class Page {
      */
     @JsonIgnore
     public void setIndex(int index) {
-        logger.debug("setIndex(" + index + ")");
-        if (index >= 0 && index < this.shapeList.size()) {
+        logger.info("setIndex(" + index + ")");
+        if (index >= 0 && index < this.fileList.size()) {
             this.index = index;
         }
+    }
+    
+    public void addShape(Shape shape) {
+    	logger.info("addShape("+shape+")");
+    	File file = this.getFile();
+    	if(file != null) {
+    		file.addShape(shape);
+    	}
+    }
+    
+    public void setShape(String uuid) {
+    	for(File file : this.fileList){
+    		if(file.setShape(uuid)) {
+    			this.setFile(file.uuid);
+    			this.getFile().setShape(uuid);
+    		}
+    	}
+    }
+    
+    public void addFile(File file) {
+    	logger.info("addFile("+file+")");
+    	this.fileList.add(file);
     }
 
     /**
@@ -97,98 +126,66 @@ public class Page {
         logger.debug("getIndex() this.index=" + this.index);
         return this.index;
     }
-
-    /**
-     * Functions sets current index by uuid.
-     * @param uuid
-     */
-    @JsonIgnore
-    public void setShape(String uuid) {
-        logger.debug("setShape(" + uuid + ")");
-        Shape shape = null;
-        for (int i = 0; i < this.shapeList.size(); i++) {
-            shape = this.shapeList.get(i);
-            if (shape.uuid.equals(uuid)) {
-                this.index = i;
-                break;
-            }
+    
+    public File getFile() {
+        File file = null;
+        if (this.index >= 0 && this.index < this.fileList.size()) {
+            file = this.fileList.get(this.index);
         }
-    }
-
-    /**
-     * Functions gets shape for index.
-     * @return
-     */
-    @JsonIgnore
-    public Shape getShape() {
-        Shape shape = null;
-        if (this.index >= 0 && this.index < this.shapeList.size()) {
-            shape = this.shapeList.get(this.index);
-        }
-        return shape;
+        return file;
     }
     
-    /**
-     * Function sets removed variable for Shape equal to true;
-     * @param shape
-     */
-    @JsonIgnore
-    public void removeShape(Shape shape) {
-        for(Shape s: this.shapeList) {
-            if(s.uuid.equals(shape.uuid)) {
-                s.removed =true;
-                break;
-            }
-        }
+    public File getFile(Point point) {
+    	logger.info("getFile("+point+")");
+    	double displacement = 0;
+    	File file = null;
+    	for(int i = 0;i < this.fileList.size();i++) {
+    		File f = this.fileList.get(i);
+    		logger.info("getFile("+point+") file.width="+f.width);
+    		if(point.x > this.scale*displacement) {
+    			file = f;
+    			this.setIndex(i);
+    		}
+    		displacement+=f.width;
+    	}
+    	return file;
     }
     
-    /**
-     * Functions adds shape to shapeList.
-     * @param shape
-     */
-    @JsonIgnore
-    public void addShape(Shape shape) {
-        for(Shape s: this.shapeList) {
-            if(s.uuid.equals(shape.uuid)) {
-                s.removed =false;
-                break;
-            }
-        }
-    }
-    
-    public void addShapeList(List<Shape> shapeList) {
-    	logger.info("addShapeList("+shapeList+")");
-    	this.shapeList.addAll(shapeList);
+    public void setFile(String uuid) {
+    	logger.info("setFile("+uuid+")");
+    	File file = null;
+    	for(int i=0;i<this.fileList.size();i++) {
+    		file = this.fileList.get(i);
+    		if(file.uuid.equals(uuid)) {
+    			this.setIndex(i);
+    			break;
+    		}
+    	}
     }
 
-//    @JsonIgnore
-//    public BufferedImage getShapeImage(Shape shape) {
-//        BufferedImage bufferedImage = null;
-//        if (this.getBufferedImage() != null) {
-////            bufferedImage = this.getBufferedImage().getSubimage(shape.getX(), shape.getX(), (shape.getI() - shape.getX()),
-////                    (shape.getJ() - shape.getY()));
-//        }
-//        return bufferedImage;
-//    }
-
-//    @JsonIgnore
-//    public List<BufferedImage> getShapeListImageList(
-//            List<Shape> rList) {
-//        List<BufferedImage> imageList = new ArrayList<>();
-//        for (Shape r : rList) {
-//            imageList.add(this.getShapeImage(r));
-//        }
-//        return imageList;
-//    }
-    
     /**
      * Function loads the bufferedImage instantiated using the fileList.
      */
     public void loadBufferedImage() {
     	if(this.bufferedImage == null) {
     		logger.info("loadBufferedImage() bufferedImage=null");
-    		this.bufferedImage = this.initBufferedImage();
+    		this.bufferedImage = this.getJoinedBufferedImage();
     	}
+    }
+    
+    @JsonIgnore
+    public List<Shape> getShapeList() {
+    	logger.info("getShapeList()");
+    	List<Shape> shapeList = new ArrayList<>();
+    	double displacement = 0;
+    	for(File file: this.fileList) {
+    		for(Shape shape: file.shapeList) {
+    			shape.displacement = displacement;
+    		}
+    		shapeList.addAll(file.shapeList);
+    		displacement+=file.width;
+    	}
+    	return shapeList;
     }
     
     /**
@@ -196,8 +193,8 @@ public class Page {
      * @return
      */
     @JsonIgnore
-    public BufferedImage initBufferedImage() {
-    	logger.debug("initBufferedImage()");
+    public BufferedImage getJoinedBufferedImage() {
+    	logger.debug("getJoinedBufferedImage()");
     	BufferedImage bufferedImage = null;
     	for(File file: this.fileList) {
     		file.loadBufferedImage();
@@ -231,9 +228,9 @@ public class Page {
     public List<LinkedList<Data>> getDataMatrix() {
     	logger.info("getDataMatrix()");
         List<LinkedList<Data>> dataMatrix = null;
-        if (this.shapeList != null && this.shapeList.size() > 0) {
-        	logger.info("getDataMatrix() this.shapeList = "+this.shapeList);
-            ArrayList<Shape> shapeList = new ArrayList<>(this.shapeList);
+        List<Shape> shapeList = this.getShapeList();
+        if (shapeList != null && shapeList.size() > 0) {
+        	logger.info("getDataMatrix() shapeList = "+shapeList);
             Shape shape = null;
             int averageY;
             int threshold = 64;
@@ -404,7 +401,7 @@ public class Page {
     }
 
     public BufferedImage joinBufferedImage(BufferedImage img1,BufferedImage img2) {
-    	logger.info("joinBufferedImage(...,...)");
+    	logger.info("joinBufferedImage("+img1+","+img2+")");
         //do some calculate first
         int offset  = 5;
         int wid = img1.getWidth()+img2.getWidth()+offset;

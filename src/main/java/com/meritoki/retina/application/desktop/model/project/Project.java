@@ -15,12 +15,20 @@
  */
 package com.meritoki.retina.application.desktop.model.project;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
+
+import javax.swing.JPanel;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.JsonGenerationException;
@@ -84,6 +92,10 @@ public class Project implements Serializable {
         file.name = "01.jpg";
         file.path = "./data/page";
         page.fileList.add(file);
+        file = new File();
+        file.name = "02.jpg";
+        file.path = "./data/page";
+        page.fileList.add(file);
         pageList.add(page);
         page = new Page();
         file = new File();
@@ -97,27 +109,92 @@ public class Project implements Serializable {
         file.path = "./data/page";
         page.fileList.add(file);
         pageList.add(page);
-//        page = new Page();
-//        page.file.name = "04.jpg";
-//        page.file.path = "./data/page";
-//        pageList.add(page);
-//        page = new Page();
-//        page.file.name = "05.jpg";
-//        page.file.path = "./data/page";
-//        pageList.add(page);
-//        page = new Page();
-//        page.file.name = "06.jpg";
-//        page.file.path = "./data/page";
-//        pageList.add(page);
-//        page = new Page();
-//        page.file.name = "07.jpg";
-//        page.file.path = "./data/page";
-//        pageList.add(page);
-//        page = new Page();
-//        page.file.name = "08.jpg";
-//        page.file.path = "./data/page";
-//        pageList.add(page);
-//        this.setIndex(0);
+        page = new Page();
+        file = new File();
+        file.name = "04.jpg";
+        file.path = "./data/page";
+        page.fileList.add(file);
+        pageList.add(page);
+        page = new Page();
+        file = new File();
+        file.name = "05.jpg";
+        file.path = "./data/page";
+        page.fileList.add(file);
+        pageList.add(page);
+        page = new Page();
+        file = new File();
+        file.name = "06.jpg";
+        file.path = "./data/page";
+        page.fileList.add(file);
+        pageList.add(page);
+        page = new Page();
+        file = new File();
+        file.name = "07.jpg";
+        file.path = "./data/page";
+        page.fileList.add(file);
+        pageList.add(page);
+        page = new Page();
+        file = new File();
+        file.name = "08.jpg";
+        file.path = "./data/page";
+        page.fileList.add(file);
+        pageList.add(page);
+        this.setIndex(0);
+    }
+    
+    public void addFile(File file) {
+    	logger.info("addFile("+file+")");
+    	Page page = this.getPage();
+    	if(page != null) {
+    		page.addFile(file);
+    	}
+    }
+    
+	/**
+	 * A mousePressed begins an Add, Move, or Resize. Call each one a Command that
+	 * affects the model. A command can have one or more Operations.
+	 * 
+	 * @param point
+	 * @return
+	 */
+	public Shape shapeContains(Point point) {
+		Shape shape = null;
+		Page image = this.getPage();
+		List<Shape> shapeList = (image != null) ? image.getFile().shapeList : null;
+		if (shapeList != null) {
+			for (Shape s : this.getPage().getFile().shapeList) {
+				if (s.contains(point)) {
+					shape = s;
+					break;
+				}
+			}
+		}
+		return shape;
+	}
+	
+	public File fileContains(Point point) {
+		Page page = this.getPage();
+		return (page != null) ? page.getFile(point) : null;
+	}
+    
+    public void addShape(Shape shape) {
+    	logger.info("addShape("+shape+")");
+    	Page page = this.getPage();
+    	if(page != null) {
+    		page.addShape(shape);
+    	}
+    }
+    
+    public void setShape(String uuid) {
+    	logger.info("setShape("+uuid+")");
+    	Page page = this.getPage();
+    	page.setShape(uuid);
+    }
+    
+    public void setFile(String uuid) {
+    	logger.info("setFile("+uuid+")");
+    	Page page = this.getPage();
+    	page.setFile(uuid);
     }
     
     @JsonIgnore
@@ -152,7 +229,7 @@ public class Project implements Serializable {
         for(int i = 0; i < this.pageList.size(); i++){
             page = this.pageList.get(i);
             if(page.uuid.equals(uuid)){
-                this.index = i;
+                this.setIndex(i);;
                 break;
             }
         }

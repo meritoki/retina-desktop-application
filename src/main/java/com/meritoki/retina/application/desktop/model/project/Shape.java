@@ -96,33 +96,6 @@ public class Shape {
     	return this.displacement;
     }
     
-    /**
-     * Using the input graphics2D
-     * @param graphics2D
-     */
-    @JsonIgnore
-    public void draw(Graphics2D graphics2D) {
-    	if(!removed) {
-			double x = Math.min(this.pointList.get(0).x, this.pointList.get(1).x);
-			double y = Math.min(this.pointList.get(0).y, this.pointList.get(1).y);
-			double width = Math.abs(this.pointList.get(0).x - this.pointList.get(1).x);
-			double height = Math.abs(this.pointList.get(0).y - this.pointList.get(1).y);
-//			double displacement = this.displacement;
-			x *= this.scale;
-			y *= this.scale;
-			width *= this.scale;
-			height *= this.scale;
-//			displacement *= this.scale;
-			if(this.classification.equals(ELLIPSE)) {
-				Ellipse2D.Double ellipse = new Ellipse2D.Double(x, y, width, height);
-				graphics2D.draw(ellipse);
-			} else if(this.classification.equals(RECTANGLE)) {
-				Rectangle2D.Double rectangle = new Rectangle2D.Double(x, y, width, height);
-				graphics2D.draw(rectangle);
-			}
-    	}
-    }
-    
     @JsonIgnore
     public void sortPointList() {
     	Point pointZero = this.pointList.get(0);

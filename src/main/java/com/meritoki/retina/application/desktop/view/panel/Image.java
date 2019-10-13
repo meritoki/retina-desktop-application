@@ -12,6 +12,8 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 
 import javax.swing.JPanel;
 import java.awt.event.MouseEvent;
@@ -26,6 +28,7 @@ import org.apache.logging.log4j.Logger;
 import com.meritoki.retina.application.desktop.model.Command;
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.Operation;
+import com.meritoki.retina.application.desktop.model.project.File;
 import com.meritoki.retina.application.desktop.model.project.Page;
 import com.meritoki.retina.application.desktop.model.project.Point;
 import com.meritoki.retina.application.desktop.model.project.Project;
@@ -39,6 +42,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 	private static Logger logger = LogManager.getLogger(Image.class.getName());
 	private Main main = null;
 	private Model model = null;
+	private File file = null;
 
 	public Image() {
 		super();
@@ -75,64 +79,78 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 	 * Need to refactor this method so that it is much more simple
 	 */
 	@Override
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
+	protected void paintComponent(Graphics graphics) {
+		logger.info("paintComponent("+graphics+")");
+		super.paintComponent(graphics);
 		if (this.model != null) {
-			Graphics2D graphics2D = (Graphics2D) g.create();
+			Graphics2D graphics2D = (Graphics2D) graphics.create();
 			Project project = this.model.project;
-			Page page = (project != null) ? project.getPage() : null;
+			Page page = project.getPage();
 			AffineTransform affineTransform = new AffineTransform();
 			affineTransform.scale(this.model.scale, this.model.scale);
 			page.loadBufferedImage();
-			BufferedImage bufferedImage = (page != null) ? page.bufferedImage : null;
+			BufferedImage bufferedImage = page.bufferedImage;
 			if (bufferedImage != null) {
-				graphics2D.drawImage(bufferedImage, affineTransform, this);
+				graphics2D.drawImage(bufferedImage, affineTransform, null);
+				double displacement = 0;
+				
+				for(File file:page.fileList) {
+					if(file.uuid.equals(page.getFile().uuid)) {
+						graphics2D.setColor(Color.RED);
+					} else {
+						graphics2D.setColor(Color.YELLOW);
+					}
+					Rectangle2D.Double image = new Rectangle2D.Double(displacement*model.scale, 0, file.width*model.scale, file.height*model.scale);
+					graphics2D.draw(image);
+					displacement+=file.width;
+				}
 			}
-			List<Shape> shapeList = (page != null) ? page.shapeList : null;
+			List<Shape> shapeList = page.getShapeList();
 			if (shapeList != null) {
 				for (Shape shape : shapeList) {
-					if (shape.uuid.equals(page.getShape().uuid)) {
+					if (shape.uuid.equals(page.getFile().getShape().uuid)) {
 						graphics2D.setColor(Color.RED);
 					} else {
 						graphics2D.setColor(Color.BLUE);
 					}
 					if (shape.classification == null) {
-						if (this.model.rectangle) {
+						if (model.rectangle) {
 							shape.classification = Shape.RECTANGLE;
-						} else if (this.model.ellipse) {
+						} else if (model.ellipse) {
 							shape.classification = Shape.ELLIPSE;
 						}
 					}
 					if (shape.pointList.size() > 1) {
-						shape.draw(graphics2D);
+				    	if(!shape.removed) {
+							double x = Math.min(shape.pointList.get(0).x, shape.pointList.get(1).x);
+							double y = Math.min(shape.pointList.get(0).y, shape.pointList.get(1).y);
+							double width = Math.abs(shape.pointList.get(0).x - shape.pointList.get(1).x);
+							double height = Math.abs(shape.pointList.get(0).y - shape.pointList.get(1).y);
+							double displacement = shape.displacement;
+							x *= this.model.scale;
+							y *= this.model.scale;
+							width *= this.model.scale;
+							height *= this.model.scale;
+							displacement *= this.model.scale;
+							if(shape.classification.equals(shape.ELLIPSE)) {
+								Ellipse2D.Double ellipse = new Ellipse2D.Double(displacement+x, y, width, height);
+								graphics2D.draw(ellipse);
+							} else if(shape.classification.equals(shape.RECTANGLE)) {
+								Rectangle2D.Double rectangle = new Rectangle2D.Double(displacement+x, y, width, height);
+								graphics2D.draw(rectangle);
+							}
+				    	}
 					}
 				}
 			}
 		}
 	}
+	
+	
 
-	/**
-	 * A mousePressed begins an Add, Move, or Resize. Call each one a Command that
-	 * affects the model. A command can have one or more Operations.
-	 * 
-	 * @param point
-	 * @return
-	 */
-	public Shape shapeContains(Point point) {
-		Shape shape = null;
-		Project project = (this.model != null) ? this.model.project : null;
-		Page image = (project != null) ? this.model.project.getPage() : null;
-		List<Shape> shapeList = (image != null) ? image.shapeList : null;
-		if (shapeList != null) {
-			for (Shape s : this.model.project.getPage().shapeList) {
-				if (s.contains(point)) {
-					shape = s;
-					break;
-				}
-			}
-		}
-		return shape;
-	}
+
+	
+	
 
 	/**
 	 * Consider moving
@@ -143,9 +161,9 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 	public int shapeIntersects(Point point) {
 		int selection = -1;
 		Page image = (this.model.project != null) ? this.model.project.getPage() : null;
-		List<Shape> shapeList = (image != null) ? image.shapeList : null;
+		List<Shape> shapeList = (image != null) ? image.getFile().shapeList : null;
 		if (shapeList != null) {
-			for (Shape s : this.model.project.getPage().shapeList) {
+			for (Shape s : this.model.project.getPage().getFile().shapeList) {
 				if (s.intersects(point)) {
 					selection = s.intersect(point);
 					break;
@@ -154,6 +172,8 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		}
 		return selection;
 	}
+	
+
 
 	/**
 	 * Here is mouse is pressed, this is the start of many operations. Here we know
@@ -178,7 +198,8 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		this.model.pressedPoint = new Point();
 		this.model.pressedPoint.x = e.getX();
 		this.model.pressedPoint.y = e.getY();
-		this.model.shape = this.shapeContains(this.model.pressedPoint);
+		this.model.shape = this.model.project.shapeContains(this.model.pressedPoint);
+		this.model.file = this.model.project.fileContains(this.model.pressedPoint);
 	}
 
 	/**
@@ -193,9 +214,11 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				&& this.model.pressedPoint.y == this.model.releasedPoint.y) {
 			if (this.model.shape != null) {
 				logger.info("Selected...");
-				this.model.project.getPage().setShape(this.model.shape.uuid);// Done
+				this.model.project.setFile(this.model.file.uuid);
+				this.model.project.setShape(this.model.shape.uuid);// Done
 			} else {
 				logger.info("Nothing...");
+				this.model.project.setFile(this.model.file.uuid);
 			}
 		} else {
 			int selection = this.shapeIntersects(this.model.pressedPoint);
@@ -210,7 +233,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 			} else {
 				if (this.model.shape != null) {
 					logger.info("Moving...");
-					this.model.project.getPage().setShape(this.model.shape.uuid);
+					this.model.project.setShape(this.model.shape.uuid);
 					Point movePoint = new Point();
 					movePoint.x = this.model.releasedPoint.x - this.model.pressedPoint.x;
 					movePoint.y = this.model.releasedPoint.y - this.model.pressedPoint.y;
@@ -222,8 +245,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 					this.model.shape.pointList.add(this.model.pressedPoint);
 					this.model.shape.pointList.add(this.model.releasedPoint);
 					this.model.shape.sortPointList();
-					this.model.project.getPage().shapeList.add(this.model.shape);
-					this.model.project.getPage().setShape(this.model.shape.uuid);
+					this.model.project.addShape(this.model.shape);
 					Command command = new Command();
 					Operation operation = new Operation();
 					operation.object = this.model.shape;
@@ -262,7 +284,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		this.model.scale = this.round(this.model.scale, 6);
 		if (this.model.scale >= 0 && this.model.scale <= 2) {
 			logger.debug("mouseWheelMoved(...) scale = " + this.model.scale);
-			for (Shape shape : this.model.project.getPage().shapeList) {
+			for (Shape shape : this.model.project.getPage().getFile().shapeList) {
 				shape.scale(this.model.scale);
 			}
 			revalidate();
@@ -291,11 +313,11 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
 						if (operation.object instanceof Shape) {
-							this.model.project.getPage().removeShape((Shape) operation.object);
+							this.model.project.getPage().getFile().removeShape((Shape) operation.object);
 						}
 					} else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
-							this.model.project.getPage().addShape((Shape) operation.object);
+							this.model.project.getPage().getFile().addShape((Shape) operation.object);
 						}
 					}
 				}
@@ -311,11 +333,11 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
 						if (operation.object instanceof Shape) {
-							this.model.project.getPage().addShape((Shape) operation.object);
+							this.model.project.getPage().getFile().addShape((Shape) operation.object);
 						}
 					} else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
-							this.model.project.getPage().removeShape((Shape) operation.object);
+							this.model.project.getPage().getFile().removeShape((Shape) operation.object);
 						}
 					}
 				}
@@ -328,8 +350,8 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 			switch (keyCode) {
 			case KeyEvent.VK_BACK_SPACE: {
 				logger.debug("KeyPressed(BACK_SPACE)");
-				this.model.shape = this.model.project.getPage().getShape();
-				this.model.project.getPage().removeShape(this.model.shape);
+				this.model.shape = this.model.project.getPage().getFile().getShape();
+				this.model.project.getPage().getFile().removeShape(this.model.shape);
 				Command command = new Command();
 				Operation operation = new Operation();
 				operation.object = this.model.shape;
