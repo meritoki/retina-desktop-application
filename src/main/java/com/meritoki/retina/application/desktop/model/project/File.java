@@ -166,7 +166,7 @@ public class File {
     }
     
     @JsonIgnore
-    public void loadBufferedImage() {
+    public BufferedImage getBufferedImage() {
     	if(this.bufferedImage == null) {
 	        if (this.path != null && this.name != null) {
 	            try {
@@ -179,6 +179,7 @@ public class File {
 	            }
 	        }
     	}
+    	return this.bufferedImage;
     }
     @JsonIgnore
     @Override

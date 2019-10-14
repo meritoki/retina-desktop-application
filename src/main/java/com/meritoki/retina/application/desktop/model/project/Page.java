@@ -141,6 +141,7 @@ public class Page {
 
 	@JsonIgnore
 	public List<Shape> getShapeList() {
+		this.initFileOffset();
 		List<Shape> shapeList = new ArrayList<>();
 		for(File file: this.fileList) {
 			shapeList.addAll(file.getShapeList());
@@ -157,7 +158,7 @@ public class Page {
 		if(this.bufferedImage == null) {
 	    	File bufferedImageFile = null;
 	    	for(File file: this.fileList) {
-	    		file.loadBufferedImage();
+	    		file.getBufferedImage();
 	    		if(bufferedImageFile == null) {
 	    			bufferedImageFile = file;
 	    		} else {
@@ -167,6 +168,13 @@ public class Page {
 	    	this.bufferedImage = bufferedImageFile.bufferedImage;
 		}
 	    return this.bufferedImage;
+	}
+	
+	public void resetBufferedImage() {
+		this.bufferedImage = null;
+		for(File file: this.fileList) {
+			file.bufferedImage = null;
+		}
 	}
 
 	/**
@@ -225,16 +233,6 @@ public class Page {
     	this.fileList.add(file);
     	this.initFileOffset();
     }
-
-//    /**
-//     * Function loads the bufferedImage instantiated using the fileList.
-//     */
-//    public void loadBufferedImage() {
-//    	if(this.bufferedImage == null) {
-//    		logger.info("loadBufferedImage() bufferedImage=null");
-//    		this.bufferedImage = this.getJoinedBufferedImage();
-//    	}
-//    }
     
     public void initFileOffset() {
     	double offset = 0;
@@ -452,8 +450,8 @@ public class Page {
         g2.fillRect(0, 0, wid, height);
         //draw image
         g2.setColor(oldColor);
-        g2.drawImage(file1.bufferedImage, null, 0, 0);
-        g2.drawImage(file2.bufferedImage, null, file1.bufferedImage.getWidth()+offset, 0);
+        g2.drawImage(file1.bufferedImage, null, 0, (int)file1.margin);
+        g2.drawImage(file2.bufferedImage, null, file1.bufferedImage.getWidth()+offset, (int)file2.margin);
         g2.dispose();
         return newImage;
     }

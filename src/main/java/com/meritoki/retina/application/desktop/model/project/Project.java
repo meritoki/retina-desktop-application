@@ -196,6 +196,25 @@ public class Project implements Serializable {
 		List<Shape> shapeList = (page != null) ? page.getShapeList():null;
 		return shapeList;
 	}
+	
+	public BufferedImage getBufferedImage() {
+		Page page = this.getPage();
+		BufferedImage bufferedImage = (page != null) ? page.getBufferedImage() : null;
+		return bufferedImage;
+	}
+
+//	public File getFile() {
+//		Page page = this.getPage();
+//		File file = (page != null) ? page.getFile(): null;
+//		return file;
+//	}
+	
+	public List<File> getFileList() {
+		Page page = this.getPage();
+		List<File> fileList = (page != null) ? page.fileList: null;
+		return fileList;
+	}
+
 
 	public void setShape(String uuid) {
     	logger.info("setShape("+uuid+")");

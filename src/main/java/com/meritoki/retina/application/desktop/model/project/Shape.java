@@ -108,15 +108,6 @@ public class Shape {
     	}
     }
 
-    @JsonIgnore
-    public void setBufferedImage(Page page){
-       BufferedImage bufferedImage = null;
-//       if(page.getBufferedImage() != null){
-//           //bufferedImage = page.getBufferedImage().getSubimage(this.getX(), this.getX(), (this.getI()-this.getX()), (this.getJ()-this.getY()));
-//       }
-//       this.bufferedImage = bufferedImage;
-    }
-    
     /**
      * Used by data Matrix algorithm
      * @param u
@@ -139,29 +130,33 @@ public class Shape {
     }
     
     @JsonProperty
-    public String getUUID(){
-        return this.uuid;
-    }
-    
-    @JsonProperty
+	public Data getData(){
+	    return this.data;
+	}
+
+	@JsonIgnore
+	public double getCenterX(){
+	    return (this.pointList.get(0).x + this.pointList.get(1).x)/2;
+	}
+
+	@JsonIgnore
+	public double getCenterY(){
+	    return (this.pointList.get(0).y+this.pointList.get(1).y)/2;
+	}
+
+	@JsonIgnore
+	    public void setBufferedImage(Page page){
+	       BufferedImage bufferedImage = null;
+	//       if(page.getBufferedImage() != null){
+	//           //bufferedImage = page.getBufferedImage().getSubimage(this.getX(), this.getX(), (this.getI()-this.getX()), (this.getJ()-this.getY()));
+	//       }
+	//       this.bufferedImage = bufferedImage;
+	    }
+
+	@JsonProperty
     public void setData(Data data){
         this.data = data;
     }
-    @JsonProperty
-    public Data getData(){
-        return this.data;
-    }
-    
-    @JsonIgnore
-    public double getCenterX(){
-        return (this.pointList.get(0).x + this.pointList.get(1).x)/2;
-    }
-    
-    @JsonIgnore
-    public double getCenterY(){
-        return (this.pointList.get(0).y+this.pointList.get(1).y)/2;
-    }
-    
     @JsonIgnore
     public void setScale(double scale) {
     	logger.info("setScale("+scale+")");
