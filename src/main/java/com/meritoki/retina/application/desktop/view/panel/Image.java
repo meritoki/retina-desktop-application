@@ -85,6 +85,8 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		if (this.model != null) {
 			Graphics2D graphics2D = (Graphics2D) graphics.create();
 			Project project = this.model.project;
+			
+			
 			AffineTransform affineTransform = new AffineTransform();
 			affineTransform.scale(this.model.scale, this.model.scale);
 			BufferedImage bufferedImage = project.getBufferedImage();
@@ -92,6 +94,8 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				graphics2D.drawImage(bufferedImage, affineTransform, null);
 
 			}
+			//TODO Attempt to build buffered image here instead of above, build it with each
+			//File bufferedImage.
 			List<File> fileList = project.getFileList();
 			File file = project.getFile();
 			if (fileList != null) {
@@ -105,6 +109,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 					Rectangle2D.Double rectangle = new Rectangle2D.Double(f.x,f.y,f.w,f.h);
 					graphics2D.draw(rectangle);
 				}
+				
 			}
 			List<Shape> shapeList = project.getShapeList();
 			Shape shape = project.getShape();
@@ -290,23 +295,31 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if ((e.getKeyCode() == KeyEvent.VK_UP) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+		if ((e.getKeyCode() == KeyEvent.VK_DOWN) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+			e.consume();
 			Page page = this.model.project.getPage();
+			page.bufferedImage = null;
 			File file = (page != null) ? page.getFile() : null;
 			if (file != null) {
-				file.margin += 10;
+				logger.info("keyPressed(...) UP CTRL file.margin="+file.margin);
+				file.setMargin(file.margin+10);
 //				page.resetBufferedImage();
 			}
 			repaint();
-		} else if ((e.getKeyCode() == KeyEvent.VK_DOWN) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+		} 
+		
+		else if ((e.getKeyCode() == KeyEvent.VK_UP) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+			e.consume();
 			Page page = this.model.project.getPage();
+			page.bufferedImage = null;
 			File file = (page != null) ? page.getFile() : null;
 			if (file != null) {
-				file.margin -= 10;
+				file.setMargin(file.margin-10);
 //				page.resetBufferedImage();
 			}
 			repaint();
 		} else if ((e.getKeyCode() == KeyEvent.VK_Z) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+			e.consume();
 			System.out.println("undo");
 			if (this.model.undoStack.size() > 0) {
 				Command command = this.model.undoStack.pop();

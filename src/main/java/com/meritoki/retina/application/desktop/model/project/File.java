@@ -208,6 +208,11 @@ public class File {
     	}
     	return this.bufferedImage;
     }
+    
+    @JsonIgnore
+    public void initBufferedImage() {
+    	this.bufferedImage = this.getBufferedImage();
+    }
     @JsonIgnore
     @Override
     public String toString() {

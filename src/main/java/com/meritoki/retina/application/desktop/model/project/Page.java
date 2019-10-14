@@ -129,7 +129,7 @@ public class Page {
 	}
 	
 	public List<File> getFileList() {
-		this.initFileOffset();
+		this.initFileOffsetAndMargin();
 		return this.fileList;
 	}
 
@@ -162,10 +162,12 @@ public class Page {
 		if(this.bufferedImage == null) {
 	    	File bufferedImageFile = null;
 	    	for(File file: this.fileList) {
-	    		file.getBufferedImage();
 	    		if(bufferedImageFile == null) {
 	    			bufferedImageFile = file;
+	    			bufferedImageFile.bufferedImage = null;
+	    			bufferedImageFile.getBufferedImage();
 	    		} else {
+	    			file.getBufferedImage();
 	    			bufferedImageFile.bufferedImage = this.joinFile(bufferedImageFile, file);
 	    		}
 	    	}
@@ -224,7 +226,7 @@ public class Page {
 
 	public void addShape(Shape shape) {
     	logger.info("addShape("+shape+")");
-    	this.initFileOffset();
+    	this.initFileOffsetAndMargin();
     	File file = this.getFile();
     	if(file != null) {
     		file.addShape(shape);
@@ -234,14 +236,20 @@ public class Page {
     public void addFile(File file) {
     	logger.info("addFile("+file+")");
     	this.fileList.add(file);
-    	this.initFileOffset();
+    	this.initFileOffsetAndMargin();
     }
     
-    public void initFileOffset() {
+    public void initFileOffsetAndMargin() {
     	double offset = 0;
+    	double minMargin = this.getFileListMinMargin();
     	for(File file: this.fileList) {
     		file.setOffset(offset);
     		offset+=file.width;
+    		if(file.margin < 0) {
+    			file.margin+=minMargin;
+    		} else {
+    			file.margin-=minMargin;
+    		}
     	}
     }
     
@@ -376,6 +384,16 @@ public class Page {
         }
         return flag;
     }
+    
+    public double getFileListMinMargin() {
+    	double min = 65536;
+    	for(File file: this.fileList) {
+    		if(file.margin < min) {
+    			min = file.margin;
+    		}
+    	}
+    	return 0;
+    }
 
     public int getShapeListYAverage(List<Shape> shapeList, Shape rectangle) {
         logger.debug("getShapeListYAverage(" + shapeList + ", " + rectangle + ")");
@@ -441,9 +459,9 @@ public class Page {
     public BufferedImage joinFile(File file1, File file2) { //BufferedImage img1,BufferedImage img2) {
     	logger.info("joinBufferedImage("+file1+","+file2+")");
         //do some calculate first
-        int offset  = 5;
-        int wid = file1.bufferedImage.getWidth()+file2.bufferedImage.getWidth()+offset;
-        int height = Math.max(file1.bufferedImage.getHeight(),file2.bufferedImage.getHeight())+offset;
+//        int offset  = 5;
+        int wid = file1.bufferedImage.getWidth()+file2.bufferedImage.getWidth();//+offset;
+        int height = Math.max(file1.bufferedImage.getHeight()+(int)file1.margin,file2.bufferedImage.getHeight()+(int)file2.margin);//+offset;
         //create a new buffer and draw two image into the new image
         BufferedImage newImage = new BufferedImage(wid,height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = newImage.createGraphics();
@@ -454,7 +472,8 @@ public class Page {
         //draw image
         g2.setColor(oldColor);
         g2.drawImage(file1.bufferedImage, null, 0, (int)file1.margin);
-        g2.drawImage(file2.bufferedImage, null, file1.bufferedImage.getWidth()+offset, (int)file2.margin);
+        g2.drawImage(file2.bufferedImage, null, file1.bufferedImage.getWidth(), (int)file2.margin);
+//        g2.drawImage(file2.bufferedImage, null, file1.bufferedImage.getWidth()+offset, (int)file2.margin);
         g2.dispose();
         return newImage;
     }
