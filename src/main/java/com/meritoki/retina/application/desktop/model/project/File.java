@@ -68,7 +68,7 @@ public class File {
     
     @JsonIgnore
     public void initDimension() {
-    	logger.info("initDimension()");
+    	logger.debug("initDimension()");
 		this.x = this.offset * this.scale;
 		this.y = this.margin * this.scale;
 		this.w = this.width * this.scale;
@@ -106,11 +106,10 @@ public class File {
 	@JsonIgnore
 	public void addShape(Shape shape) {
 		logger.info("addShape("+shape+")");
-		//Here we mode the shape pointList;
-//		logger.info("addShape("+shape+") shape.pointList="+shape.pointList);
-//		shape.pointList.get(0).x -= offset;
-//		shape.pointList.get(1).x -= offset;
-//		logger.info("addShape("+shape+") shape.pointList="+shape.pointList);
+		shape.setOffset(offset);
+		shape.setMargin(margin);
+		shape.pointList.get(0).x -= offset;
+		shape.pointList.get(1).x -= offset;
 		this.shapeList.add(shape);
 	}
 
@@ -121,9 +120,10 @@ public class File {
 	public List<Shape> getShapeList() {
 		//Here we mode the Shape again with 
 //		for(Shape shape: this.shapeList) {
-//			shape.pointList.get(0).x += offset;
-//			shape.pointList.get(1).x += offset;
+//			shape.pointList.get(0).x += offset*scale;
+//			shape.pointList.get(1).x += offset*scale;
 //		}
+		logger.info("getShapeList() this.shapeList="+this.shapeList);
 		return this.shapeList;
 	}
 
@@ -168,13 +168,19 @@ public class File {
     }
     
     public void setOffset(double offset) {
-    	logger.info("setOffset("+offset+")");
+    	logger.debug("setOffset("+offset+")");
     	this.offset = offset;
+    	for(Shape shape: this.shapeList) {
+    		shape.setOffset(this.offset);
+    	}
     }
     
     public void setMargin(double margin) {
-    	logger.info("setOMargin("+margin+")");
+    	logger.info("setMargin("+margin+")");
     	this.margin = margin;
+    	for(Shape shape: this.shapeList) {
+    		shape.setMargin(this.margin);
+    	}
     }
     
     

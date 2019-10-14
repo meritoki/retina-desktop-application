@@ -77,11 +77,11 @@ public class Page {
     @JsonIgnore
     public BufferedImage bufferedImage = null;
     
-    /**
-     * Scale of the entire page, applied to all files.
-     */
-    @JsonIgnore
-    public double scale = 1;
+//    /**
+//     * Scale of the entire page, applied to all files.
+//     */
+//    @JsonIgnore
+//    public double scale = 1;
 
     /**
      * Page class retains references to one or more files
@@ -120,7 +120,7 @@ public class Page {
 		File file = null;
 		for(int i = 0;i < fileList.size();i++) {
 			File f = fileList.get(i);
-			if(point.x > f.offset*this.scale && point.x < (f.offset+f.width)*this.scale) {
+			if(point.x > f.offset*f.scale && point.x < (f.offset+f.width)*f.scale) {
 				file = f;
 			}
 		}
@@ -197,9 +197,8 @@ public class Page {
     
     public void setScale(double scale) {
         logger.debug("setScale(" + scale + ")");
-        this.scale = scale;
         for(File file:this.fileList) {
-        	file.setScale(this.scale);
+        	file.setScale(scale);
         }
     }
     
@@ -225,7 +224,7 @@ public class Page {
 	}
 
 	public void addShape(Shape shape) {
-    	logger.info("addShape("+shape+")");
+    	logger.debug("addShape("+shape+")");
     	this.initFileOffsetAndMargin();
     	File file = this.getFile();
     	if(file != null) {
@@ -241,15 +240,22 @@ public class Page {
     
     public void initFileOffsetAndMargin() {
     	double offset = 0;
+    	//Need min because min becomes new zero;
     	double minMargin = this.getFileListMinMargin();
+    	double maxMargin = this.getFileListMaxMargin();
+    
     	for(File file: this.fileList) {
     		file.setOffset(offset);
     		offset+=file.width;
-    		if(file.margin < 0) {
-    			file.margin+=minMargin;
-    		} else {
-    			file.margin-=minMargin;
-    		}
+    		//TODO Not working at all
+//    		if(file.margin != minMargin) {
+//    			file.setMargin(file.margin+Math.abs(minMargin));
+//    		}
+//    		if(file.margin >= 0) {
+//    			file.setMargin(file.margin+Math.abs(minMargin));
+//    		} else {
+//    			file.setMargin(file.margin-Math.abs(minMargin));
+//    		}
     	}
     }
     
@@ -272,11 +278,11 @@ public class Page {
 
     @JsonIgnore
     public List<LinkedList<Data>> getDataMatrix() {
-    	logger.info("getDataMatrix()");
+    	logger.debug("getDataMatrix()");
         List<LinkedList<Data>> dataMatrix = null;
         List<Shape> shapeList = this.getShapeList();
         if (shapeList != null && shapeList.size() > 0) {
-        	logger.info("getDataMatrix() shapeList = "+shapeList);
+        	logger.debug("getDataMatrix() shapeList = "+shapeList);
             Shape shape = null;
             int averageY;
             int threshold = 64;
@@ -392,7 +398,17 @@ public class Page {
     			min = file.margin;
     		}
     	}
-    	return 0;
+    	return min;
+    }
+    
+    public double getFileListMaxMargin() {
+    	double max = -65536;
+    	for(File file: this.fileList) {
+    		if(file.margin > max) {
+    			max = file.margin;
+    		}
+    	}
+    	return max;
     }
 
     public int getShapeListYAverage(List<Shape> shapeList, Shape rectangle) {

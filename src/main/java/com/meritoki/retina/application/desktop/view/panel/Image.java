@@ -42,7 +42,6 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 	private static Logger logger = LogManager.getLogger(Image.class.getName());
 	private Main main = null;
 	private Model model = null;
-	private File file = null;
 
 	public Image() {
 		super();
@@ -123,10 +122,10 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 							graphics2D.setColor(Color.BLUE);
 						}
 						if (s.classification.equals(Shape.ELLIPSE)) {
-							Ellipse2D.Double ellipse = new Ellipse2D.Double(s.x, s.y, s.width, s.height);
+							Ellipse2D.Double ellipse = new Ellipse2D.Double(s.x, s.y, s.w, s.h);
 							graphics2D.draw(ellipse);
 						} else if (s.classification.equals(Shape.RECTANGLE)) {
-							Rectangle2D.Double rectangle = new Rectangle2D.Double(s.x, s.y, s.width, s.height);
+							Rectangle2D.Double rectangle = new Rectangle2D.Double(s.x, s.y, s.w, s.h);
 							graphics2D.draw(rectangle);
 						}
 					}

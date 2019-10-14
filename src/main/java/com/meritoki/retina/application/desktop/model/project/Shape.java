@@ -15,9 +15,6 @@
  */
 package com.meritoki.retina.application.desktop.model.project;
 
-import java.awt.Graphics2D;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,7 +30,8 @@ import org.codehaus.jackson.map.ObjectWriter;
 
 public class Shape {
     
-    static org.apache.logging.log4j.Logger logger = LogManager.getLogger(Shape.class.getName());
+	@JsonIgnore
+    private static org.apache.logging.log4j.Logger logger = LogManager.getLogger(Shape.class.getName());
     @JsonIgnore
     public static final int TOP = 0;
     @JsonIgnore
@@ -75,9 +73,13 @@ public class Shape {
     @JsonIgnore
     public double y = 0;
     @JsonIgnore
-    public double width = 0;
+    public double w = 0;
     @JsonIgnore
-    public double height = 0;
+    public double h = 0;
+    
+    public double offset = 0;
+    
+    public double margin = 0;
     
     public Shape(){
          this.uuid = UUID.randomUUID().toString();
@@ -92,13 +94,15 @@ public class Shape {
     @JsonIgnore
     public void initDimension() {
 		this.x = Math.min(this.pointList.get(0).x, this.pointList.get(1).x);
+		this.x += offset;
 		this.y = Math.min(this.pointList.get(0).y, this.pointList.get(1).y);
-		this.width = Math.abs(this.pointList.get(0).x - this.pointList.get(1).x);
-		this.height = Math.abs(this.pointList.get(0).y - this.pointList.get(1).y);
+		this.y += margin;
+		this.w = Math.abs(this.pointList.get(0).x - this.pointList.get(1).x);
+		this.h = Math.abs(this.pointList.get(0).y - this.pointList.get(1).y);
 		x *= this.scale;//this.model.scale;
 		y *= this.scale;//this.model.scale;
-		width *= this.scale;//this.model.scale;
-		height *= this.scale;//this.model.scale;
+		w *= this.scale;//this.model.scale;
+		h *= this.scale;//this.model.scale;
     }
     
     public void getObject() {
@@ -159,10 +163,20 @@ public class Shape {
 	public double getCenterY(){
 	    return (this.pointList.get(0).y+this.pointList.get(1).y)/2;
 	}
+	
+	@JsonIgnore
+	public void setOffset(double offset) {
+		this.offset = offset;
+	}
+	
+	@JsonIgnore
+	public void setMargin(double offset) {
+		this.margin = offset;
+	}
 
 	@JsonIgnore
 	    public void setBufferedImage(Page page){
-	       BufferedImage bufferedImage = null;
+//	       BufferedImage bufferedImage = null;
 	//       if(page.getBufferedImage() != null){
 	//           //bufferedImage = page.getBufferedImage().getSubimage(this.getX(), this.getX(), (this.getI()-this.getX()), (this.getJ()-this.getY()));
 	//       }
@@ -344,7 +358,7 @@ public class Shape {
                 Logger.getLogger(Shape.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            string = "uuid="+this.uuid+", scale="+this.scale;
+            string = "uuid="+this.uuid+", pointList="+this.pointList+", scale="+this.scale;
         }
         return string;
     }

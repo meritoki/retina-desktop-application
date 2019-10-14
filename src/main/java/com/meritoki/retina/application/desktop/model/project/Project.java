@@ -245,8 +245,12 @@ public class Project implements Serializable {
     @JsonIgnore
     public void setScale(double scale) {
     	logger.debug("setScale("+scale+")");
-    	Page page = this.getPage();
-    	if(page != null) {
+//    	Page page = this.getPage();
+//    	if(page != null) {
+//    		page.setScale(scale);
+//    	}
+    	
+    	for(Page page: this.getPageList()) {
     		page.setScale(scale);
     	}
     }
@@ -265,7 +269,7 @@ public class Project implements Serializable {
     }
     
     public void addShape(Shape shape) {
-		logger.info("addShape("+shape+")");
+		logger.debug("addShape("+shape+")");
 		Page page = this.getPage();
 		if(page != null) {
 			page.addShape(shape);
