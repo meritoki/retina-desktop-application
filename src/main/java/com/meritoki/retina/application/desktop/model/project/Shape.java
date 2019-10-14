@@ -90,6 +90,22 @@ public class Shape {
     }
     
     @JsonIgnore
+    public void initDimension() {
+		this.x = Math.min(this.pointList.get(0).x, this.pointList.get(1).x);
+		this.y = Math.min(this.pointList.get(0).y, this.pointList.get(1).y);
+		this.width = Math.abs(this.pointList.get(0).x - this.pointList.get(1).x);
+		this.height = Math.abs(this.pointList.get(0).y - this.pointList.get(1).y);
+		x *= this.scale;//this.model.scale;
+		y *= this.scale;//this.model.scale;
+		width *= this.scale;//this.model.scale;
+		height *= this.scale;//this.model.scale;
+    }
+    
+    public void getObject() {
+    	
+    }
+    
+    @JsonIgnore
     public void sortPointList() {
     	Point pointZero = this.pointList.get(0);
     	Point pointOne = this.pointList.get(1);

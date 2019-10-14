@@ -116,16 +116,21 @@ public class Page {
 	 * @return
 	 */
 	public File getFile(Point point) {
-		this.initFileOffset();
+		List<File> fileList = this.getFileList();
 		File file = null;
-		for(int i = 0;i < this.fileList.size();i++) {
-			File f = this.fileList.get(i);
+		for(int i = 0;i < fileList.size();i++) {
+			File f = fileList.get(i);
 			if(point.x > f.offset*this.scale && point.x < (f.offset+f.width)*this.scale) {
 				file = f;
 			}
 		}
 		logger.info("getFile("+point+") file="+file);
 		return file;
+	}
+	
+	public List<File> getFileList() {
+		this.initFileOffset();
+		return this.fileList;
 	}
 
 	public Shape getShape(Point point) {
@@ -141,9 +146,8 @@ public class Page {
 
 	@JsonIgnore
 	public List<Shape> getShapeList() {
-		this.initFileOffset();
 		List<Shape> shapeList = new ArrayList<>();
-		for(File file: this.fileList) {
+		for(File file: this.getFileList()) {
 			shapeList.addAll(file.getShapeList());
 		}
 		return shapeList;
@@ -191,9 +195,7 @@ public class Page {
     
     public void setScale(double scale) {
         logger.debug("setScale(" + scale + ")");
-        if (scale >= 0) {
-            this.scale = scale;
-        }
+        this.scale = scale;
         for(File file:this.fileList) {
         	file.setScale(this.scale);
         }
@@ -222,6 +224,7 @@ public class Page {
 
 	public void addShape(Shape shape) {
     	logger.info("addShape("+shape+")");
+    	this.initFileOffset();
     	File file = this.getFile();
     	if(file != null) {
     		file.addShape(shape);

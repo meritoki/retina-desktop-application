@@ -211,7 +211,7 @@ public class Project implements Serializable {
 	
 	public List<File> getFileList() {
 		Page page = this.getPage();
-		List<File> fileList = (page != null) ? page.fileList: null;
+		List<File> fileList = (page != null) ? page.getFileList(): null;
 		return fileList;
 	}
 

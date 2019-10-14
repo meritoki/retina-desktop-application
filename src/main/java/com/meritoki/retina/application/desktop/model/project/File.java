@@ -1,5 +1,6 @@
 package com.meritoki.retina.application.desktop.model.project;
 
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,10 +30,15 @@ public class File {
     public String cachePath = null;
     @JsonIgnore
     public BufferedImage bufferedImage = null;
+    
+    public double x = 0;
+    public double y = 0;
+    public double w = 0;
+    public double h = 0;
     @JsonProperty
-    public int width = 0;
+    public double width = 0;
     @JsonProperty
-    public int height = 0;
+    public double height = 0;
     @JsonProperty 
     public double scale = 1;
     @JsonProperty
@@ -56,6 +62,19 @@ public class File {
     public File(){ 
         this.uuid = UUID.randomUUID().toString();
     }
+    
+//    Rectangle2D.Double rectangle = new Rectangle2D.Double(file.offset * model.scale,
+//			file.margin * model.scale, file.width * model.scale, file.height * model.scale);
+    
+    @JsonIgnore
+    public void initDimension() {
+    	logger.info("initDimension()");
+		this.x = this.offset * this.scale;
+		this.y = this.margin * this.scale;
+		this.w = this.width * this.scale;
+		this.h = this.height* this.scale;
+    }
+    
     
     /**
 	 * Function gets the current index selected by user.
@@ -81,10 +100,30 @@ public class File {
 	}
 
 	/**
+	 * Functions adds shape to shapeList.
+	 * @param shape
+	 */
+	@JsonIgnore
+	public void addShape(Shape shape) {
+		logger.info("addShape("+shape+")");
+		//Here we mode the shape pointList;
+//		logger.info("addShape("+shape+") shape.pointList="+shape.pointList);
+//		shape.pointList.get(0).x -= offset;
+//		shape.pointList.get(1).x -= offset;
+//		logger.info("addShape("+shape+") shape.pointList="+shape.pointList);
+		this.shapeList.add(shape);
+	}
+
+	/**
 	 * Function transforms the 
 	 * @return
 	 */
 	public List<Shape> getShapeList() {
+		//Here we mode the Shape again with 
+//		for(Shape shape: this.shapeList) {
+//			shape.pointList.get(0).x += offset;
+//			shape.pointList.get(1).x += offset;
+//		}
 		return this.shapeList;
 	}
 
@@ -102,9 +141,7 @@ public class File {
     
     public void setScale(double scale) {
         logger.debug("setScale(" + scale + ")");
-        if (scale >= 0) {
-            this.scale = scale;
-        }
+        this.scale = scale;
         for(Shape shape:this.shapeList) {
         	shape.setScale(this.scale);
         }
@@ -153,16 +190,6 @@ public class File {
                 break;
             }
         }
-    }
-    
-    /**
-     * Functions adds shape to shapeList.
-     * @param shape
-     */
-    @JsonIgnore
-    public void addShape(Shape shape) {
-    	logger.info("addShape("+shape+")");
-		this.shapeList.add(shape);
     }
     
     @JsonIgnore

@@ -80,7 +80,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 	 */
 	@Override
 	protected void paintComponent(Graphics graphics) {
-		logger.trace("paintComponent("+graphics+")");
+		logger.trace("paintComponent(" + graphics + ")");
 		super.paintComponent(graphics);
 		if (this.model != null) {
 			Graphics2D graphics2D = (Graphics2D) graphics.create();
@@ -90,61 +90,45 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 			BufferedImage bufferedImage = project.getBufferedImage();
 			if (bufferedImage != null) {
 				graphics2D.drawImage(bufferedImage, affineTransform, null);
-				for(File file:project.getFileList()) {
-					if(project.getFile() != null && file.uuid.equals(project.getFile().uuid)) {
+
+			}
+			List<File> fileList = project.getFileList();
+			File file = project.getFile();
+			if (fileList != null) {
+				for (File f : fileList) {
+					f.initDimension();
+					if (file != null && f.uuid.equals(file.uuid)) {
 						graphics2D.setColor(Color.RED);
 					} else {
 						graphics2D.setColor(Color.YELLOW);
 					}
-					Rectangle2D.Double rectangle = new Rectangle2D.Double(file.offset*model.scale, 0, file.width*model.scale, file.height*model.scale);
+					Rectangle2D.Double rectangle = new Rectangle2D.Double(f.x,f.y,f.w,f.h);
 					graphics2D.draw(rectangle);
 				}
 			}
 			List<Shape> shapeList = project.getShapeList();
-			Shape s = project.getShape();
+			Shape shape = project.getShape();
 			if (shapeList != null) {
-				for (Shape shape : shapeList) {
-					if (s != null && shape.uuid.equals(s.uuid)) {
-						graphics2D.setColor(Color.RED);
-					} else {
-						graphics2D.setColor(Color.BLUE);
-					}
-					if (shape.classification == null) {
-						if (model.rectangle) {
-							shape.classification = Shape.RECTANGLE;
-						} else if (model.ellipse) {
-							shape.classification = Shape.ELLIPSE;
+				for (Shape s : shapeList) {
+					if (!s.removed) {
+						s.initDimension();
+						if (shape != null && s.uuid.equals(shape.uuid)) {
+							graphics2D.setColor(Color.RED);
+						} else {
+							graphics2D.setColor(Color.BLUE);
 						}
-					}
-					if (shape.pointList.size() > 1) {
-				    	if(!shape.removed) {
-							double x = Math.min(shape.pointList.get(0).x, shape.pointList.get(1).x);
-							double y = Math.min(shape.pointList.get(0).y, shape.pointList.get(1).y);
-							double width = Math.abs(shape.pointList.get(0).x - shape.pointList.get(1).x);
-							double height = Math.abs(shape.pointList.get(0).y - shape.pointList.get(1).y);
-							x *= shape.scale;//this.model.scale;
-							y *= shape.scale;//this.model.scale;
-							width *= shape.scale;//this.model.scale;
-							height *= shape.scale;//this.model.scale;
-							if(shape.classification.equals(shape.ELLIPSE)) {
-								Ellipse2D.Double ellipse = new Ellipse2D.Double(x, y, width, height);
-								graphics2D.draw(ellipse);
-							} else if(shape.classification.equals(shape.RECTANGLE)) {
-								Rectangle2D.Double rectangle = new Rectangle2D.Double(x, y, width, height);
-								graphics2D.draw(rectangle);
-							}
-				    	}
+						if (s.classification.equals(Shape.ELLIPSE)) {
+							Ellipse2D.Double ellipse = new Ellipse2D.Double(s.x, s.y, s.width, s.height);
+							graphics2D.draw(ellipse);
+						} else if (s.classification.equals(Shape.RECTANGLE)) {
+							Rectangle2D.Double rectangle = new Rectangle2D.Double(s.x, s.y, s.width, s.height);
+							graphics2D.draw(rectangle);
+						}
 					}
 				}
 			}
 		}
 	}
-	
-	
-
-
-	
-	
 
 	/**
 	 * Consider moving
@@ -166,8 +150,6 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		}
 		return selection;
 	}
-	
-
 
 	/**
 	 * Here is mouse is pressed, this is the start of many operations. Here we know
@@ -212,7 +194,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				this.model.project.setShape(this.model.shape.uuid);// Done
 			} else {
 				logger.info("Nothing...");
-				if(this.model.file != null) {
+				if (this.model.file != null) {
 					this.model.project.setFile(this.model.file.uuid);
 				}
 			}
@@ -236,7 +218,17 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 					this.model.shape.move(movePoint);
 				} else {
 					logger.info("Adding...");
+					if (this.model.file != null) {
+						this.model.project.setFile(this.model.file.uuid);
+					}
 					this.model.shape = new Shape();
+					if (this.model.shape.classification == null) {
+						if (this.model.rectangle) {
+							this.model.shape.classification = Shape.RECTANGLE;
+						} else if (this.model.ellipse) {
+							this.model.shape.classification = Shape.ELLIPSE;
+						}
+					}
 					this.model.shape.addScale = this.round(this.model.scale, 6);
 					this.model.shape.pointList.add(this.model.pressedPoint);
 					this.model.shape.pointList.add(this.model.releasedPoint);
@@ -301,16 +293,16 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		if ((e.getKeyCode() == KeyEvent.VK_UP) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
 			Page page = this.model.project.getPage();
 			File file = (page != null) ? page.getFile() : null;
-			if(file != null) {
-				file.margin+=10;
+			if (file != null) {
+				file.margin += 10;
 //				page.resetBufferedImage();
 			}
 			repaint();
 		} else if ((e.getKeyCode() == KeyEvent.VK_DOWN) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
 			Page page = this.model.project.getPage();
 			File file = (page != null) ? page.getFile() : null;
-			if(file != null) {
-				file.margin-=10;
+			if (file != null) {
+				file.margin -= 10;
 //				page.resetBufferedImage();
 			}
 			repaint();
