@@ -63,6 +63,12 @@ public class File {
         this.uuid = UUID.randomUUID().toString();
     }
     
+    public File(String path, String name){ 
+        this.uuid = UUID.randomUUID().toString();
+        this.path = path;
+        this.name = name;
+    }
+    
 //    Rectangle2D.Double rectangle = new Rectangle2D.Double(file.offset * model.scale,
 //			file.margin * model.scale, file.width * model.scale, file.height * model.scale);
     

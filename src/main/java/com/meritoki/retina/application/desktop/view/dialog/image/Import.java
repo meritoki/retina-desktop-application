@@ -15,6 +15,14 @@
  */
 package com.meritoki.retina.application.desktop.view.dialog.image;
 
+import java.io.File;
+import java.io.IOException;
+
+import com.meritoki.retina.application.desktop.model.Model;
+import com.meritoki.retina.application.desktop.model.project.Page;
+import com.meritoki.retina.application.desktop.model.project.Project;
+import com.meritoki.retina.application.desktop.view.frame.Main;
+
 /**
  *
  * @author jorodriguez
@@ -27,6 +35,13 @@ public class Import extends javax.swing.JDialog {
     public Import(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+    	this.openButton.setMultiSelectionEnabled(true);
+    	
+        this.openButton.setApproveButtonText("Open");
+        // Set the mnemonic
+        this.openButton.setApproveButtonMnemonic('O');
+        // Set the tool tip
+        this.openButton.setApproveButtonToolTipText("Open Tool Tip");
     }
 
     /**
@@ -38,21 +53,51 @@ public class Import extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        openButton = new javax.swing.JFileChooser();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        openButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(openButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addComponent(openButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void openButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openButtonActionPerformed
+    	File[] files = this.openButton.getSelectedFiles(); 
+    	Model model = ((Main)this.getParent()).model;
+    	if(model != null) {
+	    	Project project = model.project;
+	    	Page page = null;
+	    	for(File file: files) {
+	    		page = new Page();
+				page.fileList.add(new com.meritoki.retina.application.desktop.model.project.File(file.getParent(),file.getName()));
+	    		if(project != null) {
+	    			project.addPage(page);
+	    		}
+	    	}
+    		((Main)this.getParent()).setModel(model);	
+	        ((Main)this.getParent()).init();
+	        ((Main)this.getParent()).repaint();
+    	}
+        this.setVisible(false);
+    }//GEN-LAST:event_openButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -97,5 +142,6 @@ public class Import extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JFileChooser openButton;
     // End of variables declaration//GEN-END:variables
 }

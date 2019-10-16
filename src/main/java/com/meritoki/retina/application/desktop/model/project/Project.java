@@ -268,6 +268,12 @@ public class Project implements Serializable {
         }
     }
     
+    public void addPage(Page page) {
+    	logger.info("addPage("+page+")");
+    	this.pageList.add(page);
+    	
+    }
+    
     public void addShape(Shape shape) {
 		logger.debug("addShape("+shape+")");
 		Page page = this.getPage();
