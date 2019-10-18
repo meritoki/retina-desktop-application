@@ -175,6 +175,9 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 			this.model.project.setFile(this.model.file.uuid);
 			pressedPoint = new Point(this.model.pressedPoint);
 			this.model.shape = this.model.project.getShape(pressedPoint);// returns new Shape if shape not found.
+			if(this.model.shape != null) {
+				this.model.shape.setScale(this.model.scale);
+			}
 		}
 	}
 
@@ -198,14 +201,11 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				logger.info("Nothing...");
 			}
 		} else {
-			int selection = -1;//this.model.project.intersectShape(this.model.pressedPoint);
+			int selection = this.model.project.intersectShape(this.model.pressedPoint);
 			if (selection > -1) {
 				if (this.model.shape != null) {
 					logger.info("Resizing...");
 					this.model.shape.resize(this.model.releasedPoint, selection);
-					// use a copy constructor to remake shape then rezize the copy,
-					// save the old one and add a reference to its new id in the
-					// operation as id.
 				}
 			} else {
 				if (this.model.shape != null) {
@@ -231,8 +231,9 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 					this.model.shape.pointList.add(new Point(this.model.pressedPoint));
 					this.model.shape.pointList.add(new Point(this.model.releasedPoint));
 					logger.info("mouseReleased(e) this.model.shape.pointList="+this.model.shape.pointList);
-					this.model.shape.sortPointList();
+//					this.model.shape.sortPointList();//breaks intersect function
 					this.model.project.addShape(this.model.shape);
+					this.model.project.setShape(this.model.shape.uuid);
 //						Command command = new Command();
 //						Operation operation = new Operation();
 //						operation.object = this.model.shape;

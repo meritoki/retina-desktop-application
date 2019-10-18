@@ -239,7 +239,7 @@ public class Project implements Serializable {
 
 
 	public void setShape(String uuid) {
-    	logger.info("setShape("+uuid+")");
+    	logger.trace("setShape("+uuid+")");
     	Page page = this.getPage();
     	page.setShape(uuid);
     }
@@ -309,20 +309,12 @@ public class Project implements Serializable {
 		}
 	}
 	
-//	public int intersectShape(Point point) {
-//		int selection = -1;
-//		Page page = this.getPage();
-//		List<Shape> shapeList = (page != null) ? page.getFile().shapeList : null;
-//		if (shapeList != null) {
-//			for (Shape s : shapeList) {
-//				if (s.intersects(point)) {
-//					selection = s.intersect(point);
-//					break;
-//				}
-//			}
-//		}
-//		return selection;
-//	}
+	public int intersectShape(Point point) {
+		logger.trace("intersectShape("+point+")");
+		Page page = this.getPage();
+		int selection = page.intersectShape(point);
+		return selection;
+	}
 	
 	public void moveShape() {
 		

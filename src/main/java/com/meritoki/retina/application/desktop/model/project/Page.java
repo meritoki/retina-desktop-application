@@ -122,9 +122,9 @@ public class Page {
 		File file = null;
 		for(int i = 0;i < fileList.size();i++) {
 			File f = fileList.get(i);
-			logger.info("getFile(point) f.offset="+f.offset);
-			logger.info("getFile(point) f.scale="+f.scale);
-			logger.info("getFile(point) f.offset*f.scale="+f.offset*f.scale);
+			logger.debug("getFile(point) f.offset="+f.offset);
+			logger.debug("getFile(point) f.scale="+f.scale);
+			logger.debug("getFile(point) f.offset*f.scale="+f.offset*f.scale);
 			if(point.x > (f.offset*f.scale) && point.x < (f.offset+f.width)*f.scale) {
 				file = f;
 			}
@@ -147,7 +147,7 @@ public class Page {
 	}
 
 	public Shape getShape(Point point) {
-//		logger.info("getShape("+point+")");
+		logger.trace("getShape("+point+")");
 		Shape s = null;
 		for(File file:this.fileList) {
 			if(file.getShape(point) != null) {
@@ -155,14 +155,17 @@ public class Page {
 				break;
 			}
 		}
-//		
-//		for(Shape shape: this.getShapeList()) {
-//			if(shape.contains(point)) {
-//				s = shape;
-//				break;
-//			}
-//		}
 		return s;
+	}
+
+	public int intersectShape(Point point) {
+		logger.trace("intersectShape("+point+")");
+		int selection = -1;
+		File file = this.getFile();
+		if(file != null) {
+			selection = file.intersectShape(point);
+		}
+		return selection;
 	}
 
 	@JsonIgnore

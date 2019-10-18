@@ -96,14 +96,14 @@ public class File {
 		logger.info("getShape("+point+")");
 		Shape s = null;
 		double factor;
-		logger.info("getShape(point) this.offset="+this.offset);
-		logger.info("getShape(point) this.scale="+this.scale);
-		logger.info("getShape(point) factor="+this.offset*this.scale);
 		Point copyPoint = null;
 		for(Shape shape: this.shapeList) {
 			copyPoint = new Point(point);
 			factor = this.offset*shape.scale;
-			copyPoint.x -= factor;//Does not fix
+			logger.info("getShape(point) this.offset="+this.offset);
+			logger.info("getShape(point) shape.scale="+shape.scale);
+			logger.info("getShape(point) factor="+factor);
+			copyPoint.x -= factor;//Required 
 			logger.info("getShape("+copyPoint+")");
 			if(shape.contains(copyPoint)) {
 				s = shape;
@@ -111,6 +111,27 @@ public class File {
 			}
 		}
 		return s;
+	}
+	
+	public int intersectShape(Point point) {
+		logger.info("intersectShape("+point+")");
+		int selection = -1;
+		double factor;
+		Point copyPoint = null;
+		Shape shape = this.getShape();
+		if(shape != null) {
+//		for(Shape shape: this.shapeList) {
+			copyPoint = new Point(point);
+			factor = this.offset*shape.scale;
+			copyPoint.x -= factor;
+			logger.info("intersectShape(point) this.offset="+this.offset);
+			logger.info("intersectShape(point) shape.scale="+shape.scale);
+			logger.info("intersectShape(point) factor="+factor);
+			logger.info("intersectShape("+copyPoint+")");
+			selection = shape.intersect(copyPoint);
+		}
+//		}
+		return selection;
 	}
 
 	/**
