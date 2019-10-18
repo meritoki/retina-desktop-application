@@ -173,6 +173,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		this.model.file = this.model.project.getFile(pressedPoint);
 		if(model.file != null) {
 			this.model.project.setFile(this.model.file.uuid);
+			pressedPoint = new Point(this.model.pressedPoint);
 			this.model.shape = this.model.project.getShape(pressedPoint);// returns new Shape if shape not found.
 		}
 	}

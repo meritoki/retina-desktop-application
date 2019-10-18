@@ -85,17 +85,17 @@ public class Shape {
     public void initDimension() {
     	Dimension dimension = new Dimension();
 //    	if(this.dimension == null) {
-	    	dimension.x = Math.min(this.pointList.get(0).x, this.pointList.get(1).x);
-	//		this.x += offset;
-	    	dimension.y = Math.min(this.pointList.get(0).y, this.pointList.get(1).y);
-	//		this.y += margin;
-	    	dimension.w = Math.abs(this.pointList.get(0).x - this.pointList.get(1).x);
-	    	dimension.h = Math.abs(this.pointList.get(0).y - this.pointList.get(1).y);
-	    	dimension.x *= this.scale;//this.model.scale;
-	    	dimension.y *= this.scale;//this.model.scale;
-	    	dimension.w *= this.scale;//this.model.scale;
-	    	dimension.h *= this.scale;//this.model.scale;
-	    	this.dimension = dimension;
+    	dimension.x = Math.min(this.pointList.get(0).x, this.pointList.get(1).x);
+//		this.x += offset;
+    	dimension.y = Math.min(this.pointList.get(0).y, this.pointList.get(1).y);
+//		this.y += margin;
+    	dimension.w = Math.abs(this.pointList.get(0).x - this.pointList.get(1).x);
+    	dimension.h = Math.abs(this.pointList.get(0).y - this.pointList.get(1).y);
+    	dimension.x *= this.scale;//this.model.scale;
+    	dimension.y *= this.scale;//this.model.scale;
+    	dimension.w *= this.scale;//this.model.scale;
+    	dimension.h *= this.scale;//this.model.scale;
+    	this.dimension = dimension;
 //    	}
 //    	return dimension;
     }

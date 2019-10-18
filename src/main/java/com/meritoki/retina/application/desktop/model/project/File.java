@@ -99,7 +99,7 @@ public class File {
 		logger.info("getShape(point) this.offset="+this.offset);
 		logger.info("getShape(point) this.scale="+this.scale);
 		logger.info("getShape(point) factor="+this.offset*this.scale);
-		point.x -= factor;
+//		point.x += factor;//Does not fix
 		for(Shape shape: this.shapeList) {
 			logger.info("getShape("+point+")");
 			if(shape.contains(point)) {
@@ -211,8 +211,8 @@ public class File {
 	@JsonIgnore
 	public void addShape(Shape shape) {
 		logger.info("addShape("+shape+") shape.pointList="+shape.pointList);
-		shape.pointList.get(0).x -= (this.offset*this.scale);
-		shape.pointList.get(1).x -= (this.offset*this.scale);
+		shape.pointList.get(0).x -= (this.offset*shape.scale);
+		shape.pointList.get(1).x -= (this.offset*shape.scale);
 		logger.info("addShape(shape) this.offset="+this.offset);
 		logger.info("addShape(shape) this.scale="+this.scale);
 		logger.info("addShape(shape) this.offset*this.scale="+this.offset*this.scale);
