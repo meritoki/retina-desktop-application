@@ -1,6 +1,6 @@
 package com.meritoki.retina.application.desktop.model;
 
-import java.io.File;
+//import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +22,7 @@ import org.codehaus.jackson.map.SerializationConfig;
 import com.meritoki.retina.application.desktop.controller.client.FileClient;
 import com.meritoki.retina.application.desktop.controller.client.ModelClient;
 import com.meritoki.retina.application.desktop.controller.client.Status;
+import com.meritoki.retina.application.desktop.model.project.File;
 import com.meritoki.retina.application.desktop.model.project.Page;
 import com.meritoki.retina.application.desktop.model.project.Point;
 import com.meritoki.retina.application.desktop.model.project.Project;
@@ -95,7 +96,7 @@ public class Model {
 		        mapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY);
 		        mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
 		        try {
-		            mapper.writeValue(this.file, this.project);
+		            mapper.writeValue(new java.io.File(this.file.path+"/"+this.file.name), this.project);
 		            logger.info("saved...");
 		        } catch (IOException ex) {
 		           logger.error(ex);
@@ -118,7 +119,7 @@ public class Model {
     }
     
     @JsonIgnore
-    public void saveAs(File file) {
+    public void saveAs(java.io.File file) {
         logger.info("saveAs("+file+")");
         ObjectMapper mapper = new ObjectMapper();
         if(!this.modelClient.checkHealth()) {
@@ -147,14 +148,16 @@ public class Model {
     }
     
     @JsonIgnore
-    public void open(File file) {
+    public void open(java.io.File file) {
         logger.info("open("+file+")");
         ObjectMapper mapper = new ObjectMapper();
         if(!this.modelClient.checkHealth()) {
 	        mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
 	        try {
 	            this.project = mapper.readValue(file, Project.class);
-	            this.file = file;
+	            this.file = new File();
+	            this.file.path = file.getAbsolutePath();
+	            this.file.name = file.getName();
 	            logger.info("opened...");
 	        } catch (JsonGenerationException e) {
 	            logger.error(e);

@@ -15,9 +15,6 @@
  */
 package com.meritoki.retina.application.desktop.model.project;
 
-import java.awt.Graphics2D;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,7 +30,8 @@ import org.codehaus.jackson.map.ObjectWriter;
 
 public class Shape {
     
-    static org.apache.logging.log4j.Logger logger = LogManager.getLogger(Shape.class.getName());
+	@JsonIgnore
+    private static org.apache.logging.log4j.Logger logger = LogManager.getLogger(Shape.class.getName());
     @JsonIgnore
     public static final int TOP = 0;
     @JsonIgnore
@@ -70,57 +68,41 @@ public class Shape {
     public Data data = new Data();
     @JsonIgnore
     public boolean removed = false;
-    @JsonProperty
-    public double displacement = 0;
+    @JsonIgnore
+    public Dimension dimension = null;
     
     public Shape(){
          this.uuid = UUID.randomUUID().toString();
     }
     
     public Shape(Shape shape) {
+    	this.classification = shape.classification;
     	this.uuid = shape.uuid;
     	this.pointList = shape.pointList;
     	this.data = shape.data;
     }
     
-    public void setDisplacement(double displacement) {
-    	logger.info("setDisplacement("+displacement+")");
-    	this.displacement = displacement;
-    	for(Point point: this.pointList) {
-    		point.x += this.displacement;
-    	}
-    	
-    }
-    
-    public double getDisplacement() {
-    	return this.displacement;
-    }
-    
-    /**
-     * Using the input graphics2D
-     * @param graphics2D
-     */
     @JsonIgnore
-    public void draw(Graphics2D graphics2D) {
-    	if(!removed) {
-			double x = Math.min(this.pointList.get(0).x, this.pointList.get(1).x);
-			double y = Math.min(this.pointList.get(0).y, this.pointList.get(1).y);
-			double width = Math.abs(this.pointList.get(0).x - this.pointList.get(1).x);
-			double height = Math.abs(this.pointList.get(0).y - this.pointList.get(1).y);
-//			double displacement = this.displacement;
-			x *= this.scale;
-			y *= this.scale;
-			width *= this.scale;
-			height *= this.scale;
-//			displacement *= this.scale;
-			if(this.classification.equals(ELLIPSE)) {
-				Ellipse2D.Double ellipse = new Ellipse2D.Double(x, y, width, height);
-				graphics2D.draw(ellipse);
-			} else if(this.classification.equals(RECTANGLE)) {
-				Rectangle2D.Double rectangle = new Rectangle2D.Double(x, y, width, height);
-				graphics2D.draw(rectangle);
-			}
-    	}
+    public void initDimension() {
+    	Dimension dimension = new Dimension();
+//    	if(this.dimension == null) {
+    	dimension.x = Math.min(this.pointList.get(0).x, this.pointList.get(1).x);
+//		this.x += offset;
+    	dimension.y = Math.min(this.pointList.get(0).y, this.pointList.get(1).y);
+//		this.y += margin;
+    	dimension.w = Math.abs(this.pointList.get(0).x - this.pointList.get(1).x);
+    	dimension.h = Math.abs(this.pointList.get(0).y - this.pointList.get(1).y);
+    	dimension.x *= this.scale;
+    	dimension.y *= this.scale;
+    	dimension.w *= this.scale;
+    	dimension.h *= this.scale;
+    	this.dimension = dimension;
+//    	}
+//    	return dimension;
+    }
+    
+    public void getObject() {
+    	
     }
     
     @JsonIgnore
@@ -142,15 +124,6 @@ public class Shape {
     	}
     }
 
-    @JsonIgnore
-    public void setBufferedImage(Page page){
-       BufferedImage bufferedImage = null;
-//       if(page.getBufferedImage() != null){
-//           //bufferedImage = page.getBufferedImage().getSubimage(this.getX(), this.getX(), (this.getI()-this.getX()), (this.getJ()-this.getY()));
-//       }
-//       this.bufferedImage = bufferedImage;
-    }
-    
     /**
      * Used by data Matrix algorithm
      * @param u
@@ -173,32 +146,45 @@ public class Shape {
     }
     
     @JsonProperty
-    public String getUUID(){
-        return this.uuid;
-    }
-    
-    @JsonProperty
+	public Data getData(){
+	    return this.data;
+	}
+
+	@JsonIgnore
+	public double getCenterX(){
+	    return (this.pointList.get(0).x + this.pointList.get(1).x)/2;
+	}
+
+	@JsonIgnore
+	public double getCenterY(){
+	    return (this.pointList.get(0).y+this.pointList.get(1).y)/2;
+	}
+	
+//	@JsonIgnore
+//	public void setOffset(double offset) {
+//		this.offset = offset;
+//	}
+//	
+//	@JsonIgnore
+//	public void setMargin(double offset) {
+//		this.margin = offset;
+//	}
+
+	@JsonIgnore
+	    public void setBufferedImage(Page page){
+//	       BufferedImage bufferedImage = null;
+	//       if(page.getBufferedImage() != null){
+	//           //bufferedImage = page.getBufferedImage().getSubimage(this.getX(), this.getX(), (this.getI()-this.getX()), (this.getJ()-this.getY()));
+	//       }
+	//       this.bufferedImage = bufferedImage;
+	    }
+
+	@JsonProperty
     public void setData(Data data){
         this.data = data;
     }
-    @JsonProperty
-    public Data getData(){
-        return this.data;
-    }
-    
     @JsonIgnore
-    public double getCenterX(){
-        return (this.pointList.get(0).x + this.pointList.get(1).x)/2;
-    }
-    
-    @JsonIgnore
-    public double getCenterY(){
-        return (this.pointList.get(0).y+this.pointList.get(1).y)/2;
-    }
-    
-    @JsonIgnore
-    public void scale(double scale) {
-    	logger.debug("scale("+scale+")");
+    public void setScale(double scale) {
     	this.scale = scale*(1/this.addScale);
     }
     
@@ -213,6 +199,7 @@ public class Shape {
     
     @JsonIgnore
     public boolean contains(Point point){
+//    	logger.info("contains("+point+")");
         boolean flag = false;
         Point startPoint = new Point();
         Point stopPoint = new Point();
@@ -230,6 +217,7 @@ public class Shape {
                 flag = true;
             }
         }
+        logger.info("contains("+point+") "+flag);
         return flag;
     }
     
@@ -251,32 +239,42 @@ public class Shape {
         startPoint.y = this.pointList.get(0).y*this.scale;
         stopPoint.x = this.pointList.get(1).x*this.scale;
         stopPoint.y = this.pointList.get(1).y*this.scale;
+        logger.info("intersect(point) startPoint="+startPoint);
+        logger.info("intersect(point) stopPoint="+stopPoint);
         //introduce the idea of a buffer where a user does not have to press exactly on line
         //TOP
         int margin = 20;
         if(point.x == startPoint.x && point.y == startPoint.y) {
+        	logger.info("intersect("+point+") TOP_LEFT");
         	//Works
         	selection = TOP_LEFT;
         } else if(point.x > (stopPoint.x-margin) && point.x<(stopPoint.x+margin) && point.y > (stopPoint.y-margin) && point.y < (stopPoint.y+margin)) {//(point.x == stopPoint.x && point.y == stopPoint.y) {
+        	logger.info("intersect("+point+") BOTTOM_RIGHT");
         	//Works
         	selection = BOTTOM_RIGHT;
         } else if(point.x > (stopPoint.x-margin) && point.x < (stopPoint.x+margin) && point.y > (startPoint.y-margin) && point.y < (startPoint.y + margin)) {
         	//Works
+        	logger.info("intersect("+point+") TOP_RIGHT");
         	selection = TOP_RIGHT;
         } else if(point.x > (startPoint.x-margin) && point.x < (startPoint.x+margin) && point.y > (stopPoint.y - margin) && point.y < (stopPoint.y + margin)) {
         	//Works
+        	logger.info("intersect("+point+") BOTTOM_LEFT");
         	selection = BOTTOM_LEFT;
         } else if(point.y > (startPoint.y-margin) && point.y < (startPoint.y+margin) && point.x > startPoint.x && point.x < stopPoint.x) {
         	//Works
+        	logger.info("intersect("+point+") TOP");
         	selection = TOP;
         } else if(point.y > (startPoint.y-margin) && point.y < (startPoint.y+margin) && point.x > startPoint.x && point.x < stopPoint.x) {
         	//Not working
+        	logger.info("intersect("+point+") BOTTOM");
         	selection = BOTTOM;
         } else if(point.x > (startPoint.x-margin) && point.x < (startPoint.x+margin) && point.y > startPoint.y && point.y < stopPoint.y) {
         	//Works
+        	logger.info("intersect("+point+") LEFT");
         	selection = LEFT;
         } else if(point.x > (startPoint.x-margin) && point.x < (startPoint.x+margin) && point.y > startPoint.y && point.y < stopPoint.y) {
         	//Not working
+        	logger.info("intersect("+point+") RIGHT");
         	selection = RIGHT;
         }
         
@@ -367,7 +365,7 @@ public class Shape {
                 Logger.getLogger(Shape.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            string = "uuid="+this.uuid+", scale="+this.scale;
+            string = "uuid="+this.uuid;//+", scale="+this.scale;
         }
         return string;
     }

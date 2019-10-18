@@ -85,7 +85,7 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
     public void initLabel(){
         logger.debug("initLabel()");
         com.meritoki.retina.application.desktop.model.project.Page page = (this.model != null)?this.model.project.getPage():null;
-        BufferedImage bufferedPage = (page != null)?page.initBufferedImage():null;
+        BufferedImage bufferedPage = (page != null)?page.getBufferedImage():null;
         int pageIndex = (this.model != null)? this.model.project.getIndex():0;
         List<com.meritoki.retina.application.desktop.model.project.Page> pageList = this.model.project.getPageList();
         this.indexValueLabel.setText(pageIndex+"");

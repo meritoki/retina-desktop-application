@@ -77,7 +77,7 @@ public class Matrix extends javax.swing.JDialog {
     }
 
     public void initDataList(List<Data> dataList) {
-        logger.info("initDataList(" + dataList + ")");
+        logger.debug("initDataList(" + dataList + ")");
         DefaultListModel<String> defaultListModel = new DefaultListModel<>();
         if (dataList != null && dataList.size() > 0) {
             for (int i = 0; i < dataList.size(); i++) {
