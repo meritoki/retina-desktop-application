@@ -226,14 +226,12 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 						}
 					}
 					this.model.shape.addScale = this.round(this.model.scale, 6);
-					this.model.shape.setScale(this.model.scale);
-//					this.model.
-					logger.info("mouseReleased(e) "+this.model.pressedPoint);
-					logger.info("mouseReleased(e) "+this.model.releasedPoint);
+					this.model.shape.setScale(this.model.scale);//Fix includes setting scale of shape immediately
+					//Discovered functions were changing pressedPoint from original value.
 					this.model.shape.pointList.add(new Point(this.model.pressedPoint));
 					this.model.shape.pointList.add(new Point(this.model.releasedPoint));
 					logger.info("mouseReleased(e) this.model.shape.pointList="+this.model.shape.pointList);
-//						this.model.shape.sortPointList();
+					this.model.shape.sortPointList();
 					this.model.project.addShape(this.model.shape);
 //						Command command = new Command();
 //						Operation operation = new Operation();

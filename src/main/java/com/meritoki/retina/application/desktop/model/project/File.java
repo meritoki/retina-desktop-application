@@ -95,14 +95,17 @@ public class File {
 	public Shape getShape(Point point) {
 		logger.info("getShape("+point+")");
 		Shape s = null;
-		double factor = this.offset*this.scale;
+		double factor;
 		logger.info("getShape(point) this.offset="+this.offset);
 		logger.info("getShape(point) this.scale="+this.scale);
 		logger.info("getShape(point) factor="+this.offset*this.scale);
-//		point.x += factor;//Does not fix
+		Point copyPoint = null;
 		for(Shape shape: this.shapeList) {
-			logger.info("getShape("+point+")");
-			if(shape.contains(point)) {
+			copyPoint = new Point(point);
+			factor = this.offset*shape.scale;
+			copyPoint.x -= factor;//Does not fix
+			logger.info("getShape("+copyPoint+")");
+			if(shape.contains(copyPoint)) {
 				s = shape;
 				break;
 			}
@@ -211,11 +214,12 @@ public class File {
 	@JsonIgnore
 	public void addShape(Shape shape) {
 		logger.info("addShape("+shape+") shape.pointList="+shape.pointList);
+		//Correct resizing for proper placement.
 		shape.pointList.get(0).x -= (this.offset*shape.scale);
 		shape.pointList.get(1).x -= (this.offset*shape.scale);
 		logger.info("addShape(shape) this.offset="+this.offset);
-		logger.info("addShape(shape) this.scale="+this.scale);
-		logger.info("addShape(shape) this.offset*this.scale="+this.offset*this.scale);
+		logger.info("addShape(shape) shape.scale="+shape.scale);
+		logger.info("addShape(shape) this.offset*this.scale="+this.offset*shape.scale);
 		logger.info("addShape(shape) shape.pointList="+shape.pointList);
 		this.shapeList.add(shape);
 	}
