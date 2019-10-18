@@ -76,6 +76,7 @@ public class Shape {
     }
     
     public Shape(Shape shape) {
+    	this.classification = shape.classification;
     	this.uuid = shape.uuid;
     	this.pointList = shape.pointList;
     	this.data = shape.data;
@@ -91,10 +92,10 @@ public class Shape {
 //		this.y += margin;
     	dimension.w = Math.abs(this.pointList.get(0).x - this.pointList.get(1).x);
     	dimension.h = Math.abs(this.pointList.get(0).y - this.pointList.get(1).y);
-    	dimension.x *= this.scale;//this.model.scale;
-    	dimension.y *= this.scale;//this.model.scale;
-    	dimension.w *= this.scale;//this.model.scale;
-    	dimension.h *= this.scale;//this.model.scale;
+    	dimension.x *= this.scale;
+    	dimension.y *= this.scale;
+    	dimension.w *= this.scale;
+    	dimension.h *= this.scale;
     	this.dimension = dimension;
 //    	}
 //    	return dimension;

@@ -236,6 +236,11 @@ public class Project implements Serializable {
 		List<File> fileList = (page != null) ? page.getFileList(): null;
 		return fileList;
 	}
+	
+	public boolean containsShape(Shape shape) {
+		Page page = this.getPage();
+		return true;
+	}
 
 
 	public void setShape(String uuid) {

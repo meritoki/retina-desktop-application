@@ -244,19 +244,29 @@ public class File {
 		logger.info("addShape(shape) shape.pointList="+shape.pointList);
 		this.shapeList.add(shape);
 	}
+	
+	@JsonIgnore
+	public void containsShape(Shape shape) {
+		
+	}
 
 	/**
      * Function sets removed variable for Shape equal to true;
      * @param shape
      */
     @JsonIgnore
-    public void removeShape(Shape shape) {
-        for(Shape s: this.shapeList) {
+    public Shape removeShape(Shape shape) {
+    	Shape s = null;
+        for(int i = 0; i < this.shapeList.size(); i++) {
+        	s = this.shapeList.get(i);
             if(s.uuid.equals(shape.uuid)) {
-                s.removed =true;
+            	this.shapeList.remove(i);
+            	s.pointList.get(0).x += this.offset*s.scale;
+            	s.pointList.get(1).x += this.offset*s.scale;
                 break;
             }
         }
+        return s;
     }
     
     @JsonIgnore

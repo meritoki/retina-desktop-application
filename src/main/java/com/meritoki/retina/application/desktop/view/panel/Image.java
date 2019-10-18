@@ -191,7 +191,8 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		this.model.releasedPoint.x = e.getX();
 		this.model.releasedPoint.y = e.getY();
 		logger.info("mouseReleased(e) this.model.releasedPoint="+this.model.releasedPoint);
-
+		Point releasedPoint = new Point(this.model.releasedPoint);
+		File releasedFile = this.model.project.getFile(releasedPoint);
 		if (this.model.pressedPoint.x == this.model.releasedPoint.x
 				&& this.model.pressedPoint.y == this.model.releasedPoint.y) {
 			if (this.model.shape != null) {
@@ -201,15 +202,25 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				logger.info("Nothing...");
 			}
 		} else {
-			int selection = this.model.project.intersectShape(this.model.pressedPoint);
+
+
+			int selection = -1;// this.model.project.intersectShape(pressedPoint);
 			if (selection > -1) {
 				if (this.model.shape != null) {
 					logger.info("Resizing...");
-					this.model.shape.resize(this.model.releasedPoint, selection);
+					releasedPoint = new Point(this.model.releasedPoint);
+					this.model.shape.resize(releasedPoint, selection);
 				}
 			} else {
+				
 				if (this.model.shape != null) {
 					logger.info("Moving...");
+					if(!this.model.file.uuid.equals(releasedFile.uuid)) {
+						this.model.project.setFile(releasedFile.uuid);
+						Shape shape = new Shape(this.model.shape);
+						shape = this.model.file.removeShape(shape);
+						releasedFile.addShape(shape);
+					}
 					this.model.project.setShape(this.model.shape.uuid);
 					Point movePoint = new Point();
 					movePoint.x = this.model.releasedPoint.x - this.model.pressedPoint.x;
