@@ -219,7 +219,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     public void initRectangleList(List<Shape> shapeList) {
         DefaultListModel defaultListModel = new DefaultListModel();
         if (shapeList != null && shapeList.size() > 0) {
-            logger.info("initRectangleList(" + shapeList + ")");
+            logger.debug("initRectangleList(" + shapeList + ")");
             for (int i = 0; i < shapeList.size(); i++) {
                 defaultListModel.addElement(shapeList.get(i).uuid);
             }

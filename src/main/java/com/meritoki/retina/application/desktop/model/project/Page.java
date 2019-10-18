@@ -102,10 +102,12 @@ public class Page {
 
 	public File getFile() {
 	    File file = null;
-	    if (this.index >= 0 && this.index < this.fileList.size()) {
-	        file = this.fileList.get(this.index);
+	    List<File> fileList = this.getFileList();
+	    if (this.index >= 0 && this.index < fileList.size()) {
+	        file = fileList.get(this.index);
 	        logger.debug("getFile() file="+file);
 	    }
+	    
 	    return file;
 	}
 
@@ -120,7 +122,10 @@ public class Page {
 		File file = null;
 		for(int i = 0;i < fileList.size();i++) {
 			File f = fileList.get(i);
-			if(point.x > f.offset*f.scale && point.x < (f.offset+f.width)*f.scale) {
+			logger.info("getFile(point) f.offset="+f.offset);
+			logger.info("getFile(point) f.scale="+f.scale);
+			logger.info("getFile(point) f.offset*f.scale="+f.offset*f.scale);
+			if(point.x > (f.offset*f.scale) && point.x < (f.offset+f.width)*f.scale) {
 				file = f;
 			}
 		}
@@ -129,26 +134,53 @@ public class Page {
 	}
 	
 	public List<File> getFileList() {
-		this.initFileOffsetAndMargin();
+    	double offset = 0;
+    	for(File file: this.fileList) {
+    		if(file.getBufferedImage() == null)
+    			file.setBufferedImage();
+    		file.setOffset(offset);
+    		file.setMargin(0);
+    		file.setDimension();
+    		offset+=file.width;
+    	}
 		return this.fileList;
 	}
 
 	public Shape getShape(Point point) {
+//		logger.info("getShape("+point+")");
 		Shape s = null;
-		for(Shape shape: this.getShapeList()) {
-			if(shape.contains(point)) {
-				s = shape;
+		for(File file:this.fileList) {
+			if(file.getShape(point) != null) {
+				s = file.getShape(point);
 				break;
 			}
 		}
+//		
+//		for(Shape shape: this.getShapeList()) {
+//			if(shape.contains(point)) {
+//				s = shape;
+//				break;
+//			}
+//		}
 		return s;
 	}
 
 	@JsonIgnore
 	public List<Shape> getShapeList() {
 		List<Shape> shapeList = new ArrayList<>();
+		Dimension dimension = null;
+		double offset = 0;
+		double minMargin = this.getFileListMinMargin();
+    	double maxMargin = this.getFileListMaxMargin();
 		for(File file: this.getFileList()) {
-			shapeList.addAll(file.getShapeList());
+			for(Shape shape : file.getShapeList()) {
+				shape.initDimension();
+				dimension = shape.dimension;
+				dimension.x += (offset * shape.scale);
+//				dimension.y += margin;
+				shapeList.add(shape);
+			}
+			offset+=file.width;
 		}
 		return shapeList;
 	}
@@ -158,22 +190,24 @@ public class Page {
 	 * @return
 	 */
 	@JsonIgnore
+	public void setBufferedImage() {
+    	File bufferedImageFile = null;
+    	for(File file: this.fileList) {
+    		if(bufferedImageFile == null) {
+    			bufferedImageFile = file;
+    			bufferedImageFile.bufferedImage = null;
+    			bufferedImageFile.setBufferedImage();
+    		} else {
+    			file.getBufferedImage();
+    			bufferedImageFile.bufferedImage = this.joinFile(bufferedImageFile, file);
+    		}
+    	}
+    	this.bufferedImage = bufferedImageFile.bufferedImage;
+	}
+	
+	@JsonIgnore
 	public BufferedImage getBufferedImage() {
-		if(this.bufferedImage == null) {
-	    	File bufferedImageFile = null;
-	    	for(File file: this.fileList) {
-	    		if(bufferedImageFile == null) {
-	    			bufferedImageFile = file;
-	    			bufferedImageFile.bufferedImage = null;
-	    			bufferedImageFile.getBufferedImage();
-	    		} else {
-	    			file.getBufferedImage();
-	    			bufferedImageFile.bufferedImage = this.joinFile(bufferedImageFile, file);
-	    		}
-	    	}
-	    	this.bufferedImage = bufferedImageFile.bufferedImage;
-		}
-	    return this.bufferedImage;
+		return this.bufferedImage;
 	}
 	
 	public void resetBufferedImage() {
@@ -205,14 +239,13 @@ public class Page {
     public void setShape(String uuid) {
 		for(File file : this.fileList){
 			if(file.setShape(uuid)) {
-				this.setFile(file.uuid);
 				this.getFile().setShape(uuid);
 			}
 		}
 	}
     
     public void setFile(String uuid) {
-		logger.info("setFile("+uuid+")");
+		logger.debug("setFile("+uuid+")");
 		File file = null;
 		for(int i=0;i<this.fileList.size();i++) {
 			file = this.fileList.get(i);
@@ -225,7 +258,6 @@ public class Page {
 
 	public void addShape(Shape shape) {
     	logger.debug("addShape("+shape+")");
-    	this.initFileOffsetAndMargin();
     	File file = this.getFile();
     	if(file != null) {
     		file.addShape(shape);
@@ -235,28 +267,6 @@ public class Page {
     public void addFile(File file) {
     	logger.info("addFile("+file+")");
     	this.fileList.add(file);
-    	this.initFileOffsetAndMargin();
-    }
-    
-    public void initFileOffsetAndMargin() {
-    	double offset = 0;
-    	//Need min because min becomes new zero;
-    	double minMargin = this.getFileListMinMargin();
-    	double maxMargin = this.getFileListMaxMargin();
-    
-    	for(File file: this.fileList) {
-    		file.setOffset(offset);
-    		offset+=file.width;
-    		//TODO Not working at all
-//    		if(file.margin != minMargin) {
-//    			file.setMargin(file.margin+Math.abs(minMargin));
-//    		}
-//    		if(file.margin >= 0) {
-//    			file.setMargin(file.margin+Math.abs(minMargin));
-//    		} else {
-//    			file.setMargin(file.margin-Math.abs(minMargin));
-//    		}
-    	}
     }
     
     @JsonIgnore
@@ -356,7 +366,7 @@ public class Page {
     }
 
     public void printDataMatrix(List<LinkedList<Data>> data) {
-    	logger.info("printDataMatrix(...)");
+//    	logger.info("printDataMatrix(...)");
         String string = null;
         if (data != null && data.size() > 0) {
             string = "\n";
@@ -372,7 +382,7 @@ public class Page {
             }
         }
         if (string != null) {
-            logger.info(string);
+//            logger.info(string);
         }
     }
 

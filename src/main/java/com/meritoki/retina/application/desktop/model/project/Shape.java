@@ -69,17 +69,7 @@ public class Shape {
     @JsonIgnore
     public boolean removed = false;
     @JsonIgnore
-    public double x = 0;
-    @JsonIgnore
-    public double y = 0;
-    @JsonIgnore
-    public double w = 0;
-    @JsonIgnore
-    public double h = 0;
-    
-    public double offset = 0;
-    
-    public double margin = 0;
+    public Dimension dimension = null;
     
     public Shape(){
          this.uuid = UUID.randomUUID().toString();
@@ -93,16 +83,21 @@ public class Shape {
     
     @JsonIgnore
     public void initDimension() {
-		this.x = Math.min(this.pointList.get(0).x, this.pointList.get(1).x);
-		this.x += offset;
-		this.y = Math.min(this.pointList.get(0).y, this.pointList.get(1).y);
-		this.y += margin;
-		this.w = Math.abs(this.pointList.get(0).x - this.pointList.get(1).x);
-		this.h = Math.abs(this.pointList.get(0).y - this.pointList.get(1).y);
-		x *= this.scale;//this.model.scale;
-		y *= this.scale;//this.model.scale;
-		w *= this.scale;//this.model.scale;
-		h *= this.scale;//this.model.scale;
+    	Dimension dimension = new Dimension();
+//    	if(this.dimension == null) {
+	    	dimension.x = Math.min(this.pointList.get(0).x, this.pointList.get(1).x);
+	//		this.x += offset;
+	    	dimension.y = Math.min(this.pointList.get(0).y, this.pointList.get(1).y);
+	//		this.y += margin;
+	    	dimension.w = Math.abs(this.pointList.get(0).x - this.pointList.get(1).x);
+	    	dimension.h = Math.abs(this.pointList.get(0).y - this.pointList.get(1).y);
+	    	dimension.x *= this.scale;//this.model.scale;
+	    	dimension.y *= this.scale;//this.model.scale;
+	    	dimension.w *= this.scale;//this.model.scale;
+	    	dimension.h *= this.scale;//this.model.scale;
+	    	this.dimension = dimension;
+//    	}
+//    	return dimension;
     }
     
     public void getObject() {
@@ -164,15 +159,15 @@ public class Shape {
 	    return (this.pointList.get(0).y+this.pointList.get(1).y)/2;
 	}
 	
-	@JsonIgnore
-	public void setOffset(double offset) {
-		this.offset = offset;
-	}
-	
-	@JsonIgnore
-	public void setMargin(double offset) {
-		this.margin = offset;
-	}
+//	@JsonIgnore
+//	public void setOffset(double offset) {
+//		this.offset = offset;
+//	}
+//	
+//	@JsonIgnore
+//	public void setMargin(double offset) {
+//		this.margin = offset;
+//	}
 
 	@JsonIgnore
 	    public void setBufferedImage(Page page){
@@ -189,7 +184,6 @@ public class Shape {
     }
     @JsonIgnore
     public void setScale(double scale) {
-    	logger.info("setScale("+scale+")");
     	this.scale = scale*(1/this.addScale);
     }
     
@@ -204,6 +198,7 @@ public class Shape {
     
     @JsonIgnore
     public boolean contains(Point point){
+//    	logger.info("contains("+point+")");
         boolean flag = false;
         Point startPoint = new Point();
         Point stopPoint = new Point();
@@ -221,17 +216,18 @@ public class Shape {
                 flag = true;
             }
         }
+        logger.info("contains("+point+") "+flag);
         return flag;
     }
     
-    public boolean intersects(Point point) {
-    	boolean flag  = false;
-    	if(this.intersect(point)>-1) {
-    		flag = true;
-    	}
-    	return flag;
-    }
-    
+//    public boolean intersects(Point point) {
+//    	boolean flag  = false;
+//    	if(this.intersect(point)>-1) {
+//    		flag = true;
+//    	}
+//    	return flag;
+//    }
+//    
     @JsonIgnore
     public int intersect(Point point){
     	logger.info("intersect("+point+")");
@@ -358,7 +354,7 @@ public class Shape {
                 Logger.getLogger(Shape.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            string = "uuid="+this.uuid+", pointList="+this.pointList+", scale="+this.scale;
+            string = "uuid="+this.uuid;//+", scale="+this.scale;
         }
         return string;
     }

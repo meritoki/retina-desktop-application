@@ -84,6 +84,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		if (this.model != null) {
 			Graphics2D graphics2D = (Graphics2D) graphics.create();
 			Project project = this.model.project;
+			project.setScale(this.model.scale);
 			
 			
 			AffineTransform affineTransform = new AffineTransform();
@@ -97,15 +98,16 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 			//File bufferedImage.
 			List<File> fileList = project.getFileList();
 			File file = project.getFile();
+			com.meritoki.retina.application.desktop.model.project.Dimension d = null;
 			if (fileList != null) {
 				for (File f : fileList) {
-					f.initDimension();
+					d = f.dimension;
 					if (file != null && f.uuid.equals(file.uuid)) {
 						graphics2D.setColor(Color.RED);
 					} else {
 						graphics2D.setColor(Color.YELLOW);
 					}
-					Rectangle2D.Double rectangle = new Rectangle2D.Double(f.x,f.y,f.w,f.h);
+					Rectangle2D.Double rectangle = new Rectangle2D.Double(d.x,d.y,d.w,d.h);
 					graphics2D.draw(rectangle);
 				}
 				
@@ -115,17 +117,17 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 			if (shapeList != null) {
 				for (Shape s : shapeList) {
 					if (!s.removed) {
-						s.initDimension();
+						d = s.dimension;
 						if (shape != null && s.uuid.equals(shape.uuid)) {
 							graphics2D.setColor(Color.RED);
 						} else {
 							graphics2D.setColor(Color.BLUE);
 						}
 						if (s.classification.equals(Shape.ELLIPSE)) {
-							Ellipse2D.Double ellipse = new Ellipse2D.Double(s.x, s.y, s.w, s.h);
+							Ellipse2D.Double ellipse = new Ellipse2D.Double(d.x, d.y, d.w, d.h);
 							graphics2D.draw(ellipse);
 						} else if (s.classification.equals(Shape.RECTANGLE)) {
-							Rectangle2D.Double rectangle = new Rectangle2D.Double(s.x, s.y, s.w, s.h);
+							Rectangle2D.Double rectangle = new Rectangle2D.Double(d.x, d.y, d.w, d.h);
 							graphics2D.draw(rectangle);
 						}
 					}
@@ -140,20 +142,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 	 * @param point
 	 * @return
 	 */
-	public int shapeIntersects(Point point) {
-		int selection = -1;
-		Page image = (this.model.project != null) ? this.model.project.getPage() : null;
-		List<Shape> shapeList = (image != null) ? image.getFile().shapeList : null;
-		if (shapeList != null) {
-			for (Shape s : this.model.project.getPage().getFile().shapeList) {
-				if (s.intersects(point)) {
-					selection = s.intersect(point);
-					break;
-				}
-			}
-		}
-		return selection;
-	}
+
 
 	/**
 	 * Here is mouse is pressed, this is the start of many operations. Here we know
@@ -175,11 +164,17 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
+		e.consume();
 		this.model.pressedPoint = new Point();
 		this.model.pressedPoint.x = e.getX();
 		this.model.pressedPoint.y = e.getY();
-		this.model.shape = this.model.project.getShape(this.model.pressedPoint);// returns new Shape if shape not found.
-		this.model.file = this.model.project.getFile(this.model.pressedPoint);
+		logger.info("mousePressed(e) this.model.pressedPoint="+this.model.pressedPoint);
+		Point pressedPoint = new Point(this.model.pressedPoint);
+		this.model.file = this.model.project.getFile(pressedPoint);
+		if(model.file != null) {
+			this.model.project.setFile(this.model.file.uuid);
+			this.model.shape = this.model.project.getShape(pressedPoint);// returns new Shape if shape not found.
+		}
 	}
 
 	/**
@@ -187,23 +182,22 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 	 */
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		e.consume();
 		this.model.releasedPoint = new Point();
 		this.model.releasedPoint.x = e.getX();
 		this.model.releasedPoint.y = e.getY();
+		logger.info("mouseReleased(e) this.model.releasedPoint="+this.model.releasedPoint);
+
 		if (this.model.pressedPoint.x == this.model.releasedPoint.x
 				&& this.model.pressedPoint.y == this.model.releasedPoint.y) {
 			if (this.model.shape != null) {
 				logger.info("Selected...");
-				this.model.project.setFile(this.model.file.uuid);
-				this.model.project.setShape(this.model.shape.uuid);// Done
+				this.model.project.setShape(this.model.shape.uuid);
 			} else {
 				logger.info("Nothing...");
-				if (this.model.file != null) {
-					this.model.project.setFile(this.model.file.uuid);
-				}
 			}
 		} else {
-			int selection = this.shapeIntersects(this.model.pressedPoint);
+			int selection = -1;//this.model.project.intersectShape(this.model.pressedPoint);
 			if (selection > -1) {
 				if (this.model.shape != null) {
 					logger.info("Resizing...");
@@ -222,9 +216,6 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 					this.model.shape.move(movePoint);
 				} else {
 					logger.info("Adding...");
-					if (this.model.file != null) {
-						this.model.project.setFile(this.model.file.uuid);
-					}
 					this.model.shape = new Shape();
 					if (this.model.shape.classification == null) {
 						if (this.model.rectangle) {
@@ -234,18 +225,24 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 						}
 					}
 					this.model.shape.addScale = this.round(this.model.scale, 6);
-					this.model.shape.pointList.add(this.model.pressedPoint);
-					this.model.shape.pointList.add(this.model.releasedPoint);
-					this.model.shape.sortPointList();
+					this.model.shape.setScale(this.model.scale);
+//					this.model.
+					logger.info("mouseReleased(e) "+this.model.pressedPoint);
+					logger.info("mouseReleased(e) "+this.model.releasedPoint);
+					this.model.shape.pointList.add(new Point(this.model.pressedPoint));
+					this.model.shape.pointList.add(new Point(this.model.releasedPoint));
+					logger.info("mouseReleased(e) this.model.shape.pointList="+this.model.shape.pointList);
+//						this.model.shape.sortPointList();
 					this.model.project.addShape(this.model.shape);
-					Command command = new Command();
-					Operation operation = new Operation();
-					operation.object = this.model.shape;
-					operation.sign = 1;
-					operation.id = UUID.randomUUID().toString();
-					operation.uuid = this.model.shape.uuid;
-					command.operationList.push(operation);
-					this.model.undoStack.push(command);
+//						Command command = new Command();
+//						Operation operation = new Operation();
+//						operation.object = this.model.shape;
+//						operation.sign = 1;
+//						operation.id = UUID.randomUUID().toString();
+//						operation.uuid = this.model.shape.uuid;
+//						command.operationList.push(operation);
+//						this.model.undoStack.push(command);
+					
 				}
 			}
 		}

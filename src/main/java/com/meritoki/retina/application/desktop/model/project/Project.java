@@ -142,22 +142,40 @@ public class Project implements Serializable {
         this.setIndex(0);
     }
     
+    /**
+     * Get the index of the current Page, used by Dialogs
+     * @return
+     */
     @JsonIgnore
 	public int getIndex(){
 	    logger.debug("getIndex() this.index="+this.index);
 	    return this.index;
 	}
+    
+    
 
+    /**
+     * Functions gets Page object at current index from Page List
+     * @return Page
+     */
 	@JsonIgnore
 	public Page getPage() {
 	    return (this.pageList.size() > 0) ? this.pageList.get(index) : null;
 	}
 	
+	/**
+	 * Function get reference to Page List
+	 * @return List<Page>
+	 */
 	@JsonIgnore
 	public List<Page> getPageList(){
 	    return this.pageList;
 	}
 
+	/**
+	 * Function gets current File for current Page.
+	 * @return
+	 */
 	@JsonIgnore
 	public File getFile() {
 		Page page = this.getPage();
@@ -165,6 +183,11 @@ public class Project implements Serializable {
 		return file;
 	}
 
+	/**
+	 * Function gets File for a Point with x and y value.
+	 * @param point
+	 * @return
+	 */
 	public File getFile(Point point) {
 		Page page = this.getPage();
 		File shape = (page != null) ? page.getFile(point) : null;
@@ -172,18 +195,21 @@ public class Project implements Serializable {
 	}
 
 	/**
-	 * A mousePressed begins an Add, Move, or Resize. Call each one a Command that
-	 * affects the model. A command can have one or more Operations.
-	 * 
+	 * Function gets Shape from File of current Page for a Point with an x and y value.
 	 * @param point
 	 * @return
 	 */
 	public Shape getShape(Point point) {
+//		logger.info("getShape("+point+")");
 		Page page = this.getPage();
 		Shape shape = (page != null) ? page.getShape(point) : null;
 		return shape;
 	}
 	
+	/**
+	 * Funtion gets Shape from File of current Page based on index in current File.
+	 * @return
+	 */
 	public Shape getShape() {
 		Page page = this.getPage();
 		File file = (page != null) ? page.getFile() : null;
@@ -199,15 +225,11 @@ public class Project implements Serializable {
 	
 	public BufferedImage getBufferedImage() {
 		Page page = this.getPage();
+		if(page.getBufferedImage() == null) 
+			page.setBufferedImage();
 		BufferedImage bufferedImage = (page != null) ? page.getBufferedImage() : null;
 		return bufferedImage;
 	}
-
-//	public File getFile() {
-//		Page page = this.getPage();
-//		File file = (page != null) ? page.getFile(): null;
-//		return file;
-//	}
 	
 	public List<File> getFileList() {
 		Page page = this.getPage();
@@ -223,7 +245,7 @@ public class Project implements Serializable {
     }
     
     public void setFile(String uuid) {
-    	logger.info("setFile("+uuid+")");
+    	logger.trace("setFile("+uuid+")");
     	Page page = this.getPage();
     	page.setFile(uuid);
     }
@@ -245,12 +267,8 @@ public class Project implements Serializable {
     @JsonIgnore
     public void setScale(double scale) {
     	logger.debug("setScale("+scale+")");
-//    	Page page = this.getPage();
-//    	if(page != null) {
-//    		page.setScale(scale);
-//    	}
-    	
-    	for(Page page: this.getPageList()) {
+    	Page page = this.getPage();
+    	if(page != null) {
     		page.setScale(scale);
     	}
     }
@@ -289,6 +307,25 @@ public class Project implements Serializable {
 		if(page != null) {
 			page.addFile(file);
 		}
+	}
+	
+//	public int intersectShape(Point point) {
+//		int selection = -1;
+//		Page page = this.getPage();
+//		List<Shape> shapeList = (page != null) ? page.getFile().shapeList : null;
+//		if (shapeList != null) {
+//			for (Shape s : shapeList) {
+//				if (s.intersects(point)) {
+//					selection = s.intersect(point);
+//					break;
+//				}
+//			}
+//		}
+//		return selection;
+//	}
+	
+	public void moveShape() {
+		
 	}
 
 	@JsonIgnore

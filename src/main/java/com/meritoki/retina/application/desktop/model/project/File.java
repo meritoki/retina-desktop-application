@@ -31,10 +31,7 @@ public class File {
     @JsonIgnore
     public BufferedImage bufferedImage = null;
     
-    public double x = 0;
-    public double y = 0;
-    public double w = 0;
-    public double h = 0;
+    public Dimension dimension = null;
     @JsonProperty
     public double width = 0;
     @JsonProperty
@@ -72,16 +69,6 @@ public class File {
 //    Rectangle2D.Double rectangle = new Rectangle2D.Double(file.offset * model.scale,
 //			file.margin * model.scale, file.width * model.scale, file.height * model.scale);
     
-    @JsonIgnore
-    public void initDimension() {
-    	logger.debug("initDimension()");
-		this.x = this.offset * this.scale;
-		this.y = this.margin * this.scale;
-		this.w = this.width * this.scale;
-		this.h = this.height* this.scale;
-    }
-    
-    
     /**
 	 * Function gets the current index selected by user.
 	 * @return
@@ -104,19 +91,23 @@ public class File {
 	    }
 	    return shape;
 	}
-
-	/**
-	 * Functions adds shape to shapeList.
-	 * @param shape
-	 */
-	@JsonIgnore
-	public void addShape(Shape shape) {
-		logger.info("addShape("+shape+")");
-		shape.setOffset(offset);
-		shape.setMargin(margin);
-		shape.pointList.get(0).x -= offset;
-		shape.pointList.get(1).x -= offset;
-		this.shapeList.add(shape);
+	
+	public Shape getShape(Point point) {
+		logger.info("getShape("+point+")");
+		Shape s = null;
+		double factor = this.offset*this.scale;
+		logger.info("getShape(point) this.offset="+this.offset);
+		logger.info("getShape(point) this.scale="+this.scale);
+		logger.info("getShape(point) factor="+this.offset*this.scale);
+		point.x -= factor;
+		for(Shape shape: this.shapeList) {
+			logger.info("getShape("+point+")");
+			if(shape.contains(point)) {
+				s = shape;
+				break;
+			}
+		}
+		return s;
 	}
 
 	/**
@@ -124,13 +115,12 @@ public class File {
 	 * @return
 	 */
 	public List<Shape> getShapeList() {
-		//Here we mode the Shape again with 
-//		for(Shape shape: this.shapeList) {
-//			shape.pointList.get(0).x += offset*scale;
-//			shape.pointList.get(1).x += offset*scale;
-//		}
-		logger.info("getShapeList() this.shapeList="+this.shapeList);
 		return this.shapeList;
+	}
+
+	@JsonIgnore
+	public BufferedImage getBufferedImage() {
+		return this.bufferedImage;
 	}
 
 	/**
@@ -153,7 +143,37 @@ public class File {
         }
     }
     
-    /**
+    //    Rectangle2D.Double rectangle = new Rectangle2D.Double(file.offset * model.scale,
+	//			file.margin * model.scale, file.width * model.scale, file.height * model.scale);
+	    
+	    @JsonIgnore
+	    public void setDimension() {
+	    	logger.debug("getDimension()");
+	    	Dimension dimension = new Dimension();
+	    	dimension.x = this.offset * this.scale;
+	    	dimension.y = this.margin * this.scale;
+	    	dimension.w = this.width * this.scale;
+	    	dimension.h = this.height* this.scale;
+		    this.dimension = dimension;
+	    }
+
+	@JsonIgnore
+	public void setBufferedImage() {
+        if (this.path != null && this.name != null) {
+            try {
+            	logger.info("setBufferedImage() "+this.path + "/" + this.name);
+                this.bufferedImage = ImageIO.read(new java.io.File(this.path + "/" + this.name));
+                this.width = this.bufferedImage.getWidth();
+                this.height = this.bufferedImage.getHeight();
+                logger.info("getBufferedImage() width="+width);
+                logger.info("getBufferedImage() height="+height);
+            } catch (IOException ex) {
+                logger.error(ex);
+            }
+        }
+	}
+
+	/**
      * Functions sets current index by uuid.
      * @param uuid
      */
@@ -174,23 +194,33 @@ public class File {
     }
     
     public void setOffset(double offset) {
-    	logger.debug("setOffset("+offset+")");
+//    	logger.info("setOffset("+offset+")");
     	this.offset = offset;
-    	for(Shape shape: this.shapeList) {
-    		shape.setOffset(this.offset);
-    	}
     }
     
     public void setMargin(double margin) {
-    	logger.info("setMargin("+margin+")");
+//    	logger.info("setMargin("+margin+")");
     	this.margin = margin;
-    	for(Shape shape: this.shapeList) {
-    		shape.setMargin(this.margin);
-    	}
     }
     
     
     /**
+	 * Functions adds shape to shapeList.
+	 * @param shape
+	 */
+	@JsonIgnore
+	public void addShape(Shape shape) {
+		logger.info("addShape("+shape+") shape.pointList="+shape.pointList);
+		shape.pointList.get(0).x -= (this.offset*this.scale);
+		shape.pointList.get(1).x -= (this.offset*this.scale);
+		logger.info("addShape(shape) this.offset="+this.offset);
+		logger.info("addShape(shape) this.scale="+this.scale);
+		logger.info("addShape(shape) this.offset*this.scale="+this.offset*this.scale);
+		logger.info("addShape(shape) shape.pointList="+shape.pointList);
+		this.shapeList.add(shape);
+	}
+
+	/**
      * Function sets removed variable for Shape equal to true;
      * @param shape
      */
@@ -204,27 +234,6 @@ public class File {
         }
     }
     
-    @JsonIgnore
-    public BufferedImage getBufferedImage() {
-    	if(this.bufferedImage == null) {
-	        if (this.path != null && this.name != null) {
-	            try {
-	            	logger.info("loadBufferedImage() "+this.path + "/" + this.name);
-	                this.bufferedImage = ImageIO.read(new java.io.File(this.path + "/" + this.name));
-	                this.width = this.bufferedImage.getWidth();
-	                this.height = this.bufferedImage.getHeight();
-	            } catch (IOException ex) {
-	                logger.error(ex);
-	            }
-	        }
-    	}
-    	return this.bufferedImage;
-    }
-    
-    @JsonIgnore
-    public void initBufferedImage() {
-    	this.bufferedImage = this.getBufferedImage();
-    }
     @JsonIgnore
     @Override
     public String toString() {

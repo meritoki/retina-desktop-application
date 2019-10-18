@@ -19,6 +19,11 @@ public class Point {
 		
 	}
 	
+	public Point(Point p) {
+		this.x = p.x;
+		this.y = p.y;
+	}
+	
 	public Point(double x, double y) {
 		this.x = x;
 		this.y = y;
@@ -28,7 +33,7 @@ public class Point {
     @Override
     public String toString(){
         String string = "";
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        ObjectWriter ow = new ObjectMapper().writer();//.withDefaultPrettyPrinter();
         try {
             string = ow.writeValueAsString(this);
         } catch (IOException ex) {
