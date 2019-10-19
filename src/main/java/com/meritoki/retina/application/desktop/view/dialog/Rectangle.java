@@ -92,9 +92,9 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         Page page = (project != null) ? this.model.project.getPage() : null;
         File file = (page != null) ? page.getFile() : null;
         Shape shape = (file != null) ? file.getShape() : null;
-        List<Shape> shapeList = (page != null) ? file.shapeList : null;
-        Data data = (shape != null) ? shape.data : null;
-        List<Text> textList = (data != null) ? data.getTextList() : null;
+//        List<Shape> shapeList = (page != null) ? file.shapeList : null;
+//        Data data = (shape != null) ? shape.data : null;
+        List<Text> textList = (shape != null) ? shape.getTextList() : null;
     }
 
     public void initList() {
@@ -106,15 +106,18 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
 //        Data data = (shape != null) ? shape.data : null;
 //        List<Text> textList = (data != null) ? data.getTextList() : null;
         this.initRectangleList(shapeList);
-        this.setRectangleListSelectedIndex(index);
+        Shape shape = (page != null) ? page.getShape() : null;
+        if(shape != null) {
+        	this.setShapeListSelectedUUID(shape.uuid);
+        }
     }
 
     public void initComboBox() {
         logger.debug("initComboBox()");
         Page image = this.model.project.getPage();
-        Shape rectangle = (image != null) ? image.getFile().getShape() : null;
-        Data data = (rectangle != null) ? rectangle.data : null;
-        List<Text> textList = (data != null) ? data.getTextList() : null;
+        Shape shape = (image != null) ? image.getFile().getShape() : null;
+        Data data = (shape != null) ? shape.data : null;
+        List<Text> textList = (shape != null) ? shape.getTextList() : null;
         this.initTextValueComboBox(textList);
         List<String> unitTypeList = new ArrayList<>();
         unitTypeList.add("data");
@@ -166,7 +169,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
             Shape shape = (page != null)?page.getFile().getShape():null;
             Data data = (shape != null)?shape.getData():null;
             if(data != null) {
-            	this.textValueComboBox.setSelectedItem(data.getDefaultText().value);
+            	this.textValueComboBox.setSelectedItem(shape.getDefaultText().value);
             }
         }
     }
@@ -228,17 +231,22 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         this.rectangleList.setModel(defaultListModel);
     }
 
-    public void setRectangleListSelectedIndex(int index) {
-        this.rectangleList.setSelectedIndex(index);
+//    public void setRectangleListSelectedIndex(int index) {
+//        this.rectangleList.setSelsetSelectedIndex(index);
+//    }
+    public void setShapeListSelectedUUID(String uuid) {
+        this.rectangleList.setSelectedValue(uuid, true);
     }
+
 
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 1) {
-            Page image = this.model.project.getPage();
-            if (image != null) {
+            Page page = this.model.getPage();
+            if (page != null) {
                 String selectedItem = (String) this.rectangleList.getSelectedValue();
-                image.getFile().setShape(selectedItem);
+                logger.info("mouseClicked(e) selectedItem="+selectedItem);
+                this.model.project.setShape(selectedItem);
                 this.getParent().repaint();
                 this.init();
             }
@@ -271,27 +279,27 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        Page image = this.model.project.getPage();
-        if (image != null) {
-            int index = image.getIndex();
+        Page page = this.model.project.getPage();
+        if (page != null) {
+            int index = page.getIndex();
             switch (keyCode) {
                 case KeyEvent.VK_LEFT: {
                     logger.debug("RectangleDialog.keyPressed LEFT");
-                    index = image.getIndex();
+                    index = page.getIndex();
                     index = index - 1;
-                    image.setIndex(index);
+                    page.setIndex(index);
                     this.init();
-                    this.setRectangleListSelectedIndex(index);
+//                    this.setRectangleListSelectedIndex(index);
                     this.getParent().repaint();
                     break;
                 }
                 case KeyEvent.VK_RIGHT: {
                     logger.debug("RectangleDialog.keyPressed RIGHT");
-                    index = image.getIndex();
+                    index = page.getIndex();
                     index = index + 1;
-                    image.setIndex(index);
+                    page.setIndex(index);
                     this.init();
-                    this.setRectangleListSelectedIndex(index);
+//                    this.setRectangleListSelectedIndex(index);
                     this.getParent().repaint();
                     break;
                 }
@@ -566,10 +574,9 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         text.value = value;
         Page page = this.model.project.getPage();
         Shape shape = (page != null)?page.getFile().getShape():null;
-        Data data = (shape != null)?shape.getData():null;
-        if(data != null) {
-        	data.addText(text);
-        	System.out.println(data.getTextMap());
+        if(shape != null) {
+        	shape.addText(text);
+        	System.out.println(shape.getTextMap());
         	this.setModel(this.model);
         }
         
@@ -580,9 +587,8 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         if (flag) {
         	Page page = this.model.project.getPage();
             Shape shape = (page != null)?page.getFile().getShape():null;
-            Data data = (shape != null)?shape.getData():null;
-            if(data != null) {
-            	this.textValueComboBox.setSelectedItem(data.getDefaultText().value);
+            if(shape != null) {
+            	this.textValueComboBox.setSelectedItem(shape.getDefaultText().value);
             }
         }
     }//GEN-LAST:event_textValueDefaultCheckBoxActionPerformed

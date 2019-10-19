@@ -25,9 +25,9 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.retina.application.desktop.model.Command;
 import com.meritoki.retina.application.desktop.model.Model;
-import com.meritoki.retina.application.desktop.model.Operation;
+import com.meritoki.retina.application.desktop.model.command.Command;
+import com.meritoki.retina.application.desktop.model.command.Operation;
 import com.meritoki.retina.application.desktop.model.project.File;
 import com.meritoki.retina.application.desktop.model.project.Page;
 import com.meritoki.retina.application.desktop.model.project.Point;

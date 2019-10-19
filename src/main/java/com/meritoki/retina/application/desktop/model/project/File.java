@@ -30,18 +30,18 @@ public class File {
     public String cachePath = null;
     @JsonIgnore
     public BufferedImage bufferedImage = null;
-    
+    @JsonIgnore
     public Dimension dimension = null;
     @JsonProperty
     public double width = 0;
     @JsonProperty
     public double height = 0;
-    @JsonProperty 
-    public double scale = 1;
-    @JsonProperty
-    public double margin = 0;
     @JsonProperty
     public double offset = 0;
+    @JsonProperty
+    public double margin = 0;
+    @JsonProperty 
+    public double scale = 1;
     /**
      * Current index of the shapeList.
      */

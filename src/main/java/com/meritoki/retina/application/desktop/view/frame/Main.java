@@ -22,6 +22,7 @@ import javax.swing.JFrame;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.meritoki.retina.application.desktop.model.Model;
+import com.meritoki.retina.application.desktop.view.dialog.user.Login;
 import java.io.File;
 
 /**
@@ -36,6 +37,7 @@ public final class Main extends JFrame {
     private static final long serialVersionUID = 4699683145704846741L;
     private static Logger logger = LogManager.getLogger(Main.class.getName());
     public Model model = null;
+    public Login loginDialog = new Login(this,false);
     public com.meritoki.retina.application.desktop.view.dialog.Image imageDialog = new com.meritoki.retina.application.desktop.view.dialog.Image(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.Rectangle shapeDialog = new com.meritoki.retina.application.desktop.view.dialog.Rectangle(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.Matrix pageDialog = new com.meritoki.retina.application.desktop.view.dialog.Matrix(this, false);
@@ -95,6 +97,7 @@ public final class Main extends JFrame {
         matrixPanel = new com.meritoki.retina.application.desktop.view.panel.Matrix();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
+        loginMenuItem = new javax.swing.JMenuItem();
         newMenuItem = new javax.swing.JMenuItem();
         openMenuItem = new javax.swing.JMenuItem();
         saveMenuItem = new javax.swing.JMenuItem();
@@ -147,6 +150,14 @@ public final class Main extends JFrame {
         imagePageTabbedPane.addTab("Matrix", jScrollPane2);
 
         fileMenu.setText("File");
+
+        loginMenuItem.setText("Login");
+        loginMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(loginMenuItem);
 
         newMenuItem.setText("New");
         newMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -308,6 +319,10 @@ public final class Main extends JFrame {
         this.imageImportDialog.setVisible(true);
     }//GEN-LAST:event_importImageMenuItemActionPerformed
 
+    private void loginMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginMenuItemActionPerformed
+        this.loginDialog.setVisible(true);
+    }//GEN-LAST:event_loginMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -364,6 +379,7 @@ public final class Main extends JFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JMenuItem loginMenuItem;
     private com.meritoki.retina.application.desktop.view.panel.Matrix matrixPanel;
     private javax.swing.JMenuItem newMenuItem;
     private javax.swing.JMenuItem openMenuItem;

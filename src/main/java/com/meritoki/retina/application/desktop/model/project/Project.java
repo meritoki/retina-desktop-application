@@ -45,6 +45,7 @@ import org.codehaus.jackson.map.SerializationConfig;
 
 import com.meritoki.retina.application.desktop.controller.client.ModelClient;
 import com.meritoki.retina.application.desktop.model.Model;
+import com.meritoki.retina.application.desktop.model.account.User;
 import com.meritoki.retina.application.desktop.model.provider.Provider;
 import com.meritoki.retina.application.desktop.model.vendor.Vendor;
 
@@ -55,18 +56,22 @@ public class Project implements Serializable {
 	public static void main(String[] args) throws IOException{
         Project project = new Project();
 //        File file = new File("~/test.json");
-//        project.initTest();
+        project.initTest();
         ObjectMapper mapper = new ObjectMapper();
         Model model = new Model();
-        model.open(new java.io.File("/home/jorodriguez/test.json"));
+        model.project = project;
+//        model.open(new java.io.File("/home/jorodriguez/test.json"));
 //        mapper.setVisibility(JsonMethod.FIELD, Visibility.ANY);
 //        mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
 //        mapper.writeValue(file, project);
 //        project = mapper.readValue(file, Project.class);
         String jsonInString = mapper.writeValueAsString(model.project);
-        System.out.println(jsonInString);
         ModelClient modelClient = new ModelClient();
-        modelClient.importProject(jsonInString);
+        User user = new User();
+        user.name = "javainuse";
+        user.password = "password";
+        modelClient.login(user);
+        modelClient.uploadProject(jsonInString);
         System.out.println(project);
     }
     
@@ -188,6 +193,7 @@ public class Project implements Serializable {
 	 * @param point
 	 * @return
 	 */
+	@JsonIgnore
 	public File getFile(Point point) {
 		Page page = this.getPage();
 		File shape = (page != null) ? page.getFile(point) : null;
@@ -199,8 +205,9 @@ public class Project implements Serializable {
 	 * @param point
 	 * @return
 	 */
+	@JsonIgnore
 	public Shape getShape(Point point) {
-//		logger.info("getShape("+point+")");
+		logger.trace("getShape("+point+")");
 		Page page = this.getPage();
 		Shape shape = (page != null) ? page.getShape(point) : null;
 		return shape;
@@ -210,6 +217,7 @@ public class Project implements Serializable {
 	 * Funtion gets Shape from File of current Page based on index in current File.
 	 * @return
 	 */
+	@JsonIgnore
 	public Shape getShape() {
 		Page page = this.getPage();
 		File file = (page != null) ? page.getFile() : null;
@@ -217,12 +225,14 @@ public class Project implements Serializable {
 		return shape;
 	}
 	
+	@JsonIgnore
 	public List<Shape> getShapeList() {
 		Page page = this.getPage();
 		List<Shape> shapeList = (page != null) ? page.getShapeList():null;
 		return shapeList;
 	}
 	
+	@JsonIgnore
 	public BufferedImage getBufferedImage() {
 		Page page = this.getPage();
 		if(page.getBufferedImage() == null) 
@@ -231,24 +241,27 @@ public class Project implements Serializable {
 		return bufferedImage;
 	}
 	
+	@JsonIgnore
 	public List<File> getFileList() {
 		Page page = this.getPage();
 		List<File> fileList = (page != null) ? page.getFileList(): null;
 		return fileList;
 	}
 	
+	@JsonIgnore
 	public boolean containsShape(Shape shape) {
 		Page page = this.getPage();
 		return true;
 	}
 
-
+	@JsonIgnore
 	public void setShape(String uuid) {
     	logger.trace("setShape("+uuid+")");
     	Page page = this.getPage();
     	page.setShape(uuid);
     }
     
+	@JsonIgnore
     public void setFile(String uuid) {
     	logger.trace("setFile("+uuid+")");
     	Page page = this.getPage();
@@ -291,12 +304,14 @@ public class Project implements Serializable {
         }
     }
     
+    @JsonIgnore
     public void addPage(Page page) {
     	logger.info("addPage("+page+")");
     	this.pageList.add(page);
     	
     }
     
+    @JsonIgnore
     public void addShape(Shape shape) {
 		logger.debug("addShape("+shape+")");
 		Page page = this.getPage();
@@ -305,7 +320,7 @@ public class Project implements Serializable {
 		}
 	}
 
-
+    @JsonIgnore
 	public void addFile(File file) {
 		logger.info("addFile("+file+")");
 		Page page = this.getPage();
@@ -314,6 +329,7 @@ public class Project implements Serializable {
 		}
 	}
 	
+    @JsonIgnore
 	public int intersectShape(Point point) {
 		logger.trace("intersectShape("+point+")");
 		Page page = this.getPage();
@@ -321,6 +337,7 @@ public class Project implements Serializable {
 		return selection;
 	}
 	
+    @JsonIgnore
 	public void moveShape() {
 		
 	}

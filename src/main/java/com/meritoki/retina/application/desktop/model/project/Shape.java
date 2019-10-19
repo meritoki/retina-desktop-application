@@ -18,7 +18,9 @@ package com.meritoki.retina.application.desktop.model.project;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -70,6 +72,8 @@ public class Shape {
     public boolean removed = false;
     @JsonIgnore
     public Dimension dimension = null;
+    @JsonProperty
+    public List<Text> textList = new ArrayList<>();
     
     public Shape(){
          this.uuid = UUID.randomUUID().toString();
@@ -101,8 +105,59 @@ public class Shape {
 //    	return dimension;
     }
     
-    public void getObject() {
-    	
+    @JsonProperty
+    public void addText(Text text){
+        logger.debug("addText("+text.value+")");
+        this.textList.add(text);
+    }
+    
+    /**
+     * Function creates a Map from the textList that shows the frequency that a text value
+     * has been input by a user
+     * @return
+     */
+    @JsonIgnore
+    public Map<String, Integer> getTextMap() {
+    	int count = 0;
+    	Map<String,Integer> textMap = new HashMap<>();
+    	for(Text text: this.textList) {
+          count = (textMap.get(text.value)!=null)?textMap.get(text.value):0;
+          ++count;
+          textMap.put(text.value, count);
+    	}
+    	return textMap;
+    }
+    
+    /**
+     * Function returns the text value with the highest frequency of input
+     * @return
+     */
+    @JsonIgnore
+    public Text getDefaultText(){
+        int max = 0;
+        Text text = new Text();
+        int value = 0;
+        for(Map.Entry<String, Integer> entry : this.getTextMap().entrySet()){
+        	value = entry.getValue().intValue();
+            if(value > max){
+            	max = value;
+                text = new Text();
+                text.value = entry.getKey();
+            }
+        }
+        return text;
+    }
+    
+    @JsonProperty
+    public List<Text> getTextList(){
+        List<Text> textList = new ArrayList<>();
+        Text text = null;
+        for(Map.Entry<String, Integer> entry : this.getTextMap().entrySet()){
+            text = new Text();
+            text.value = entry.getKey();
+            textList.add(text);
+        }
+        return textList;
     }
     
     @JsonIgnore

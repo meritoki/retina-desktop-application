@@ -1,4 +1,4 @@
-package com.meritoki.retina.application.desktop.model;
+package com.meritoki.retina.application.desktop.model.command;
 
 import java.util.LinkedList;
 import java.util.List;

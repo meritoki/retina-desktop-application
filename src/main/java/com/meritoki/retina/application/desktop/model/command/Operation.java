@@ -1,4 +1,4 @@
-package com.meritoki.retina.application.desktop.model;
+package com.meritoki.retina.application.desktop.model.command;
 
 public class Operation {
     public Object object;
