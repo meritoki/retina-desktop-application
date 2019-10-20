@@ -187,8 +187,10 @@ public class File {
             try {
             	logger.info("setBufferedImage() "+this.path + "/" + this.name);
                 this.bufferedImage = ImageIO.read(new java.io.File(this.path + "/" + this.name));
-                this.width = this.bufferedImage.getWidth();
-                this.height = this.bufferedImage.getHeight();
+//                if(this.bufferedImage != null) {
+                	this.width = this.bufferedImage.getWidth();
+                	this.height = this.bufferedImage.getHeight();
+//                }
                 logger.info("getBufferedImage() width="+width);
                 logger.info("getBufferedImage() height="+height);
             } catch (IOException ex) {

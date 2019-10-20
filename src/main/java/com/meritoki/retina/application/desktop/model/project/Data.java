@@ -31,8 +31,11 @@ import org.codehaus.jackson.map.ObjectWriter;
 
 public class Data {
     private static Logger logger = LogManager.getLogger(Data.class.getName());
+    @JsonProperty
     public String uuid;
+    @JsonProperty
     public Unit unit = new Unit();
+    @JsonProperty
     public Text text = new Text();
     
     public Data(){

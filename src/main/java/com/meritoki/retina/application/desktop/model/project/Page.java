@@ -521,10 +521,14 @@ public class Page {
     	logger.info("joinBufferedImage("+file1+","+file2+")");
         //do some calculate first
 //        int offset  = 5;
-        int wid = file1.bufferedImage.getWidth()+file2.bufferedImage.getWidth();//+offset;
-        int height = Math.max(file1.bufferedImage.getHeight()+(int)file1.margin,file2.bufferedImage.getHeight()+(int)file2.margin);//+offset;
+    	int wid = 1;
+    	int height = 1;
+    	BufferedImage newImage = new BufferedImage(wid,height, BufferedImage.TYPE_INT_ARGB);
+    	if(file1.bufferedImage != null && file2.bufferedImage != null) {
+        wid = file1.bufferedImage.getWidth()+file2.bufferedImage.getWidth();//+offset;
+        height = Math.max(file1.bufferedImage.getHeight()+(int)file1.margin,file2.bufferedImage.getHeight()+(int)file2.margin);//+offset;
         //create a new buffer and draw two image into the new image
-        BufferedImage newImage = new BufferedImage(wid,height, BufferedImage.TYPE_INT_ARGB);
+        newImage = new BufferedImage(wid,height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = newImage.createGraphics();
         Color oldColor = g2.getColor();
         //fill background
@@ -536,6 +540,7 @@ public class Page {
         g2.drawImage(file2.bufferedImage, null, file1.bufferedImage.getWidth(), (int)file2.margin);
 //        g2.drawImage(file2.bufferedImage, null, file1.bufferedImage.getWidth()+offset, (int)file2.margin);
         g2.dispose();
+    	}
         return newImage;
     }
 

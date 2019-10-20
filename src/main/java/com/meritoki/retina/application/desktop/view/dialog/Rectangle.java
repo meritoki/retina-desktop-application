@@ -361,6 +361,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         jLabel1 = new javax.swing.JLabel();
         rectangleButton = new javax.swing.JButton();
         ellipseButton = new javax.swing.JButton();
+        setTextButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -445,6 +446,13 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
             }
         });
 
+        setTextButton.setText("Set");
+        setTextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setTextButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -504,6 +512,10 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
                                 .addComponent(ellipseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(138, 138, 138)
+                .addComponent(setTextButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -527,7 +539,9 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
                     .addComponent(valueLabel)
                     .addComponent(textValueDefaultCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(textUnitSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(setTextButton)
+                .addGap(19, 19, 19)
+                .addComponent(textUnitSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(unitLabel)
                 .addGap(14, 14, 14)
@@ -613,25 +627,26 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         if (data != null) {
             String unitType = (String) this.unitTypeComboBox.getSelectedItem();
             switch (unitType) {
-                case "Data": {
+                case "data": {
                     data.unit.type = Unit.DATA;
                     break;
                 }
-                case "Time": {
+                case "time": {
                     data.unit.type = Unit.TIME;
                     break;
                 }
-                case "Space": {
+                case "space": {
                     data.unit.type = Unit.SPACE;
                     break;
                 }
-                case "Energy": {
+                case "energy": {
                     data.unit.type = Unit.ENERGY;
                     break;
                 }
             }
             data.unit.value = (String) this.unitValueComboBox.getSelectedItem();
-            System.out.println(data.unit.value);
+            logger.info("applyUnitButtonActionPerformed(e) data.unit.value="+data.unit.value);
+            logger.info("applyUnitButtonActionPerformed(e) data.unit.type="+data.unit.type);
         }
     }//GEN-LAST:event_applyUnitButtonActionPerformed
 
@@ -644,6 +659,15 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         this.model.rectangle = false;
         this.model.ellipse = true;
     }//GEN-LAST:event_ellipseButtonActionPerformed
+
+    private void setTextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setTextButtonActionPerformed
+       Shape shape = this.model.getShape();
+       Data data = (shape !=null) ? shape.data : null;
+       Text text = (data != null) ? data.text : null;
+       String value = (String)this.textValueComboBox.getSelectedItem();
+       text.value = value;
+       
+    }//GEN-LAST:event_setTextButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -701,6 +725,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     private javax.swing.JButton rectangleButton;
     private javax.swing.JList rectangleList;
     private javax.swing.JScrollPane rectangleScrollPane;
+    private javax.swing.JButton setTextButton;
     private javax.swing.JTextField textInputTextField;
     private javax.swing.JLabel textLabel;
     private javax.swing.JSeparator textUnitSeparator;

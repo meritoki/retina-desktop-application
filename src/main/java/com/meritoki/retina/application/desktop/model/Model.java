@@ -57,7 +57,7 @@ public class Model {
 	
 	private static Logger logger = LogManager.getLogger(Model.class.getName());
     @JsonIgnore
-	public boolean test = false;
+	public boolean test = true;
     @JsonIgnore
     public boolean rectangle = true;
     @JsonIgnore
@@ -223,6 +223,7 @@ public class Model {
 	        mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
 	        try {
 	            this.project = mapper.readValue(file, Project.class);
+                    logger.info(this.project);
 	            this.file = new File();
 	            this.file.path = file.getAbsolutePath();
 	            this.file.name = file.getName();

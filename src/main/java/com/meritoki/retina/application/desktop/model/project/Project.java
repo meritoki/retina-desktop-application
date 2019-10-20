@@ -95,53 +95,53 @@ public class Project implements Serializable {
         Page page = new Page();
         File file = new File();
         file.name = "01.jpg";
-        file.path = "./data/page";
+        file.path = "./data/image";
         page.fileList.add(file);
         file = new File();
         file.name = "02.jpg";
-        file.path = "./data/page";
+        file.path = "./data/image";
         page.fileList.add(file);
         pageList.add(page);
         page = new Page();
         file = new File();
         file.name = "02.jpg";
-        file.path = "./data/page";
+        file.path = "./data/image";
         page.fileList.add(file);
         pageList.add(page);
         page = new Page();
         file = new File();
         file.name = "03.jpg";
-        file.path = "./data/page";
+        file.path = "./data/image";
         page.fileList.add(file);
         pageList.add(page);
         page = new Page();
         file = new File();
         file.name = "04.jpg";
-        file.path = "./data/page";
+        file.path = "./data/image";
         page.fileList.add(file);
         pageList.add(page);
         page = new Page();
         file = new File();
         file.name = "05.jpg";
-        file.path = "./data/page";
+        file.path = "./data/image";
         page.fileList.add(file);
         pageList.add(page);
         page = new Page();
         file = new File();
         file.name = "06.jpg";
-        file.path = "./data/page";
+        file.path = "./data/image";
         page.fileList.add(file);
         pageList.add(page);
         page = new Page();
         file = new File();
         file.name = "07.jpg";
-        file.path = "./data/page";
+        file.path = "./data/image";
         page.fileList.add(file);
         pageList.add(page);
         page = new Page();
         file = new File();
         file.name = "08.jpg";
-        file.path = "./data/page";
+        file.path = "./data/image";
         page.fileList.add(file);
         pageList.add(page);
         this.setIndex(0);
@@ -346,16 +346,16 @@ public class Project implements Serializable {
     @Override
     public String toString(){
         String string = "";
-        if(logger.isTraceEnabled()){
+//        if(logger.isTraceEnabled()){
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             try {
                 string = ow.writeValueAsString(this);
             } catch (IOException ex) {
                 java.util.logging.Logger.getLogger(Shape.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else {
-            string = this.uuid;
-        }
+//        } else {
+//            string = this.uuid;
+//        }
         return string;
     }
 }
