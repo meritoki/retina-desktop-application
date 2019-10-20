@@ -28,6 +28,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.Script;
+import com.meritoki.retina.application.desktop.model.project.Page;
 import com.meritoki.retina.application.desktop.model.project.Project;
 import com.meritoki.retina.application.desktop.view.frame.Main;
 
@@ -84,10 +85,11 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
       
     public void initLabel(){
         logger.debug("initLabel()");
-        com.meritoki.retina.application.desktop.model.project.Page page = (this.model != null)?this.model.project.getPage():null;
+        Project project = (this.model != null) ? this.model.project : null;
+        Page page = (project != null)? project.getPage():null;
         BufferedImage bufferedPage = (page != null)?page.getBufferedImage():null;
-        int pageIndex = (this.model != null)? this.model.project.getIndex():0;
-        List<com.meritoki.retina.application.desktop.model.project.Page> pageList = this.model.project.getPageList();
+        int pageIndex = (project != null)? project.getIndex():0;
+        List<com.meritoki.retina.application.desktop.model.project.Page> pageList = (project != null)? project.getPageList():null;
         this.indexValueLabel.setText(pageIndex+"");
         if(page!=null){
         	if(page.fileList.size() == 1) {
@@ -112,8 +114,9 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
     
     public void initList(){
         logger.debug("initList()");
-        int pageIndex = (this.model != null)? this.model.project.getIndex():0;
-        List<com.meritoki.retina.application.desktop.model.project.Page> pageList = this.model.project.getPageList();
+        Project project = (this.model != null)? this.model.project:null;
+        int pageIndex = (project != null)? project.getIndex():0;
+        List<Page> pageList = (project != null)? project.getPageList():null;
         this.initPageList(pageList);
         this.setPageListSelectedIndex(pageIndex);
     }

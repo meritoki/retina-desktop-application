@@ -25,7 +25,10 @@ import org.codehaus.jackson.map.SerializationConfig;
 import com.meritoki.retina.application.desktop.controller.client.FileClient;
 import com.meritoki.retina.application.desktop.controller.client.ModelClient;
 import com.meritoki.retina.application.desktop.controller.client.Status;
+import com.meritoki.retina.application.desktop.controller.client.UserClient;
 import com.meritoki.retina.application.desktop.model.account.Account;
+import com.meritoki.retina.application.desktop.model.account.Organization;
+import com.meritoki.retina.application.desktop.model.account.User;
 import com.meritoki.retina.application.desktop.model.command.Command;
 import com.meritoki.retina.application.desktop.model.project.File;
 import com.meritoki.retina.application.desktop.model.project.Page;
@@ -54,7 +57,7 @@ public class Model {
 	
 	private static Logger logger = LogManager.getLogger(Model.class.getName());
     @JsonIgnore
-	public boolean test = true;
+	public boolean test = false;
     @JsonIgnore
     public boolean rectangle = true;
     @JsonIgnore
@@ -62,54 +65,86 @@ public class Model {
     
     @JsonIgnore
 	public Properties properties = null;
+    @JsonIgnore
     public List<Provider> providerList = new ArrayList<>();
+    @JsonIgnore
     public List<Vendor> vendorList = new ArrayList<>();
+    @JsonIgnore
 	public ModelClient modelClient = new ModelClient();
+    @JsonIgnore
     public FileClient fileClient = new FileClient();
-    
+    @JsonIgnore
+    public UserClient userClient = new UserClient();
     
     @JsonProperty
-    public List<Account> accountList;
+    public String uuid = null;
+    @JsonProperty
+    public List<Account> accountList = new ArrayList<>();
     @JsonProperty
     public LinkedList<Command> undoStack = new LinkedList<>();
     @JsonProperty
     public LinkedList<Command> redoStack = new LinkedList<>();
     
   //Project helpers
+    @JsonIgnore
     public File file = null;
+    @JsonIgnore
 	public Project project;
+    @JsonIgnore
 	public Script script = new Script();
+    @JsonIgnore
 	public Page page = null;
+    @JsonIgnore
 	public Shape shape = null;
+    @JsonIgnore
 	public Text text = null;
+    @JsonIgnore
 	public List<Page> pageList = null;
+    @JsonIgnore
 	public List<Shape> shapeList = null;
+    @JsonIgnore
 	public List<Text> textList = null;
+    @JsonIgnore
 	public Point pressedPoint = new Point();
+    @JsonIgnore
 	public Point releasedPoint = new Point();
+    @JsonIgnore
 	public double scale = 1;
-	
+    @JsonIgnore
 	public List<String> emptyList = new ArrayList<>();
+    @JsonIgnore
     public List<String> timeList = Arrays.asList("year", "month", "week", "day", "hour", "minute", "second");
+    @JsonIgnore
     public List<String> spaceList = Arrays.asList("latitude", "longitude", "locale", "location");
+    @JsonIgnore
     public List<String> energyList = Arrays.asList("letter", "word", "sentance", "temperature", "pressure");
 	
 	public Model() {
 		this.properties = this.open("./retina-desktop.properties");
+                this.project = new Project();
 		if (this.test) {
-			this.project = new Project();
-			this.project.initTest();
-        }
+                    this.project.initTest();
+                }
+		Account account = new Account();
+		User user = new User();
+		user.name = "javainuse";
+		user.password = "";
+		account.user = user;
+		Organization org = new Organization();
+		account.organizationList.add(org);
+		this.accountList.add(account);
 		this.providerList.add(new ZooniverseProvider());
 		this.vendorList.add(new MicrosoftVendor());
 		this.vendorList.add(new EphesoftVendor());
 	}
 	
+	@JsonIgnore
 	public static void save(Properties properties) {
 		
 		
 	}
 	
+	@JsonIgnore
 	public static Properties open(String fileName) {
         Properties properties = new Properties();
 		try (InputStream input = new FileInputStream(fileName)) {
@@ -204,27 +239,44 @@ public class Model {
         }
     }
     
+    @JsonIgnore
     public Page getPage() {
     	return (this.project != null) ? this.project.getPage():null;
     }
     
+    @JsonIgnore
     public List<Page> getPageList() {
     	return (this.project != null) ? this.project.getPageList():null;
     }
     
+    @JsonIgnore
     public File getFile() {
     	return (this.project != null) ? this.project.getFile():null;
     }
     
+    @JsonIgnore
     public File getFile(Point point) {
     	return (this.project != null) ? this.project.getFile(point):null;
     }
     
+    @JsonIgnore
     public Shape getShape(Point point) {
     	return (this.project != null) ? this.project.getShape(point):null;
     }
     
+    @JsonIgnore
     public Shape getShape() {
     	return (this.project != null) ? this.project.getShape():null;
     }
+    
+    @JsonIgnore
+    public void setScale(double scale) {
+    	Project project = this.project;
+    	if(project != null) {
+    		project.setScale(scale);
+    	}
+    }
+    
+//    @JsonIgnore
+//    public Token login(String username, )
 }

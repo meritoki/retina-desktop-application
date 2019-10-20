@@ -22,6 +22,7 @@ import javax.swing.JFrame;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.meritoki.retina.application.desktop.model.Model;
+import com.meritoki.retina.application.desktop.model.project.Project;
 import com.meritoki.retina.application.desktop.view.dialog.user.Login;
 import java.io.File;
 
@@ -282,7 +283,8 @@ public final class Main extends JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void newMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMenuItemActionPerformed
-        this.newDialog.setVisible(true);
+        this.model.project = new Project();
+        this.imageImportDialog.setVisible(true);
     }//GEN-LAST:event_newMenuItemActionPerformed
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed

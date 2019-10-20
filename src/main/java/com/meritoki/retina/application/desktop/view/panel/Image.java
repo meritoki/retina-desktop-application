@@ -84,51 +84,51 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		if (this.model != null) {
 			Graphics2D graphics2D = (Graphics2D) graphics.create();
 			Project project = this.model.project;
-			project.setScale(this.model.scale);
-			
-			
-			AffineTransform affineTransform = new AffineTransform();
-			affineTransform.scale(this.model.scale, this.model.scale);
-			BufferedImage bufferedImage = project.getBufferedImage();
-			if (bufferedImage != null) {
-				graphics2D.drawImage(bufferedImage, affineTransform, null);
-
-			}
-			//TODO Attempt to build buffered image here instead of above, build it with each
-			//File bufferedImage.
-			List<File> fileList = project.getFileList();
-			File file = project.getFile();
-			com.meritoki.retina.application.desktop.model.project.Dimension d = null;
-			if (fileList != null) {
-				for (File f : fileList) {
-					d = f.dimension;
-					if (file != null && f.uuid.equals(file.uuid)) {
-						graphics2D.setColor(Color.RED);
-					} else {
-						graphics2D.setColor(Color.YELLOW);
-					}
-					Rectangle2D.Double rectangle = new Rectangle2D.Double(d.x,d.y,d.w,d.h);
-					graphics2D.draw(rectangle);
+			if(project != null) {
+				project.setScale(this.model.scale);
+				AffineTransform affineTransform = new AffineTransform();
+				affineTransform.scale(this.model.scale, this.model.scale);
+				BufferedImage bufferedImage = project.getBufferedImage();
+				if (bufferedImage != null) {
+					graphics2D.drawImage(bufferedImage, affineTransform, null);
+	
 				}
-				
-			}
-			List<Shape> shapeList = project.getShapeList();
-			Shape shape = project.getShape();
-			if (shapeList != null) {
-				for (Shape s : shapeList) {
-					if (!s.removed) {
-						d = s.dimension;
-						if (shape != null && s.uuid.equals(shape.uuid)) {
+				//TODO Attempt to build buffered image here instead of above, build it with each
+				//File bufferedImage.
+				List<File> fileList = project.getFileList();
+				File file = project.getFile();
+				com.meritoki.retina.application.desktop.model.project.Dimension d = null;
+				if (fileList != null) {
+					for (File f : fileList) {
+						d = f.dimension;
+						if (file != null && f.uuid.equals(file.uuid)) {
 							graphics2D.setColor(Color.RED);
 						} else {
-							graphics2D.setColor(Color.BLUE);
+							graphics2D.setColor(Color.YELLOW);
 						}
-						if (s.classification.equals(Shape.ELLIPSE)) {
-							Ellipse2D.Double ellipse = new Ellipse2D.Double(d.x, d.y, d.w, d.h);
-							graphics2D.draw(ellipse);
-						} else if (s.classification.equals(Shape.RECTANGLE)) {
-							Rectangle2D.Double rectangle = new Rectangle2D.Double(d.x, d.y, d.w, d.h);
-							graphics2D.draw(rectangle);
+						Rectangle2D.Double rectangle = new Rectangle2D.Double(d.x,d.y,d.w,d.h);
+						graphics2D.draw(rectangle);
+					}
+					
+				}
+				List<Shape> shapeList = project.getShapeList();
+				Shape shape = project.getShape();
+				if (shapeList != null) {
+					for (Shape s : shapeList) {
+						if (!s.removed) {
+							d = s.dimension;
+							if (shape != null && s.uuid.equals(shape.uuid)) {
+								graphics2D.setColor(Color.RED);
+							} else {
+								graphics2D.setColor(Color.BLUE);
+							}
+							if (s.classification.equals(Shape.ELLIPSE)) {
+								Ellipse2D.Double ellipse = new Ellipse2D.Double(d.x, d.y, d.w, d.h);
+								graphics2D.draw(ellipse);
+							} else if (s.classification.equals(Shape.RECTANGLE)) {
+								Rectangle2D.Double rectangle = new Rectangle2D.Double(d.x, d.y, d.w, d.h);
+								graphics2D.draw(rectangle);
+							}
 						}
 					}
 				}
@@ -169,14 +169,16 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		this.model.pressedPoint.x = e.getX();
 		this.model.pressedPoint.y = e.getY();
 		logger.info("mousePressed(e) this.model.pressedPoint="+this.model.pressedPoint);
-		Point pressedPoint = new Point(this.model.pressedPoint);
-		this.model.file = this.model.project.getFile(pressedPoint);
-		if(model.file != null) {
-			this.model.project.setFile(this.model.file.uuid);
-			pressedPoint = new Point(this.model.pressedPoint);
-			this.model.shape = this.model.project.getShape(pressedPoint);// returns new Shape if shape not found.
-			if(this.model.shape != null) {
-				this.model.shape.setScale(this.model.scale);
+		if(this.model.project != null) {
+			Point pressedPoint = new Point(this.model.pressedPoint);
+			this.model.file = this.model.project.getFile(pressedPoint);
+			if(model.file != null) {
+				this.model.project.setFile(this.model.file.uuid);
+				pressedPoint = new Point(this.model.pressedPoint);
+				this.model.shape = this.model.project.getShape(pressedPoint);// returns new Shape if shape not found.
+				if(this.model.shape != null) {
+					this.model.shape.setScale(this.model.scale);
+				}
 			}
 		}
 	}
@@ -191,69 +193,71 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		this.model.releasedPoint.x = e.getX();
 		this.model.releasedPoint.y = e.getY();
 		logger.info("mouseReleased(e) this.model.releasedPoint="+this.model.releasedPoint);
-		Point releasedPoint = new Point(this.model.releasedPoint);
-		File releasedFile = this.model.project.getFile(releasedPoint);
-		if (this.model.pressedPoint.x == this.model.releasedPoint.x
-				&& this.model.pressedPoint.y == this.model.releasedPoint.y) {
-			if (this.model.shape != null) {
-				logger.info("Selected...");
-				this.model.project.setShape(this.model.shape.uuid);
-			} else {
-				logger.info("Nothing...");
-			}
-		} else {
-
-
-			int selection = -1;// this.model.project.intersectShape(pressedPoint);
-			if (selection > -1) {
+		if(this.model.project != null) {
+			Point releasedPoint = new Point(this.model.releasedPoint);
+			File releasedFile = this.model.project.getFile(releasedPoint);
+			if (this.model.pressedPoint.x == this.model.releasedPoint.x
+					&& this.model.pressedPoint.y == this.model.releasedPoint.y) {
 				if (this.model.shape != null) {
-					logger.info("Resizing...");
-					releasedPoint = new Point(this.model.releasedPoint);
-					this.model.shape.resize(releasedPoint, selection);
+					logger.info("Selected...");
+					this.model.project.setShape(this.model.shape.uuid);
+				} else {
+					logger.info("Nothing...");
 				}
 			} else {
-				
-				if (this.model.shape != null) {
-					logger.info("Moving...");
-					if(!this.model.file.uuid.equals(releasedFile.uuid)) {
-						this.model.project.setFile(releasedFile.uuid);
-						Shape shape = new Shape(this.model.shape);
-						shape = this.model.file.removeShape(shape);
-						releasedFile.addShape(shape);
+	
+	
+				int selection = -1;// this.model.project.intersectShape(pressedPoint);
+				if (selection > -1) {
+					if (this.model.shape != null) {
+						logger.info("Resizing...");
+						releasedPoint = new Point(this.model.releasedPoint);
+						this.model.shape.resize(releasedPoint, selection);
 					}
-					this.model.project.setShape(this.model.shape.uuid);
-					Point movePoint = new Point();
-					movePoint.x = this.model.releasedPoint.x - this.model.pressedPoint.x;
-					movePoint.y = this.model.releasedPoint.y - this.model.pressedPoint.y;
-					this.model.shape.move(movePoint);
 				} else {
-					logger.info("Adding...");
-					this.model.shape = new Shape();
-					if (this.model.shape.classification == null) {
-						if (this.model.rectangle) {
-							this.model.shape.classification = Shape.RECTANGLE;
-						} else if (this.model.ellipse) {
-							this.model.shape.classification = Shape.ELLIPSE;
-						}
-					}
-					this.model.shape.addScale = this.round(this.model.scale, 6);
-					this.model.shape.setScale(this.model.scale);//Fix includes setting scale of shape immediately
-					//Discovered functions were changing pressedPoint from original value.
-					this.model.shape.pointList.add(new Point(this.model.pressedPoint));
-					this.model.shape.pointList.add(new Point(this.model.releasedPoint));
-					logger.info("mouseReleased(e) this.model.shape.pointList="+this.model.shape.pointList);
-//					this.model.shape.sortPointList();//breaks intersect function
-					this.model.project.addShape(this.model.shape);
-					this.model.project.setShape(this.model.shape.uuid);
-//						Command command = new Command();
-//						Operation operation = new Operation();
-//						operation.object = this.model.shape;
-//						operation.sign = 1;
-//						operation.id = UUID.randomUUID().toString();
-//						operation.uuid = this.model.shape.uuid;
-//						command.operationList.push(operation);
-//						this.model.undoStack.push(command);
 					
+					if (this.model.shape != null) {
+						logger.info("Moving...");
+						if(!this.model.file.uuid.equals(releasedFile.uuid)) {
+							this.model.project.setFile(releasedFile.uuid);
+							Shape shape = new Shape(this.model.shape);
+							shape = this.model.file.removeShape(shape);
+							releasedFile.addShape(shape);
+						}
+						this.model.project.setShape(this.model.shape.uuid);
+						Point movePoint = new Point();
+						movePoint.x = this.model.releasedPoint.x - this.model.pressedPoint.x;
+						movePoint.y = this.model.releasedPoint.y - this.model.pressedPoint.y;
+						this.model.shape.move(movePoint);
+					} else {
+						logger.info("Adding...");
+						this.model.shape = new Shape();
+						if (this.model.shape.classification == null) {
+							if (this.model.rectangle) {
+								this.model.shape.classification = Shape.RECTANGLE;
+							} else if (this.model.ellipse) {
+								this.model.shape.classification = Shape.ELLIPSE;
+							}
+						}
+						this.model.shape.addScale = this.round(this.model.scale, 6);
+						this.model.shape.setScale(this.model.scale);//Fix includes setting scale of shape immediately
+						//Discovered functions were changing pressedPoint from original value.
+						this.model.shape.pointList.add(new Point(this.model.pressedPoint));
+						this.model.shape.pointList.add(new Point(this.model.releasedPoint));
+						logger.info("mouseReleased(e) this.model.shape.pointList="+this.model.shape.pointList);
+	//					this.model.shape.sortPointList();//breaks intersect function
+						this.model.project.addShape(this.model.shape);
+						this.model.project.setShape(this.model.shape.uuid);
+	//						Command command = new Command();
+	//						Operation operation = new Operation();
+	//						operation.object = this.model.shape;
+	//						operation.sign = 1;
+	//						operation.id = UUID.randomUUID().toString();
+	//						operation.uuid = this.model.shape.uuid;
+	//						command.operationList.push(operation);
+	//						this.model.undoStack.push(command);
+						
+					}
 				}
 			}
 		}
@@ -283,8 +287,8 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		this.model.scale += delta;
 		this.model.scale = this.round(this.model.scale, 6);
 		if (this.model.scale >= 0 && this.model.scale <= 2) {
-			logger.debug("mouseWheelMoved(...) scale = " + this.model.scale);
-			this.model.project.setScale(this.model.scale);
+			logger.info("mouseWheelMoved(...) scale = " + this.model.scale);
+			this.model.setScale(this.model.scale);
 			revalidate();
 			repaint();
 		}

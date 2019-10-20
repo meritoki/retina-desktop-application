@@ -235,7 +235,7 @@ public class Project implements Serializable {
 	@JsonIgnore
 	public BufferedImage getBufferedImage() {
 		Page page = this.getPage();
-		if(page.getBufferedImage() == null) 
+		if(page != null && page.getBufferedImage() == null) 
 			page.setBufferedImage();
 		BufferedImage bufferedImage = (page != null) ? page.getBufferedImage() : null;
 		return bufferedImage;

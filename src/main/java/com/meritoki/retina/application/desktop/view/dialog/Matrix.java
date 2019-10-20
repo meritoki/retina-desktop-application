@@ -69,7 +69,7 @@ public class Matrix extends javax.swing.JDialog {
     public void initList() {
         logger.debug("initList()");
         Project project = (this.model != null) ? this.model.project : null;
-        Page page = project.getPage();
+        Page page = (project != null) ? project.getPage():null;
         int index = (page != null) ? page.getIndex() : 0;
         List<Data> dataList = (page != null) ? page.getDataList() : null;
         this.initDataList(dataList);
