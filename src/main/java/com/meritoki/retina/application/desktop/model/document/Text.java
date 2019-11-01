@@ -13,24 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meritoki.retina.application.desktop.model.project;
+package com.meritoki.retina.application.desktop.model.document;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.codehaus.jackson.annotate.JsonProperty;
 
-/**
- *
- * @author osvaldo.rodriguez
- */
-public class Layout {
-    
-    List<Shape> shapeList = new ArrayList<Shape>();
-    
-    public void setShapeList(List<Shape> rectangleList){
-        this.shapeList = rectangleList;
-    }
-    
-    public List<Shape> getShapeList(){
-        return this.shapeList;
-    }
+public class Text {
+	
+	public String value = "";
+
+	@JsonProperty
+	public void setValue(String value) {
+		this.value = value;
+	}
 }

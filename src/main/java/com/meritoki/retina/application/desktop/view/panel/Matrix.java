@@ -32,10 +32,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.retina.application.desktop.model.Model;
-import com.meritoki.retina.application.desktop.model.project.Data;
-import com.meritoki.retina.application.desktop.model.project.Page;
-import com.meritoki.retina.application.desktop.model.project.Project;
-import com.meritoki.retina.application.desktop.model.project.Unit;
+import com.meritoki.retina.application.desktop.model.document.Data;
+import com.meritoki.retina.application.desktop.model.document.Page;
+import com.meritoki.retina.application.desktop.model.document.Project;
+import com.meritoki.retina.application.desktop.model.document.Unit;
 import com.meritoki.retina.application.desktop.view.frame.Main;
 
 /**

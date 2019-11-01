@@ -21,8 +21,10 @@ import java.net.URL;
 import javax.swing.JFrame;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.meritoki.retina.application.desktop.controller.document.DocumentController;
 import com.meritoki.retina.application.desktop.model.Model;
-import com.meritoki.retina.application.desktop.model.project.Project;
+import com.meritoki.retina.application.desktop.model.document.Project;
 import com.meritoki.retina.application.desktop.view.dialog.user.Login;
 import java.io.File;
 
@@ -288,9 +290,8 @@ public final class Main extends JFrame {
     }//GEN-LAST:event_newMenuItemActionPerformed
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
-     
-        this.model.save();
-        
+    	
+    	DocumentController.save(file, this.model.getDocument());    
     }//GEN-LAST:event_saveMenuItemActionPerformed
 
     private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed

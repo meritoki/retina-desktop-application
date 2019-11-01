@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meritoki.retina.application.desktop.model.project;
+package com.meritoki.retina.application.desktop.model.document;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -45,7 +45,6 @@ import org.codehaus.jackson.map.SerializationConfig;
 
 import com.meritoki.retina.application.desktop.controller.client.ModelClient;
 import com.meritoki.retina.application.desktop.model.Model;
-import com.meritoki.retina.application.desktop.model.account.User;
 import com.meritoki.retina.application.desktop.model.provider.Provider;
 import com.meritoki.retina.application.desktop.model.vendor.Vendor;
 
@@ -82,6 +81,8 @@ public class Project implements Serializable {
     public List<Page> pageList = new ArrayList<>();
     @JsonIgnore
     public int index = 0;
+    @JsonIgnore
+    public File file = new File();
     @JsonProperty
     public List<Layout> layoutList = new ArrayList<>();
 

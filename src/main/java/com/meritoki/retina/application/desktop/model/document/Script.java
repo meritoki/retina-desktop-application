@@ -13,17 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meritoki.retina.application.desktop.model;
+package com.meritoki.retina.application.desktop.model.document;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-
-import com.meritoki.retina.application.desktop.model.project.Data;
-import com.meritoki.retina.application.desktop.model.project.File;
-import com.meritoki.retina.application.desktop.model.project.Page;
-import com.meritoki.retina.application.desktop.model.project.Shape;
 
 /**
  *

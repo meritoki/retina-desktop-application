@@ -29,13 +29,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.retina.application.desktop.model.Model;
-import com.meritoki.retina.application.desktop.model.project.Data;
-import com.meritoki.retina.application.desktop.model.project.File;
-import com.meritoki.retina.application.desktop.model.project.Page;
-import com.meritoki.retina.application.desktop.model.project.Project;
-import com.meritoki.retina.application.desktop.model.project.Shape;
-import com.meritoki.retina.application.desktop.model.project.Text;
-import com.meritoki.retina.application.desktop.model.project.Unit;
+import com.meritoki.retina.application.desktop.model.document.Data;
+import com.meritoki.retina.application.desktop.model.document.Document;
+import com.meritoki.retina.application.desktop.model.document.File;
+import com.meritoki.retina.application.desktop.model.document.Page;
+import com.meritoki.retina.application.desktop.model.document.Project;
+import com.meritoki.retina.application.desktop.model.document.Shape;
+import com.meritoki.retina.application.desktop.model.document.Text;
+import com.meritoki.retina.application.desktop.model.document.Unit;
 import com.meritoki.retina.application.desktop.view.frame.Main;
 
 /**
@@ -79,32 +80,27 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     }
 
     public void init() {
-        if (this.model.project != null) {
-            this.initLabel();
-            this.initList();
-            this.initComboBox();
-        }
+        this.initLabel();
+        this.initList();
+        this.initComboBox();
     }
 
     public void initLabel() {
         logger.debug("initLabel()");
-        Project project = this.model.project;
-        Page page = (project != null) ? this.model.project.getPage() : null;
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+        Page page = (project != null) ? project.getPage() : null;
         File file = (page != null) ? page.getFile() : null;
         Shape shape = (file != null) ? file.getShape() : null;
-//        List<Shape> shapeList = (page != null) ? file.shapeList : null;
-//        Data data = (shape != null) ? shape.data : null;
         List<Text> textList = (shape != null) ? shape.getTextList() : null;
     }
 
     public void initList() {
         logger.debug("initList()");
-        Page page = this.model.project.getPage();
-        int index = (page != null) ? page.getIndex() : 0;
-//        Shape shape = (page != null) ? page.getShape() : null;
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+        Page page = (project != null)? project.getPage(): null;
         List<Shape> shapeList = (page != null) ? page.getShapeList() : null;
-//        Data data = (shape != null) ? shape.data : null;
-//        List<Text> textList = (data != null) ? data.getTextList() : null;
         this.initRectangleList(shapeList);
         Shape shape = (page != null) ? page.getShape() : null;
         if(shape != null) {
@@ -114,8 +110,10 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
 
     public void initComboBox() {
         logger.debug("initComboBox()");
-        Page image = this.model.project.getPage();
-        Shape shape = (image != null) ? image.getFile().getShape() : null;
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+        Page page = (project != null) ? project.getPage() : null;
+        Shape shape = (page != null) ? page.getFile().getShape() : null;
         Data data = (shape != null) ? shape.data : null;
         List<Text> textList = (shape != null) ? shape.getTextList() : null;
         this.initTextValueComboBox(textList);
@@ -165,7 +163,9 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         this.textValueComboBox.setModel(new DefaultComboBoxModel(array));
         boolean flag = this.textValueDefaultCheckBox.isSelected();
         if (flag) {
-        	Page page = this.model.project.getPage();
+        	Document document = (this.model != null) ? this.model.getDocument() : null;
+            Project project = (document != null) ? document.getProject() : null;
+            Page page = (project != null) ? project.getPage() : null;
             Shape shape = (page != null)?page.getFile().getShape():null;
             Data data = (shape != null)?shape.getData():null;
             if(data != null) {
@@ -242,11 +242,13 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 1) {
-            Page page = this.model.getPage();
+            Page page = this.model.getDocument().getPage();
             if (page != null) {
                 String selectedItem = (String) this.rectangleList.getSelectedValue();
                 logger.info("mouseClicked(e) selectedItem="+selectedItem);
-                this.model.project.setShape(selectedItem);
+                Document document = (this.model != null) ? this.model.getDocument() : null;
+                Project project = (document != null) ? document.getProject() : null;
+                project.setShape(selectedItem);
                 this.getParent().repaint();
                 this.init();
             }
@@ -279,7 +281,9 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        Page page = this.model.project.getPage();
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+        Page page = (project != null) ? project.getPage() : null;
         if (page != null) {
             int index = page.getIndex();
             switch (keyCode) {
@@ -322,9 +326,11 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     @Override
     public void keyReleased(KeyEvent e) {
         String uuid = (String) rectangleList.getSelectedValue();
-        Page image = this.model.project.getPage();
-        if (image != null && !uuid.equals(image.getFile().getShape().uuid)) {
-            this.model.project.getPage().getFile().setShape(uuid);
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+        Page page = (project != null) ? project.getPage() : null;
+        if (page != null && !uuid.equals(page.getFile().getShape().uuid)) {
+            project.getPage().getFile().setShape(uuid);
             this.init();
             this.getParent().repaint();
         }
@@ -586,7 +592,9 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         String value = this.textInputTextField.getText().trim();
         Text text = new Text();
         text.value = value;
-        Page page = this.model.project.getPage();
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+        Page page = (project != null) ? project.getPage() : null;
         Shape shape = (page != null)?page.getFile().getShape():null;
         if(shape != null) {
         	shape.addText(text);
@@ -599,7 +607,9 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     private void textValueDefaultCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textValueDefaultCheckBoxActionPerformed
         boolean flag = this.textValueDefaultCheckBox.isSelected();
         if (flag) {
-        	Page page = this.model.project.getPage();
+        	Document document = (this.model != null) ? this.model.getDocument() : null;
+            Project project = (document != null) ? document.getProject() : null;
+            Page page = (project != null) ? project.getPage() : null;
             Shape shape = (page != null)?page.getFile().getShape():null;
             if(shape != null) {
             	this.textValueComboBox.setSelectedItem(shape.getDefaultText().value);
@@ -613,15 +623,19 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
 
     private void deleteRectangleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRectangleButtonActionPerformed
         int index = this.rectangleList.getSelectedIndex();
-        Page image = this.model.project.getPage();
-        image.getShapeList().remove(index);
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+        Page page = (project != null) ? project.getPage() : null;
+        page.getShapeList().remove(index);
         this.init();
         ((Main) this.getParent()).repaint();
     }//GEN-LAST:event_deleteRectangleButtonActionPerformed
 
     private void applyUnitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyUnitButtonActionPerformed
         logger.info("applyUnitButtonActionPerformed(...)");
-    	Page page = (this.model.project != null) ? this.model.project.getPage() : null;
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+        Page page = (project != null) ? project.getPage() : null;
         Shape shape = (page != null) ? page.getFile().getShape() : null;
         Data data = (shape != null) ? shape.getData() : null;
         if (data != null) {
@@ -661,7 +675,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     }//GEN-LAST:event_ellipseButtonActionPerformed
 
     private void setTextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setTextButtonActionPerformed
-       Shape shape = this.model.getShape();
+       Shape shape = this.model.getDocument().getShape();
        Data data = (shape !=null) ? shape.data : null;
        Text text = (data != null) ? data.text : null;
        String value = (String)this.textValueComboBox.getSelectedItem();

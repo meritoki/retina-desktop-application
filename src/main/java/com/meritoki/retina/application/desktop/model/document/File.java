@@ -1,4 +1,4 @@
-package com.meritoki.retina.application.desktop.model.project;
+package com.meritoki.retina.application.desktop.model.document;
 
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;

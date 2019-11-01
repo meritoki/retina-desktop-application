@@ -36,7 +36,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
-import com.meritoki.retina.application.desktop.controller.system.Shell;
+import com.meritoki.retina.application.desktop.controller.system.NodeController;
 
 /**
  *
@@ -100,8 +100,8 @@ public class Zooniverse {
             } catch (IOException ex) {
                 logger.error(ex);
             }
-            Shell.executeCommand("cp ./config.yml ~/.panoptes/");
-            Shell.executeCommand("panoptes configure");
+            NodeController.executeCommand("cp ./config.yml ~/.panoptes/");
+            NodeController.executeCommand("panoptes configure");
         }
     }
 
@@ -112,7 +112,7 @@ public class Zooniverse {
 
     @JsonIgnore
     public void createProject(Project project) {
-        List<String> stringList = Shell.executeCommand("panoptes project create " + project.getTitle() + " " + project.getDescription());
+        List<String> stringList = NodeController.executeCommand("panoptes project create " + project.getTitle() + " " + project.getDescription());
         if(stringList.size() > 0 && !stringList.get(0).equals("error")){
             String string = stringList.get(0);
             String[] stringArray = string.split(" ");
@@ -126,7 +126,7 @@ public class Zooniverse {
     @JsonIgnore
     public void searchProject(String query) {
         logger.info("searchProject(" + query + ")");
-        List<String> stringList = Shell.executeCommand("panoptes project ls | grep " + query);
+        List<String> stringList = NodeController.executeCommand("panoptes project ls | grep " + query);
         Project project;
         List<Project> projectList = new ArrayList<>();
         if(stringList.size() > 0 && !stringList.get(0).equals("error")){
@@ -144,7 +144,7 @@ public class Zooniverse {
     
     @JsonIgnore
     public void updateProjectWorkflowList(Project project) {
-        List<String> stringList = Shell.executeCommand("panoptes workflow ls -p " + project.getId(),60);
+        List<String> stringList = NodeController.executeCommand("panoptes workflow ls -p " + project.getId(),60);
         if(stringList.size() > 0 && !stringList.get(0).equals("error")){
             String string = stringList.get(0);
             for(String s: stringList){
@@ -157,7 +157,7 @@ public class Zooniverse {
 
     @JsonIgnore
     public void createSubjectSet(String projectId, SubjectSet subjectSet) {
-        List<String> stringList = Shell.executeCommand("panoptes subject-set create " + projectId + " " + subjectSet.getTitle());
+        List<String> stringList = NodeController.executeCommand("panoptes subject-set create " + projectId + " " + subjectSet.getTitle());
         subjectSet.setId(stringList.get(0));
     }
 

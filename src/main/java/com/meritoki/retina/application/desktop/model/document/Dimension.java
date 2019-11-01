@@ -1,4 +1,4 @@
-package com.meritoki.retina.application.desktop.model.project;
+package com.meritoki.retina.application.desktop.model.document;
 
 public class Dimension {
 	public double x;

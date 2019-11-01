@@ -26,13 +26,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.retina.application.desktop.model.Model;
-import com.meritoki.retina.application.desktop.model.command.Command;
-import com.meritoki.retina.application.desktop.model.command.Operation;
-import com.meritoki.retina.application.desktop.model.project.File;
-import com.meritoki.retina.application.desktop.model.project.Page;
-import com.meritoki.retina.application.desktop.model.project.Point;
-import com.meritoki.retina.application.desktop.model.project.Project;
-import com.meritoki.retina.application.desktop.model.project.Shape;
+import com.meritoki.retina.application.desktop.model.document.Command;
+import com.meritoki.retina.application.desktop.model.document.Document;
+import com.meritoki.retina.application.desktop.model.document.File;
+import com.meritoki.retina.application.desktop.model.document.Operation;
+import com.meritoki.retina.application.desktop.model.document.Page;
+import com.meritoki.retina.application.desktop.model.document.Point;
+import com.meritoki.retina.application.desktop.model.document.Project;
+import com.meritoki.retina.application.desktop.model.document.Shape;
 import com.meritoki.retina.application.desktop.view.frame.Main;
 import java.util.UUID;
 
@@ -64,13 +65,13 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 	@Override
 	public Dimension getPreferredSize() {
 		Dimension size = new Dimension(1028, 512);
-		if (this.model != null && this.model.project != null && this.model.project.getPage() != null
-				&& this.model.project.getPage().getBufferedImage() != null) {
-			size.width = (int) Math
-					.round(this.model.project.getPage().getBufferedImage().getWidth() * this.model.scale);
-			size.height = (int) Math
-					.round(this.model.project.getPage().getBufferedImage().getHeight() * this.model.scale);
-		}
+//		if (this.model != null && this.model.project != null && this.model.project.getPage() != null
+//				&& this.model.project.getPage().getBufferedImage() != null) {
+//			size.width = (int) Math
+//					.round(this.model.project.getPage().getBufferedImage().getWidth() * this.model.scale);
+//			size.height = (int) Math
+//					.round(this.model.project.getPage().getBufferedImage().getHeight() * this.model.scale);
+//		}
 		return size;
 	}
 
@@ -83,7 +84,8 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		super.paintComponent(graphics);
 		if (this.model != null) {
 			Graphics2D graphics2D = (Graphics2D) graphics.create();
-			Project project = this.model.project;
+			Document document = (this.model != null) ? this.model.getDocument() : null;
+	        Project project = (document != null) ? document.getProject() : null;
 			if(project != null) {
 				project.setScale(this.model.scale);
 				AffineTransform affineTransform = new AffineTransform();
@@ -97,7 +99,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				//File bufferedImage.
 				List<File> fileList = project.getFileList();
 				File file = project.getFile();
-				com.meritoki.retina.application.desktop.model.project.Dimension d = null;
+				com.meritoki.retina.application.desktop.model.document.Dimension d = null;
 				if (fileList != null) {
 					for (File f : fileList) {
 						d = f.dimension;
@@ -288,7 +290,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		this.model.scale = this.round(this.model.scale, 6);
 		if (this.model.scale >= 0 && this.model.scale <= 2) {
 			logger.info("mouseWheelMoved(...) scale = " + this.model.scale);
-			this.model.setScale(this.model.scale);
+			this.model.getDocument().setScale(this.model.scale);
 			revalidate();
 			repaint();
 		}
@@ -332,60 +334,19 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		} else if ((e.getKeyCode() == KeyEvent.VK_Z) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
 			e.consume();
 			System.out.println("undo");
-			if (this.model.undoStack.size() > 0) {
-				Command command = this.model.undoStack.pop();
-				Operation operation = null;
-				for (int i = 0; i < command.operationList.size(); i++) {
-					operation = command.operationList.get(i);
-					if (operation.sign == 1) {
-						if (operation.object instanceof Shape) {
-							this.model.project.getPage().getFile().removeShape((Shape) operation.object);
-						}
-					} else if (operation.sign == 0) {
-						if (operation.object instanceof Shape) {
-							this.model.project.getPage().getFile().addShape((Shape) operation.object);
-						}
-					}
-				}
-				this.model.redoStack.push(command);
-				repaint();
-			}
+			this.model.getDocument().undo();
+			repaint();
 		} else if ((e.getKeyCode() == KeyEvent.VK_Y) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
 			System.out.println("redo");
-			if (this.model.redoStack.size() > 0) {
-				Command command = this.model.redoStack.pop();
-				Operation operation = null;
-				for (int i = command.operationList.size() - 1; i >= 0; i--) {
-					operation = command.operationList.get(i);
-					if (operation.sign == 1) {
-						if (operation.object instanceof Shape) {
-							this.model.project.getPage().getFile().addShape((Shape) operation.object);
-						}
-					} else if (operation.sign == 0) {
-						if (operation.object instanceof Shape) {
-							this.model.project.getPage().getFile().removeShape((Shape) operation.object);
-						}
-					}
-				}
-				this.model.undoStack.push(command);
-				repaint();
-			}
+			this.model.getDocument().redo();
+			repaint();
 		} else {
 			int keyCode = e.getKeyCode();
 			int index = this.model.project.getIndex();
 			switch (keyCode) {
 			case KeyEvent.VK_BACK_SPACE: {
 				logger.debug("KeyPressed(BACK_SPACE)");
-				this.model.shape = this.model.project.getPage().getFile().getShape();
-				this.model.project.getPage().getFile().removeShape(this.model.shape);
-				Command command = new Command();
-				Operation operation = new Operation();
-				operation.object = this.model.shape;
-				operation.sign = 0;
-				operation.id = UUID.randomUUID().toString();
-				operation.uuid = this.model.shape.uuid;
-				command.operationList.push(operation);
-				this.model.undoStack.push(command);
+				this.model.getDocument().removeShape();
 				this.repaint();
 				break;
 			}

@@ -19,8 +19,9 @@ import java.io.File;
 import java.io.IOException;
 
 import com.meritoki.retina.application.desktop.model.Model;
-import com.meritoki.retina.application.desktop.model.project.Page;
-import com.meritoki.retina.application.desktop.model.project.Project;
+import com.meritoki.retina.application.desktop.model.document.Document;
+import com.meritoki.retina.application.desktop.model.document.Page;
+import com.meritoki.retina.application.desktop.model.document.Project;
 import com.meritoki.retina.application.desktop.view.frame.Main;
 
 /**
@@ -83,11 +84,12 @@ public class Import extends javax.swing.JDialog {
     	File[] files = this.openButton.getSelectedFiles(); 
     	Model model = ((Main)this.getParent()).model;
     	if(model != null) {
-	    	Project project = model.project;
+    		Document document = (model != null) ? model.getDocument() : null;
+            Project project = (document != null) ? document.getProject() : null;
 	    	Page page = null;
 	    	for(File file: files) {
 	    		page = new Page();
-				page.fileList.add(new com.meritoki.retina.application.desktop.model.project.File(file.getParent(),file.getName()));
+				page.fileList.add(new com.meritoki.retina.application.desktop.model.document.File(file.getParent(),file.getName()));
 	    		if(project != null) {
 	    			project.addPage(page);
 	    		}

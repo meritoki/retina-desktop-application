@@ -19,9 +19,10 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import org.apache.logging.log4j.LogManager;
 import com.meritoki.retina.application.desktop.model.Model;
-import com.meritoki.retina.application.desktop.model.project.Data;
-import com.meritoki.retina.application.desktop.model.project.Page;
-import com.meritoki.retina.application.desktop.model.project.Project;
+import com.meritoki.retina.application.desktop.model.document.Data;
+import com.meritoki.retina.application.desktop.model.document.Document;
+import com.meritoki.retina.application.desktop.model.document.Page;
+import com.meritoki.retina.application.desktop.model.document.Project;
 
 /**
  *
@@ -59,7 +60,8 @@ public class Matrix extends javax.swing.JDialog {
 
     public void initLabel() {
         logger.debug("initLabel()");
-        Project project = (this.model != null) ? this.model.project : null;
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
         Page page = (project != null) ? project.getPage() : null;
         int pageIndex = (project != null) ? project.getIndex() : 0;
         this.indexValueLabel.setText(pageIndex + "");
@@ -68,7 +70,8 @@ public class Matrix extends javax.swing.JDialog {
 
     public void initList() {
         logger.debug("initList()");
-        Project project = (this.model != null) ? this.model.project : null;
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
         Page page = (project != null) ? project.getPage():null;
         int index = (page != null) ? page.getIndex() : 0;
         List<Data> dataList = (page != null) ? page.getDataList() : null;
@@ -222,7 +225,9 @@ public class Matrix extends javax.swing.JDialog {
 
     private void executePageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executePageScriptButtonActionPerformed
         String value = this.imageScriptTextArea.getText();
-        this.model.script.setPageList(this.model.project.getPageList());
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+        this.model.script.setPageList(project.getPageList());
         try {
             this.model.script.sortDataMatrix(value);
         } catch (Exception ex) {
@@ -232,11 +237,15 @@ public class Matrix extends javax.swing.JDialog {
     }//GEN-LAST:event_executePageScriptButtonActionPerformed
 
     private void resetPageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetPageScriptButtonActionPerformed
-        this.initDataList(this.model.project.getPageList().get(this.model.project.getIndex()).getDataList());
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+    	this.initDataList(project.getPageList().get(project.getIndex()).getDataList());
     }//GEN-LAST:event_resetPageScriptButtonActionPerformed
 
     private void setImageListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setImageListActionPerformed
-        this.model.project.setPageList(this.model.pageList);
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+    	project.setPageList(this.model.pageList);
         this.imageScriptTextArea.setText("");
     }//GEN-LAST:event_setImageListActionPerformed
 

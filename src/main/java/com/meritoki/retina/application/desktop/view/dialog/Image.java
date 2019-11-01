@@ -27,9 +27,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.retina.application.desktop.model.Model;
-import com.meritoki.retina.application.desktop.model.Script;
-import com.meritoki.retina.application.desktop.model.project.Page;
-import com.meritoki.retina.application.desktop.model.project.Project;
+import com.meritoki.retina.application.desktop.model.document.Document;
+import com.meritoki.retina.application.desktop.model.document.Page;
+import com.meritoki.retina.application.desktop.model.document.Project;
 import com.meritoki.retina.application.desktop.view.frame.Main;
 
 /**
@@ -85,11 +85,12 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
       
     public void initLabel(){
         logger.debug("initLabel()");
-        Project project = (this.model != null) ? this.model.project : null;
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
         Page page = (project != null)? project.getPage():null;
         BufferedImage bufferedPage = (page != null)?page.getBufferedImage():null;
         int pageIndex = (project != null)? project.getIndex():0;
-        List<com.meritoki.retina.application.desktop.model.project.Page> pageList = (project != null)? project.getPageList():null;
+        List<Page> pageList = (project != null)? project.getPageList():null;
         this.indexValueLabel.setText(pageIndex+"");
         if(page!=null){
         	if(page.fileList.size() == 1) {
@@ -114,14 +115,15 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
     
     public void initList(){
         logger.debug("initList()");
-        Project project = (this.model != null)? this.model.project:null;
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
         int pageIndex = (project != null)? project.getIndex():0;
         List<Page> pageList = (project != null)? project.getPageList():null;
         this.initPageList(pageList);
         this.setPageListSelectedIndex(pageIndex);
     }
     
-    public void initPageList(List<com.meritoki.retina.application.desktop.model.project.Page> pageList) {
+    public void initPageList(List<Page> pageList) {
         logger.debug("initPageList(...)");
     	DefaultListModel<String> defaultListModel = new DefaultListModel<>();
         if(pageList != null){
@@ -142,7 +144,9 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
     public void mouseClicked(MouseEvent e) {
         if(e.getClickCount()==1){
             String selectedItem = (String) this.pageList.getSelectedValue();
-            this.model.project.setPage(selectedItem);
+            Document document = (this.model != null) ? this.model.getDocument() : null;
+            Project project = (document != null) ? document.getProject() : null;
+            project.setPage(selectedItem);
             this.initLabel();
             this.getParent().repaint();
             ((Main)this.getParent()).shapeDialog.init();
@@ -173,13 +177,15 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        int index = this.model.project.getIndex();
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+        int index = project.getIndex();
         switch(keyCode) {
             case KeyEvent.VK_LEFT:{
                 logger.debug("keyPressed LEFT");
-                index = this.model.project.getIndex();
+                index = project.getIndex();
                 index=index-1;
-                this.model.project.setIndex(index);
+                project.setIndex(index);
                 this.initLabel();
                 this.setPageListSelectedIndex(index);
                 this.getParent().repaint();
@@ -189,9 +195,9 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
             }
             case KeyEvent.VK_RIGHT:{
                 logger.debug("keyPressed RIGHT");
-                index = this.model.project.getIndex();
+                index = project.getIndex();
                 index=index+1;
-                this.model.project.setIndex(index);
+                project.setIndex(index);
                 this.initLabel();
                 this.setPageListSelectedIndex(index);
                 this.getParent().repaint();
@@ -211,9 +217,11 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
     @Override
     public void keyReleased(KeyEvent e) {
         String uuid = (String)pageList.getSelectedValue();
-        com.meritoki.retina.application.desktop.model.project.Page page = this.model.project.getPage();
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+        Page page = project.getPage();
         if(page != null && !uuid.equals(page.uuid)){
-            this.model.project.setPage(uuid);
+            project.setPage(uuid);
             this.initLabel();
             this.getParent().repaint();
             ((Main)this.getParent()).shapeDialog.init();
@@ -404,13 +412,17 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
 
     private void setPageListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setPageListActionPerformed
         //COMMAND
-    	this.model.project.pageList = this.model.pageList;
+    	Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+    	project.pageList = this.model.pageList;
         this.pageScriptTextArea.setText("");
     }//GEN-LAST:event_setPageListActionPerformed
 
     private void executePageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executePageScriptButtonActionPerformed
         String value = this.pageScriptTextArea.getText();
-        this.model.pageList = new ArrayList<>(this.model.project.getPageList());
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+        this.model.pageList = new ArrayList<>(project.getPageList());
         this.model.script.setPageList(this.model.pageList);
         try {
             this.model.script.sortPageList(value);
@@ -421,7 +433,9 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
     }//GEN-LAST:event_executePageScriptButtonActionPerformed
 
     private void resetPageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetPageScriptButtonActionPerformed
-        this.initPageList(this.model.project.getPageList());
+    	Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+    	this.initPageList(project.getPageList());
     }//GEN-LAST:event_resetPageScriptButtonActionPerformed
 
     /**
