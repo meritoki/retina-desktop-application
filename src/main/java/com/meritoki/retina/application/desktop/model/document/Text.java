@@ -20,6 +20,14 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class Text {
 	
 	public String value = "";
+	
+	public Text() {
+		
+	}
+	
+	public Text(Text text) {
+		this.value = text.value;
+	}
 
 	@JsonProperty
 	public void setValue(String value) {

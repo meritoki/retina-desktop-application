@@ -51,28 +51,6 @@ import com.meritoki.retina.application.desktop.model.vendor.Vendor;
 public class Project implements Serializable {
     
 	private static final long serialVersionUID = 1L;
-
-	public static void main(String[] args) throws IOException{
-        Project project = new Project();
-//        File file = new File("~/test.json");
-        project.initTest();
-        ObjectMapper mapper = new ObjectMapper();
-        Model model = new Model();
-        model.project = project;
-//        model.open(new java.io.File("/home/jorodriguez/test.json"));
-//        mapper.setVisibility(JsonMethod.FIELD, Visibility.ANY);
-//        mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
-//        mapper.writeValue(file, project);
-//        project = mapper.readValue(file, Project.class);
-        String jsonInString = mapper.writeValueAsString(model.project);
-        ModelClient modelClient = new ModelClient();
-        User user = new User();
-        user.name = "javainuse";
-        user.password = "password";
-        modelClient.login(user);
-        modelClient.uploadProject(jsonInString);
-        System.out.println(project);
-    }
     
     static Logger logger = LogManager.getLogger(Project.class.getName());
     @JsonProperty
@@ -89,6 +67,13 @@ public class Project implements Serializable {
     
     public Project(){ 
         this.uuid = UUID.randomUUID().toString();
+    }
+    
+    public Project(Project project) {
+    	this.uuid = project.uuid;
+    	for(Page p : project.pageList) {
+    		this.pageList.add(new Page(p));
+    	}
     }
     
     @JsonIgnore

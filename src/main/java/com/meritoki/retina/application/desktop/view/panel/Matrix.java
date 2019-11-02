@@ -31,6 +31,7 @@ import javax.swing.JPanel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.meritoki.retina.application.desktop.model.Document;
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.document.Data;
 import com.meritoki.retina.application.desktop.model.document.Page;
@@ -82,7 +83,8 @@ public class Matrix extends JPanel implements MouseListener, MouseWheelListener,
 	public void paintComponent(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
 		if (this.model != null) {
-			Project project = this.model.project;
+			Document document = (this.model != null) ?this.model.getDocument() : null; 
+			Project project = (document != null)? document.project: null;
 			Page page = (project != null) ? project.getPage() : null;
 			List<LinkedList<Data>> dataMatrix = (page != null) ? page.getDataMatrix() : null;
 			int width = 0;

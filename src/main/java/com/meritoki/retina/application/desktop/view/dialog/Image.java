@@ -26,8 +26,8 @@ import javax.swing.DefaultListModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.meritoki.retina.application.desktop.model.Document;
 import com.meritoki.retina.application.desktop.model.Model;
-import com.meritoki.retina.application.desktop.model.document.Document;
 import com.meritoki.retina.application.desktop.model.document.Page;
 import com.meritoki.retina.application.desktop.model.document.Project;
 import com.meritoki.retina.application.desktop.view.frame.Main;
@@ -414,7 +414,7 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
         //COMMAND
     	Document document = (this.model != null) ? this.model.getDocument() : null;
         Project project = (document != null) ? document.getProject() : null;
-    	project.pageList = this.model.pageList;
+    	project.pageList = this.model.variable.pageList;
         this.pageScriptTextArea.setText("");
     }//GEN-LAST:event_setPageListActionPerformed
 
@@ -422,14 +422,14 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
         String value = this.pageScriptTextArea.getText();
         Document document = (this.model != null) ? this.model.getDocument() : null;
         Project project = (document != null) ? document.getProject() : null;
-        this.model.pageList = new ArrayList<>(project.getPageList());
-        this.model.script.setPageList(this.model.pageList);
+        this.model.variable.pageList = new ArrayList<>(project.getPageList());
+        this.model.variable.script.setPageList(this.model.variable.pageList);
         try {
-            this.model.script.sortPageList(value);
+            this.model.variable.script.sortPageList(value);
         } catch (Exception ex) {
             System.err.println(ex);
         }
-        this.initPageList(this.model.pageList);
+        this.initPageList(this.model.variable.pageList);
     }//GEN-LAST:event_executePageScriptButtonActionPerformed
 
     private void resetPageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetPageScriptButtonActionPerformed

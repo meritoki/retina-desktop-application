@@ -89,6 +89,11 @@ public class Page {
     public Page() {
         this.uuid = UUID.randomUUID().toString();
     }
+    
+    public Page(Page page) {
+    	this.uuid = page.uuid;
+    	
+    }
 
     /**
 	 * Function gets the current index selected by user.

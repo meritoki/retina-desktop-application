@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.type.TypeReference;
 import com.meritoki.retina.application.desktop.controller.system.NodeController;
-import com.meritoki.retina.application.desktop.model.document.User;
+import com.meritoki.retina.application.desktop.model.User;
 
 /**
  * User controller is responsible for loading the users 
@@ -35,14 +35,24 @@ public class UserController {
 	
 	public static void save(Object object) {
 		logger.info("save()");
-		NodeController.save(filePath, fileName, object);
+		NodeController.saveJson(filePath, fileName, object);
 	}
 	
 	@JsonIgnore
 	public static List<User> open() {
 		logger.info("open()");
 		List<User> userList = null;
-		userList = (List<User>) NodeController.open(new java.io.File(filePath+"/"+fileName), new TypeReference<List<User>>(){});
+		userList = (List<User>)NodeController.openJson(new java.io.File(filePath+"/"+fileName), new TypeReference<List<User>>(){});
 		return userList;
+	}
+	
+	public static boolean login(List<User> userList, User user) {
+		
+		
+		return true;
+	}
+	
+	public static void register(User user) {
+		
 	}
 }

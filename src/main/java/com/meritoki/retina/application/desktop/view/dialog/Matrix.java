@@ -18,9 +18,10 @@ package com.meritoki.retina.application.desktop.view.dialog;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import org.apache.logging.log4j.LogManager;
+
+import com.meritoki.retina.application.desktop.model.Document;
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.document.Data;
-import com.meritoki.retina.application.desktop.model.document.Document;
 import com.meritoki.retina.application.desktop.model.document.Page;
 import com.meritoki.retina.application.desktop.model.document.Project;
 
@@ -227,9 +228,9 @@ public class Matrix extends javax.swing.JDialog {
         String value = this.imageScriptTextArea.getText();
         Document document = (this.model != null) ? this.model.getDocument() : null;
         Project project = (document != null) ? document.getProject() : null;
-        this.model.script.setPageList(project.getPageList());
+        this.model.variable.script.setPageList(project.getPageList());
         try {
-            this.model.script.sortDataMatrix(value);
+            this.model.variable.script.sortDataMatrix(value);
         } catch (Exception ex) {
             System.err.println(ex);
         }
@@ -245,7 +246,7 @@ public class Matrix extends javax.swing.JDialog {
     private void setImageListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setImageListActionPerformed
         Document document = (this.model != null) ? this.model.getDocument() : null;
         Project project = (document != null) ? document.getProject() : null;
-    	project.setPageList(this.model.pageList);
+    	project.setPageList(this.model.variable.pageList);
         this.imageScriptTextArea.setText("");
     }//GEN-LAST:event_setImageListActionPerformed
 

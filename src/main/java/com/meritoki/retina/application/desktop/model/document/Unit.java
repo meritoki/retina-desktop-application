@@ -26,4 +26,13 @@ public class Unit {
     public static final String ENERGY = "energy";
     public String type = DATA;
     public String value;
+    
+    public Unit() {
+    	
+    }
+    
+    public Unit(Unit unit) {
+    	this.type = unit.type;
+    	this.value = unit.value;
+    }
 }

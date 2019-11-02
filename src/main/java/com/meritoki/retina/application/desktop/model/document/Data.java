@@ -42,6 +42,12 @@ public class Data {
         this.uuid = UUID.randomUUID().toString();
     }
     
+    public Data(Data data) {
+    	this.uuid = data.uuid;
+    	this.unit = new Unit(data.unit);
+    	this.text = new Text(data.text);
+    }
+    
     @JsonIgnore
     public void setUUID(String uuid){
         this.uuid = uuid;

@@ -29,7 +29,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meritoki.retina.application.desktop.model.Model;
-import com.meritoki.retina.application.desktop.model.document.User;
+import com.meritoki.retina.application.desktop.model.User;
 
 /**
  *

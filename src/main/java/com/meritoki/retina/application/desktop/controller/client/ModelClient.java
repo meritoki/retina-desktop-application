@@ -32,9 +32,9 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meritoki.retina.application.desktop.model.Model;
+import com.meritoki.retina.application.desktop.model.User;
 import com.meritoki.retina.application.desktop.model.document.Point;
 import com.meritoki.retina.application.desktop.model.document.Shape;
-import com.meritoki.retina.application.desktop.model.document.User;
 
 public class ModelClient {
 

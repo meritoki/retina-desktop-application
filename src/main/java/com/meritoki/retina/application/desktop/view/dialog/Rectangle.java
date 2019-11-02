@@ -28,9 +28,9 @@ import javax.swing.DefaultListModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.meritoki.retina.application.desktop.model.Document;
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.document.Data;
-import com.meritoki.retina.application.desktop.model.document.Document;
 import com.meritoki.retina.application.desktop.model.document.File;
 import com.meritoki.retina.application.desktop.model.document.Page;
 import com.meritoki.retina.application.desktop.model.document.Project;
@@ -127,24 +127,24 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
             this.unitTypeComboBox.setSelectedItem(data.unit.type);
             switch (data.unit.type) {
                 case "data": {
-                    this.initUnitValueComboBox(this.model.emptyList);
+                    this.initUnitValueComboBox(this.model.variable.emptyList);
                     break;
                 }
                 case "time": {
-                    this.initUnitValueComboBox(this.model.timeList);
+                    this.initUnitValueComboBox(this.model.variable.timeList);
                     break;
                 }
                 case "space": {
-                    this.initUnitValueComboBox(this.model.spaceList);
+                    this.initUnitValueComboBox(this.model.variable.spaceList);
                     break;
                 }
                 case "energy": {
-                    this.initUnitValueComboBox(this.model.energyList);
+                    this.initUnitValueComboBox(this.model.variable.energyList);
                     break;
                 }
             }
         } else {
-            this.initUnitValueComboBox(this.model.emptyList);
+            this.initUnitValueComboBox(this.model.variable.emptyList);
         }
     }
 
@@ -188,19 +188,19 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
                 int selectedIndex = unitTypeComboBox.getSelectedIndex();
                 switch (selectedIndex) {
                     case 0: {
-                        initUnitValueComboBox(model.emptyList);
+                        initUnitValueComboBox(model.variable.emptyList);
                         break;
                     }
                     case 1: {
-                        initUnitValueComboBox(model.timeList);
+                        initUnitValueComboBox(model.variable.timeList);
                         break;
                     }
                     case 2: {
-                        initUnitValueComboBox(model.spaceList);
+                        initUnitValueComboBox(model.variable.spaceList);
                         break;
                     }
                     case 3: {
-                        initUnitValueComboBox(model.energyList);
+                        initUnitValueComboBox(model.variable.energyList);
                         break;
                     }
                 }
@@ -665,13 +665,13 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     }//GEN-LAST:event_applyUnitButtonActionPerformed
 
     private void rectangleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rectangleButtonActionPerformed
-        this.model.rectangle = true;
-        this.model.ellipse = false;
+        this.model.variable.rectangle = true;
+        this.model.variable.ellipse = false;
     }//GEN-LAST:event_rectangleButtonActionPerformed
 
     private void ellipseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ellipseButtonActionPerformed
-        this.model.rectangle = false;
-        this.model.ellipse = true;
+        this.model.variable.rectangle = false;
+        this.model.variable.ellipse = true;
     }//GEN-LAST:event_ellipseButtonActionPerformed
 
     private void setTextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setTextButtonActionPerformed

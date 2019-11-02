@@ -12,34 +12,17 @@ import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonMethod;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
 
-import com.meritoki.retina.application.desktop.controller.client.FileClient;
-import com.meritoki.retina.application.desktop.controller.client.ModelClient;
-import com.meritoki.retina.application.desktop.controller.client.Status;
-import com.meritoki.retina.application.desktop.controller.client.UserClient;
-import com.meritoki.retina.application.desktop.controller.system.PropertiesController;
+import com.meritoki.retina.application.desktop.controller.security.BCryptController;
+import com.meritoki.retina.application.desktop.controller.system.NodeController;
 import com.meritoki.retina.application.desktop.controller.user.UserController;
-import com.meritoki.retina.application.desktop.model.document.Command;
-import com.meritoki.retina.application.desktop.model.document.Document;
-import com.meritoki.retina.application.desktop.model.document.File;
-import com.meritoki.retina.application.desktop.model.document.Page;
-import com.meritoki.retina.application.desktop.model.document.Point;
-import com.meritoki.retina.application.desktop.model.document.Project;
-import com.meritoki.retina.application.desktop.model.document.Script;
-import com.meritoki.retina.application.desktop.model.document.Shape;
-import com.meritoki.retina.application.desktop.model.document.Text;
-import com.meritoki.retina.application.desktop.model.document.User;
-import com.meritoki.retina.application.desktop.model.provider.Provider;
-import com.meritoki.retina.application.desktop.model.vendor.Vendor;
+import com.meritoki.retina.application.desktop.model.command.AddPage;
+import com.meritoki.retina.application.desktop.model.command.AddShape;
+import com.meritoki.retina.application.desktop.model.command.Command;
+import com.meritoki.retina.application.desktop.model.command.MoveShape;
+import com.meritoki.retina.application.desktop.model.command.RemoveShape;
+import com.meritoki.retina.application.desktop.model.command.SetShape;
 
 /**
  * Model is a class that is used to maintain the state of the Project for the
@@ -55,73 +38,65 @@ public class Model {
 
 	private static Logger logger = LogManager.getLogger(Model.class.getName());
 	@JsonIgnore
-	public boolean test = true;
-	@JsonIgnore
-	public boolean rectangle = true;
-	@JsonIgnore
-	public boolean ellipse = true;
-
-	
-	@JsonIgnore
-	public List<Provider> providerList = new ArrayList<>();
-	@JsonIgnore
-	public List<Vendor> vendorList = new ArrayList<>();
-	@JsonIgnore
-	public ModelClient modelClient = new ModelClient();
-	@JsonIgnore
-	public FileClient fileClient = new FileClient();
-	@JsonIgnore
-	public UserClient userClient = new UserClient();
-	
-	@JsonIgnore
 	public Properties properties = null;
-	
 	@JsonIgnore
 	public List<User> userList = null;
-
+	@JsonIgnore
+	public User user = null;
 	@JsonIgnore
 	public Document document = null;
-
 	@JsonIgnore
-	public File file = null;
-//	@JsonIgnore
-//	public Project project;
-	@JsonIgnore
-	public Script script = new Script();
-	@JsonIgnore
-	public Page page = null;
-	@JsonIgnore
-	public Shape shape = null;
-	@JsonIgnore
-	public Text text = null;
-	@JsonIgnore
-	public List<Page> pageList = null;
-	@JsonIgnore
-	public List<Shape> shapeList = null;
-	@JsonIgnore
-	public List<Text> textList = null;
-	@JsonIgnore
-	public Point pressedPoint = new Point();
-	@JsonIgnore
-	public Point releasedPoint = new Point();
-	@JsonIgnore
-	public double scale = 1;
-	@JsonIgnore
-	public List<String> emptyList = new ArrayList<>();
-	@JsonIgnore
-	public List<String> timeList = Arrays.asList("year", "month", "week", "day", "hour", "minute", "second");
-	@JsonIgnore
-	public List<String> spaceList = Arrays.asList("latitude", "longitude", "locale", "location");
-	@JsonIgnore
-	public List<String> energyList = Arrays.asList("letter", "word", "sentance", "temperature", "pressure");
+	public Variable variable = null;
 	
 	public Model() {
-		this.properties = PropertiesController.open("./retina-desktop.properties");
+		this.properties = NodeController.openProperties("./retina-desktop.properties");
 		this.userList = UserController.open();
 		this.document = new Document();
+		Command addPage = new AddPage(this);
+//		Command setPage = new SetPage(this);
+		Command addShape = new AddShape(this);
+		Command setShape = new SetShape(this);
+		Command moveShape = new MoveShape(this);
+		Command removeShape = new RemoveShape(this);
+		this.document.register("addPage", addPage);
+//		this.document.register("setPage", setPage);
+		this.document.register("addShape", addShape);
+		this.document.register("setShape", setShape);
+		this.document.register("moveShape", moveShape);
+		this.document.register("removeShape", removeShape);
+		this.variable = new Variable();
+		if(this.userList.size() == 0) {
+			this.variable.newUser = true;
+			User user = new User();
+			user.name = "anonymous";
+			user.fullName = "anonymous";
+			user.hash = BCryptController.hash("anonymous", 11);
+			user.email = "null";
+			this.userList.add(user);
+		} else {
+			this.variable.loginUser = true;
+		}
 	}
 	
 	public Document getDocument() {
 		return this.document;
+	}
+	
+	public boolean loginUser(String userName, String password) {
+		boolean flag =false;
+		for(User u: userList) {
+			if(u.name.equals(userName)) {
+				if(BCryptController.verifyHash(password, u.hash)) {
+					flag = true;
+					this.user = u;
+				}
+			}
+		}
+		return flag;
+	}
+	
+	public void registerUser(User user) {
+		this.userList.add(user);
+		UserController.save(userList);
 	}
 }

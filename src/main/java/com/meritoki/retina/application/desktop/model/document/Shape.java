@@ -82,8 +82,10 @@ public class Shape {
     public Shape(Shape shape) {
     	this.classification = shape.classification;
     	this.uuid = shape.uuid;
-    	this.pointList = shape.pointList;
-    	this.data = shape.data;
+    	for(Point p : shape.pointList) {
+    		this.pointList.add(new Point(p));
+    	}
+    	this.data = new Data(shape.data);
     }
     
     @JsonIgnore
