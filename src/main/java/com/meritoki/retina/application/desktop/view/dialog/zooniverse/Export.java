@@ -59,15 +59,15 @@ public class Export extends javax.swing.JDialog {
     }
 
     public void initComboBox() {
-    	for(Provider provider: this.model.providerList) {
-    		if(provider instanceof ZooniverseProvider) {
-		        Zooniverse zooniverse = ((ZooniverseProvider)provider).zooniverse;
-		        List<com.meritoki.retina.application.desktop.model.provider.zooniverse.Project> projectList = (zooniverse != null) ? zooniverse.getProjectList() : null;
-		        this.initProjectComboBox(projectList);
-		        this.initSearchProjectComboBox(new ArrayList<Project>());
-		        this.initProjectWorkflowComboBox(new ArrayList<Workflow>());
-    		}
-    	}
+//    	for(Provider provider: this.model.var.providerList) {
+//    		if(provider instanceof ZooniverseProvider) {
+//		        Zooniverse zooniverse = ((ZooniverseProvider)provider).zooniverse;
+//		        List<com.meritoki.retina.application.desktop.model.provider.zooniverse.Project> projectList = (zooniverse != null) ? zooniverse.getProjectList() : null;
+//		        this.initProjectComboBox(projectList);
+//		        this.initSearchProjectComboBox(new ArrayList<Project>());
+//		        this.initProjectWorkflowComboBox(new ArrayList<Workflow>());
+//    		}
+//    	}
     }
 
     public void initProjectComboBox(List<com.meritoki.retina.application.desktop.model.provider.zooniverse.Project> projectList) {

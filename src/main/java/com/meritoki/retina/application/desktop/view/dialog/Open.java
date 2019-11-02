@@ -16,6 +16,8 @@
 package com.meritoki.retina.application.desktop.view.dialog;
 
 import java.io.File;
+
+import com.meritoki.retina.application.desktop.controller.document.DocumentController;
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.view.frame.Main;
 
@@ -80,7 +82,7 @@ public class Open extends javax.swing.JDialog {
     private void openFileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openFileChooserActionPerformed
         File file = this.openFileChooser.getSelectedFile();
         Model model = new Model();
-        model.open(file);
+        model.document = DocumentController.open(file);
         ((Main)this.getParent()).setModel(model);
         ((Main)this.getParent()).init();
         ((Main)this.getParent()).repaint();

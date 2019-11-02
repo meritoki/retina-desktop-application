@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meritoki.retina.application.desktop.model.project;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.meritoki.retina.application.desktop.model.document;
 
 /**
  *
  * @author osvaldo.rodriguez
  */
-public class Layout {
+public class Unit {
+    public static final String DATA = "data";
+    public static final String TIME = "time";
+    public static final String SPACE = "space";
+    public static final String ENERGY = "energy";
+    public String type = DATA;
+    public String value;
     
-    List<Shape> shapeList = new ArrayList<Shape>();
-    
-    public void setShapeList(List<Shape> rectangleList){
-        this.shapeList = rectangleList;
+    public Unit() {
+    	
     }
     
-    public List<Shape> getShapeList(){
-        return this.shapeList;
+    public Unit(Unit unit) {
+    	this.type = unit.type;
+    	this.value = unit.value;
     }
 }

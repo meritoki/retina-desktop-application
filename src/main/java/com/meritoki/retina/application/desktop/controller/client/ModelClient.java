@@ -31,6 +31,10 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.meritoki.retina.application.desktop.model.Model;
+import com.meritoki.retina.application.desktop.model.User;
+import com.meritoki.retina.application.desktop.model.document.Point;
+import com.meritoki.retina.application.desktop.model.document.Shape;
 
 public class ModelClient {
 
@@ -41,10 +45,11 @@ public class ModelClient {
 
 	private static final Logger logger = LoggerFactory.getLogger(ModelClient.class);
 	private String url = "http://localhost:8301";
-	private Properties properties = null;
-
-	public void setProperties(Properties properties) {
-		this.properties = properties;
+	private Model model = null;
+	private Token token = null;
+	
+	public void setModel(Model model) {
+		this.model = model;
 	}
 
 	public boolean checkHealth() {
@@ -73,16 +78,44 @@ public class ModelClient {
 		}
 		return flag;
 	}
-	
+
 	public void updateProject() {
-		
+
 	}
 
-	public void importProject(String project) {
+	public void login(User user) {
+		RestTemplate restTemplate = new RestTemplate();
+		String uri = new String(url + "/authenticate");
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		String body = "{\"username\":\"" + user.name + "\", \"password\":\"" + user.password + "\"}";
+		logger.info(body);
+		HttpEntity<String> entity = new HttpEntity<String>(body, headers);
+		try {
+			String responseJson = restTemplate.postForObject(uri, entity, String.class);
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				this.token = mapper.readValue(responseJson, Token.class);
+				logger.info("login(user) token.token = "+token.token);
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} catch (ResourceAccessException e) {
+			logger.error("ResourceAccessException");
+		}
+	}
+
+	public void uploadProject(String project) {
+		logger.info("uploadProject(" + project + ")");
 		RestTemplate restTemplate = new RestTemplate();
 		String uri = new String(url + "/import");
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.set("Authorization", "Bearer " + this.token.token);
 		HttpEntity<String> entity = new HttpEntity<String>(project, headers);
 		String string = restTemplate.postForObject(uri, entity, String.class);
 		System.out.println(string);
@@ -94,6 +127,19 @@ public class ModelClient {
 		String uri = new String(url + "/project/" + uuid);
 		string = restTemplate.getForObject(uri, String.class);
 		return string;
+	}
+	
+	public Shape getShape(Point point) {
+//		RestTemplate restTemplate = new RestTemplate();
+//		String uri = new String(url + "/project/");
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setContentType(MediaType.APPLICATION_JSON);
+//		headers.set("Authorization", "Bearer " + this.token.token);
+//		HttpEntity<String> entity = new HttpEntity<String>(project, headers);
+//		String string = restTemplate.postForObject(uri, entity, String.class);
+//		System.out.println(string);
+		
+		return null;
 	}
 
 //    public static void main(String args[]) {

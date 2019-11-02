@@ -13,13 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meritoki.retina.application.desktop.model.project;
+package com.meritoki.retina.application.desktop.model.document;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class Text {
 	
 	public String value = "";
+	
+	public Text() {
+		
+	}
+	
+	public Text(Text text) {
+		this.value = text.value;
+	}
 
 	@JsonProperty
 	public void setValue(String value) {

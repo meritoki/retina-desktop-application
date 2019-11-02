@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meritoki.retina.application.desktop.model.project;
+package com.meritoki.retina.application.desktop.model.document;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -51,24 +51,6 @@ import com.meritoki.retina.application.desktop.model.vendor.Vendor;
 public class Project implements Serializable {
     
 	private static final long serialVersionUID = 1L;
-
-	public static void main(String[] args) throws IOException{
-        Project project = new Project();
-//        File file = new File("~/test.json");
-//        project.initTest();
-        ObjectMapper mapper = new ObjectMapper();
-        Model model = new Model();
-        model.open(new java.io.File("/home/jorodriguez/test.json"));
-//        mapper.setVisibility(JsonMethod.FIELD, Visibility.ANY);
-//        mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
-//        mapper.writeValue(file, project);
-//        project = mapper.readValue(file, Project.class);
-        String jsonInString = mapper.writeValueAsString(model.project);
-        System.out.println(jsonInString);
-        ModelClient modelClient = new ModelClient();
-        modelClient.importProject(jsonInString);
-        System.out.println(project);
-    }
     
     static Logger logger = LogManager.getLogger(Project.class.getName());
     @JsonProperty
@@ -77,6 +59,8 @@ public class Project implements Serializable {
     public List<Page> pageList = new ArrayList<>();
     @JsonIgnore
     public int index = 0;
+    @JsonIgnore
+    public File file = new File();
     @JsonProperty
     public List<Layout> layoutList = new ArrayList<>();
 
@@ -85,58 +69,65 @@ public class Project implements Serializable {
         this.uuid = UUID.randomUUID().toString();
     }
     
+    public Project(Project project) {
+    	this.uuid = project.uuid;
+    	for(Page p : project.pageList) {
+    		this.pageList.add(new Page(p));
+    	}
+    }
+    
     @JsonIgnore
     public void initTest(){
         Page page = new Page();
         File file = new File();
         file.name = "01.jpg";
-        file.path = "./data/page";
+        file.path = "./data/image";
         page.fileList.add(file);
         file = new File();
         file.name = "02.jpg";
-        file.path = "./data/page";
+        file.path = "./data/image";
         page.fileList.add(file);
         pageList.add(page);
         page = new Page();
         file = new File();
         file.name = "02.jpg";
-        file.path = "./data/page";
+        file.path = "./data/image";
         page.fileList.add(file);
         pageList.add(page);
         page = new Page();
         file = new File();
         file.name = "03.jpg";
-        file.path = "./data/page";
+        file.path = "./data/image";
         page.fileList.add(file);
         pageList.add(page);
         page = new Page();
         file = new File();
         file.name = "04.jpg";
-        file.path = "./data/page";
+        file.path = "./data/image";
         page.fileList.add(file);
         pageList.add(page);
         page = new Page();
         file = new File();
         file.name = "05.jpg";
-        file.path = "./data/page";
+        file.path = "./data/image";
         page.fileList.add(file);
         pageList.add(page);
         page = new Page();
         file = new File();
         file.name = "06.jpg";
-        file.path = "./data/page";
+        file.path = "./data/image";
         page.fileList.add(file);
         pageList.add(page);
         page = new Page();
         file = new File();
         file.name = "07.jpg";
-        file.path = "./data/page";
+        file.path = "./data/image";
         page.fileList.add(file);
         pageList.add(page);
         page = new Page();
         file = new File();
         file.name = "08.jpg";
-        file.path = "./data/page";
+        file.path = "./data/image";
         page.fileList.add(file);
         pageList.add(page);
         this.setIndex(0);
@@ -188,6 +179,7 @@ public class Project implements Serializable {
 	 * @param point
 	 * @return
 	 */
+	@JsonIgnore
 	public File getFile(Point point) {
 		Page page = this.getPage();
 		File shape = (page != null) ? page.getFile(point) : null;
@@ -199,8 +191,9 @@ public class Project implements Serializable {
 	 * @param point
 	 * @return
 	 */
+	@JsonIgnore
 	public Shape getShape(Point point) {
-//		logger.info("getShape("+point+")");
+		logger.trace("getShape("+point+")");
 		Page page = this.getPage();
 		Shape shape = (page != null) ? page.getShape(point) : null;
 		return shape;
@@ -210,6 +203,7 @@ public class Project implements Serializable {
 	 * Funtion gets Shape from File of current Page based on index in current File.
 	 * @return
 	 */
+	@JsonIgnore
 	public Shape getShape() {
 		Page page = this.getPage();
 		File file = (page != null) ? page.getFile() : null;
@@ -217,38 +211,43 @@ public class Project implements Serializable {
 		return shape;
 	}
 	
+	@JsonIgnore
 	public List<Shape> getShapeList() {
 		Page page = this.getPage();
 		List<Shape> shapeList = (page != null) ? page.getShapeList():null;
 		return shapeList;
 	}
 	
+	@JsonIgnore
 	public BufferedImage getBufferedImage() {
 		Page page = this.getPage();
-		if(page.getBufferedImage() == null) 
+		if(page != null && page.getBufferedImage() == null) 
 			page.setBufferedImage();
 		BufferedImage bufferedImage = (page != null) ? page.getBufferedImage() : null;
 		return bufferedImage;
 	}
 	
+	@JsonIgnore
 	public List<File> getFileList() {
 		Page page = this.getPage();
 		List<File> fileList = (page != null) ? page.getFileList(): null;
 		return fileList;
 	}
 	
+	@JsonIgnore
 	public boolean containsShape(Shape shape) {
 		Page page = this.getPage();
 		return true;
 	}
 
-
+	@JsonIgnore
 	public void setShape(String uuid) {
     	logger.trace("setShape("+uuid+")");
     	Page page = this.getPage();
     	page.setShape(uuid);
     }
     
+	@JsonIgnore
     public void setFile(String uuid) {
     	logger.trace("setFile("+uuid+")");
     	Page page = this.getPage();
@@ -291,12 +290,14 @@ public class Project implements Serializable {
         }
     }
     
+    @JsonIgnore
     public void addPage(Page page) {
     	logger.info("addPage("+page+")");
     	this.pageList.add(page);
     	
     }
     
+    @JsonIgnore
     public void addShape(Shape shape) {
 		logger.debug("addShape("+shape+")");
 		Page page = this.getPage();
@@ -305,7 +306,7 @@ public class Project implements Serializable {
 		}
 	}
 
-
+    @JsonIgnore
 	public void addFile(File file) {
 		logger.info("addFile("+file+")");
 		Page page = this.getPage();
@@ -314,6 +315,7 @@ public class Project implements Serializable {
 		}
 	}
 	
+    @JsonIgnore
 	public int intersectShape(Point point) {
 		logger.trace("intersectShape("+point+")");
 		Page page = this.getPage();
@@ -321,6 +323,7 @@ public class Project implements Serializable {
 		return selection;
 	}
 	
+    @JsonIgnore
 	public void moveShape() {
 		
 	}
@@ -329,16 +332,16 @@ public class Project implements Serializable {
     @Override
     public String toString(){
         String string = "";
-        if(logger.isTraceEnabled()){
+//        if(logger.isTraceEnabled()){
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             try {
                 string = ow.writeValueAsString(this);
             } catch (IOException ex) {
                 java.util.logging.Logger.getLogger(Shape.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else {
-            string = this.uuid;
-        }
+//        } else {
+//            string = this.uuid;
+//        }
         return string;
     }
 }

@@ -17,8 +17,9 @@ package com.meritoki.retina.application.desktop.view.dialog;
 
 import java.io.File;
 
+import com.meritoki.retina.application.desktop.controller.document.DocumentController;
 import com.meritoki.retina.application.desktop.model.Model;
-import com.meritoki.retina.application.desktop.model.project.Project;
+import com.meritoki.retina.application.desktop.model.document.Project;
 import com.meritoki.retina.application.desktop.view.frame.Main;
 
 /**
@@ -78,7 +79,7 @@ public class SaveAs extends javax.swing.JDialog {
 
     private void saveFileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveFileChooserActionPerformed
         File file = this.saveFileChooser.getSelectedFile();
-        ((Main)this.getParent()).model.saveAs(file);
+        DocumentController.save(file, ((Main)this.getParent()).model.document);
         this.setVisible(false);
     }//GEN-LAST:event_saveFileChooserActionPerformed
 

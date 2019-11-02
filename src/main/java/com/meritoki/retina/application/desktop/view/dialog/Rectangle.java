@@ -28,14 +28,15 @@ import javax.swing.DefaultListModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.meritoki.retina.application.desktop.model.Document;
 import com.meritoki.retina.application.desktop.model.Model;
-import com.meritoki.retina.application.desktop.model.project.Data;
-import com.meritoki.retina.application.desktop.model.project.File;
-import com.meritoki.retina.application.desktop.model.project.Page;
-import com.meritoki.retina.application.desktop.model.project.Project;
-import com.meritoki.retina.application.desktop.model.project.Shape;
-import com.meritoki.retina.application.desktop.model.project.Text;
-import com.meritoki.retina.application.desktop.model.project.Unit;
+import com.meritoki.retina.application.desktop.model.document.Data;
+import com.meritoki.retina.application.desktop.model.document.File;
+import com.meritoki.retina.application.desktop.model.document.Page;
+import com.meritoki.retina.application.desktop.model.document.Project;
+import com.meritoki.retina.application.desktop.model.document.Shape;
+import com.meritoki.retina.application.desktop.model.document.Text;
+import com.meritoki.retina.application.desktop.model.document.Unit;
 import com.meritoki.retina.application.desktop.view.frame.Main;
 
 /**
@@ -79,42 +80,42 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     }
 
     public void init() {
-        if (this.model.project != null) {
-            this.initLabel();
-            this.initList();
-            this.initComboBox();
-        }
+        this.initLabel();
+        this.initList();
+        this.initComboBox();
     }
 
     public void initLabel() {
         logger.debug("initLabel()");
-        Project project = this.model.project;
-        Page page = (project != null) ? this.model.project.getPage() : null;
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+        Page page = (project != null) ? project.getPage() : null;
         File file = (page != null) ? page.getFile() : null;
         Shape shape = (file != null) ? file.getShape() : null;
-        List<Shape> shapeList = (page != null) ? file.shapeList : null;
-        Data data = (shape != null) ? shape.data : null;
-        List<Text> textList = (data != null) ? data.getTextList() : null;
+        List<Text> textList = (shape != null) ? shape.getTextList() : null;
     }
 
     public void initList() {
         logger.debug("initList()");
-        Page page = this.model.project.getPage();
-        int index = (page != null) ? page.getIndex() : 0;
-//        Shape shape = (page != null) ? page.getShape() : null;
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+        Page page = (project != null)? project.getPage(): null;
         List<Shape> shapeList = (page != null) ? page.getShapeList() : null;
-//        Data data = (shape != null) ? shape.data : null;
-//        List<Text> textList = (data != null) ? data.getTextList() : null;
         this.initRectangleList(shapeList);
-        this.setRectangleListSelectedIndex(index);
+        Shape shape = (page != null) ? page.getShape() : null;
+        if(shape != null) {
+        	this.setShapeListSelectedUUID(shape.uuid);
+        }
     }
 
     public void initComboBox() {
         logger.debug("initComboBox()");
-        Page image = this.model.project.getPage();
-        Shape rectangle = (image != null) ? image.getFile().getShape() : null;
-        Data data = (rectangle != null) ? rectangle.data : null;
-        List<Text> textList = (data != null) ? data.getTextList() : null;
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+        Page page = (project != null) ? project.getPage() : null;
+        Shape shape = (page != null) ? page.getFile().getShape() : null;
+        Data data = (shape != null) ? shape.data : null;
+        List<Text> textList = (shape != null) ? shape.getTextList() : null;
         this.initTextValueComboBox(textList);
         List<String> unitTypeList = new ArrayList<>();
         unitTypeList.add("data");
@@ -126,24 +127,24 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
             this.unitTypeComboBox.setSelectedItem(data.unit.type);
             switch (data.unit.type) {
                 case "data": {
-                    this.initUnitValueComboBox(this.model.emptyList);
+                    this.initUnitValueComboBox(this.model.variable.emptyList);
                     break;
                 }
                 case "time": {
-                    this.initUnitValueComboBox(this.model.timeList);
+                    this.initUnitValueComboBox(this.model.variable.timeList);
                     break;
                 }
                 case "space": {
-                    this.initUnitValueComboBox(this.model.spaceList);
+                    this.initUnitValueComboBox(this.model.variable.spaceList);
                     break;
                 }
                 case "energy": {
-                    this.initUnitValueComboBox(this.model.energyList);
+                    this.initUnitValueComboBox(this.model.variable.energyList);
                     break;
                 }
             }
         } else {
-            this.initUnitValueComboBox(this.model.emptyList);
+            this.initUnitValueComboBox(this.model.variable.emptyList);
         }
     }
 
@@ -162,11 +163,13 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         this.textValueComboBox.setModel(new DefaultComboBoxModel(array));
         boolean flag = this.textValueDefaultCheckBox.isSelected();
         if (flag) {
-        	Page page = this.model.project.getPage();
+        	Document document = (this.model != null) ? this.model.getDocument() : null;
+            Project project = (document != null) ? document.getProject() : null;
+            Page page = (project != null) ? project.getPage() : null;
             Shape shape = (page != null)?page.getFile().getShape():null;
             Data data = (shape != null)?shape.getData():null;
             if(data != null) {
-            	this.textValueComboBox.setSelectedItem(data.getDefaultText().value);
+            	this.textValueComboBox.setSelectedItem(shape.getDefaultText().value);
             }
         }
     }
@@ -185,19 +188,19 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
                 int selectedIndex = unitTypeComboBox.getSelectedIndex();
                 switch (selectedIndex) {
                     case 0: {
-                        initUnitValueComboBox(model.emptyList);
+                        initUnitValueComboBox(model.variable.emptyList);
                         break;
                     }
                     case 1: {
-                        initUnitValueComboBox(model.timeList);
+                        initUnitValueComboBox(model.variable.timeList);
                         break;
                     }
                     case 2: {
-                        initUnitValueComboBox(model.spaceList);
+                        initUnitValueComboBox(model.variable.spaceList);
                         break;
                     }
                     case 3: {
-                        initUnitValueComboBox(model.energyList);
+                        initUnitValueComboBox(model.variable.energyList);
                         break;
                     }
                 }
@@ -228,17 +231,24 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         this.rectangleList.setModel(defaultListModel);
     }
 
-    public void setRectangleListSelectedIndex(int index) {
-        this.rectangleList.setSelectedIndex(index);
+//    public void setRectangleListSelectedIndex(int index) {
+//        this.rectangleList.setSelsetSelectedIndex(index);
+//    }
+    public void setShapeListSelectedUUID(String uuid) {
+        this.rectangleList.setSelectedValue(uuid, true);
     }
+
 
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 1) {
-            Page image = this.model.project.getPage();
-            if (image != null) {
+            Page page = this.model.getDocument().getPage();
+            if (page != null) {
                 String selectedItem = (String) this.rectangleList.getSelectedValue();
-                image.getFile().setShape(selectedItem);
+                logger.info("mouseClicked(e) selectedItem="+selectedItem);
+                Document document = (this.model != null) ? this.model.getDocument() : null;
+                Project project = (document != null) ? document.getProject() : null;
+                project.setShape(selectedItem);
                 this.getParent().repaint();
                 this.init();
             }
@@ -271,27 +281,29 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        Page image = this.model.project.getPage();
-        if (image != null) {
-            int index = image.getIndex();
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+        Page page = (project != null) ? project.getPage() : null;
+        if (page != null) {
+            int index = page.getIndex();
             switch (keyCode) {
                 case KeyEvent.VK_LEFT: {
                     logger.debug("RectangleDialog.keyPressed LEFT");
-                    index = image.getIndex();
+                    index = page.getIndex();
                     index = index - 1;
-                    image.setIndex(index);
+                    page.setIndex(index);
                     this.init();
-                    this.setRectangleListSelectedIndex(index);
+//                    this.setRectangleListSelectedIndex(index);
                     this.getParent().repaint();
                     break;
                 }
                 case KeyEvent.VK_RIGHT: {
                     logger.debug("RectangleDialog.keyPressed RIGHT");
-                    index = image.getIndex();
+                    index = page.getIndex();
                     index = index + 1;
-                    image.setIndex(index);
+                    page.setIndex(index);
                     this.init();
-                    this.setRectangleListSelectedIndex(index);
+//                    this.setRectangleListSelectedIndex(index);
                     this.getParent().repaint();
                     break;
                 }
@@ -314,9 +326,11 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     @Override
     public void keyReleased(KeyEvent e) {
         String uuid = (String) rectangleList.getSelectedValue();
-        Page image = this.model.project.getPage();
-        if (image != null && !uuid.equals(image.getFile().getShape().uuid)) {
-            this.model.project.getPage().getFile().setShape(uuid);
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+        Page page = (project != null) ? project.getPage() : null;
+        if (page != null && !uuid.equals(page.getFile().getShape().uuid)) {
+            project.getPage().getFile().setShape(uuid);
             this.init();
             this.getParent().repaint();
         }
@@ -353,6 +367,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         jLabel1 = new javax.swing.JLabel();
         rectangleButton = new javax.swing.JButton();
         ellipseButton = new javax.swing.JButton();
+        setTextButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -437,6 +452,13 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
             }
         });
 
+        setTextButton.setText("Set");
+        setTextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setTextButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -496,6 +518,10 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
                                 .addComponent(ellipseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(138, 138, 138)
+                .addComponent(setTextButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -519,7 +545,9 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
                     .addComponent(valueLabel)
                     .addComponent(textValueDefaultCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(textUnitSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(setTextButton)
+                .addGap(19, 19, 19)
+                .addComponent(textUnitSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(unitLabel)
                 .addGap(14, 14, 14)
@@ -564,12 +592,13 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         String value = this.textInputTextField.getText().trim();
         Text text = new Text();
         text.value = value;
-        Page page = this.model.project.getPage();
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+        Page page = (project != null) ? project.getPage() : null;
         Shape shape = (page != null)?page.getFile().getShape():null;
-        Data data = (shape != null)?shape.getData():null;
-        if(data != null) {
-        	data.addText(text);
-        	System.out.println(data.getTextMap());
+        if(shape != null) {
+        	shape.addText(text);
+        	System.out.println(shape.getTextMap());
         	this.setModel(this.model);
         }
         
@@ -578,11 +607,12 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     private void textValueDefaultCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textValueDefaultCheckBoxActionPerformed
         boolean flag = this.textValueDefaultCheckBox.isSelected();
         if (flag) {
-        	Page page = this.model.project.getPage();
+        	Document document = (this.model != null) ? this.model.getDocument() : null;
+            Project project = (document != null) ? document.getProject() : null;
+            Page page = (project != null) ? project.getPage() : null;
             Shape shape = (page != null)?page.getFile().getShape():null;
-            Data data = (shape != null)?shape.getData():null;
-            if(data != null) {
-            	this.textValueComboBox.setSelectedItem(data.getDefaultText().value);
+            if(shape != null) {
+            	this.textValueComboBox.setSelectedItem(shape.getDefaultText().value);
             }
         }
     }//GEN-LAST:event_textValueDefaultCheckBoxActionPerformed
@@ -593,51 +623,65 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
 
     private void deleteRectangleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRectangleButtonActionPerformed
         int index = this.rectangleList.getSelectedIndex();
-        Page image = this.model.project.getPage();
-        image.getShapeList().remove(index);
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+        Page page = (project != null) ? project.getPage() : null;
+        page.getShapeList().remove(index);
         this.init();
         ((Main) this.getParent()).repaint();
     }//GEN-LAST:event_deleteRectangleButtonActionPerformed
 
     private void applyUnitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyUnitButtonActionPerformed
         logger.info("applyUnitButtonActionPerformed(...)");
-    	Page page = (this.model.project != null) ? this.model.project.getPage() : null;
+        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Project project = (document != null) ? document.getProject() : null;
+        Page page = (project != null) ? project.getPage() : null;
         Shape shape = (page != null) ? page.getFile().getShape() : null;
         Data data = (shape != null) ? shape.getData() : null;
         if (data != null) {
             String unitType = (String) this.unitTypeComboBox.getSelectedItem();
             switch (unitType) {
-                case "Data": {
+                case "data": {
                     data.unit.type = Unit.DATA;
                     break;
                 }
-                case "Time": {
+                case "time": {
                     data.unit.type = Unit.TIME;
                     break;
                 }
-                case "Space": {
+                case "space": {
                     data.unit.type = Unit.SPACE;
                     break;
                 }
-                case "Energy": {
+                case "energy": {
                     data.unit.type = Unit.ENERGY;
                     break;
                 }
             }
             data.unit.value = (String) this.unitValueComboBox.getSelectedItem();
-            System.out.println(data.unit.value);
+            logger.info("applyUnitButtonActionPerformed(e) data.unit.value="+data.unit.value);
+            logger.info("applyUnitButtonActionPerformed(e) data.unit.type="+data.unit.type);
         }
     }//GEN-LAST:event_applyUnitButtonActionPerformed
 
     private void rectangleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rectangleButtonActionPerformed
-        this.model.rectangle = true;
-        this.model.ellipse = false;
+        this.model.variable.rectangle = true;
+        this.model.variable.ellipse = false;
     }//GEN-LAST:event_rectangleButtonActionPerformed
 
     private void ellipseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ellipseButtonActionPerformed
-        this.model.rectangle = false;
-        this.model.ellipse = true;
+        this.model.variable.rectangle = false;
+        this.model.variable.ellipse = true;
     }//GEN-LAST:event_ellipseButtonActionPerformed
+
+    private void setTextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setTextButtonActionPerformed
+       Shape shape = this.model.getDocument().getShape();
+       Data data = (shape !=null) ? shape.data : null;
+       Text text = (data != null) ? data.text : null;
+       String value = (String)this.textValueComboBox.getSelectedItem();
+       text.value = value;
+       
+    }//GEN-LAST:event_setTextButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -695,6 +739,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     private javax.swing.JButton rectangleButton;
     private javax.swing.JList rectangleList;
     private javax.swing.JScrollPane rectangleScrollPane;
+    private javax.swing.JButton setTextButton;
     private javax.swing.JTextField textInputTextField;
     private javax.swing.JLabel textLabel;
     private javax.swing.JSeparator textUnitSeparator;

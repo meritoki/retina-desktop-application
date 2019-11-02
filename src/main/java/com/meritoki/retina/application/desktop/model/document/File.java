@@ -1,4 +1,4 @@
-package com.meritoki.retina.application.desktop.model.project;
+package com.meritoki.retina.application.desktop.model.document;
 
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -17,6 +17,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
+import com.meritoki.retina.application.desktop.controller.system.NodeController;
+
 public class File {
 	@JsonIgnore
     static Logger logger = LogManager.getLogger(File.class.getName());
@@ -30,18 +32,18 @@ public class File {
     public String cachePath = null;
     @JsonIgnore
     public BufferedImage bufferedImage = null;
-    
+    @JsonIgnore
     public Dimension dimension = null;
     @JsonProperty
     public double width = 0;
     @JsonProperty
     public double height = 0;
-    @JsonProperty 
-    public double scale = 1;
-    @JsonProperty
-    public double margin = 0;
     @JsonProperty
     public double offset = 0;
+    @JsonProperty
+    public double margin = 0;
+    @JsonProperty 
+    public double scale = 1;
     /**
      * Current index of the shapeList.
      */
@@ -184,16 +186,11 @@ public class File {
 	@JsonIgnore
 	public void setBufferedImage() {
         if (this.path != null && this.name != null) {
-            try {
-            	logger.info("setBufferedImage() "+this.path + "/" + this.name);
-                this.bufferedImage = ImageIO.read(new java.io.File(this.path + "/" + this.name));
-                this.width = this.bufferedImage.getWidth();
-                this.height = this.bufferedImage.getHeight();
-                logger.info("getBufferedImage() width="+width);
-                logger.info("getBufferedImage() height="+height);
-            } catch (IOException ex) {
-                logger.error(ex);
-            }
+        	this.bufferedImage = NodeController.openBufferedImage(this.path,this.name);
+        	if(this.bufferedImage != null) {
+	        	this.width = this.bufferedImage.getWidth();
+	        	this.height = this.bufferedImage.getHeight();
+        	}
         }
 	}
 

@@ -1,4 +1,4 @@
-package com.meritoki.retina.application.desktop.model.project;
+package com.meritoki.retina.application.desktop.model.document;
 
 import java.io.IOException;
 import java.util.logging.Level;

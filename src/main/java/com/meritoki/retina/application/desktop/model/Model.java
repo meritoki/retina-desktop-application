@@ -1,7 +1,9 @@
 package com.meritoki.retina.application.desktop.model;
 
+import java.io.FileInputStream;
 //import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -10,164 +12,91 @@ import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonMethod;
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
 
-import com.meritoki.retina.application.desktop.controller.client.FileClient;
-import com.meritoki.retina.application.desktop.controller.client.ModelClient;
-import com.meritoki.retina.application.desktop.controller.client.Status;
-import com.meritoki.retina.application.desktop.model.project.File;
-import com.meritoki.retina.application.desktop.model.project.Page;
-import com.meritoki.retina.application.desktop.model.project.Point;
-import com.meritoki.retina.application.desktop.model.project.Project;
-import com.meritoki.retina.application.desktop.model.project.Shape;
-import com.meritoki.retina.application.desktop.model.project.Text;
-import com.meritoki.retina.application.desktop.model.provider.Provider;
-import com.meritoki.retina.application.desktop.model.provider.zooniverse.Zooniverse;
-import com.meritoki.retina.application.desktop.model.provider.zooniverse.ZooniverseProvider;
-import com.meritoki.retina.application.desktop.model.vendor.Vendor;
-import com.meritoki.retina.application.desktop.model.vendor.ephesoft.EphesoftVendor;
-import com.meritoki.retina.application.desktop.model.vendor.microsoft.MicrosoftVendor;
+import com.meritoki.retina.application.desktop.controller.security.BCryptController;
+import com.meritoki.retina.application.desktop.controller.system.NodeController;
+import com.meritoki.retina.application.desktop.controller.user.UserController;
+import com.meritoki.retina.application.desktop.model.command.AddPage;
+import com.meritoki.retina.application.desktop.model.command.AddShape;
+import com.meritoki.retina.application.desktop.model.command.Command;
+import com.meritoki.retina.application.desktop.model.command.MoveShape;
+import com.meritoki.retina.application.desktop.model.command.RemoveShape;
+import com.meritoki.retina.application.desktop.model.command.SetShape;
 
 /**
- * Model is a class that is used to maintain the state of the 
- * Project for the desktop application locally and remotely
- * The class wraps method calls to set the Project and its attribute.
- * These calls are intercepted by the class to create a command stack.
- * This allows support for Do/Undo/Redo operations
+ * Model is a class that is used to maintain the state of the Project for the
+ * desktop application locally and remotely The class wraps method calls to set
+ * the Project and its attribute. These calls are intercepted by the class to
+ * create a command stack. This allows support for Do/Undo/Redo operations. This
+ * class periodically, writes itself in json to file.
+ * 
  * @author jorodriguez
  *
  */
 public class Model {
-	
+
 	private static Logger logger = LogManager.getLogger(Model.class.getName());
-    public boolean test = true;
-    public boolean rectangle = true;
-    public boolean ellipse = true;
+	@JsonIgnore
 	public Properties properties = null;
-    public List<Provider> providerList = new ArrayList<>();
-    public List<Vendor> vendorList = new ArrayList<>();
-	public ModelClient modelClient = new ModelClient();
-    public FileClient fileClient = new FileClient();
-    public LinkedList<Command> undoStack = new LinkedList<>();
-    public LinkedList<Command> redoStack = new LinkedList<>();
-    public File file = null;
-	public Project project;
-	public Script script = new Script();
-	//Project helpers
-	public Page page = null;
-	public Shape shape = null;
-	public Text text = null;
-	public List<Page> pageList = null;
-	public List<Shape> shapeList = null;
-	public List<Text> textList = null;
-	public Point pressedPoint = new Point();
-	public Point releasedPoint = new Point();
-	public double scale = 1;
-	
-	public List<String> emptyList = new ArrayList<>();
-    public List<String> timeList = Arrays.asList("year", "month", "week", "day", "hour", "minute", "second");
-    public List<String> spaceList = Arrays.asList("latitude", "longitude", "locale", "location");
-    public List<String> energyList = Arrays.asList("letter", "word", "sentance", "temperature", "pressure");
+	@JsonIgnore
+	public List<User> userList = null;
+	@JsonIgnore
+	public User user = null;
+	@JsonIgnore
+	public Document document = null;
+	@JsonIgnore
+	public Variable variable = null;
 	
 	public Model() {
-		this.properties = Configuration.open("./retina-desktop.properties");
-		if (this.test) {
-			this.project = new Project();
-			this.project.initTest();
-        }
-		this.providerList.add(new ZooniverseProvider());
-		this.vendorList.add(new MicrosoftVendor());
-		this.vendorList.add(new EphesoftVendor());
+		this.properties = NodeController.openProperties("./retina-desktop.properties");
+		this.userList = UserController.open();
+		this.document = new Document();
+		Command addPage = new AddPage(this);
+//		Command setPage = new SetPage(this);
+		Command addShape = new AddShape(this);
+		Command setShape = new SetShape(this);
+		Command moveShape = new MoveShape(this);
+		Command removeShape = new RemoveShape(this);
+		this.document.register("addPage", addPage);
+//		this.document.register("setPage", setPage);
+		this.document.register("addShape", addShape);
+		this.document.register("setShape", setShape);
+		this.document.register("moveShape", moveShape);
+		this.document.register("removeShape", removeShape);
+		this.variable = new Variable();
+		if(this.userList.size() == 0) {
+			this.variable.newUser = true;
+			User user = new User();
+			user.name = "anonymous";
+			user.fullName = "anonymous";
+			user.hash = BCryptController.hash("anonymous", 11);
+			user.email = "null";
+			this.userList.add(user);
+		} else {
+			this.variable.loginUser = true;
+		}
 	}
 	
-    @JsonIgnore
-    public void save() {
-        logger.info("save()");
-        ObjectMapper mapper = new ObjectMapper();
-        if(!this.modelClient.checkHealth()) {
-        	if(this.file != null) {
-		        mapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY);
-		        mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
-		        try {
-		            mapper.writeValue(new java.io.File(this.file.path+"/"+this.file.name), this.project);
-		            logger.info("saved...");
-		        } catch (IOException ex) {
-		           logger.error(ex);
-		        }
-        	}
-        } else {
-        	try {
-				this.modelClient.importProject(mapper.writeValueAsString(this.project));
-			} catch (JsonGenerationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+	public Document getDocument() {
+		return this.document;
+	}
+	
+	public boolean loginUser(String userName, String password) {
+		boolean flag =false;
+		for(User u: userList) {
+			if(u.name.equals(userName)) {
+				if(BCryptController.verifyHash(password, u.hash)) {
+					flag = true;
+					this.user = u;
+				}
 			}
-        }
-    }
-    
-    @JsonIgnore
-    public void saveAs(java.io.File file) {
-        logger.info("saveAs("+file+")");
-        ObjectMapper mapper = new ObjectMapper();
-        if(!this.modelClient.checkHealth()) {
-	        mapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY);
-	        mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
-	        try {
-	            mapper.writeValue(file, this.project);
-	            logger.info("saved...");
-	        } catch (IOException ex) {
-	           logger.error(ex);
-	        }
-        } else {
-        	try {
-				this.modelClient.importProject(mapper.writeValueAsString(this.project));
-			} catch (JsonGenerationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        }
-    }
-    
-    @JsonIgnore
-    public void open(java.io.File file) {
-        logger.info("open("+file+")");
-        ObjectMapper mapper = new ObjectMapper();
-        if(!this.modelClient.checkHealth()) {
-	        mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
-	        try {
-	            this.project = mapper.readValue(file, Project.class);
-	            this.file = new File();
-	            this.file.path = file.getAbsolutePath();
-	            this.file.name = file.getName();
-	            logger.info("opened...");
-	        } catch (JsonGenerationException e) {
-	            logger.error(e);
-	        } catch (JsonMappingException e) {
-	            logger.error(e);
-	        } catch (IOException e) {
-	            logger.error(e);
-	        }
-        } else {
-//        	this.modelClient();
-        }
-    }
+		}
+		return flag;
+	}
+	
+	public void registerUser(User user) {
+		this.userList.add(user);
+		UserController.save(userList);
+	}
 }

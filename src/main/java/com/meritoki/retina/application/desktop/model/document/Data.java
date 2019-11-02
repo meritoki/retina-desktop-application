@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meritoki.retina.application.desktop.model.project;
+package com.meritoki.retina.application.desktop.model.document;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,13 +31,21 @@ import org.codehaus.jackson.map.ObjectWriter;
 
 public class Data {
     private static Logger logger = LogManager.getLogger(Data.class.getName());
+    @JsonProperty
     public String uuid;
+    @JsonProperty
     public Unit unit = new Unit();
+    @JsonProperty
     public Text text = new Text();
-    public List<Text> textList = new ArrayList<>();
     
     public Data(){
         this.uuid = UUID.randomUUID().toString();
+    }
+    
+    public Data(Data data) {
+    	this.uuid = data.uuid;
+    	this.unit = new Unit(data.unit);
+    	this.text = new Text(data.text);
     }
     
     @JsonIgnore
@@ -45,59 +53,10 @@ public class Data {
         this.uuid = uuid;
     }
     
-    @JsonProperty
-    public void addText(Text text){
-        logger.debug("addText("+text.value+")");
-        this.textList.add(text);
-    }
-    
-    /**
-     * Function creates a Map from the textList that shows the frequency that a text value
-     * has been input by a user
-     * @return
-     */
     @JsonIgnore
-    public Map<String, Integer> getTextMap() {
-    	int count = 0;
-    	Map<String,Integer> textMap = new HashMap<>();
-    	for(Text text: this.textList) {
-          count = (textMap.get(text.value)!=null)?textMap.get(text.value):0;
-          ++count;
-          textMap.put(text.value, count);
-    	}
-    	return textMap;
-    }
-    
-    /**
-     * Function returns the text value with the highest frequency of input
-     * @return
-     */
-    @JsonIgnore
-    public Text getDefaultText(){
-        int max = 0;
-        Text text = new Text();
-        int value = 0;
-        for(Map.Entry<String, Integer> entry : this.getTextMap().entrySet()){
-        	value = entry.getValue().intValue();
-            if(value > max){
-            	max = value;
-                text = new Text();
-                text.value = entry.getKey();
-            }
-        }
-        return text;
-    }
-    
-    @JsonProperty
-    public List<Text> getTextList(){
-        List<Text> textList = new ArrayList<>();
-        Text text = null;
-        for(Map.Entry<String, Integer> entry : this.getTextMap().entrySet()){
-            text = new Text();
-            text.value = entry.getKey();
-            textList.add(text);
-        }
-        return textList;
+    public void setText(Text text) {
+    	logger.info("setText("+text+")");
+    	this.text = text;
     }
     
     @JsonProperty

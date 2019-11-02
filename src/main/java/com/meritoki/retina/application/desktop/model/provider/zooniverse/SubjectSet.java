@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.meritoki.retina.application.desktop.model.project.Shape;
+import com.meritoki.retina.application.desktop.model.document.Shape;
 
 /**
  *
@@ -50,7 +50,7 @@ public class SubjectSet {
     public void setName(String name) {
         this.name = name;
     }
-    public List<com.meritoki.retina.application.desktop.model.project.Shape> rectangleList = new ArrayList<>();
+    public List<com.meritoki.retina.application.desktop.model.document.Shape> rectangleList = new ArrayList<>();
 
     public String getTitle() {
         return title;
