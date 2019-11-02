@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -49,7 +51,8 @@ public class Document {
         modelClient.uploadProject(jsonInString);
         System.out.println(project);
     }
-
+	@JsonIgnore
+    static Logger logger = LogManager.getLogger(Document.class.getName());
 	@JsonProperty
 	public Project project = null;
 	@JsonProperty
@@ -75,8 +78,14 @@ public class Document {
         if (command == null) {
             throw new IllegalStateException("no command registered for " + commandName);
         }
-        this.state.undoStack.push(command);
         command.execute();
+        Command newCommand = new Command();
+        newCommand.name = command.name;
+        newCommand.model = command.model;
+        newCommand.user = command.user;
+        newCommand.operationList = command.operationList;
+        this.state.undoStack.push(newCommand);
+        command.reset();
     }
 	
 	public void addUser(User user) {
@@ -151,18 +160,83 @@ public class Document {
 	public void undo() {
 		if (this.state.undoStack.size() > 0) {
 			Command command = this.state.undoStack.pop();
+			logger.info("undo() command.name="+command.name);
 			Operation operation = null;
-			for (int i = 0; i < command.operationList.size(); i++) {
-				operation = command.operationList.get(i);
-				if (operation.sign == 1) {
-					if (operation.object instanceof Shape) {
-						this.project.getPage().getFile().removeShape((Shape) operation.object);
-					}
-				} else if (operation.sign == 0) {
-					if (operation.object instanceof Shape) {
-						this.project.getPage().getFile().addShape((Shape) operation.object);
+			switch(command.name) {
+			case "setShape":{
+				for (int i = 0; i < command.operationList.size(); i++) {
+					operation = command.operationList.get(i);
+					if (operation.sign == 0) {
+						if (operation.object instanceof Shape) {
+							this.project.getPage().getFile().setShape(((Shape)operation.object).uuid);
+						}
 					}
 				}
+				break;
+			}
+			case "addShape": {
+				for (int i = 0; i < command.operationList.size(); i++) {
+					operation = command.operationList.get(i);
+					if (operation.sign == 1) {
+						if (operation.object instanceof Shape) {
+							this.project.getPage().getFile().removeShape((Shape) operation.object);
+						}
+					} else if (operation.sign == 0) {
+						if (operation.object instanceof Shape) {
+							this.project.getPage().getFile().addShape((Shape) operation.object);
+						}
+					}
+				}
+				break;
+			}
+			case "moveShape": {
+				for (int i = 0; i < command.operationList.size(); i++) {
+					operation = command.operationList.get(i);
+					if (operation.sign == 1) {
+						if (operation.object instanceof Shape) {
+							this.project.getPage().getFile().removeShape((Shape) operation.object);
+						}
+					} else if (operation.sign == 0) {
+						if (operation.object instanceof Shape) {
+							this.project.getPage().getFile().addShape((Shape) operation.object);
+						}
+					}
+				}
+				break;
+			}
+			case "resizeShape": {
+				for (int i = 0; i < command.operationList.size(); i++) {
+					operation = command.operationList.get(i);
+					if (operation.sign == 1) {
+						if (operation.object instanceof Shape) {
+							this.project.getPage().getFile().removeShape((Shape) operation.object);
+						}
+					} else if (operation.sign == 0) {
+						if (operation.object instanceof Shape) {
+							this.project.getPage().getFile().addShape((Shape) operation.object);
+						}
+					}
+				}
+				break;
+			}
+			case "removeShape": {
+				for (int i = 0; i < command.operationList.size(); i++) {
+					operation = command.operationList.get(i);
+					if (operation.sign == 1) {
+						if (operation.object instanceof Shape) {
+							this.project.getPage().getFile().removeShape((Shape) operation.object);
+						}
+					} else if (operation.sign == 0) {
+						if (operation.object instanceof Shape) {
+							this.project.getPage().getFile().addShape((Shape) operation.object);
+						}
+					}
+				}
+				break;
+			}
+			default: {
+				
+			}
 			}
 			this.state.redoStack.push(command);
 		}
@@ -172,16 +246,80 @@ public class Document {
 		if (this.state.redoStack.size() > 0) {
 			Command command = this.state.redoStack.pop();
 			Operation operation = null;
-			for (int i = command.operationList.size() - 1; i >= 0; i--) {
-				operation = command.operationList.get(i);
-				if (operation.sign == 1) {
-					if (operation.object instanceof Shape) {
-						this.project.getPage().getFile().addShape((Shape) operation.object);
+			switch(command.name) {
+				case "setShape":{
+					for (int i = 0; i < command.operationList.size(); i++) {
+						operation = command.operationList.get(i);
+						if (operation.sign == 1) {
+							if (operation.object instanceof Shape) {
+								this.project.getPage().getFile().setShape(((Shape) operation.object).uuid);
+							}
+						}
 					}
-				} else if (operation.sign == 0) {
-					if (operation.object instanceof Shape) {
-						this.project.getPage().getFile().removeShape((Shape) operation.object);
+					break;
+				}
+				case "addShape": {
+					for (int i = command.operationList.size() - 1; i >= 0; i--) {
+						operation = command.operationList.get(i);
+						if (operation.sign == 1) {
+							if (operation.object instanceof Shape) {
+								this.project.getPage().getFile().addShape((Shape) operation.object);
+							}
+						} else if (operation.sign == 0) {
+							if (operation.object instanceof Shape) {
+								this.project.getPage().getFile().removeShape((Shape) operation.object);
+							}
+						}
 					}
+					break;
+				}
+				case "moveShape": {
+					for (int i = 0; i < command.operationList.size(); i++) {
+						operation = command.operationList.get(i);
+						if (operation.sign == 1) {
+							if (operation.object instanceof Shape) {
+								this.project.getPage().getFile().addShape((Shape) operation.object);
+							}
+						} else if (operation.sign == 0) {
+							if (operation.object instanceof Shape) {
+								this.project.getPage().getFile().removeShape((Shape) operation.object);
+							}
+						}
+					}
+					break;
+				}
+				case "resizeShape": {
+					for (int i = 0; i < command.operationList.size(); i++) {
+						operation = command.operationList.get(i);
+						if (operation.sign == 1) {
+							if (operation.object instanceof Shape) {
+								this.project.getPage().getFile().addShape((Shape) operation.object);
+							}
+						} else if (operation.sign == 0) {
+							if (operation.object instanceof Shape) {
+								this.project.getPage().getFile().removeShape((Shape) operation.object);
+							}
+						}
+					}
+					break;
+				}
+				case "removeShape": {
+					for (int i = 0; i < command.operationList.size(); i++) {
+						operation = command.operationList.get(i);
+						if (operation.sign == 1) {
+							if (operation.object instanceof Shape) {
+								this.project.getPage().getFile().addShape((Shape) operation.object);
+							}
+						} else if (operation.sign == 0) {
+							if (operation.object instanceof Shape) {
+								this.project.getPage().getFile().removeShape((Shape) operation.object);
+							}
+						}
+					}
+					break;
+				}
+				default: {
+					
 				}
 			}
 			this.state.undoStack.push(command);

@@ -289,6 +289,7 @@ public class Page {
     	File file = this.getFile();
     	if(file != null) {
     		file.addShape(shape);
+    		this.setShape(shape.uuid);
     	}
     }
     

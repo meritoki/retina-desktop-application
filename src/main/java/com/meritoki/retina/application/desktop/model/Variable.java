@@ -47,6 +47,8 @@ public class Variable {
 	public Point movedPoint = new Point();
 	@JsonIgnore
 	public double scale = 1;
+	
+	public int selection = -1;
 	@JsonIgnore
 	public List<String> emptyList = new ArrayList<>();
 	@JsonIgnore

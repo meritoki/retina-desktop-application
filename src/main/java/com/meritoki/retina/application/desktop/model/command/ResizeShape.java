@@ -7,14 +7,14 @@ import org.apache.logging.log4j.Logger;
 
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.document.Operation;
+import com.meritoki.retina.application.desktop.model.document.Point;
 import com.meritoki.retina.application.desktop.model.document.Shape;
 
-
-public class MoveShape extends Command {
-	private static Logger logger = LogManager.getLogger(MoveShape.class.getName());
-	public MoveShape(Model project) {
-		this.model = project;
-		this.name = "moveShape";
+public class ResizeShape extends Command {
+	private static Logger logger = LogManager.getLogger(ResizeShape.class.getName());
+	public ResizeShape(Model model) {
+		this.model = model;
+		this.name = "resizeShape";
 	}
 	
     @Override // Command
@@ -27,7 +27,8 @@ public class MoveShape extends Command {
 		operation.id = UUID.randomUUID().toString();
 		operation.uuid = this.model.variable.shape.uuid;
 		this.operationList.push(operation);
-		this.model.variable.shape.move(this.model.variable.movedPoint);
+		Point releasedPoint = new Point(this.model.variable.releasedPoint);
+		this.model.variable.shape.resize(releasedPoint, this.model.variable.selection);
 		operation = new Operation();
 		operation.object = new Shape(this.model.variable.shape);
 		operation.sign = 1;

@@ -321,7 +321,7 @@ public class Shape {
         	//Works
         	logger.info("intersect("+point+") TOP");
         	selection = TOP;
-        } else if(point.y > (startPoint.y-margin) && point.y < (startPoint.y+margin) && point.x > startPoint.x && point.x < stopPoint.x) {
+        } else if(point.y > (stopPoint.y-margin) && point.y < (stopPoint.y+margin) && point.x > startPoint.x && point.x < stopPoint.x) {
         	//Not working
         	logger.info("intersect("+point+") BOTTOM");
         	selection = BOTTOM;
@@ -329,7 +329,7 @@ public class Shape {
         	//Works
         	logger.info("intersect("+point+") LEFT");
         	selection = LEFT;
-        } else if(point.x > (startPoint.x-margin) && point.x < (startPoint.x+margin) && point.y > startPoint.y && point.y < stopPoint.y) {
+        } else if(point.x > (stopPoint.x-margin) && point.x < (stopPoint.x+margin) && point.y > startPoint.y && point.y < stopPoint.y) {
         	//Not working
         	logger.info("intersect("+point+") RIGHT");
         	selection = RIGHT;
