@@ -135,7 +135,7 @@ public class Page {
 				f = null;
 			}
 		}
-		logger.info("getFile(" + point + ") f=" + f);
+		logger.info("getFile(" + point + ") f.uuid=" + f.uuid);
 		return f;
 	}
 
@@ -231,7 +231,7 @@ public class Page {
 	 */
 	@JsonIgnore
 	public void setIndex(int index) {
-		logger.info("setIndex(" + index + ")");
+		logger.trace("setIndex(" + index + ")");
 		if (index >= 0 && index < this.fileList.size()) {
 			this.index = index;
 		}

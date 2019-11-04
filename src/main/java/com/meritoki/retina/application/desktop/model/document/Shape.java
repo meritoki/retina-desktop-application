@@ -276,7 +276,6 @@ public class Shape {
                 flag = true;
             }
         }
-        logger.info("contains("+point+") "+flag);
         return flag;
     }
     
@@ -290,7 +289,6 @@ public class Shape {
     
     @JsonIgnore
     public int intersect(Point point){
-    	logger.info("intersect("+point+")");
         int selection = -1;
         Point startPoint = new Point();
         Point stopPoint = new Point();
@@ -298,8 +296,6 @@ public class Shape {
         startPoint.y = this.pointList.get(0).y*this.scale;
         stopPoint.x = this.pointList.get(1).x*this.scale;
         stopPoint.y = this.pointList.get(1).y*this.scale;
-        logger.info("intersect(point) startPoint="+startPoint);
-        logger.info("intersect(point) stopPoint="+stopPoint);
         //introduce the idea of a buffer where a user does not have to press exactly on line
         //TOP
         int margin = 20;
@@ -358,7 +354,7 @@ public class Shape {
     }
     
     public void resize(Point point, int selection) {
-    	logger.info("resize("+point+", "+selection+")");
+    	
     	Point startPoint = new Point();
         Point stopPoint = new Point();
         startPoint.x = this.pointList.get(0).x*this.scale;
@@ -367,36 +363,44 @@ public class Shape {
         stopPoint.y = this.pointList.get(1).y*this.scale;
     	switch(selection) {
 	    	case TOP:{
+	    		logger.info("resize("+point+", "+selection+") TOP");
 	    		this.pointList.get(0).y = point.y;
 	    		break;
 	    	}
 	    	case BOTTOM:{
+	    		logger.info("resize("+point+", "+selection+") BOTTOM");
 	    		this.pointList.get(1).y = point.y;
 	    		break;
 	    	}
 	    	case LEFT:{
+	    		logger.info("resize("+point+", "+selection+") LEFT");
 	    		this.pointList.get(0).x = point.x;
 	    		break;
 	    	}
 	    	case RIGHT:{
+	    		logger.info("resize("+point+", "+selection+") RIGHT");
 	    		this.pointList.get(1).x = point.x;
 	    		break;
 	    	}
 	    	case TOP_LEFT:{
+	    		logger.info("resize("+point+", "+selection+") TOP_LEFT");
 	    		this.pointList.set(0, point);
 	    		break;
 	    	}
 	    	case TOP_RIGHT:{
+	    		logger.info("resize("+point+", "+selection+") TOP_RIGHT");
 	    		this.pointList.get(0).y = point.y;
 	    		this.pointList.get(1).x = point.x;
 	    		break;
 	    	}
 	    	case BOTTOM_LEFT:{
+	    		logger.info("resize("+point+", "+selection+") BOTTOM_LEFT");
 	    		this.pointList.get(0).x = point.x;
 	    		this.pointList.get(1).y = point.y;
 	    		break;
 	    	}
 	    	case BOTTOM_RIGHT:{
+	    		logger.info("resize("+point+", "+selection+") BOTTOM_RIGHT");
 	    		this.pointList.set(1, point);
 	    		break;
 	    	}

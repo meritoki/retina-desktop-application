@@ -109,19 +109,14 @@ public class File {
 	}
 
 	public Shape getShape(Point point) {
-		logger.info("getShape(" + point + ")");
+//		logger.info("getShape(" + point + ")");
 		Shape s = null;
-		double factor;
 		Point copyPoint = null;
 		for (Shape shape : this.shapeList) {
 			copyPoint = new Point(point);
-			factor = this.offset * shape.scale;
-			logger.info("getShape(point) this.offset=" + this.offset);
-			logger.info("getShape(point) shape.scale=" + shape.scale);
-			logger.info("getShape(point) factor=" + factor);
-			copyPoint.x -= factor;// Required
-			logger.info("getShape(" + copyPoint + ")");
+			copyPoint.x -= this.offset * this.scale;// Required
 			if (shape.contains(copyPoint)) {
+				logger.info("getShape(" + copyPoint + ") s.uuid="+shape.uuid);
 				s = shape;
 				break;
 			}
@@ -249,40 +244,29 @@ public class File {
 	 */
 	@JsonIgnore
 	public void addShape(Shape shape) {
-		logger.info("addShape(" + shape + ") shape.pointList=" + shape.pointList);
 		shape.pointList.get(0).x -= (this.offset * this.scale);
 		shape.pointList.get(1).x -= (this.offset * this.scale);
 		shape.pointList.get(0).y -= (this.margin * this.scale);
 		shape.pointList.get(1).y -= (this.margin * this.scale);
-		logger.info("addShape(shape) shape.pointList=" + shape.pointList);
-		logger.info("addShape(shape) file.uuid=" + this.uuid);
 		this.shapeList.add(shape);
 	}
 
 	public int intersectShape(Point point) {
-			logger.info("intersectShape(" + point + ")");
 			int selection = -1;
 			double factor;
 			Point copyPoint = null;
 			Shape shape = this.getShape();
 			if (shape != null) {
-	//		for(Shape shape: this.shapeList) {
 				copyPoint = new Point(point);
 				factor = this.offset * shape.scale;
 				copyPoint.x -= factor;
-//				logger.info("intersectShape(point) this.offset=" + this.offset);
-//				logger.info("intersectShape(point) shape.scale=" + shape.scale);
-//				logger.info("intersectShape(point) factor=" + factor);
-				logger.info("intersectShape(" + copyPoint + ")");
 				selection = shape.intersect(copyPoint);
 			}
-	//		}
 			return selection;
 		}
 
 	@JsonIgnore
 	public boolean containsShape(Shape shape) {
-		logger.info("containsShape("+shape+")");
 		boolean flag = false;
 		if(this.containsPoint(new Point(shape.pointList.get(0)))){
 			flag = true;
@@ -313,11 +297,7 @@ public class File {
 	}
 
 	public boolean containsPoint(Point point) {
-		logger.info("containsPoint("+point+") file.uuid="+this.uuid);
 		boolean flag = false;
-		logger.info("containsPoint(point) f.offset="+this.offset);
-		logger.info("containsPoint(point) f.scale="+this.scale);
-		logger.info("containsPoint(point) f.offset*f.scale="+this.offset*this.scale);
 		if (point.x > (this.offset * this.scale) && point.x < (this.offset + this.width) * this.scale) {
 			flag = true;
 		}
