@@ -36,7 +36,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
-import com.meritoki.retina.application.desktop.controller.system.NodeController;
+import com.meritoki.retina.application.desktop.controller.node.NodeController;
 
 /**
  *

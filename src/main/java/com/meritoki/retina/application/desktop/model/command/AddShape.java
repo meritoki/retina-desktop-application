@@ -20,7 +20,7 @@ public class AddShape extends Command {
     public void execute() {
     	logger.info("execute()");
     	this.user = this.model.user;
-    	this.model.getDocument().getProject().addShape(this.model.variable.shape);
+    	this.model.getDocument().getProject().getPage().addShape(this.model.variable.shape);
 		Operation operation = new Operation();
 		operation.object = new Shape(this.model.variable.shape);
 		operation.sign = 1;

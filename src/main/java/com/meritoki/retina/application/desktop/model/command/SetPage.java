@@ -16,6 +16,6 @@ public class SetPage extends Command {
     public void execute() {
     	logger.info("execute()");
     	this.user = this.model.user;
-    	this.model.getDocument().getProject().setShape(this.model.variable.shape.uuid);
+    	this.model.getDocument().getProject().getPage().setShape(this.model.variable.shape.uuid);
     }
 }

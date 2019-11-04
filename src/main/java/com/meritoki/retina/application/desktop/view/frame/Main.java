@@ -91,9 +91,9 @@ public final class Main extends JFrame {
         logger.debug("init()");
         this.setTitle("Retina Desktop Application");
         this.imagePanel.setMain(this);
-        this.imagePanel.setFocusable(true);
-        this.imagePanel.requestFocusInWindow();
-        this.imageDialog.setVisible(true);
+//        this.imagePanel.setFocusable(true);
+//        this.imagePanel.requestFocusInWindow();
+//        this.imageDialog.setVisible(true);
 //        this.shapeDialog.setVisible(true);
     }
 

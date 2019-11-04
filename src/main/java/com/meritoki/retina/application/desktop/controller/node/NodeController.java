@@ -1,4 +1,4 @@
-package com.meritoki.retina.application.desktop.controller.system;
+package com.meritoki.retina.application.desktop.controller.node;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -56,7 +56,6 @@ public class NodeController {
 		mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
 		try {
 			object = mapper.readValue(file, className);
-			logger.info(object);
 			logger.info("opened...");
 		} catch (JsonGenerationException e) {
 			logger.error(e);
@@ -103,7 +102,6 @@ public class NodeController {
 		mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
 		try {
 			object = mapper.readValue(file, typeReference);
-			logger.info(object);
 			logger.info("opened...");
 		} catch (JsonGenerationException e) {
 			logger.error(e);

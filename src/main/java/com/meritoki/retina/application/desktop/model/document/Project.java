@@ -15,11 +15,6 @@
  */
 package com.meritoki.retina.application.desktop.model.document;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -27,26 +22,12 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
-import javax.swing.JPanel;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonMethod;
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
-import org.codehaus.jackson.map.SerializationConfig;
-
-import com.meritoki.retina.application.desktop.controller.client.ModelClient;
-import com.meritoki.retina.application.desktop.model.Model;
-import com.meritoki.retina.application.desktop.model.provider.Provider;
-import com.meritoki.retina.application.desktop.model.vendor.Vendor;
 
 public class Project implements Serializable {
     
@@ -151,7 +132,7 @@ public class Project implements Serializable {
      */
 	@JsonIgnore
 	public Page getPage() {
-	    return (this.pageList.size() > 0) ? this.pageList.get(index) : null;
+	    return (this.pageList.size() > 0) ? this.pageList.get(index) : new Page();
 	}
 	
 	/**
@@ -163,170 +144,40 @@ public class Project implements Serializable {
 	    return this.pageList;
 	}
 
-	/**
-	 * Function gets current File for current Page.
-	 * @return
-	 */
-	@JsonIgnore
-	public File getFile() {
-		Page page = this.getPage();
-		File file = (page != null) ? page.getFile(): null;
-		return file;
+	
+@JsonIgnore
+	public void setIndex(int index) {
+	    logger.debug("setIndex("+index+")");
+	    if(index >= 0 && index < this.pageList.size()) {
+	        this.index = index;
+	    }
 	}
 
-	/**
-	 * Function gets File for a Point with x and y value.
-	 * @param point
-	 * @return
-	 */
-	@JsonIgnore
-	public File getFile(Point point) {
-		Page page = this.getPage();
-		File shape = (page != null) ? page.getFile(point) : null;
-		return shape;
-	}
+	    @JsonIgnore
+	    public void setPage(String uuid) {
+	        logger.info("setPage("+uuid+")");
+	        Page page = null;
+	        for(int i = 0; i < this.pageList.size(); i++){
+	            page = this.pageList.get(i);
+	            if(page.uuid.equals(uuid)){
+	                this.setIndex(i);;
+	                break;
+	            }
+	        }
+	    }
 
-	/**
-	 * Function gets Shape from File of current Page for a Point with an x and y value.
-	 * @param point
-	 * @return
-	 */
-	@JsonIgnore
-	public Shape getShape(Point point) {
-		logger.trace("getShape("+point+")");
-		Page page = this.getPage();
-		Shape shape = (page != null) ? page.getShape(point) : null;
-		return shape;
-	}
-	
-	/**
-	 * Funtion gets Shape from File of current Page based on index in current File.
-	 * @return
-	 */
-	@JsonIgnore
-	public Shape getShape() {
-		Page page = this.getPage();
-		File file = (page != null) ? page.getFile() : null;
-		Shape shape = (file != null) ? file.getShape() : null;
-		return shape;
-	}
-	
-	@JsonIgnore
-	public List<Shape> getShapeList() {
-		Page page = this.getPage();
-		List<Shape> shapeList = (page != null) ? page.getShapeList():null;
-		return shapeList;
-	}
-	
-	@JsonIgnore
-	public BufferedImage getBufferedImage() {
-		Page page = this.getPage();
-		if(page != null && page.getBufferedImage() == null) 
-			page.setBufferedImage();
-		BufferedImage bufferedImage = (page != null) ? page.getBufferedImage() : null;
-		return bufferedImage;
-	}
-	
-	@JsonIgnore
-	public List<File> getFileList() {
-		Page page = this.getPage();
-		List<File> fileList = (page != null) ? page.getFileList(): null;
-		return fileList;
-	}
-	
-	@JsonIgnore
-	public boolean containsShape(Shape shape) {
-		Page page = this.getPage();
-		return true;
-	}
-
-	@JsonIgnore
-	public void setShape(String uuid) {
-    	logger.trace("setShape("+uuid+")");
-    	Page page = this.getPage();
-    	page.setShape(uuid);
-    }
-    
-	@JsonIgnore
-    public void setFile(String uuid) {
-    	logger.trace("setFile("+uuid+")");
-    	Page page = this.getPage();
-    	page.setFile(uuid);
-    }
-    
     @JsonIgnore
     public void setPageList(List<Page> pageList){
         logger.info("setPageList("+pageList+")");
         this.pageList = pageList;
     }
-    
-    @JsonIgnore
-    public void setIndex(int index) {
-        logger.debug("setIndex("+index+")");
-        if(index >= 0 && index < this.pageList.size()) {
-            this.index = index;
-        }
-    }
-    
-    @JsonIgnore
-    public void setScale(double scale) {
-    	logger.debug("setScale("+scale+")");
-    	Page page = this.getPage();
-    	if(page != null) {
-    		page.setScale(scale);
-    	}
-    }
-    
-    @JsonIgnore
-    public void setPage(String uuid) {
-        logger.info("setPage("+uuid+")");
-        Page page = null;
-        for(int i = 0; i < this.pageList.size(); i++){
-            page = this.pageList.get(i);
-            if(page.uuid.equals(uuid)){
-                this.setIndex(i);;
-                break;
-            }
-        }
-    }
-    
+
     @JsonIgnore
     public void addPage(Page page) {
     	logger.info("addPage("+page+")");
     	this.pageList.add(page);
-    	
     }
-    
-    @JsonIgnore
-    public void addShape(Shape shape) {
-		logger.debug("addShape("+shape+")");
-		Page page = this.getPage();
-		if(page != null) {
-			page.addShape(shape);
-		}
-	}
 
-    @JsonIgnore
-	public void addFile(File file) {
-		logger.info("addFile("+file+")");
-		Page page = this.getPage();
-		if(page != null) {
-			page.addFile(file);
-		}
-	}
-	
-    @JsonIgnore
-	public int intersectShape(Point point) {
-		logger.trace("intersectShape("+point+")");
-		Page page = this.getPage();
-		int selection = page.intersectShape(point);
-		return selection;
-	}
-	
-    @JsonIgnore
-	public void moveShape() {
-		
-	}
 
 	@JsonIgnore
     @Override
@@ -345,3 +196,130 @@ public class Project implements Serializable {
         return string;
     }
 }
+
+///**
+// * Function gets current File for current Page.
+// * @return
+// */
+//@JsonIgnore
+//public File getFile() {
+//	Page page = this.getPage();
+//	File file = (page != null) ? page.getFile(): null;
+//	return file;
+//}
+
+///**
+// * Function gets File for a Point with x and y value.
+// * @param point
+// * @return
+// */
+//@JsonIgnore
+//public File getFile(Point point) {
+//	Page page = this.getPage();
+//	File shape = (page != null) ? page.getFile(point) : null;
+//	return shape;
+//}
+
+///**
+// * Function gets Shape from File of current Page for a Point with an x and y value.
+// * @param point
+// * @return
+// */
+//@JsonIgnore
+//public Shape getShape(Point point) {
+//	logger.trace("getShape("+point+")");
+//	Page page = this.getPage();
+//	Shape shape = (page != null) ? page.getShape(point) : null;
+//	return shape;
+//}
+//
+///**
+// * Funtion gets Shape from File of current Page based on index in current File.
+// * @return
+// */
+//@JsonIgnore
+//public Shape getShape() {
+//	Page page = this.getPage();
+//	File file = (page != null) ? page.getFile() : null;
+//	Shape shape = (file != null) ? file.getShape() : null;
+//	return shape;
+//}
+
+//@JsonIgnore
+//public List<Shape> getShapeList() {
+//	Page page = this.getPage();
+//	List<Shape> shapeList = (page != null) ? page.getShapeList():null;
+//	return shapeList;
+//}
+//
+//@JsonIgnore
+//public BufferedImage getBufferedImage() {
+//	Page page = this.getPage();
+//	if(page != null && page.getBufferedImage() == null) 
+//		page.setBufferedImage();
+//	BufferedImage bufferedImage = (page != null) ? page.getBufferedImage() : null;
+//	return bufferedImage;
+//}
+//    
+//    @JsonIgnore
+//    public void setScale(double scale) {
+//    	logger.debug("setScale("+scale+")");
+//    	Page page = this.getPage();
+//    	if(page != null) {
+//    		page.setScale(scale);
+//    	}
+//    }
+//    
+//
+//@JsonIgnore
+//public void addShape(Shape shape) {
+//	logger.debug("addShape("+shape+")");
+//	Page page = this.getPage();
+//	if(page != null) {
+//		page.addShape(shape);
+//	}
+//}
+//
+//@JsonIgnore
+//public void addFile(File file) {
+//	logger.info("addFile("+file+")");
+//	Page page = this.getPage();
+//	if(page != null) {
+//		page.addFile(file);
+//	}
+//}
+//
+//@JsonIgnore
+//public boolean containsShape(Shape shape) {
+//	Page page = this.getPage();
+//	return true;
+//}
+//
+//@JsonIgnore
+//public int intersectShape(Point point) {
+//	logger.trace("intersectShape("+point+")");
+//	Page page = this.getPage();
+//	int selection = page.intersectShape(point);
+//	return selection;
+//}
+//	@JsonIgnore
+//public List<File> getFileList() {
+//	Page page = this.getPage();
+//	List<File> fileList = (page != null) ? page.getFileList(): null;
+//	return fileList;
+//}
+//
+//@JsonIgnore
+//public void setShape(String uuid) {
+//	logger.trace("setShape("+uuid+")");
+//	Page page = this.getPage();
+//	page.setShape(uuid);
+//}
+//
+//@JsonIgnore
+//public void setFile(String uuid) {
+//	logger.trace("setFile("+uuid+")");
+//	Page page = this.getPage();
+//	page.setFile(uuid);
+//}
+//

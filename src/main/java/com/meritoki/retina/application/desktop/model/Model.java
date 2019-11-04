@@ -14,8 +14,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import com.meritoki.retina.application.desktop.controller.node.NodeController;
 import com.meritoki.retina.application.desktop.controller.security.BCryptController;
-import com.meritoki.retina.application.desktop.controller.system.NodeController;
 import com.meritoki.retina.application.desktop.controller.user.UserController;
 import com.meritoki.retina.application.desktop.model.command.AddPage;
 import com.meritoki.retina.application.desktop.model.command.AddShape;

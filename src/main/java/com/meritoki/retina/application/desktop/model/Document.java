@@ -54,7 +54,7 @@ public class Document {
 	@JsonIgnore
     static Logger logger = LogManager.getLogger(Document.class.getName());
 	@JsonProperty
-	public Project project = null;
+	public Project project = new Project();
 	@JsonProperty
 	public LinkedList<State> stateStack= new LinkedList<>();
 	@JsonProperty
@@ -62,14 +62,24 @@ public class Document {
 	@JsonProperty
 	public State state = new State();
 	
+	private final HashMap<String, Command> commandMap = new HashMap<>();
+
 	public Document() {
 		this.project = new Project();
 		this.project.initTest();
 	}
 	
-    private final HashMap<String, Command> commandMap = new HashMap<>();
-    
-    public void register(String commandName, Command command) {
+    public Project getProject() {
+		return this.project;
+	}
+//	@JsonIgnore
+//	public void setScale(double scale) {
+//		if (this.project != null) {
+//			this.project.setScale(scale);
+//		}
+//	}
+
+	public void register(String commandName, Command command) {
         commandMap.put(commandName, command);
     }
     
@@ -116,47 +126,6 @@ public class Document {
 		return flag;
 	}
 	
-	public Project getProject() {
-		return this.project;
-	}
-	
-	@JsonIgnore
-	public Page getPage() {
-		return (this.project != null) ? this.project.getPage() : null;
-	}
-
-	@JsonIgnore
-	public List<Page> getPageList() {
-		return (this.project != null) ? this.project.getPageList() : null;
-	}
-
-	@JsonIgnore
-	public File getFile() {
-		return (this.project != null) ? this.project.getFile() : null;
-	}
-
-	@JsonIgnore
-	public File getFile(Point point) {
-		return (this.project != null) ? this.project.getFile(point) : null;
-	}
-
-	@JsonIgnore
-	public Shape getShape(Point point) {
-		return (this.project != null) ? this.project.getShape(point) : null;
-	}
-
-	@JsonIgnore
-	public Shape getShape() {
-		return (this.project != null) ? this.project.getShape() : null;
-	}
-
-	@JsonIgnore
-	public void setScale(double scale) {
-		if (this.project != null) {
-			this.project.setScale(scale);
-		}
-	}
-	
 	public void undo() {
 		if (this.state.undoStack.size() > 0) {
 			Command command = this.state.undoStack.pop();
@@ -179,7 +148,7 @@ public class Document {
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
 						if (operation.object instanceof Shape) {
-							this.project.getPage().getFile().removeShape((Shape) operation.object);
+							this.project.getPage().removeShape((Shape) operation.object);
 						}
 					} else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
@@ -194,7 +163,7 @@ public class Document {
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
 						if (operation.object instanceof Shape) {
-							this.project.getPage().getFile().removeShape((Shape) operation.object);
+							this.project.getPage().removeShape((Shape) operation.object);
 						}
 					} else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
@@ -209,7 +178,7 @@ public class Document {
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
 						if (operation.object instanceof Shape) {
-							this.project.getPage().getFile().removeShape((Shape) operation.object);
+							this.project.getPage().removeShape((Shape) operation.object);
 						}
 					} else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
@@ -224,7 +193,7 @@ public class Document {
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
 						if (operation.object instanceof Shape) {
-							this.project.getPage().getFile().removeShape((Shape) operation.object);
+							this.project.getPage().removeShape((Shape) operation.object);
 						}
 					} else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {

@@ -242,13 +242,13 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 1) {
-            Page page = this.model.getDocument().getPage();
+            Page page = this.model.getDocument().getProject().getPage();
             if (page != null) {
                 String selectedItem = (String) this.rectangleList.getSelectedValue();
                 logger.info("mouseClicked(e) selectedItem="+selectedItem);
                 Document document = (this.model != null) ? this.model.getDocument() : null;
                 Project project = (document != null) ? document.getProject() : null;
-                project.setShape(selectedItem);
+                project.getPage().setShape(selectedItem);
                 this.getParent().repaint();
                 this.init();
             }
@@ -675,7 +675,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
     }//GEN-LAST:event_ellipseButtonActionPerformed
 
     private void setTextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setTextButtonActionPerformed
-       Shape shape = this.model.getDocument().getShape();
+       Shape shape = this.model.getDocument().getProject().getPage().getShape();
        Data data = (shape !=null) ? shape.data : null;
        Text text = (data != null) ? data.text : null;
        String value = (String)this.textValueComboBox.getSelectedItem();
