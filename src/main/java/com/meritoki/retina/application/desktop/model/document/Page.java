@@ -220,7 +220,7 @@ public class Page {
 
 	@JsonIgnore
 	public void setBufferedImage(BufferedImage bufferedImage) {
-		logger.info("setBufferedImage(" + bufferedImage + ")");
+		logger.trace("setBufferedImage(" + bufferedImage + ")");
 		this.bufferedImage = bufferedImage;
 	}
 
@@ -536,7 +536,7 @@ public class Page {
 
 	@JsonIgnore
 	public BufferedImage joinFile(File file1, File file2) { // BufferedImage img1,BufferedImage img2) {
-		logger.info("joinBufferedImage(" + file1 + "," + file2 + ")");
+		logger.debug("joinBufferedImage(" + file1 + "," + file2 + ")");
 		// do some calculate first
 //        int offset  = 5;
 		int wid = 1;

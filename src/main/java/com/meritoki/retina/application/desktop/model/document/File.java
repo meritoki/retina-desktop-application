@@ -109,7 +109,6 @@ public class File {
 	}
 
 	public Shape getShape(Point point) {
-//		logger.info("getShape(" + point + ")");
 		Shape s = null;
 		Point copyPoint = null;
 		for (Shape shape : this.shapeList) {
@@ -179,13 +178,13 @@ public class File {
 
 	@JsonIgnore
 	public void setWidth(double width) {
-		logger.info("setWidth(" + width + ")");
+		logger.debug("setWidth(" + width + ")");
 		this.width = width;
 	}
 
 	@JsonIgnore
 	public void setHeight(double height) {
-		logger.info("setHeight(" + height + ")");
+		logger.debug("setHeight(" + height + ")");
 		this.height = height;
 	}
 

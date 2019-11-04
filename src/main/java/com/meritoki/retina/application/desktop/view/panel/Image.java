@@ -291,13 +291,11 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 			page.setBufferedImage(null);
 			File file = (page != null) ? page.getFile() : null;
 			if (file != null) {
-				logger.info("keyPressed(...) UP CTRL file.margin="+file.margin);
 				file.setMargin(file.margin+10);
 				page.setBufferedImage(null);
 			}
 			repaint();
 		} 
-		
 		else if ((e.getKeyCode() == KeyEvent.VK_UP) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
 			e.consume();
 			Page page = this.model.getDocument().getProject().getPage();
@@ -317,6 +315,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 			this.model.getDocument().redo();
 			repaint();
 		} else {
+			e.consume();
 			int keyCode = e.getKeyCode();
 			int index = this.model.getDocument().getProject().getIndex();
 			switch (keyCode) {
