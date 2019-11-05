@@ -136,7 +136,8 @@ public class Page {
 				f = null;
 			}
 		}
-		logger.info("getFile(" + point + ") file.uuid=" + f.uuid);
+		if(f != null)
+			logger.info("getFile(" + point + ") file.uuid=" + f.uuid);
 		return f;
 	}
 

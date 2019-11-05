@@ -24,19 +24,21 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import com.meritoki.retina.application.desktop.model.Document;
 import com.meritoki.retina.application.desktop.model.Model;
-import com.meritoki.retina.application.desktop.model.command.Command;
 import com.meritoki.retina.application.desktop.model.document.File;
-import com.meritoki.retina.application.desktop.model.document.Operation;
 import com.meritoki.retina.application.desktop.model.document.Page;
 import com.meritoki.retina.application.desktop.model.document.Point;
 import com.meritoki.retina.application.desktop.model.document.Project;
 import com.meritoki.retina.application.desktop.model.document.Shape;
 import com.meritoki.retina.application.desktop.view.frame.Main;
-import java.util.UUID;
 
+/**
+ * Image extends JPanel and contains many of the functions and features for 
+ * preparing subset images to upload to a provider such as Zooniverse.
+ * @author jorodriguez
+ *
+ */
 public class Image extends JPanel implements MouseListener, MouseWheelListener, KeyListener {
 
 	private static final long serialVersionUID = 3989576625299550361L;
@@ -64,15 +66,15 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 
 	@Override
 	public Dimension getPreferredSize() {
-		Dimension size = new Dimension(1028, 512);
-//		if (this.model != null && this.model.project != null && this.model.project.getPage() != null
-//				&& this.model.project.getPage().getBufferedImage() != null) {
-//			size.width = (int) Math
-//					.round(this.model.project.getPage().getBufferedImage().getWidth() * this.model.scale);
-//			size.height = (int) Math
-//					.round(this.model.project.getPage().getBufferedImage().getHeight() * this.model.scale);
-//		}
-		return size;
+		Dimension dimension = new Dimension(1028, 512);
+		Document document = (this.model != null)?this.model.getDocument(): null;
+		Project project = (document != null) ? document.getProject():null;
+		Page page = (project != null)?project.getPage():null;
+		BufferedImage bufferedImage = (page != null)? page.getBufferedImage(): null;
+		if(bufferedImage != null) {
+			dimension.setSize(bufferedImage.getWidth(), bufferedImage.getHeight());
+		}
+		return dimension;
 	}
 
 	/**
@@ -202,16 +204,24 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 					if (this.model.variable.shape != null) {
 						File releasedFile = this.model.getDocument().getProject().getPage().getFile(new Point(this.model.variable.releasedPoint));
 						if(!this.model.variable.file.uuid.equals(releasedFile.uuid)) {
-							this.model.getDocument().getProject().getPage().setFile(releasedFile.uuid);
+							//here we detect a file change
+							logger.info("File changed");
 							Shape shape = new Shape(this.model.variable.shape);
 							shape = this.model.variable.file.removeShape(shape);
+							shape.pointList.get(0).x = shape.dimension.x;
+							shape.pointList.get(0).y = shape.dimension.y;
+							shape.pointList.get(1).x = shape.dimension.x + shape.dimension.w;
+							shape.pointList.get(1).y = shape.dimension.y+ shape.dimension.h;
 							//for move in both directions, muct fix shape here.
+							logger.info("shape="+shape);
 							releasedFile.addShape(shape);
 						}
-						this.model.getDocument().getProject().getPage().setShape(this.model.variable.shape.uuid);
 						this.model.variable.movedPoint = new Point();
-						this.model.variable.movedPoint.x = this.model.variable.releasedPoint.x - this.model.variable.pressedPoint.x;
-						this.model.variable.movedPoint.y = this.model.variable.releasedPoint.y - this.model.variable.pressedPoint.y;
+						Point a = new Point(this.model.variable.releasedPoint);
+						Point b = new Point(this.model.variable.pressedPoint);
+						this.model.variable.movedPoint.x = a.x - b.x;
+						this.model.variable.movedPoint.y = a.y - b.y;
+						logger.info("movedPoint="+this.model.variable.movedPoint);
 						this.model.getDocument().execute("moveShape");
 					} else {
 						this.model.variable.shape = new Shape();
@@ -222,7 +232,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 								this.model.variable.shape.classification = Shape.ELLIPSE;
 							}
 						}
-						this.model.variable.shape.addScale = this.round(this.model.variable.scale, 6);
+						this.model.variable.shape.addScale = this.model.variable.scale;
 						this.model.variable.shape.setScale(this.model.variable.scale);
 						this.model.variable.shape.pointList.add(new Point(this.model.variable.pressedPoint));
 						this.model.variable.shape.pointList.add(new Point(this.model.variable.releasedPoint));
@@ -235,9 +245,6 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		this.main.shapeDialog.setModel(this.model);
 		this.main.pageDialog.setModel(this.model);
 		repaint();
-	}
-
-	public void mouseDragged(MouseEvent e) {
 	}
 
 	@Override
@@ -256,23 +263,12 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		double delta = 0.05f * e.getPreciseWheelRotation();
 		this.model.variable.scale += delta;
-		this.model.variable.scale = this.round(this.model.variable.scale, 6);
 		if (this.model.variable.scale >= 0 && this.model.variable.scale <= 2) {
 			logger.trace("mouseWheelMoved(...) scale = " + this.model.variable.scale);
 			this.model.getDocument().getProject().getPage().setScale(this.model.variable.scale);
 			revalidate();
 			repaint();
 		}
-	}
-
-	public double round(double value, int places) {
-		if (places < 0)
-			throw new IllegalArgumentException();
-
-		long factor = (long) Math.pow(10, places);
-		value = value * factor;
-		long tmp = Math.round(value);
-		return (double) tmp / factor;
 	}
 
 	@Override
@@ -366,3 +362,11 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 	public void keyReleased(KeyEvent e) {
 	}
 }
+//public double round(double value, int places) {
+//if (places < 0)
+//	throw new IllegalArgumentException();
+//long factor = (long) Math.pow(10, places);
+//value = value * factor;
+//long tmp = Math.round(value);
+//return (double) tmp / factor;
+//}
