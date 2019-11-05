@@ -130,12 +130,13 @@ public class Page {
 		for (File file : this.getFileList()) {
 			f = file;
 			if (f.containsPoint(point)) {
+				this.setFile(f.uuid);
 				break;
 			} else {
 				f = null;
 			}
 		}
-		logger.info("getFile(" + point + ") f.uuid=" + f.uuid);
+		logger.info("getFile(" + point + ") file.uuid=" + f.uuid);
 		return f;
 	}
 
@@ -251,6 +252,7 @@ public class Page {
 		for (File file : this.getFileList()) {
 			if (file.setShape(uuid)) {
 				this.setFile(file.uuid);
+				break;
 			}
 		}
 	}
@@ -288,6 +290,7 @@ public class Page {
 			if(f.containsShape(shape)) {
 				logger.info("addShape(" + shape + ") file.uuid="+f.uuid);
 				f.addShape(shape);
+				this.setFile(f.uuid);
 				this.setShape(shape.uuid);
 				break;
 			}

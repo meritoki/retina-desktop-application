@@ -166,20 +166,11 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		this.model.variable.pressedPoint = new Point();
 		this.model.variable.pressedPoint.x = e.getX();
 		this.model.variable.pressedPoint.y = e.getY();
-		logger.info("mousePressed(e) this.model.variable.pressedPoint="+this.model.variable.pressedPoint);
-		Document document = (this.model != null) ?this.model.getDocument() : null; 
-		Project project = (document != null)? document.project: null;
-		if(project != null) {
-			Point pressedPoint = new Point(this.model.variable.pressedPoint);
-			this.model.variable.file = project.getPage().getFile(pressedPoint);
-			if(this.model.variable.file != null) {
-				project.getPage().setFile(this.model.variable.file.uuid);
-				pressedPoint = new Point(this.model.variable.pressedPoint);
-				this.model.variable.shape = this.model.getDocument().getProject().getPage().getShape(pressedPoint);// returns new Shape if shape not found.
-				if(this.model.variable.shape != null) {
-					this.model.variable.shape.setScale(this.model.variable.scale);
-				}
-			}
+		logger.trace("mousePressed(e) this.model.variable.pressedPoint="+this.model.variable.pressedPoint);
+		this.model.variable.file = this.model.getDocument().getProject().getPage().getFile(new Point(this.model.variable.pressedPoint));
+		if(this.model.variable.file != null) {
+			logger.trace("mousePressed(e) this.model.variable.file.uuid="+this.model.variable.file.uuid);
+			this.model.variable.shape = this.model.getDocument().getProject().getPage().getShape(new Point(this.model.variable.pressedPoint));// returns new Shape if shape not found.
 		}
 	}
 
@@ -192,10 +183,9 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		this.model.variable.releasedPoint = new Point();
 		this.model.variable.releasedPoint.x = e.getX();
 		this.model.variable.releasedPoint.y = e.getY();
-		logger.info("mouseReleased(e) this.model.variable.releasedPoint="+this.model.variable.releasedPoint);
+		logger.trace("mouseReleased(e) this.model.variable.releasedPoint="+this.model.variable.releasedPoint);
 		if(this.model.getDocument().getProject() != null) {
-			Point releasedPoint = new Point(this.model.variable.releasedPoint);
-			File releasedFile = this.model.getDocument().getProject().getPage().getFile(releasedPoint);
+			
 			if (this.model.variable.pressedPoint.x == this.model.variable.releasedPoint.x
 					&& this.model.variable.pressedPoint.y == this.model.variable.releasedPoint.y) {
 				if (this.model.variable.shape != null) {
@@ -210,10 +200,12 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				} else {
 					
 					if (this.model.variable.shape != null) {
+						File releasedFile = this.model.getDocument().getProject().getPage().getFile(new Point(this.model.variable.releasedPoint));
 						if(!this.model.variable.file.uuid.equals(releasedFile.uuid)) {
 							this.model.getDocument().getProject().getPage().setFile(releasedFile.uuid);
 							Shape shape = new Shape(this.model.variable.shape);
 							shape = this.model.variable.file.removeShape(shape);
+							//for move in both directions, muct fix shape here.
 							releasedFile.addShape(shape);
 						}
 						this.model.getDocument().getProject().getPage().setShape(this.model.variable.shape.uuid);

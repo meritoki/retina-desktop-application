@@ -117,6 +117,7 @@ public class File {
 			if (shape.contains(copyPoint)) {
 				logger.info("getShape(" + copyPoint + ") s.uuid="+shape.uuid);
 				s = shape;
+				this.setShape(s.uuid);
 				break;
 			}
 		}
