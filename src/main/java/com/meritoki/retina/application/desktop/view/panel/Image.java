@@ -185,29 +185,16 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		e.consume();
 		this.model.variable.releasedPoint = new Point(e.getX(),e.getY());
 		if (this.model.variable.pressedPoint.equals(this.model.variable.releasedPoint)) {
-			if(this.model.variable.pressedShape != null)
-				this.model.getDocument().execute("setShape");
+			this.model.getDocument().execute("setShape");
 		} else {
 			this.model.variable.selection = this.model.getDocument().getProject().getPage().intersectShape(this.model.variable.pressedPoint);
 			if (this.model.variable.selection > -1) {
 				this.model.getDocument().execute("resizeShape");
 			} else {
 				if (this.model.variable.pressedShape != null) {
-					this.model.variable.movedPoint = this.getMovedPoint(new Point(this.model.variable.releasedPoint), new Point(this.model.variable.pressedPoint));
-					this.model.variable.releasedFile = this.model.getDocument().getProject().getPage().getFile(new Point(this.model.variable.releasedPoint));
+					this.model.variable.releasedFile = this.model.getDocument().getProject().getPage().getFile(this.model.variable.releasedPoint);
 					this.model.getDocument().execute("moveShape");
 				} else {
-					this.model.variable.pressedShape = new Shape();
-					if (this.model.variable.rectangle) {
-						this.model.variable.pressedShape.classification = Shape.RECTANGLE;
-					} else if (this.model.variable.ellipse) {
-						this.model.variable.pressedShape.classification = Shape.ELLIPSE;
-					}
-					this.model.variable.pressedShape.setAddScale(this.model.variable.scale);
-					this.model.variable.pressedShape.setScale(this.model.variable.scale);
-					this.model.variable.pressedShape.pointList.add(new Point(this.model.variable.pressedPoint));
-					this.model.variable.pressedShape.pointList.add(new Point(this.model.variable.releasedPoint));
-//						this.model.variable.shape.sortPointList();//breaks intersect function
 					this.model.getDocument().execute("addShape");
 				}
 			}
@@ -215,10 +202,6 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		this.main.shapeDialog.setModel(this.model);
 		this.main.pageDialog.setModel(this.model);
 		repaint();
-	}
-	
-	public Point getMovedPoint(Point a, Point b) {
-		return new Point(a.x - b.x, a.y - b.y);
 	}
 
 	@Override

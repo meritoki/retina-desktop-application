@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.document.Operation;
+import com.meritoki.retina.application.desktop.model.document.Point;
 import com.meritoki.retina.application.desktop.model.document.Shape;
 
 public class AddShape extends Command {
@@ -20,6 +21,17 @@ public class AddShape extends Command {
     public void execute() {
     	logger.info("execute()");
     	this.user = this.model.user;
+		this.model.variable.pressedShape = new Shape();
+		if (this.model.variable.rectangle) {
+			this.model.variable.pressedShape.classification = Shape.RECTANGLE;
+		} else if (this.model.variable.ellipse) {
+			this.model.variable.pressedShape.classification = Shape.ELLIPSE;
+		}
+		this.model.variable.pressedShape.setAddScale(this.model.variable.scale);
+		this.model.variable.pressedShape.setScale(this.model.variable.scale);
+		this.model.variable.pressedShape.pointList.add(new Point(this.model.variable.pressedPoint));
+		this.model.variable.pressedShape.pointList.add(new Point(this.model.variable.releasedPoint));
+		this.model.variable.pressedShape.sortPointList();
     	this.model.getDocument().getProject().getPage().addShape(this.model.variable.pressedShape);
 		Operation operation = new Operation();
 		operation.object = new Shape(this.model.variable.pressedShape);

@@ -28,9 +28,10 @@ public class MoveShape extends Command {
 		operation.id = UUID.randomUUID().toString();
 		operation.uuid = this.model.variable.pressedShape.uuid;
 		this.operationList.push(operation);
-		if (!this.model.variable.pressedFile.equals(this.model.variable.releasedFile)) {
-			logger.info("pressedFile != releasedFile");
-			Shape shape = new Shape(this.model.variable.pressedShape);
+		this.model.variable.movedPoint = this.getMovedPoint(new Point(this.model.variable.releasedPoint), new Point(this.model.variable.pressedPoint));
+		Shape shape = null;
+		if (this.model.variable.releasedFile != null &&!this.model.variable.pressedFile.equals(this.model.variable.releasedFile)) {
+			shape = new Shape(this.model.variable.pressedShape);
 			shape.pointList.get(0).x = shape.dimension.x;
 			shape.pointList.get(0).y = shape.dimension.y;
 			shape.pointList.get(1).x = shape.dimension.x + shape.dimension.w;
@@ -38,20 +39,19 @@ public class MoveShape extends Command {
 			shape.move(this.model.variable.movedPoint);
 			this.model.variable.pressedFile.removeShape(shape);
 			this.model.variable.releasedFile.addShape(shape);
-			operation = new Operation();
-			operation.object = new Shape(shape);
-			operation.sign = 1;
-			operation.id = UUID.randomUUID().toString();
-			operation.uuid = this.model.variable.pressedShape.uuid;
-			this.operationList.push(operation);
 		} else {
 			this.model.variable.pressedShape.move(this.model.variable.movedPoint);
-			operation = new Operation();
-			operation.object = new Shape(this.model.variable.pressedShape);
-			operation.sign = 1;
-			operation.id = UUID.randomUUID().toString();
-			operation.uuid = this.model.variable.pressedShape.uuid;
-			this.operationList.push(operation);
+			shape = this.model.variable.pressedShape;
 		}		
+		operation = new Operation();
+		operation.object = new Shape(shape);
+		operation.sign = 1;
+		operation.id = UUID.randomUUID().toString();
+		operation.uuid = this.model.variable.pressedShape.uuid;
+		this.operationList.push(operation);
     }
+    
+	public Point getMovedPoint(Point a, Point b) {
+		return new Point(a.x - b.x, a.y - b.y);
+	}
 }

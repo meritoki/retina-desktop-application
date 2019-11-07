@@ -20,24 +20,22 @@ public class SetShape extends Command {
     public void execute() {
     	logger.info("execute()");
     	this.user = this.model.user;
-    	Shape shape = this.model.getDocument().getProject().getPage().getShape();
-    	if(shape != null) {
+
+//		Operation operation = new Operation();
+//		operation.object = new Shape(this.model.getDocument().getProject().getPage().getShape());
+//		operation.sign = 0;
+//		operation.id = UUID.randomUUID().toString();
+//		operation.uuid = this.model.variable.pressedShape.uuid;
+//		this.operationList.add(operation);
+	
+    	if(this.model.variable.pressedShape != null) {
+	    	this.model.getDocument().getProject().getPage().setShape(this.model.variable.pressedShape.uuid);
 			Operation operation = new Operation();
-			operation.object = new Shape(shape);
+			operation.object = new Shape(this.model.getDocument().getProject().getPage().getShape());
 			operation.sign = 0;
 			operation.id = UUID.randomUUID().toString();
 			operation.uuid = this.model.variable.pressedShape.uuid;
 			this.operationList.add(operation);
     	}
-    	this.model.getDocument().getProject().getPage().setShape(this.model.variable.pressedShape.uuid);
-		shape = this.model.getDocument().getProject().getPage().getShape();
-		if(shape != null) {
-			Operation operation = new Operation();
-			operation.object = new Shape();
-			operation.sign = 1;
-			operation.id = UUID.randomUUID().toString();
-			operation.uuid = this.model.variable.pressedShape.uuid;
-			this.operationList.add(operation);
-		}
     }
 }

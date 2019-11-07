@@ -173,16 +173,21 @@ public class Shape {
     	Point pointOne = this.pointList.get(1);
     	//Case B
     	if(pointZero.x > pointOne.x && pointZero.y < pointOne.y) {
+    		logger.info("sortPointList() Case B");
     		this.pointList.set(0, new Point(pointOne.x,pointZero.y));
     		this.pointList.set(1, new Point(pointZero.x,pointOne.y));
     	//Case C
     	} else if(pointZero.x < pointOne.x && pointZero.y > pointOne.y) {
+    		logger.info("sortPointList() Case C");
     		this.pointList.set(0, new Point(pointZero.x,pointOne.y));
     		this.pointList.set(1, new Point(pointOne.x,pointZero.y));
     	//Case D
-    	} else if(pointZero.x < pointOne.x && pointZero.y < pointOne.y) {
+    	} else if(pointZero.x > pointOne.x && pointZero.y > pointOne.y) {
+    		logger.info("sortPointList() Case D");
     		this.pointList.set(0, pointOne);
     		this.pointList.set(1, pointZero);
+    	} else {
+    		logger.info("sortPointList() sorted");
     	}
     }
 
