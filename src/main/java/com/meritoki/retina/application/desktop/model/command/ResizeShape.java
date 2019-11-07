@@ -22,18 +22,18 @@ public class ResizeShape extends Command {
     	logger.info("execute()");
     	this.user = this.model.user;
 		Operation operation = new Operation();
-		operation.object = new Shape(this.model.variable.shape);
+		operation.object = new Shape(this.model.variable.pressedShape);
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
-		operation.uuid = this.model.variable.shape.uuid;
+		operation.uuid = this.model.variable.pressedShape.uuid;
 		this.operationList.push(operation);
 		Point releasedPoint = new Point(this.model.variable.releasedPoint);
-		this.model.variable.shape.resize(releasedPoint, this.model.variable.selection);
+		this.model.variable.pressedShape.resize(releasedPoint, this.model.variable.selection);
 		operation = new Operation();
-		operation.object = new Shape(this.model.variable.shape);
+		operation.object = new Shape(this.model.variable.pressedShape);
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
-		operation.uuid = this.model.variable.shape.uuid;
+		operation.uuid = this.model.variable.pressedShape.uuid;
 		this.operationList.push(operation);
     }
 }

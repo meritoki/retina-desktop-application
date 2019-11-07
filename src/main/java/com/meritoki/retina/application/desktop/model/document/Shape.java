@@ -82,6 +82,9 @@ public class Shape {
     public Shape(Shape shape) {
     	this.classification = shape.classification;
     	this.uuid = shape.uuid;
+    	this.scale = shape.scale;
+    	this.addScale = shape.addScale;
+    	this.dimension = new Dimension(shape.getDimension());
     	for(Point p : shape.pointList) {
     		this.pointList.add(new Point(p));
     	}
@@ -223,6 +226,11 @@ public class Shape {
     public void setData(Data data){
         this.data = data;
     }
+	
+	@JsonIgnore
+	public void setAddScale(double addScale) {
+		this.addScale = addScale;
+	}
     @JsonIgnore
     public void setScale(double scale) {
     	this.scale = scale*(1/this.addScale);
@@ -279,36 +287,41 @@ public class Shape {
         stopPoint.y = this.pointList.get(1).y*this.scale;
         //introduce the idea of a buffer where a user does not have to press exactly on line
         //TOP
-        int margin = 20;
-        if(point.x == startPoint.x && point.y == startPoint.y) {
-        	logger.info("intersect("+point+") TOP_LEFT");
-        	//Works
-        	selection = TOP_LEFT;
-        } else if(point.x > (stopPoint.x-margin) && point.x<(stopPoint.x+margin) && point.y > (stopPoint.y-margin) && point.y < (stopPoint.y+margin)) {//(point.x == stopPoint.x && point.y == stopPoint.y) {
-        	logger.info("intersect("+point+") BOTTOM_RIGHT");
-        	//Works
-        	selection = BOTTOM_RIGHT;
-        } else if(point.x > (stopPoint.x-margin) && point.x < (stopPoint.x+margin) && point.y > (startPoint.y-margin) && point.y < (startPoint.y + margin)) {
-        	//Works
-        	logger.info("intersect("+point+") TOP_RIGHT");
-        	selection = TOP_RIGHT;
-        } else if(point.x > (startPoint.x-margin) && point.x < (startPoint.x+margin) && point.y > (stopPoint.y - margin) && point.y < (stopPoint.y + margin)) {
-        	//Works
-        	logger.info("intersect("+point+") BOTTOM_LEFT");
-        	selection = BOTTOM_LEFT;
-        } else if(point.y > (startPoint.y-margin) && point.y < (startPoint.y+margin) && point.x > startPoint.x && point.x < stopPoint.x) {
+        double margin = 20*this.scale;
+//        if(point.x == startPoint.x && point.y == startPoint.y) {
+//        	logger.info("intersect("+point+") TOP_LEFT");
+//        	//Works
+//        	selection = TOP_LEFT;
+//        } else if(point.x > (stopPoint.x-margin) && point.x<(stopPoint.x+margin) && point.y > (stopPoint.y-margin) && point.y < (stopPoint.y+margin)) {
+//        	logger.info("intersect("+point+") BOTTOM_RIGHT");
+//        	//Works
+//        	selection = BOTTOM_RIGHT;
+//        } else if(point.x > (stopPoint.x-margin) && point.x < (stopPoint.x+margin) && point.y > (startPoint.y-margin) && point.y < (startPoint.y + margin)) {
+//        	//Works
+//        	logger.info("intersect("+point+") TOP_RIGHT");
+//        	selection = TOP_RIGHT;
+//        } else if(point.x > (startPoint.x-margin) && point.x < (startPoint.x+margin) && point.y > (stopPoint.y - margin) && point.y < (stopPoint.y + margin)) {
+//        	//Works
+//        	logger.info("intersect("+point+") BOTTOM_LEFT");
+//        	selection = BOTTOM_LEFT;
+////        } else if(point.y > (startPoint.y-margin) && point.y < (startPoint.y+margin) && point.x > startPoint.x && point.x < stopPoint.x) {
+//        } else 
+        if(point.y >= (startPoint.y) && point.y < (startPoint.y+margin) && point.x > startPoint.x && point.x < stopPoint.x) {
         	//Works
         	logger.info("intersect("+point+") TOP");
         	selection = TOP;
-        } else if(point.y > (stopPoint.y-margin) && point.y < (stopPoint.y+margin) && point.x > startPoint.x && point.x < stopPoint.x) {
+//        } else if(point.y > (stopPoint.y-margin) && point.y < (stopPoint.y+margin) && point.x > startPoint.x && point.x < stopPoint.x) {
+        } else if(point.y > (stopPoint.y-margin) && point.y <= (stopPoint.y) && point.x > startPoint.x && point.x < stopPoint.x) {
         	//Not working
         	logger.info("intersect("+point+") BOTTOM");
         	selection = BOTTOM;
-        } else if(point.x > (startPoint.x-margin) && point.x < (startPoint.x+margin) && point.y > startPoint.y && point.y < stopPoint.y) {
+//        } else if(point.x > (startPoint.x-margin) && point.x < (startPoint.x+margin) && point.y > startPoint.y && point.y < stopPoint.y) {
+        } else if(point.x >= (startPoint.x) && point.x < (startPoint.x+margin) && point.y > startPoint.y && point.y < stopPoint.y) {
         	//Works
         	logger.info("intersect("+point+") LEFT");
         	selection = LEFT;
-        } else if(point.x > (stopPoint.x-margin) && point.x < (stopPoint.x+margin) && point.y > startPoint.y && point.y < stopPoint.y) {
+//        } else if(point.x > (stopPoint.x-margin) && point.x < (stopPoint.x+margin) && point.y > startPoint.y && point.y < stopPoint.y) {
+        } else if(point.x > (stopPoint.x-margin) && point.x <= (stopPoint.x) && point.y > startPoint.y && point.y < stopPoint.y) {
         	//Not working
         	logger.info("intersect("+point+") RIGHT");
         	selection = RIGHT;

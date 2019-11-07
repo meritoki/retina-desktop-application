@@ -23,7 +23,9 @@ public class Variable {
 	@JsonIgnore
 	public boolean ellipse = true;
 	@JsonIgnore
-	public File file = null;
+	public File pressedFile = null;
+	@JsonIgnore
+	public File releasedFile = null;
 	@JsonIgnore
 	public java.io.File[] files = null;
 	@JsonIgnore
@@ -31,7 +33,7 @@ public class Variable {
 	@JsonIgnore
 	public Page page = null;
 	@JsonIgnore
-	public Shape shape = null;
+	public Shape pressedShape = null;
 	@JsonIgnore
 	public Text text = null;
 	@JsonIgnore

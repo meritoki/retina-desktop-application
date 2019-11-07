@@ -29,6 +29,14 @@ public class Point {
 		this.y = y;
 	}
 	
+	public boolean equals(Point point) {
+		boolean flag = false;
+		if(this.x == point.x && this.y == point.y) {
+			flag = true;
+		}
+		return flag;
+	}
+	
     @JsonIgnore
     @Override
     public String toString(){

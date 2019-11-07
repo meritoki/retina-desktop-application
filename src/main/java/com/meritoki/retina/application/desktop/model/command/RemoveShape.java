@@ -20,12 +20,12 @@ public class RemoveShape extends Command {
     public void execute() {
     	logger.info("execute()");
     	this.user = this.model.user;
-		this.model.getDocument().project.getPage().removeShape(this.model.variable.shape);
+		this.model.getDocument().project.getPage().removeShape(this.model.variable.pressedShape);
 		Operation operation = new Operation();
-		operation.object = new Shape(this.model.variable.shape);
+		operation.object = new Shape(this.model.variable.pressedShape);
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
-		operation.uuid = this.model.variable.shape.uuid;
+		operation.uuid = this.model.variable.pressedShape.uuid;
 		this.operationList.push(operation);
     }
 }

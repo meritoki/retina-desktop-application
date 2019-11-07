@@ -81,6 +81,14 @@ public class File {
 		this.name = name;
 		this.setBufferedImage(NodeController.openBufferedImage(this.path, this.name));
 	}
+	
+	public boolean equals(File file) {
+		boolean flag = false;
+		if(this.uuid.equals(file.uuid)) {
+			flag = true;
+		}
+		return flag;
+	}
 
 
 	/**
@@ -274,17 +282,21 @@ public class File {
 		return flag;
 	}
 
+	@JsonIgnore
+	public Shape removeShape(Shape shape) {
+		return this.removeShape(shape.uuid);
+	}
 	/**
 	 * Function sets removed variable for Shape equal to true;
 	 * 
-	 * @param shape
+	 * @param pressedShape
 	 */
 	@JsonIgnore
-	public Shape removeShape(Shape shape) {
+	public Shape removeShape(String uuid) {
 		Shape s = null;
 		for (int i = 0; i < this.shapeList.size(); i++) {
 			s = this.shapeList.get(i);
-			if (s.uuid.equals(shape.uuid)) {
+			if (s.uuid.equals(uuid)) {
 				this.shapeList.remove(i);
 				s.pointList.get(0).x += this.offset * s.scale;
 				s.pointList.get(1).x += this.offset * s.scale;

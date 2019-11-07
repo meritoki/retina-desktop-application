@@ -23,17 +23,35 @@ public class MoveShape extends Command {
     	logger.info("execute()");
     	this.user = this.model.user;
 		Operation operation = new Operation();
-		operation.object = new Shape(this.model.variable.shape);
+		operation.object = new Shape(this.model.variable.pressedShape);
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
-		operation.uuid = this.model.variable.shape.uuid;
+		operation.uuid = this.model.variable.pressedShape.uuid;
 		this.operationList.push(operation);
-		this.model.variable.shape.move(new Point(this.model.variable.movedPoint));
-		operation = new Operation();
-		operation.object = new Shape(this.model.variable.shape);
-		operation.sign = 1;
-		operation.id = UUID.randomUUID().toString();
-		operation.uuid = this.model.variable.shape.uuid;
-		this.operationList.push(operation);
+		if (!this.model.variable.pressedFile.equals(this.model.variable.releasedFile)) {
+			logger.info("pressedFile != releasedFile");
+			Shape shape = new Shape(this.model.variable.pressedShape);
+			shape.pointList.get(0).x = shape.dimension.x;
+			shape.pointList.get(0).y = shape.dimension.y;
+			shape.pointList.get(1).x = shape.dimension.x + shape.dimension.w;
+			shape.pointList.get(1).y = shape.dimension.y + shape.dimension.h;
+			shape.move(this.model.variable.movedPoint);
+			this.model.variable.pressedFile.removeShape(shape);
+			this.model.variable.releasedFile.addShape(shape);
+			operation = new Operation();
+			operation.object = new Shape(shape);
+			operation.sign = 1;
+			operation.id = UUID.randomUUID().toString();
+			operation.uuid = this.model.variable.pressedShape.uuid;
+			this.operationList.push(operation);
+		} else {
+			this.model.variable.pressedShape.move(this.model.variable.movedPoint);
+			operation = new Operation();
+			operation.object = new Shape(this.model.variable.pressedShape);
+			operation.sign = 1;
+			operation.id = UUID.randomUUID().toString();
+			operation.uuid = this.model.variable.pressedShape.uuid;
+			this.operationList.push(operation);
+		}		
     }
 }

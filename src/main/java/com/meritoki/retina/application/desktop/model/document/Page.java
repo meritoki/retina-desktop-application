@@ -130,7 +130,7 @@ public class Page {
 		for (File file : this.getFileList()) {
 			f = file;
 			if (f.containsPoint(point)) {
-				this.setFile(f.uuid);
+//				this.setFile(f.uuid);
 				break;
 			} else {
 				f = null;
