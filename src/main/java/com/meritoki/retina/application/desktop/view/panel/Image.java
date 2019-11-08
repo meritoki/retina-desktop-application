@@ -139,13 +139,6 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 	}
 
 	/**
-	 * Consider moving
-	 * 
-	 * @param point
-	 * @return
-	 */
-
-	/**
 	 * Here is mouse is pressed, this is the start of many operations. Here we know
 	 * what page is selected, if the event lies in or outside of a shape,etc.
 	 * Commands we need to support include Add, Select, Move, Resize, and Remove
@@ -200,8 +193,8 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				}
 			}
 		}
-		this.main.shapeDialog.setModel(this.model);
-		this.main.pageDialog.setModel(this.model);
+		this.main.shapeDialog.init();
+		this.main.pageDialog.init();
 		repaint();
 	}
 

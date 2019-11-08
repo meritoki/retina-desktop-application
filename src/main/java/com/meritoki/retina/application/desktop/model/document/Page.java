@@ -18,6 +18,7 @@ package com.meritoki.retina.application.desktop.model.document;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -93,6 +94,7 @@ public class Page {
 
 	/**
 	 * Copy constructor
+	 * 
 	 * @param page
 	 */
 	public Page(Page page) {
@@ -102,6 +104,7 @@ public class Page {
 
 	/**
 	 * Function gets the current index selected by user.
+	 * 
 	 * @return this.index
 	 */
 	@JsonIgnore
@@ -111,6 +114,7 @@ public class Page {
 
 	/**
 	 * Function returns file using index
+	 * 
 	 * @return file
 	 */
 	@JsonIgnore
@@ -140,13 +144,14 @@ public class Page {
 				f = null;
 			}
 		}
-		if(f != null)
+		if (f != null)
 			logger.info("getFile(" + point + ") file.uuid=" + f.uuid);
 		return f;
 	}
 
 	/**
 	 * Function returns shape that contains the point parameter
+	 * 
 	 * @param point
 	 * @return
 	 */
@@ -164,6 +169,7 @@ public class Page {
 
 	/**
 	 * Function returns the Shape at the current index in File
+	 * 
 	 * @return shape
 	 */
 	@JsonIgnore
@@ -174,10 +180,9 @@ public class Page {
 	}
 
 	/**
-	 * DIMENSION 1
-	 * C
-	 * Converts the dimension of Shape back to the global coordinates.
+	 * DIMENSION 1 C Converts the dimension of Shape back to the global coordinates.
 	 * This method converts the shape back to the coordinates of the page.
+	 * 
 	 * @return
 	 */
 	@JsonIgnore
@@ -191,17 +196,35 @@ public class Page {
 				dimension = shape.getDimension();
 				dimension.x += (file.getOffset() * file.scale);
 				dimension.y += (file.getMargin() * file.scale);
+				shape.bufferedImage = this.getShapeBufferedImage(shape);
 				shapeList.add(shape);
 			}
 		}
 		return shapeList;
 	}
 
+	public BufferedImage getShapeBufferedImage(Shape shape) {
+		BufferedImage bufferedImage = null;
+		bufferedImage = new BufferedImage((int) shape.getDimension().w, (int) shape.getDimension().h,
+				BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2 = bufferedImage.createGraphics();
+		if (shape.classification.equals(Shape.ELLIPSE)) {
+			Ellipse2D.Double ellipse = new Ellipse2D.Double(shape.getDimension().x, shape.getDimension().y,
+					shape.getDimension().w, shape.getDimension().h);
+			g2.setClip(ellipse);
+		} else if (shape.classification.equals(Shape.RECTANGLE)) {
+			Rectangle2D.Double rectangle = new Rectangle2D.Double(shape.getDimension().x, shape.getDimension().y,
+					shape.getDimension().w, shape.getDimension().h);
+			g2.setClip(rectangle);
+		}
+		g2.drawImage(this.getBufferedImage(), 0, 0, null);
+		return bufferedImage;
+	}
+
 	/**
-	 * DIMENSION 2
-	 * A
-	 * Function is the only place where the File objects receive the metadata necessary to
-	 * correctly process shapes.
+	 * DIMENSION 2 A Function is the only place where the File objects receive the
+	 * metadata necessary to correctly process shapes.
+	 * 
 	 * @return
 	 */
 	@JsonIgnore
@@ -218,7 +241,9 @@ public class Page {
 	}
 
 	/**
-	 * Function returns bufferedImage with one or more File bufferedImages from the fileList
+	 * Function returns bufferedImage with one or more File bufferedImages from the
+	 * fileList
+	 * 
 	 * @return this.bufferedImage;
 	 */
 	@JsonIgnore
@@ -258,6 +283,7 @@ public class Page {
 
 	/**
 	 * Function sets scale for page and all files in fileList
+	 * 
 	 * @param scale
 	 */
 	@JsonIgnore
@@ -270,6 +296,7 @@ public class Page {
 
 	/**
 	 * Function sets current shape and file using uuid
+	 * 
 	 * @param uuid
 	 */
 	@JsonIgnore
@@ -297,12 +324,13 @@ public class Page {
 
 	/**
 	 * Shape has global coordinates
+	 * 
 	 * @param shape
 	 */
 	@JsonIgnore
 	public void addShape(Shape shape) {
-		for(File f: this.getFileList()) {
-			if(f.containsShape(shape)) {
+		for (File f : this.getFileList()) {
+			if (f.containsShape(shape)) {
 				f.addShape(shape);
 				this.setFile(f.uuid);
 				this.setShape(shape.uuid);
@@ -580,14 +608,15 @@ public class Page {
 		}
 		return bufferedImage;
 	}
-	
+
 	@JsonIgnore
 	public BufferedImage joinFile(File a, File b) {
 		logger.debug("joinFiles(" + a + "," + b + ")");
 		BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 		if (a.bufferedImage != null && b.bufferedImage != null) {
 			int width = a.bufferedImage.getWidth() + b.bufferedImage.getWidth();
-			int height = Math.max(a.bufferedImage.getHeight() + (int) a.margin, b.bufferedImage.getHeight() + (int) b.margin);// +offset;
+			int height = Math.max(a.bufferedImage.getHeight() + (int) a.margin,
+					b.bufferedImage.getHeight() + (int) b.margin);// +offset;
 			bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 			Graphics2D graphics2D = bufferedImage.createGraphics();
 			Color oldColor = graphics2D.getColor();

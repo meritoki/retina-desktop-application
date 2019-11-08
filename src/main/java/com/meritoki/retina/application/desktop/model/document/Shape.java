@@ -65,7 +65,7 @@ public class Shape {
     @JsonProperty
     public String uuid = null;
     @JsonIgnore
-    private BufferedImage bufferedImage = null;
+    public BufferedImage bufferedImage = null;
     @JsonProperty
     public Data data = new Data();
     @JsonIgnore
