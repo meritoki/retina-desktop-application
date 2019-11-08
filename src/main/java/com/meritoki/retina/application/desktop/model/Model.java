@@ -14,14 +14,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
+import com.meritoki.retina.application.desktop.controller.node.NodeController;
 import com.meritoki.retina.application.desktop.controller.security.BCryptController;
-import com.meritoki.retina.application.desktop.controller.system.NodeController;
 import com.meritoki.retina.application.desktop.controller.user.UserController;
 import com.meritoki.retina.application.desktop.model.command.AddPage;
 import com.meritoki.retina.application.desktop.model.command.AddShape;
 import com.meritoki.retina.application.desktop.model.command.Command;
 import com.meritoki.retina.application.desktop.model.command.MoveShape;
 import com.meritoki.retina.application.desktop.model.command.RemoveShape;
+import com.meritoki.retina.application.desktop.model.command.ResizeShape;
 import com.meritoki.retina.application.desktop.model.command.SetShape;
 
 /**
@@ -58,12 +59,14 @@ public class Model {
 		Command setShape = new SetShape(this);
 		Command moveShape = new MoveShape(this);
 		Command removeShape = new RemoveShape(this);
+		Command resizeShape = new ResizeShape(this);
 		this.document.register("addPage", addPage);
 //		this.document.register("setPage", setPage);
 		this.document.register("addShape", addShape);
 		this.document.register("setShape", setShape);
 		this.document.register("moveShape", moveShape);
 		this.document.register("removeShape", removeShape);
+		this.document.register("resizeShape", resizeShape);
 		this.variable = new Variable();
 		if(this.userList.size() == 0) {
 			this.variable.newUser = true;

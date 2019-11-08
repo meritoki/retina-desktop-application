@@ -1,6 +1,8 @@
 package com.meritoki.retina.application.desktop.model.document;
 
 import java.util.LinkedList;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.meritoki.retina.application.desktop.model.User;
@@ -18,7 +20,7 @@ public class State {
 	public Project project;
 	@JsonProperty
 	public LinkedList<Command> undoStack = new LinkedList<>();
-	@JsonProperty
+	@JsonIgnore
 	public LinkedList<Command> redoStack = new LinkedList<>();
 	@JsonProperty
 	public int index = 0;

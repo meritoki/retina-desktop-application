@@ -24,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.provider.Provider;
+import com.meritoki.retina.application.desktop.model.provider.zooniverse.Credential;
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.Project;
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.Workflow;
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.Zooniverse;
@@ -59,18 +60,18 @@ public class Export extends javax.swing.JDialog {
     }
 
     public void initComboBox() {
-//    	for(Provider provider: this.model.var.providerList) {
-//    		if(provider instanceof ZooniverseProvider) {
-//		        Zooniverse zooniverse = ((ZooniverseProvider)provider).zooniverse;
-//		        List<com.meritoki.retina.application.desktop.model.provider.zooniverse.Project> projectList = (zooniverse != null) ? zooniverse.getProjectList() : null;
-//		        this.initProjectComboBox(projectList);
-//		        this.initSearchProjectComboBox(new ArrayList<Project>());
-//		        this.initProjectWorkflowComboBox(new ArrayList<Workflow>());
-//    		}
-//    	}
+    	for(Provider provider: this.model.getDocument().providerList) {
+    		if(provider instanceof ZooniverseProvider) {
+		        Zooniverse zooniverse = ((ZooniverseProvider)provider).zooniverse;
+		        List<Project> projectList = (zooniverse != null) ? zooniverse.getProjectList() : null;
+		        this.initProjectComboBox(projectList);
+		        this.initSearchProjectComboBox(new ArrayList<Project>());
+		        this.initProjectWorkflowComboBox(new ArrayList<Workflow>());
+    		}
+    	}
     }
 
-    public void initProjectComboBox(List<com.meritoki.retina.application.desktop.model.provider.zooniverse.Project> projectList) {
+    public void initProjectComboBox(List<Project> projectList) {
         String[] array = new String[0];
         if (projectList != null && projectList.size()>0) {
             array = new String[projectList.size()];
@@ -358,66 +359,93 @@ public class Export extends javax.swing.JDialog {
     private void addNewProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewProjectActionPerformed
         String title = this.projectTitleTextField.getText();
         String description = this.projectDescriptionTextField.getText();
-//        Project project = new Project(title, description);
-//        com.meritoki.retina.application.desktop.model.provider.zooniverse.Zooniverse zooniverse = (this.model != null) ? this.model.zooniverse : null;
-//        if (zooniverse != null) {
-//            zooniverse.createProject(project);
-//            this.initProjectComboBox(zooniverse.getProjectList());
-//        }
+       	for(Provider provider: this.model.getDocument().providerList) {
+    		if(provider instanceof ZooniverseProvider) {
+		        Zooniverse zooniverse = ((ZooniverseProvider)provider).zooniverse;
+		        if (zooniverse != null) {
+		        	 Project project = new Project(title, description);
+		            zooniverse.createProject(project);
+		            this.initProjectComboBox(zooniverse.getProjectList());
+		        }
+		        break;
+    		}
+    	}
     }//GEN-LAST:event_addNewProjectActionPerformed
 
     private void setCredentialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setCredentialActionPerformed
-//        Credential credential = new Credential();
-//        credential.password = this.passwordTextField.getText();
-//        credential.userName = this.userNameTextField.getText();
-//        com.meritoki.retina.application.desktop.model.provider.zooniverse.Zooniverse zooniverse = (this.model != null) ? this.model.zooniverse : null;
-//        if (zooniverse != null) {
-//            zooniverse.setCredential(credential);
-//            zooniverse.createConfig();
-//        }
+        Credential credential = new Credential();
+        credential.password = this.passwordTextField.getText();
+        credential.userName = this.userNameTextField.getText();
+       	for(Provider provider: this.model.getDocument().providerList) {
+    		if(provider instanceof ZooniverseProvider) {
+		        Zooniverse zooniverse = ((ZooniverseProvider)provider).zooniverse;
+		        if (zooniverse != null) {
+		            zooniverse.setCredential(credential);
+		            zooniverse.createConfig();
+		        }
+    		}
+    	}
     }//GEN-LAST:event_setCredentialActionPerformed
 
     private void findProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findProjectButtonActionPerformed
-//        com.meritoki.retina.application.desktop.model.provider.zooniverse.Zooniverse zooniverse = (this.model != null) ? this.model.zooniverse : null;
-//        String query = this.projectSearchTextField.getText().trim();
-//        if (zooniverse != null) {
-//            zooniverse.searchProject(query);
-//            this.initSearchProjectComboBox(zooniverse.getSearchProjectList());
-//        }
+        String query = this.projectSearchTextField.getText().trim();
+       	for(Provider provider: this.model.getDocument().providerList) {
+    		if(provider instanceof ZooniverseProvider) {
+		        Zooniverse zooniverse = ((ZooniverseProvider)provider).zooniverse;
+		        if (zooniverse != null) {
+		            zooniverse.searchProject(query);
+		            this.initSearchProjectComboBox(zooniverse.getSearchProjectList());
+		        }
+    		}
+    	}
     }//GEN-LAST:event_findProjectButtonActionPerformed
 
     private void addProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProjectButtonActionPerformed
-//        com.meritoki.retina.application.desktop.model.provider.zooniverse.Zooniverse zooniverse = (this.model != null) ? this.model.zooniverse : null;
-//        if (zooniverse != null) {
-//            String searchProjectName = (String) this.searchProjectComboBox.getSelectedItem();
-//            if (searchProjectName != null && !searchProjectName.equals("")) {
-////                for (Project p : zooniverse.getSearchProjectList()) {
-////                    if (p.name.equals(searchProjectName)) {
-////                        zooniverse.getProjectList().add(p);
-////                        break;
-////                    }
-////                }
-//                this.initProjectComboBox(zooniverse.getProjectList());
-//            }
-//        }
+       	for(Provider provider: this.model.getDocument().providerList) {
+    		if(provider instanceof ZooniverseProvider) {
+		        Zooniverse zooniverse = ((ZooniverseProvider)provider).zooniverse;
+		        if (zooniverse != null) {
+		            if (zooniverse != null) {
+		                String searchProjectName = (String) this.searchProjectComboBox.getSelectedItem();
+		                if (searchProjectName != null && !searchProjectName.equals("")) {
+		                    for (Project p : zooniverse.getSearchProjectList()) {
+		                        if (p.name.equals(searchProjectName)) {
+		                            zooniverse.getProjectList().add(p);
+		                            break;
+		                        }
+		                    }
+		                    this.initProjectComboBox(zooniverse.getProjectList());
+		                }
+		            }
+		        }
+    		}
+    	}
+        
+
     }//GEN-LAST:event_addProjectButtonActionPerformed
 
     private void updateProjectWorkflowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateProjectWorkflowButtonActionPerformed
-//        com.meritoki.retina.application.desktop.model.provider.zooniverse.Zooniverse zooniverse = (this.model != null) ? this.model.zooniverse : null;
-//        if (zooniverse != null) {
-//            String projectName = (String) this.projectComboBox.getSelectedItem();
-//            List<Workflow> projectWorkflowList = new ArrayList<Workflow>();
-//            if (projectName != null && !projectName.equals("")) {
-////                for (Project p : zooniverse.getProjectList()) {
-////                    if (p.name.equals(projectName)) {
-////                        zooniverse.updateProjectWorkflowList(p);
-////                        projectWorkflowList = p.getWorkflowList();
-////                        break;
-////                    }
-////                }
-//            }
-//            this.initProjectWorkflowComboBox(projectWorkflowList);
-//        }
+       	for(Provider provider: this.model.getDocument().providerList) {
+    		if(provider instanceof ZooniverseProvider) {
+		        Zooniverse zooniverse = ((ZooniverseProvider)provider).zooniverse;
+		        if (zooniverse != null) {
+		            String projectName = (String) this.projectComboBox.getSelectedItem();
+		            List<Workflow> projectWorkflowList = new ArrayList<Workflow>();
+		            if (projectName != null && !projectName.equals("")) {
+		                for (Project p : zooniverse.getProjectList()) {
+		                    if (p.name.equals(projectName)) {
+		                        zooniverse.updateProjectWorkflowList(p);
+		                        projectWorkflowList = p.getWorkflowList();
+		                        break;
+		                    }
+		                }
+		            }
+		            this.initProjectWorkflowComboBox(projectWorkflowList);
+		        }
+    		}
+    	}
+        
+
     }//GEN-LAST:event_updateProjectWorkflowButtonActionPerformed
 
     /**

@@ -22,8 +22,13 @@ public class Command implements CommandInterface {
 	public User user;
 	@JsonProperty
     public LinkedList<Operation> operationList = new LinkedList<>();
+	
 	@Override
 	public void execute() {
 		
+	}
+	
+	public void reset() {
+		this.operationList = new LinkedList<>();
 	}
 }

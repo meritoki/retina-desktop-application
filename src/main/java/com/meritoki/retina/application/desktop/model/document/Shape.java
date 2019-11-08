@@ -80,31 +80,40 @@ public class Shape {
     }
     
     public Shape(Shape shape) {
-    	this.classification = shape.classification;
     	this.uuid = shape.uuid;
+    	this.classification = shape.classification;
+    	this.scale = shape.scale;
+    	this.addScale = shape.addScale;
+    	this.dimension = new Dimension(shape.getDimension());
     	for(Point p : shape.pointList) {
     		this.pointList.add(new Point(p));
     	}
     	this.data = new Data(shape.data);
     }
     
+    /**
+     * DIMENSION 1
+     * @return
+     */
     @JsonIgnore
-    public void initDimension() {
-    	Dimension dimension = new Dimension();
-//    	if(this.dimension == null) {
-    	dimension.x = Math.min(this.pointList.get(0).x, this.pointList.get(1).x);
-//		this.x += offset;
-    	dimension.y = Math.min(this.pointList.get(0).y, this.pointList.get(1).y);
-//		this.y += margin;
-    	dimension.w = Math.abs(this.pointList.get(0).x - this.pointList.get(1).x);
-    	dimension.h = Math.abs(this.pointList.get(0).y - this.pointList.get(1).y);
-    	dimension.x *= this.scale;
-    	dimension.y *= this.scale;
-    	dimension.w *= this.scale;
-    	dimension.h *= this.scale;
+    public Dimension getDimension() {
+    	if(this.dimension == null) {
+	    	Dimension dimension = new Dimension();
+	    	dimension.x = Math.min(this.pointList.get(0).x, this.pointList.get(1).x);
+	    	dimension.y = Math.min(this.pointList.get(0).y, this.pointList.get(1).y);
+	    	dimension.w = Math.abs(this.pointList.get(0).x - this.pointList.get(1).x);
+	    	dimension.h = Math.abs(this.pointList.get(0).y - this.pointList.get(1).y);
+	    	dimension.x *= this.scale;
+	    	dimension.y *= this.scale;
+	    	dimension.w *= this.scale;
+	    	dimension.h *= this.scale;
+	    	this.dimension = dimension;
+    	}
+    	return dimension;
+    }
+    
+    public void setDimension(Dimension dimension) {
     	this.dimension = dimension;
-//    	}
-//    	return dimension;
     }
     
     @JsonProperty
@@ -168,30 +177,25 @@ public class Shape {
     	Point pointOne = this.pointList.get(1);
     	//Case B
     	if(pointZero.x > pointOne.x && pointZero.y < pointOne.y) {
+    		logger.info("sortPointList() Case B");
     		this.pointList.set(0, new Point(pointOne.x,pointZero.y));
     		this.pointList.set(1, new Point(pointZero.x,pointOne.y));
     	//Case C
     	} else if(pointZero.x < pointOne.x && pointZero.y > pointOne.y) {
+    		logger.info("sortPointList() Case C");
     		this.pointList.set(0, new Point(pointZero.x,pointOne.y));
     		this.pointList.set(1, new Point(pointOne.x,pointZero.y));
     	//Case D
-    	} else if(pointZero.x < pointOne.x && pointZero.y < pointOne.y) {
+    	} else if(pointZero.x > pointOne.x && pointZero.y > pointOne.y) {
+    		logger.info("sortPointList() Case D");
     		this.pointList.set(0, pointOne);
     		this.pointList.set(1, pointZero);
+    	} else {
+    		logger.info("sortPointList() sorted");
     	}
     }
 
-    /**
-     * Used by data Matrix algorithm
-     * @param u
-     * @return
-     */
-//    public int compareTo(Object u) {
-//      if (this.pointList.get(0).x == 0 || ((Shape)u).startPoint.x == 0) {
-//        return 0;
-//      }
-//      return ((Integer)this.pointList.get(0).x).compareTo(((Shape)u).startPoint.x);
-//    }
+
     
     @JsonIgnore
     public boolean isValid(){
@@ -216,47 +220,24 @@ public class Shape {
 	public double getCenterY(){
 	    return (this.pointList.get(0).y+this.pointList.get(1).y)/2;
 	}
-	
-//	@JsonIgnore
-//	public void setOffset(double offset) {
-//		this.offset = offset;
-//	}
-//	
-//	@JsonIgnore
-//	public void setMargin(double offset) {
-//		this.margin = offset;
-//	}
-
-	@JsonIgnore
-	    public void setBufferedImage(Page page){
-//	       BufferedImage bufferedImage = null;
-	//       if(page.getBufferedImage() != null){
-	//           //bufferedImage = page.getBufferedImage().getSubimage(this.getX(), this.getX(), (this.getI()-this.getX()), (this.getJ()-this.getY()));
-	//       }
-	//       this.bufferedImage = bufferedImage;
-	    }
 
 	@JsonProperty
     public void setData(Data data){
         this.data = data;
     }
+	
+	@JsonIgnore
+	public void setAddScale(double addScale) {
+		this.addScale = addScale;
+	}
     @JsonIgnore
     public void setScale(double scale) {
     	this.scale = scale*(1/this.addScale);
     }
     
-	public double round(double value, int places) {
-	    if (places < 0) throw new IllegalArgumentException();
-
-	    long factor = (long) Math.pow(10, places);
-	    value = value * factor;
-	    long tmp = Math.round(value);
-	    return (double) tmp / factor;
-	}
-    
     @JsonIgnore
-    public boolean contains(Point point){
-//    	logger.info("contains("+point+")");
+    public boolean containsPoint(Point point){
+    	logger.trace("containsPoint("+point+")");
         boolean flag = false;
         Point startPoint = new Point();
         Point stopPoint = new Point();
@@ -274,7 +255,6 @@ public class Shape {
                 flag = true;
             }
         }
-        logger.info("contains("+point+") "+flag);
         return flag;
     }
     
@@ -288,7 +268,6 @@ public class Shape {
     
     @JsonIgnore
     public int intersect(Point point){
-    	logger.info("intersect("+point+")");
         int selection = -1;
         Point startPoint = new Point();
         Point stopPoint = new Point();
@@ -296,67 +275,57 @@ public class Shape {
         startPoint.y = this.pointList.get(0).y*this.scale;
         stopPoint.x = this.pointList.get(1).x*this.scale;
         stopPoint.y = this.pointList.get(1).y*this.scale;
-        logger.info("intersect(point) startPoint="+startPoint);
-        logger.info("intersect(point) stopPoint="+stopPoint);
         //introduce the idea of a buffer where a user does not have to press exactly on line
         //TOP
-        int margin = 20;
-        if(point.x == startPoint.x && point.y == startPoint.y) {
-        	logger.info("intersect("+point+") TOP_LEFT");
-        	//Works
-        	selection = TOP_LEFT;
-        } else if(point.x > (stopPoint.x-margin) && point.x<(stopPoint.x+margin) && point.y > (stopPoint.y-margin) && point.y < (stopPoint.y+margin)) {//(point.x == stopPoint.x && point.y == stopPoint.y) {
-        	logger.info("intersect("+point+") BOTTOM_RIGHT");
-        	//Works
-        	selection = BOTTOM_RIGHT;
-        } else if(point.x > (stopPoint.x-margin) && point.x < (stopPoint.x+margin) && point.y > (startPoint.y-margin) && point.y < (startPoint.y + margin)) {
-        	//Works
-        	logger.info("intersect("+point+") TOP_RIGHT");
-        	selection = TOP_RIGHT;
-        } else if(point.x > (startPoint.x-margin) && point.x < (startPoint.x+margin) && point.y > (stopPoint.y - margin) && point.y < (stopPoint.y + margin)) {
-        	//Works
-        	logger.info("intersect("+point+") BOTTOM_LEFT");
-        	selection = BOTTOM_LEFT;
-        } else if(point.y > (startPoint.y-margin) && point.y < (startPoint.y+margin) && point.x > startPoint.x && point.x < stopPoint.x) {
+        double margin = 20*this.scale;
+//        if(point.x == startPoint.x && point.y == startPoint.y) {
+//        	logger.info("intersect("+point+") TOP_LEFT");
+//        	//Works
+//        	selection = TOP_LEFT;
+//        } else if(point.x > (stopPoint.x-margin) && point.x<(stopPoint.x+margin) && point.y > (stopPoint.y-margin) && point.y < (stopPoint.y+margin)) {
+//        	logger.info("intersect("+point+") BOTTOM_RIGHT");
+//        	//Works
+//        	selection = BOTTOM_RIGHT;
+//        } else if(point.x > (stopPoint.x-margin) && point.x < (stopPoint.x+margin) && point.y > (startPoint.y-margin) && point.y < (startPoint.y + margin)) {
+//        	//Works
+//        	logger.info("intersect("+point+") TOP_RIGHT");
+//        	selection = TOP_RIGHT;
+//        } else if(point.x > (startPoint.x-margin) && point.x < (startPoint.x+margin) && point.y > (stopPoint.y - margin) && point.y < (stopPoint.y + margin)) {
+//        	//Works
+//        	logger.info("intersect("+point+") BOTTOM_LEFT");
+//        	selection = BOTTOM_LEFT;
+////        } else if(point.y > (startPoint.y-margin) && point.y < (startPoint.y+margin) && point.x > startPoint.x && point.x < stopPoint.x) {
+//        } else 
+        if(point.y >= (startPoint.y) && point.y < (startPoint.y+margin) && point.x > startPoint.x && point.x < stopPoint.x) {
         	//Works
         	logger.info("intersect("+point+") TOP");
         	selection = TOP;
-        } else if(point.y > (startPoint.y-margin) && point.y < (startPoint.y+margin) && point.x > startPoint.x && point.x < stopPoint.x) {
+//        } else if(point.y > (stopPoint.y-margin) && point.y < (stopPoint.y+margin) && point.x > startPoint.x && point.x < stopPoint.x) {
+        } else if(point.y > (stopPoint.y-margin) && point.y <= (stopPoint.y) && point.x > startPoint.x && point.x < stopPoint.x) {
         	//Not working
         	logger.info("intersect("+point+") BOTTOM");
         	selection = BOTTOM;
-        } else if(point.x > (startPoint.x-margin) && point.x < (startPoint.x+margin) && point.y > startPoint.y && point.y < stopPoint.y) {
+//        } else if(point.x > (startPoint.x-margin) && point.x < (startPoint.x+margin) && point.y > startPoint.y && point.y < stopPoint.y) {
+        } else if(point.x >= (startPoint.x) && point.x < (startPoint.x+margin) && point.y > startPoint.y && point.y < stopPoint.y) {
         	//Works
         	logger.info("intersect("+point+") LEFT");
         	selection = LEFT;
-        } else if(point.x > (startPoint.x-margin) && point.x < (startPoint.x+margin) && point.y > startPoint.y && point.y < stopPoint.y) {
+//        } else if(point.x > (stopPoint.x-margin) && point.x < (stopPoint.x+margin) && point.y > startPoint.y && point.y < stopPoint.y) {
+        } else if(point.x > (stopPoint.x-margin) && point.x <= (stopPoint.x) && point.y > startPoint.y && point.y < stopPoint.y) {
         	//Not working
         	logger.info("intersect("+point+") RIGHT");
         	selection = RIGHT;
         }
-        
-//        if(point.y == startPoint.y && point.x > startPoint.x && point.x < stopPoint.x) {
-//        	selection = TOP;
-//        } else if(point.y == stopPoint.y && point.x > startPoint.x && point.x < stopPoint.x) {
-//        	selection = BOTTOM;
-//        } else if(point.x == startPoint.x && point.y > startPoint.y && point.y < stopPoint.y) {
-//        	selection = LEFT;
-//        } else if(point.x == stopPoint.x && point.y > startPoint.y && point.y < stopPoint.y) {
-//        	selection = RIGHT;
-//        } else if(point.x == startPoint.x && point.y == startPoint.y) {
-//        	selection = TOP_LEFT;
-//        } else if(point.x == stopPoint.x && point.y == stopPoint.y) {
-//        	selection = BOTTOM_RIGHT;
-//        } else if(point.x == stopPoint.x && point.y == startPoint.y) {
-//        	selection = TOP_RIGHT;
-//        } else if(point.x == startPoint.x && point.y == stopPoint.y) {
-//        	selection = BOTTOM_LEFT;
-//        }
         return selection;
     }
     
+    /**
+     * DIMENSION 1
+     * @param point
+     * @param selection
+     */
     public void resize(Point point, int selection) {
-    	logger.info("resize("+point+", "+selection+")");
+    	
     	Point startPoint = new Point();
         Point stopPoint = new Point();
         startPoint.x = this.pointList.get(0).x*this.scale;
@@ -365,36 +334,44 @@ public class Shape {
         stopPoint.y = this.pointList.get(1).y*this.scale;
     	switch(selection) {
 	    	case TOP:{
+	    		logger.info("resize("+point+", "+selection+") TOP");
 	    		this.pointList.get(0).y = point.y;
 	    		break;
 	    	}
 	    	case BOTTOM:{
+	    		logger.info("resize("+point+", "+selection+") BOTTOM");
 	    		this.pointList.get(1).y = point.y;
 	    		break;
 	    	}
 	    	case LEFT:{
+	    		logger.info("resize("+point+", "+selection+") LEFT");
 	    		this.pointList.get(0).x = point.x;
 	    		break;
 	    	}
 	    	case RIGHT:{
+	    		logger.info("resize("+point+", "+selection+") RIGHT");
 	    		this.pointList.get(1).x = point.x;
 	    		break;
 	    	}
 	    	case TOP_LEFT:{
+	    		logger.info("resize("+point+", "+selection+") TOP_LEFT");
 	    		this.pointList.set(0, point);
 	    		break;
 	    	}
 	    	case TOP_RIGHT:{
+	    		logger.info("resize("+point+", "+selection+") TOP_RIGHT");
 	    		this.pointList.get(0).y = point.y;
 	    		this.pointList.get(1).x = point.x;
 	    		break;
 	    	}
 	    	case BOTTOM_LEFT:{
+	    		logger.info("resize("+point+", "+selection+") BOTTOM_LEFT");
 	    		this.pointList.get(0).x = point.x;
 	    		this.pointList.get(1).y = point.y;
 	    		break;
 	    	}
 	    	case BOTTOM_RIGHT:{
+	    		logger.info("resize("+point+", "+selection+") BOTTOM_RIGHT");
 	    		this.pointList.set(1, point);
 	    		break;
 	    	}
@@ -404,11 +381,14 @@ public class Shape {
     @JsonIgnore
     public void move(Point point){
     	logger.info("move("+point+")");
+    	logger.info("move("+point+") this.pointList="+this.pointList);
         this.pointList.get(0).x = this.pointList.get(0).x + point.x;
         this.pointList.get(0).y = this.pointList.get(0).y + point.y;
         this.pointList.get(1).x = this.pointList.get(1).x + point.x;
         this.pointList.get(1).y = this.pointList.get(1).y + point.y;
+        logger.info("move("+point+") this.pointList="+this.pointList);
     }
+   
     
     @JsonIgnore
     @Override
@@ -426,5 +406,25 @@ public class Shape {
         }
         return string;
     }
-    
 }
+
+//public double round(double value, int places) {
+//if (places < 0) throw new IllegalArgumentException();
+//
+//long factor = (long) Math.pow(10, places);
+//value = value * factor;
+//long tmp = Math.round(value);
+//return (double) tmp / factor;
+//}
+
+/**
+ * Used by data Matrix algorithm
+ * @param u
+ * @return
+ */
+//public int compareTo(Object u) {
+//  if (this.pointList.get(0).x == 0 || ((Shape)u).startPoint.x == 0) {
+//    return 0;
+//  }
+//  return ((Integer)this.pointList.get(0).x).compareTo(((Shape)u).startPoint.x);
+//}

@@ -28,7 +28,7 @@ public class Desktop {
     public static void main(String args[]) {
         logger.info("Starting Retina Desktop Application..."); 
         final Main main = new Main();
-//        final Splash splash = new Splash("/splash.png", main, 4000);
+        final Splash splash = new Splash("/splash.png", main, 4000);
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {

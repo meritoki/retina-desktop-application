@@ -20,12 +20,17 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 /**
  *
  * @author osvaldo.rodriguez
  */
 public class Script {
-    
+	@JsonIgnore
+	static Logger logger = LogManager.getLogger(Script.class.getName());
     public List<Page> pageList = new ArrayList<>();
     public List<LinkedList<Data>> dataMatrix = new ArrayList<>();
     
@@ -63,7 +68,6 @@ public class Script {
         String a;
         String b;
         for(String i: instructions){
-            System.out.println(i);
             if(i.contains("SWAP")){
                 instruction=i.replaceFirst("SWAP", "");
                 parameters=instruction.split(":");
@@ -100,12 +104,12 @@ public class Script {
     	for(File file: pageB.fileList) {
     		pageA.addFile(file);
     	}
-    	pageA.bufferedImage = null;
+    	pageA.setBufferedImage(null);
     	this.pageList.remove(y);
     }
     
     public void swapPage(String a, String b) throws Exception {
-        System.out.println("swap("+a+","+b+")");
+        logger.info("swap("+a+","+b+")");
         String[] A;
         String[] B;
         String i;
@@ -126,7 +130,7 @@ public class Script {
             x = Integer.parseInt(i);
             y = Integer.parseInt(j);
             if(diff == (y-x)){
-                System.out.println("valid");
+                logger.info("valid");
             }
         }else{
             i = a;
@@ -138,14 +142,14 @@ public class Script {
     }
     
     public void swapPage(int a, int b){
-       System.out.println("swap("+a+","+b+")");
+       logger.info("swap("+a+","+b+")");
        Collections.swap(this.pageList, a, b);
     }
     
     
     
     public void interlacePage(String a, String b) throws Exception {
-        System.out.println("interlace("+a+","+b+")");
+        logger.info("interlace("+a+","+b+")");
         String[] A;
         String[] B;
         if(a.contains("-") && b.contains("-")){
@@ -155,7 +159,7 @@ public class Script {
     }
     
     public void insertPage(String a, String b) throws Exception {
-        System.out.println("insert("+a+","+b+")");
+        logger.info("insert("+a+","+b+")");
         String[] A;
         String[] B;
         String i;
@@ -176,7 +180,7 @@ public class Script {
             x = Integer.parseInt(i);
             y = Integer.parseInt(j);
             if(diff == (y-x)){
-                System.out.println("valid");
+                logger.info("valid");
             }
         }else{
             i = a;
@@ -221,7 +225,7 @@ public class Script {
         String a;
         String b;
         for(String i: instructions){
-            System.out.println(i);
+            logger.info(i);
             if(i.contains("SWAP")){//0:0 0:0;
                 instruction=i.replaceFirst("SWAP", "");
                 instruction = instruction.trim();
