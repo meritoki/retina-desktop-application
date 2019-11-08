@@ -80,8 +80,8 @@ public class Shape {
     }
     
     public Shape(Shape shape) {
-    	this.classification = shape.classification;
     	this.uuid = shape.uuid;
+    	this.classification = shape.classification;
     	this.scale = shape.scale;
     	this.addScale = shape.addScale;
     	this.dimension = new Dimension(shape.getDimension());
@@ -91,6 +91,10 @@ public class Shape {
     	this.data = new Data(shape.data);
     }
     
+    /**
+     * DIMENSION 1
+     * @return
+     */
     @JsonIgnore
     public Dimension getDimension() {
     	if(this.dimension == null) {
@@ -191,17 +195,7 @@ public class Shape {
     	}
     }
 
-    /**
-     * Used by data Matrix algorithm
-     * @param u
-     * @return
-     */
-//    public int compareTo(Object u) {
-//      if (this.pointList.get(0).x == 0 || ((Shape)u).startPoint.x == 0) {
-//        return 0;
-//      }
-//      return ((Integer)this.pointList.get(0).x).compareTo(((Shape)u).startPoint.x);
-//    }
+
     
     @JsonIgnore
     public boolean isValid(){
@@ -241,18 +235,9 @@ public class Shape {
     	this.scale = scale*(1/this.addScale);
     }
     
-	public double round(double value, int places) {
-	    if (places < 0) throw new IllegalArgumentException();
-
-	    long factor = (long) Math.pow(10, places);
-	    value = value * factor;
-	    long tmp = Math.round(value);
-	    return (double) tmp / factor;
-	}
-    
     @JsonIgnore
-    public boolean contains(Point point){
-//    	logger.info("contains("+point+")");
+    public boolean containsPoint(Point point){
+    	logger.trace("containsPoint("+point+")");
         boolean flag = false;
         Point startPoint = new Point();
         Point stopPoint = new Point();
@@ -334,6 +319,11 @@ public class Shape {
         return selection;
     }
     
+    /**
+     * DIMENSION 1
+     * @param point
+     * @param selection
+     */
     public void resize(Point point, int selection) {
     	
     	Point startPoint = new Point();
@@ -398,6 +388,7 @@ public class Shape {
         this.pointList.get(1).y = this.pointList.get(1).y + point.y;
         logger.info("move("+point+") this.pointList="+this.pointList);
     }
+   
     
     @JsonIgnore
     @Override
@@ -415,5 +406,25 @@ public class Shape {
         }
         return string;
     }
-    
 }
+
+//public double round(double value, int places) {
+//if (places < 0) throw new IllegalArgumentException();
+//
+//long factor = (long) Math.pow(10, places);
+//value = value * factor;
+//long tmp = Math.round(value);
+//return (double) tmp / factor;
+//}
+
+/**
+ * Used by data Matrix algorithm
+ * @param u
+ * @return
+ */
+//public int compareTo(Object u) {
+//  if (this.pointList.get(0).x == 0 || ((Shape)u).startPoint.x == 0) {
+//    return 0;
+//  }
+//  return ((Integer)this.pointList.get(0).x).compareTo(((Shape)u).startPoint.x);
+//}

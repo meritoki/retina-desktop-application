@@ -22,6 +22,9 @@ import com.meritoki.retina.application.desktop.model.document.Point;
 import com.meritoki.retina.application.desktop.model.document.Project;
 import com.meritoki.retina.application.desktop.model.document.Shape;
 import com.meritoki.retina.application.desktop.model.document.State;
+import com.meritoki.retina.application.desktop.model.provider.Provider;
+import com.meritoki.retina.application.desktop.model.provider.zooniverse.ZooniverseProvider;
+import com.meritoki.retina.application.desktop.model.vendor.Vendor;
 
 /**
  * Document 
@@ -52,8 +55,12 @@ public class Document {
         System.out.println(project);
     }
 	@JsonIgnore
-    static Logger logger = LogManager.getLogger(Document.class.getName());
+        static Logger logger = LogManager.getLogger(Document.class.getName());
 	@JsonProperty
+    public List<Provider> providerList = new ArrayList<>();
+    @JsonProperty
+    public List<Vendor> vendorList = new ArrayList<>();
+    @JsonProperty
 	public Project project = new Project();
 	@JsonProperty
 	public LinkedList<State> stateStack= new LinkedList<>();
@@ -67,6 +74,7 @@ public class Document {
 	public Document() {
 		this.project = new Project();
 		this.project.initTest();
+                this.providerList.add(new ZooniverseProvider());
 	}
 	
     public Project getProject() {

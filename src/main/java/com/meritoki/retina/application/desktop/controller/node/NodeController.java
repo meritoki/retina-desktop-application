@@ -3,6 +3,7 @@ package com.meritoki.retina.application.desktop.controller.node;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.type.TypeReference;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
 
 import com.meritoki.retina.application.desktop.model.User;
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.Zooniverse;
@@ -67,6 +70,35 @@ public class NodeController {
 		return object;
 	}
 	
+	public static Object openJson(File file, TypeReference<List<User>> typeReference) {
+		logger.info("openJson(" +file+", "+typeReference+ ")");
+		Object object = null;
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
+		try {
+			object = mapper.readValue(file, typeReference);
+			logger.info("opened...");
+		} catch (JsonGenerationException e) {
+			logger.error(e);
+		} catch (JsonMappingException e) {
+			logger.error(e);
+		} catch (IOException e) {
+			logger.error(e);
+		}
+		return object;
+	}
+
+	@JsonIgnore
+	public static Properties openProperties(String fileName) {
+		Properties properties = new Properties();
+		try (InputStream input = new FileInputStream(fileName)) {
+			properties.load(input);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		return properties;
+	}
+
 	@JsonIgnore
 	public static void saveJson(String path, String name, Object object) {
 		logger.info("saveJson()");
@@ -95,38 +127,24 @@ public class NodeController {
 		}
 	}
 	
-	public static Object openJson(File file, TypeReference<List<User>> typeReference) {
-		logger.info("openJson(" +file+", "+typeReference+ ")");
-		Object object = null;
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
-		try {
-			object = mapper.readValue(file, typeReference);
-			logger.info("opened...");
-		} catch (JsonGenerationException e) {
-			logger.error(e);
-		} catch (JsonMappingException e) {
-			logger.error(e);
-		} catch (IOException e) {
-			logger.error(e);
-		}
-		return object;
-	}
-	
 	@JsonIgnore
 	public static void saveProperties(Properties properties) {
 
 	}
-
+	
 	@JsonIgnore
-	public static Properties openProperties(String fileName) {
-		Properties properties = new Properties();
-		try (InputStream input = new FileInputStream(fileName)) {
-			properties.load(input);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-		return properties;
+	public static void saveYaml(String filePath, String fileName, Object object) {
+        DumperOptions options = new DumperOptions();
+        options.setPrettyFlow(true);
+        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        Yaml yaml = new Yaml(options);
+        FileWriter writer;
+        try {
+            writer = new FileWriter(filePath+"/"+fileName);
+            yaml.dump(object, writer);
+        } catch (IOException ex) {
+            logger.error(ex);
+        }
 	}
 
 	@JsonIgnore
@@ -136,7 +154,7 @@ public class NodeController {
 
 	@JsonIgnore
 	public static List<String> executeCommand(String command, int timeout) {
-	    logger.info("executeCommand(" + command + ")");
+	    logger.info("executeCommand(" + command + ", "+timeout+")");
 	    ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c",command)
 	            .redirectError(new File("error"))
 	            .redirectOutput(new File("output"));

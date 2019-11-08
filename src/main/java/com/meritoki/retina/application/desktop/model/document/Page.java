@@ -103,7 +103,6 @@ public class Page {
 	 */
 	@JsonIgnore
 	public int getIndex() {
-		logger.debug("getIndex() this.index=" + this.index);
 		return this.index;
 	}
 
@@ -114,15 +113,14 @@ public class Page {
 		if (this.index >= 0 && this.index < fileList.size()) {
 			file = fileList.get(this.index);
 		}
-		logger.debug("getFile() file=" + file);
 		return file;
 	}
 
 	/**
-	 * Crucial method that is failing. How to troubleshoot?
+	 * Function returns file that contains the point parameter
 	 * 
-	 * @param point
-	 * @return
+	 * @param Point
+	 * @return File
 	 */
 	@JsonIgnore
 	public File getFile(Point point) {
@@ -130,7 +128,6 @@ public class Page {
 		for (File file : this.getFileList()) {
 			f = file;
 			if (f.containsPoint(point)) {
-//				this.setFile(f.uuid);
 				break;
 			} else {
 				f = null;
@@ -141,9 +138,13 @@ public class Page {
 		return f;
 	}
 
+	/**
+	 * Function returns shape that contains the point parameter
+	 * @param point
+	 * @return
+	 */
 	@JsonIgnore
 	public Shape getShape(Point point) {
-		logger.trace("getShape(" + point + ")");
 		Shape s = null;
 		for (File file : this.getFileList()) {
 			s = file.getShape(point);
@@ -161,6 +162,41 @@ public class Page {
 	}
 
 	/**
+	 * DIMENSION 1
+	 * C
+	 * Converts the dimension of Shape back to the global coordinates.
+	 * This method converts the shape back to the coordinates of the page.
+	 * @return
+	 */
+	@JsonIgnore
+	public List<Shape> getShapeList() {
+		List<Shape> shapeList = new ArrayList<>();
+		Dimension dimension = null;
+		for (File file : this.getFileList()) {
+			for (Shape shape : file.getShapeList()) {
+				shape.setScale(file.scale);
+				shape.setDimension(null);
+				dimension = shape.getDimension();
+				dimension.x += (file.getOffset() * file.scale);
+				dimension.y += (file.getMargin() * file.scale);
+				shapeList.add(shape);
+			}
+		}
+		return shapeList;
+	}
+	
+//	  @JsonIgnore
+//	  public BufferedImage getShapeImage(Shape shape) {
+//	    BufferedImage bufferedImage = null;
+//	    if (this.getBufferedImage() != null) {
+//	//        bufferedImage = this.getBufferedImage().getSubimage(shape.getX(), shape.getX(), (shape.getI() - shape.getX()),
+//	//                (shape.getJ() - shape.getY()));
+//	    }
+//	    return bufferedImage;
+//	  }
+
+	/**
+	 * DIMENSION 2
 	 * A
 	 * Function is the only place where the File objects receive the metadata necessary to
 	 * correctly process shapes.
@@ -179,29 +215,6 @@ public class Page {
 		return this.fileList;
 	}
 
-	/**
-	 * C
-	 * Converts the dimension of Shape back to the global coordinates.
-	 * This method converts the shape back to the coordinates of the page.
-	 * @return
-	 */
-	@JsonIgnore
-	public List<Shape> getShapeList() {
-		List<Shape> shapeList = new ArrayList<>();
-		Dimension dimension = null;
-		for (File file : this.getFileList()) {
-			for (Shape shape : file.getShapeList()) {
-				shape.setScale(file.scale);
-				shape.setDimension(null);
-				dimension = shape.getDimension();
-				dimension.x += (file.offset * file.scale);
-				dimension.y += (file.margin * file.scale);
-				shapeList.add(shape);
-			}
-		}
-		return shapeList;
-	}
-
 	@JsonIgnore
 	public BufferedImage getBufferedImage() {
 		if (this.bufferedImage == null) {
@@ -210,9 +223,9 @@ public class Page {
 			for (File f : this.getFileList()) {
 				if (file == null) {
 					file = new File(f);
-					bufferedImage = file.bufferedImage;
+					bufferedImage = this.modFile(file);
 				} else {
-					bufferedImage = (this.joinFile(file, f));
+					bufferedImage = this.joinFile(file, f);
 				}
 			}
 			this.bufferedImage = bufferedImage;
@@ -222,7 +235,6 @@ public class Page {
 
 	@JsonIgnore
 	public void setBufferedImage(BufferedImage bufferedImage) {
-		logger.trace("setBufferedImage(" + bufferedImage + ")");
 		this.bufferedImage = bufferedImage;
 	}
 
@@ -233,7 +245,6 @@ public class Page {
 	 */
 	@JsonIgnore
 	public void setIndex(int index) {
-		logger.trace("setIndex(" + index + ")");
 		if (index >= 0 && index < this.fileList.size()) {
 			this.index = index;
 		}
@@ -241,7 +252,6 @@ public class Page {
 
 	@JsonIgnore
 	public void setScale(double scale) {
-		logger.debug("setScale(" + scale + ")");
 		this.scale = scale;
 		for (File file : this.fileList) {
 			file.setScale(scale);
@@ -260,7 +270,6 @@ public class Page {
 
 	@JsonIgnore
 	public void setFile(String uuid) {
-		logger.debug("setFile(" + uuid + ")");
 		File file = null;
 		List<File> fileList = this.getFileList();
 		for (int i = 0; i < fileList.size(); i++) {
@@ -270,6 +279,24 @@ public class Page {
 				break;
 			}
 		}
+	}
+
+	@JsonIgnore
+	public void addShape(Shape shape) {
+		for(File f: this.getFileList()) {
+			if(f.containsShape(shape)) {
+				f.addShape(shape);
+				this.setFile(f.uuid);
+				this.setShape(shape.uuid);
+				break;
+			}
+		}
+	}
+
+	@JsonIgnore
+	public void addFile(File file) {
+		file.setScale(this.scale);
+		this.fileList.add(file);
 	}
 
 	public Shape removeShape(Shape shape) {
@@ -285,20 +312,6 @@ public class Page {
 	}
 
 	@JsonIgnore
-	public void addShape(Shape shape) {
-		logger.debug("addShape(" + shape + ")");
-		for(File f: this.getFileList()) {
-			if(f.containsShape(shape)) {
-				logger.info("addShape(" + shape + ") file.uuid="+f.uuid);
-				f.addShape(shape);
-				this.setFile(f.uuid);
-				this.setShape(shape.uuid);
-				break;
-			}
-		}
-	}
-
-	@JsonIgnore
 	public int intersectShape(Point point) {
 		logger.trace("intersectShape(" + point + ")");
 		int selection = -1;
@@ -307,13 +320,6 @@ public class Page {
 			selection = file.intersectShape(point);
 		}
 		return selection;
-	}
-
-	@JsonIgnore
-	public void addFile(File file) {
-		logger.info("addFile(" + file + ")");
-		file.setScale(this.scale);
-		this.fileList.add(file);
 	}
 
 	@JsonIgnore
@@ -539,32 +545,42 @@ public class Page {
 	}
 
 	@JsonIgnore
-	public BufferedImage joinFile(File file1, File file2) { // BufferedImage img1,BufferedImage img2) {
-		logger.debug("joinBufferedImage(" + file1 + "," + file2 + ")");
-		// do some calculate first
-//        int offset  = 5;
-		int wid = 1;
-		int height = 1;
-		BufferedImage newImage = new BufferedImage(wid, height, BufferedImage.TYPE_INT_ARGB);
-		if (file1.bufferedImage != null && file2.bufferedImage != null) {
-			wid = file1.bufferedImage.getWidth() + file2.bufferedImage.getWidth();// +offset;
-			height = Math.max(file1.bufferedImage.getHeight() + (int) file1.margin,
-					file2.bufferedImage.getHeight() + (int) file2.margin);// +offset;
-			// create a new buffer and draw two image into the new image
-			newImage = new BufferedImage(wid, height, BufferedImage.TYPE_INT_ARGB);
-			Graphics2D g2 = newImage.createGraphics();
-			Color oldColor = g2.getColor();
-			// fill background
-			g2.setPaint(Color.BLACK);
-			g2.fillRect(0, 0, wid, height);
-			// draw image
-			g2.setColor(oldColor);
-			g2.drawImage(file1.bufferedImage, null, 0, (int) file1.margin);
-			g2.drawImage(file2.bufferedImage, null, file1.bufferedImage.getWidth(), (int) file2.margin);
-//        g2.drawImage(file2.bufferedImage, null, file1.bufferedImage.getWidth()+offset, (int)file2.margin);
-			g2.dispose();
+	public BufferedImage modFile(File a) { // BufferedImage img1,BufferedImage img2) {
+		logger.debug("modFile(" + a + ")");
+		BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+		if (a.bufferedImage != null) {
+			int width = a.bufferedImage.getWidth();
+			int height = a.bufferedImage.getHeight();
+			bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+			Graphics2D graphics2D = bufferedImage.createGraphics();
+			Color oldColor = graphics2D.getColor();
+			graphics2D.setPaint(Color.BLACK);
+			graphics2D.fillRect(0, 0, width, height);
+			graphics2D.setColor(oldColor);
+			graphics2D.drawImage(a.bufferedImage, null, 0, (int) a.margin);
+			graphics2D.dispose();
 		}
-		return newImage;
+		return bufferedImage;
+	}
+	
+	@JsonIgnore
+	public BufferedImage joinFile(File a, File b) {
+		logger.debug("joinFiles(" + a + "," + b + ")");
+		BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+		if (a.bufferedImage != null && b.bufferedImage != null) {
+			int width = a.bufferedImage.getWidth() + b.bufferedImage.getWidth();
+			int height = Math.max(a.bufferedImage.getHeight() + (int) a.margin, b.bufferedImage.getHeight() + (int) b.margin);// +offset;
+			bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+			Graphics2D graphics2D = bufferedImage.createGraphics();
+			Color oldColor = graphics2D.getColor();
+			graphics2D.setPaint(Color.BLACK);
+			graphics2D.fillRect(0, 0, width, height);
+			graphics2D.setColor(oldColor);
+			graphics2D.drawImage(a.bufferedImage, null, 0, (int) a.margin);
+			graphics2D.drawImage(b.bufferedImage, null, a.bufferedImage.getWidth(), (int) b.margin);
+			graphics2D.dispose();
+		}
+		return bufferedImage;
 	}
 
 //    public BufferedImage joinBufferedImage(BufferedImage img1,BufferedImage img2) {

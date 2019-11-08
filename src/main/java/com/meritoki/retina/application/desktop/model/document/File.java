@@ -116,16 +116,20 @@ public class File {
 		return shape;
 	}
 
+	/**
+	 * DIMENSION 1
+	 * @param point
+	 * @return
+	 */
 	public Shape getShape(Point point) {
 		Shape s = null;
 		Point copyPoint = null;
 		for (Shape shape : this.shapeList) {
 			copyPoint = new Point(point);
 			copyPoint.x -= this.offset * this.scale;// Required
-			if (shape.contains(copyPoint)) {
+			if (shape.containsPoint(copyPoint)) {
 				logger.info("getShape(" + copyPoint + ") s.uuid="+shape.uuid);
 				s = shape;
-				this.setShape(s.uuid);
 				break;
 			}
 		}
@@ -167,6 +171,11 @@ public class File {
 		}
 	}
 
+	
+	/**
+	 * DIMENSION 2
+	 * @return
+	 */
 	@JsonIgnore
 	public Dimension getDimension() {
 		logger.debug("getDimension()");
@@ -212,6 +221,14 @@ public class File {
 	public String getName() {
 		return this.name;
 	}
+	
+	public double getOffset() {
+		return this.offset;
+	}
+	
+	public double getMargin() {
+		return this.margin;
+	}
 
 	/**
 	 * Functions sets current index by uuid.
@@ -245,7 +262,8 @@ public class File {
 	}
 
 	/**
-	 * B
+	 * DIMENSION 3
+	 * B 
 	 * Functions adds shape to shapeList. The only place a shape's
 	 * point list is modified to fit within the File
 	 * @param shape
@@ -287,6 +305,7 @@ public class File {
 		return this.removeShape(shape.uuid);
 	}
 	/**
+	 * DIMENSION 4
 	 * Function sets removed variable for Shape equal to true;
 	 * 
 	 * @param pressedShape

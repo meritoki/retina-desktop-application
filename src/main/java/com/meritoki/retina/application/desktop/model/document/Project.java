@@ -31,7 +31,7 @@ import org.codehaus.jackson.map.ObjectWriter;
 
 public class Project implements Serializable {
     
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     
     static Logger logger = LogManager.getLogger(Project.class.getName());
     @JsonProperty

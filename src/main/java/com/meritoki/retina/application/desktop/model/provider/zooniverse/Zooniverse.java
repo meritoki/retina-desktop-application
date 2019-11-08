@@ -87,21 +87,9 @@ public class Zooniverse {
             data.put("username", credential.userName);
             data.put("password", credential.password);
             data.put("endpoint", "https://www.zooniverse.org");
-
-            DumperOptions options = new DumperOptions();
-            options.setPrettyFlow(true);
-            // Fix below - additional configuration
-            options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-            Yaml yaml = new Yaml(options);
-            FileWriter writer;
-            try {
-                writer = new FileWriter("./config.yml");
-                yaml.dump(data, writer);
-            } catch (IOException ex) {
-                logger.error(ex);
-            }
+            NodeController.saveYaml("./", "config.yml", data);
             NodeController.executeCommand("cp ./config.yml ~/.panoptes/");
-            NodeController.executeCommand("panoptes configure");
+//            NodeController.executeCommand("panoptes configure");
         }
     }
 
@@ -170,94 +158,4 @@ public class Zooniverse {
         }
         return stringBuilder.toString().trim();
     }
-//    @JsonIgnore
-//    public List<String> executeCommand(String command) {
-//        logger.info("executeCommand(" + command + ")");
-//        List<String> stringList = new ArrayList<>();
-//        String s;
-//        Process p;
-//        try {
-//            p = Runtime.getRuntime().exec(command);
-//            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//            while ((s = br.readLine()) != null) {
-//                stringList.add(s);
-//            }
-//
-//            if (!p.waitFor(1, TimeUnit.MINUTES)) {
-//                System.out.println("exit: " + p.exitValue());
-//                //timeout - kill the process. 
-//                p.destroy(); // consider using destroyForcibly instead
-//            }
-//        } catch (Exception e) {
-//        }
-//        return stringList;
-//    }
-    
-//    @JsonIgnore
-//    public List<String> executeCommand(String command) throws IOException {
-//        logger.info("executeCommand(" + command + ")");
-//        Process process = Runtime.getRuntime().exec(command);
-//
-//        ExecutorService newFixedThreadPool = Executors.newFixedThreadPool(2);
-//
-//        Future<String> output = newFixedThreadPool.submit(() -> {
-//            return IOUtils.toString(process.getInputStream());
-//        });
-//        Future<String> error = newFixedThreadPool.submit(() -> {
-//            return IOUtils.toString(process.getErrorStream());
-//        });
-//
-//        newFixedThreadPool.shutdown();
-//
-//// process.waitFor();
-//        if (!process.waitFor(3, TimeUnit.SECONDS)) {
-//            System.out.println("Destroy");
-//            process.destroy();
-//        }
-//
-//        System.out.println(output.get());
-//        System.out.println(error.get());
-//    }
-//    public List<String> executeCommand(String command) {
-//        logger.info("executeCommand(" + command + ")");
-//        List<String> stringList = new ArrayList<>();
-//        String s;
-//        Process p;
-//        int timeoutInSeconds = 60;
-//        int exitValue;
-//        try {
-//            p = Runtime.getRuntime().exec(command);
-//
-//            if (timeoutInSeconds <= 0) {
-//                exitValue = p.waitFor();
-//            } else {
-//                long now = System.currentTimeMillis();
-//                long timeoutInMillis = 1000L * timeoutInSeconds;
-//                long finish = now + timeoutInMillis;
-//                while (isAlive(p) && (System.currentTimeMillis() < finish)) {
-//                    BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//                    while ((s = br.readLine()) != null) {
-//                        stringList.add(s);
-//                    }
-//                    Thread.sleep(10);
-//                }
-//                if (isAlive(p)) {
-//                    throw new InterruptedException("Process timeout out after " + timeoutInSeconds + " seconds");
-//                }
-//                exitValue = p.exitValue();
-//                logger.info("executeCommand(" + command + ") exitValue = " + exitValue);
-//            }
-//        } catch (Exception e) {
-//        }
-//        return stringList;
-//    }
-//
-//    public static boolean isAlive(Process p) {
-//        try {
-//            p.exitValue();
-//            return false;
-//        } catch (IllegalThreadStateException e) {
-//            return true;
-//        }
-//    }
 }
