@@ -185,7 +185,8 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		e.consume();
 		this.model.variable.releasedPoint = new Point(e.getX(),e.getY());
 		if (this.model.variable.pressedPoint.equals(this.model.variable.releasedPoint)) {
-			this.model.getDocument().execute("setShape");
+			if(this.model.variable.pressedShape != null)
+				this.model.getDocument().execute("setShape");
 		} else {
 			this.model.variable.selection = this.model.getDocument().getProject().getPage().intersectShape(this.model.variable.pressedPoint);
 			if (this.model.variable.selection > -1) {

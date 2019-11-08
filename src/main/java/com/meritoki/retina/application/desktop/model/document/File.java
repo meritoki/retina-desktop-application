@@ -15,6 +15,11 @@ import org.codehaus.jackson.map.ObjectWriter;
 
 import com.meritoki.retina.application.desktop.controller.node.NodeController;
 
+/**
+ * Class is used to manage reference to file in filesystem
+ * @author jorodriguez
+ *
+ */
 public class File {
 	@JsonIgnore
 	static Logger logger = LogManager.getLogger(File.class.getName());
@@ -52,12 +57,16 @@ public class File {
 	public List<Shape> shapeList = new ArrayList<>();
 
 	/**
-	 * Instantiate new instance of File
+	 * Default constructor
 	 */
 	public File() {
 		this.uuid = UUID.randomUUID().toString();
 	}
 
+	/**
+	 * Copy constructor
+	 * @param file
+	 */
 	public File(File file) {
 		this.uuid = file.uuid;
 		this.name = file.name;
@@ -75,6 +84,11 @@ public class File {
 		}
 	}
 
+	/**
+	 * Constructor accepts a file path and name parameters
+	 * @param path
+	 * @param name
+	 */
 	public File(String path, String name) {
 		this.uuid = UUID.randomUUID().toString();
 		this.path = path;
@@ -82,6 +96,11 @@ public class File {
 		this.setBufferedImage(NodeController.openBufferedImage(this.path, this.name));
 	}
 	
+	/**
+	 * Function returns true if files have the same uuid
+	 * @param file
+	 * @return flag
+	 */
 	public boolean equals(File file) {
 		boolean flag = false;
 		if(this.uuid.equals(file.uuid)) {
@@ -123,17 +142,42 @@ public class File {
 	 */
 	public Shape getShape(Point point) {
 		Shape s = null;
-		Point copyPoint = null;
 		for (Shape shape : this.shapeList) {
-			copyPoint = new Point(point);
-			copyPoint.x -= this.offset * this.scale;// Required
-			if (shape.containsPoint(copyPoint)) {
-				logger.info("getShape(" + copyPoint + ") s.uuid="+shape.uuid);
+			if (shape.containsPoint(this.getFilePoint(point))) {
+				logger.info("getShape(" + point + ") s.uuid="+shape.uuid);
 				s = shape;
 				break;
 			}
 		}
 		return s;
+	}
+	
+	public Point getFilePoint(Point point) {
+		Point p = new Point(point);
+		p.x -= this.offset * this.scale;
+		p.y -= this.margin * this.scale;
+		return p;
+	}
+	
+	public Point getPagePoint(Point point) {
+		Point p = new Point(point);
+		p.x += this.offset * this.scale;
+		p.y += this.margin * this.scale;
+		return p;
+	}
+	
+	public List<Point> getFilePointList(List<Point> pointList) {
+		List<Point> pList = this.copyPointList(pointList);
+		pList.set(0, this.getFilePoint(pList.get(0)));
+		pList.set(1, this.getFilePoint(pList.get(1)));
+		return pList;
+	}
+
+	public List<Point> getPagePointList(List<Point> pointList) {
+		List<Point> pList = this.copyPointList(pointList);
+		pList.set(0, this.getPagePoint(pList.get(0)));
+		pList.set(1, this.getPagePoint(pList.get(1)));
+		return pList;
 	}
 
 	/**
@@ -148,6 +192,45 @@ public class File {
 	@JsonIgnore
 	public BufferedImage getBufferedImage() {
 		return this.bufferedImage;
+	}
+
+	/**
+	 * DIMENSION 2
+	 * @return
+	 */
+	@JsonIgnore
+	public Dimension getDimension() {
+		logger.debug("getDimension()");
+		Dimension dimension = new Dimension();
+		dimension.x = this.offset * this.scale;
+		dimension.y = this.margin * this.scale;
+		dimension.w = this.width * this.scale;
+		dimension.h = this.height * this.scale;
+		return dimension;
+	}
+
+	public double getWidth() {
+		return this.width;
+	}
+
+	public double getHeight() {
+		return this.height;
+	}
+
+	public String getPath() {
+		return this.path;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public double getOffset() {
+		return this.offset;
+	}
+
+	public double getMargin() {
+		return this.margin;
 	}
 
 	/**
@@ -172,21 +255,6 @@ public class File {
 	}
 
 	
-	/**
-	 * DIMENSION 2
-	 * @return
-	 */
-	@JsonIgnore
-	public Dimension getDimension() {
-		logger.debug("getDimension()");
-		Dimension dimension = new Dimension();
-		dimension.x = this.offset * this.scale;
-		dimension.y = this.margin * this.scale;
-		dimension.w = this.width * this.scale;
-		dimension.h = this.height * this.scale;
-		return dimension;
-	}
-
 	@JsonIgnore
 	public void setBufferedImage(BufferedImage bufferedImage) {
 		this.bufferedImage = bufferedImage;
@@ -204,30 +272,6 @@ public class File {
 	public void setHeight(double height) {
 		logger.debug("setHeight(" + height + ")");
 		this.height = height;
-	}
-
-	public double getWidth() {
-		return this.width;
-	}
-
-	public double getHeight() {
-		return this.height;
-	}
-
-	public String getPath() {
-		return this.path;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-	
-	public double getOffset() {
-		return this.offset;
-	}
-	
-	public double getMargin() {
-		return this.margin;
 	}
 
 	/**
@@ -261,6 +305,14 @@ public class File {
 		this.margin = margin;
 	}
 
+	public List<Point> copyPointList(List<Point> pointList) {
+		List<Point> copyPointList = new ArrayList<>();
+		for(Point p: pointList) {
+			copyPointList.add(new Point(p));
+		}
+		return copyPointList;
+	}
+
 	/**
 	 * DIMENSION 3
 	 * B 
@@ -270,13 +322,10 @@ public class File {
 	 */
 	@JsonIgnore
 	public void addShape(Shape shape) {
-		shape.pointList.get(0).x -= (this.offset * this.scale);
-		shape.pointList.get(1).x -= (this.offset * this.scale);
-		shape.pointList.get(0).y -= (this.margin * this.scale);
-		shape.pointList.get(1).y -= (this.margin * this.scale);
+		shape.pointList = this.getFilePointList(shape.pointList);
 		this.shapeList.add(shape);
 	}
-
+	
 	public int intersectShape(Point point) {
 			int selection = -1;
 			double factor;
@@ -306,9 +355,9 @@ public class File {
 	}
 	/**
 	 * DIMENSION 4
-	 * Function sets removed variable for Shape equal to true;
+	 * Function removes Shape from shapeList using uuid.
 	 * 
-	 * @param pressedShape
+	 * @param shape
 	 */
 	@JsonIgnore
 	public Shape removeShape(String uuid) {
@@ -317,8 +366,7 @@ public class File {
 			s = this.shapeList.get(i);
 			if (s.uuid.equals(uuid)) {
 				this.shapeList.remove(i);
-				s.pointList.get(0).x += this.offset * s.scale;
-				s.pointList.get(1).x += this.offset * s.scale;
+				s.pointList = this.getPagePointList(s.pointList);
 				break;
 			} else {
 				s = null;
@@ -326,11 +374,18 @@ public class File {
 		}
 		return s;
 	}
-
+	
+	/**
+	 * Function returns true if point is contained within file
+	 * @param point
+	 * @return
+	 */
 	public boolean containsPoint(Point point) {
 		boolean flag = false;
 		if (point.x > (this.offset * this.scale) && point.x < (this.offset + this.width) * this.scale) {
-			flag = true;
+			if(point.y > (this.margin * this.scale) && point.y < (this.margin + this.height) * this.scale) {
+				flag = true;
+			}
 		}
 		return flag;
 	}
@@ -370,4 +425,40 @@ public class File {
 //      imageList.add(this.getShapeImage(r));
 //  }
 //  return imageList;
+//}
+
+//	@JsonIgnore
+//	public void addShape(Shape shape) {
+//		shape.pointList.get(0).x -= (this.offset * this.scale);
+//		shape.pointList.get(1).x -= (this.offset * this.scale);
+//		shape.pointList.get(0).y -= (this.margin * this.scale);
+//		shape.pointList.get(1).y -= (this.margin * this.scale);
+//		this.shapeList.add(shape);
+//	}
+//@JsonIgnore
+//public Shape removeShape(String uuid) {
+//	Shape s = null;
+//	for (int i = 0; i < this.shapeList.size(); i++) {
+//		s = this.shapeList.get(i);
+//		if (s.uuid.equals(uuid)) {
+//			this.shapeList.remove(i);
+//			s.pointList = this.getGlobalPointList(this.copyPointList(s.pointList));
+//			//convert to global coordinates
+////			s.pointList.get(0).x += this.offset * this.scale;
+////			s.pointList.get(1).x += this.offset * this.scale;
+//			break;
+//		} else {
+//			s = null;
+//		}
+//	}
+//	return s;
+//}
+
+//@JsonIgnore
+//public void addShape(Shape shape) {
+//	shape.pointList.get(0).x -= (this.offset * this.scale);
+//	shape.pointList.get(1).x -= (this.offset * this.scale);
+//	shape.pointList.get(0).y -= (this.margin * this.scale);
+//	shape.pointList.get(1).y -= (this.margin * this.scale);
+//	this.shapeList.add(shape);
 //}

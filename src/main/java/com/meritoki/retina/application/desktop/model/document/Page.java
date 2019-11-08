@@ -91,6 +91,10 @@ public class Page {
 		this.uuid = UUID.randomUUID().toString();
 	}
 
+	/**
+	 * Copy constructor
+	 * @param page
+	 */
 	public Page(Page page) {
 		this.uuid = page.uuid;
 
@@ -98,14 +102,17 @@ public class Page {
 
 	/**
 	 * Function gets the current index selected by user.
-	 * 
-	 * @return
+	 * @return this.index
 	 */
 	@JsonIgnore
 	public int getIndex() {
 		return this.index;
 	}
 
+	/**
+	 * Function returns file using index
+	 * @return file
+	 */
 	@JsonIgnore
 	public File getFile() {
 		File file = null;
@@ -155,10 +162,15 @@ public class Page {
 		return s;
 	}
 
+	/**
+	 * Function returns the Shape at the current index in File
+	 * @return shape
+	 */
 	@JsonIgnore
 	public Shape getShape() {
 		File file = this.getFile();
-		return (file != null) ? file.getShape() : null;
+		Shape shape = (file != null) ? file.getShape() : null;
+		return shape;
 	}
 
 	/**
@@ -184,16 +196,6 @@ public class Page {
 		}
 		return shapeList;
 	}
-	
-//	  @JsonIgnore
-//	  public BufferedImage getShapeImage(Shape shape) {
-//	    BufferedImage bufferedImage = null;
-//	    if (this.getBufferedImage() != null) {
-//	//        bufferedImage = this.getBufferedImage().getSubimage(shape.getX(), shape.getX(), (shape.getI() - shape.getX()),
-//	//                (shape.getJ() - shape.getY()));
-//	    }
-//	    return bufferedImage;
-//	  }
 
 	/**
 	 * DIMENSION 2
@@ -215,6 +217,10 @@ public class Page {
 		return this.fileList;
 	}
 
+	/**
+	 * Function returns bufferedImage with one or more File bufferedImages from the fileList
+	 * @return this.bufferedImage;
+	 */
 	@JsonIgnore
 	public BufferedImage getBufferedImage() {
 		if (this.bufferedImage == null) {
@@ -250,6 +256,10 @@ public class Page {
 		}
 	}
 
+	/**
+	 * Function sets scale for page and all files in fileList
+	 * @param scale
+	 */
 	@JsonIgnore
 	public void setScale(double scale) {
 		this.scale = scale;
@@ -258,6 +268,10 @@ public class Page {
 		}
 	}
 
+	/**
+	 * Function sets current shape and file using uuid
+	 * @param uuid
+	 */
 	@JsonIgnore
 	public void setShape(String uuid) {
 		for (File file : this.getFileList()) {
@@ -281,6 +295,10 @@ public class Page {
 		}
 	}
 
+	/**
+	 * Shape has global coordinates
+	 * @param shape
+	 */
 	@JsonIgnore
 	public void addShape(Shape shape) {
 		for(File f: this.getFileList()) {
@@ -303,7 +321,7 @@ public class Page {
 		logger.info("removeShape(" + shape + ")");
 		Shape s = null;
 		for (File file : this.getFileList()) {
-			s = file.removeShape(shape);
+			s = file.removeShape(shape.uuid);
 			if (s != null) {
 				break;
 			}
@@ -646,4 +664,14 @@ public class Page {
 //		file.addShape(shape);
 //		this.setShape(shape.uuid);
 //	}
+//}
+
+//@JsonIgnore
+//public BufferedImage getShapeImage(Shape shape) {
+//  BufferedImage bufferedImage = null;
+//  if (this.getBufferedImage() != null) {
+////        bufferedImage = this.getBufferedImage().getSubimage(shape.getX(), shape.getX(), (shape.getI() - shape.getX()),
+////                (shape.getJ() - shape.getY()));
+//  }
+//  return bufferedImage;
 //}
