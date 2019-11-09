@@ -37,7 +37,7 @@ public class MoveShape extends Command {
 			shape.pointList.get(1).x = shape.dimension.x + shape.dimension.w;
 			shape.pointList.get(1).y = shape.dimension.y + shape.dimension.h;
 			shape.move(this.model.variable.movedPoint);
-			this.model.variable.pressedFile.removeShape(shape);
+			this.model.variable.pressedFile.removeShape(shape.uuid);
 			this.model.variable.releasedFile.addShape(shape);
 		} else {
 			this.model.variable.pressedShape.move(this.model.variable.movedPoint);

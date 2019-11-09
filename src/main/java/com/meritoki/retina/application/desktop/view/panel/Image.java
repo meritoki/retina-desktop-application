@@ -5,6 +5,7 @@
  */
 package com.meritoki.retina.application.desktop.view.panel;
 
+import com.meritoki.retina.application.desktop.controller.node.NodeController;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -133,17 +134,11 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 						Rectangle2D.Double rectangle = new Rectangle2D.Double(d.x, d.y, d.w, d.h);
 						graphics2D.draw(rectangle);
 					}
+//                                        NodeController.saveJpg("./", s.uuid+".jpg", s.bufferedImage);
 				}
 			}
 		}
 	}
-
-	/**
-	 * Consider moving
-	 * 
-	 * @param point
-	 * @return
-	 */
 
 	/**
 	 * Here is mouse is pressed, this is the start of many operations. Here we know
@@ -185,7 +180,8 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		e.consume();
 		this.model.variable.releasedPoint = new Point(e.getX(),e.getY());
 		if (this.model.variable.pressedPoint.equals(this.model.variable.releasedPoint)) {
-			this.model.getDocument().execute("setShape");
+			if(this.model.variable.pressedShape != null)
+				this.model.getDocument().execute("setShape");
 		} else {
 			this.model.variable.selection = this.model.getDocument().getProject().getPage().intersectShape(this.model.variable.pressedPoint);
 			if (this.model.variable.selection > -1) {
@@ -199,8 +195,8 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				}
 			}
 		}
-		this.main.shapeDialog.setModel(this.model);
-		this.main.pageDialog.setModel(this.model);
+		this.main.shapeDialog.init();
+		this.main.pageDialog.init();
 		repaint();
 	}
 

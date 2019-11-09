@@ -65,7 +65,7 @@ public class Shape {
     @JsonProperty
     public String uuid = null;
     @JsonIgnore
-    private BufferedImage bufferedImage = null;
+    public BufferedImage bufferedImage = null;
     @JsonProperty
     public Data data = new Data();
     @JsonIgnore
@@ -220,6 +220,10 @@ public class Shape {
 	public double getCenterY(){
 	    return (this.pointList.get(0).y+this.pointList.get(1).y)/2;
 	}
+	
+	public List<Point> getPointList() {
+		return this.pointList;
+	}
 
 	@JsonProperty
     public void setData(Data data){
@@ -233,6 +237,10 @@ public class Shape {
     @JsonIgnore
     public void setScale(double scale) {
     	this.scale = scale*(1/this.addScale);
+    }
+    
+    public void setPointList(List<Point> pointList) {
+    	this.pointList = pointList;
     }
     
     @JsonIgnore
@@ -320,7 +328,7 @@ public class Shape {
     }
     
     /**
-     * DIMENSION 1
+     * DIMENSION 2
      * @param point
      * @param selection
      */

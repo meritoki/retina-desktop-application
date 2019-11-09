@@ -31,6 +31,8 @@ public class SubjectSet {
     public String uuid;
     public String id;
     public String name;
+    public List<Shape> shapeList = new ArrayList<>();
+
     
     public SubjectSet(){
         UUID uuid = UUID.randomUUID();
@@ -50,8 +52,7 @@ public class SubjectSet {
     public void setName(String name) {
         this.name = name;
     }
-    public List<com.meritoki.retina.application.desktop.model.document.Shape> rectangleList = new ArrayList<>();
-
+    
     public String getTitle() {
         return title;
     }
@@ -76,11 +77,11 @@ public class SubjectSet {
         this.id = id;
     }
     
-    public List<Shape> getRectangleList() {
-        return rectangleList;
+    public List<Shape> getShapeList() {
+        return shapeList;
     }
 
-    public void setRectangleList(List<Shape> rectangleList) {
-        this.rectangleList = rectangleList;
+    public void setShapeList(List<Shape> shapeList) {
+        this.shapeList = shapeList;
     }
 }
