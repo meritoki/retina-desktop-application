@@ -5,6 +5,7 @@
  */
 package com.meritoki.retina.application.desktop.view.panel;
 
+import com.meritoki.retina.application.desktop.controller.node.NodeController;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -133,6 +134,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 						Rectangle2D.Double rectangle = new Rectangle2D.Double(d.x, d.y, d.w, d.h);
 						graphics2D.draw(rectangle);
 					}
+//                                        NodeController.saveJpg("./", s.uuid+".jpg", s.bufferedImage);
 				}
 			}
 		}

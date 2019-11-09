@@ -15,10 +15,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import com.meritoki.retina.application.desktop.controller.client.ModelClient;
 import com.meritoki.retina.application.desktop.model.command.Command;
-import com.meritoki.retina.application.desktop.model.document.File;
 import com.meritoki.retina.application.desktop.model.document.Operation;
-import com.meritoki.retina.application.desktop.model.document.Page;
-import com.meritoki.retina.application.desktop.model.document.Point;
 import com.meritoki.retina.application.desktop.model.document.Project;
 import com.meritoki.retina.application.desktop.model.document.Shape;
 import com.meritoki.retina.application.desktop.model.document.State;

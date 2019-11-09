@@ -50,6 +50,20 @@ public class NodeController {
         }
         return bufferedImage;
 	}
+        
+        public static void saveJpg(String filePath, String fileName, BufferedImage bufferedImage) {
+            logger.info(filePath+", "+fileName+", "+bufferedImage);
+            saveJpg(new File(filePath+"/"+fileName), bufferedImage);
+        }
+        
+        @JsonIgnore
+        public static void saveJpg(File file, BufferedImage bufferedImage) {
+            try {
+                ImageIO.write(bufferedImage, "jpg", file);
+            } catch (IOException ex) {
+                logger.error(ex);
+            }
+        }
 	
 	@JsonIgnore
 	public static Object openJson(java.io.File file, Class className) {
