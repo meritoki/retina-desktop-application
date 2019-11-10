@@ -16,6 +16,7 @@ import com.meritoki.retina.application.desktop.model.command.Command;
 import com.meritoki.retina.application.desktop.model.command.MoveShape;
 import com.meritoki.retina.application.desktop.model.command.RemoveShape;
 import com.meritoki.retina.application.desktop.model.command.ResizeShape;
+import com.meritoki.retina.application.desktop.model.command.SetPage;
 import com.meritoki.retina.application.desktop.model.command.SetShape;
 import com.meritoki.retina.application.desktop.model.document.Document;
 
@@ -48,14 +49,14 @@ public class Model {
 		this.userList = UserController.open();
 		this.document = new Document();
 		Command addPage = new AddPage(this);
-//		Command setPage = new SetPage(this);
+		Command setPage = new SetPage(this);
 		Command addShape = new AddShape(this);
 		Command setShape = new SetShape(this);
 		Command moveShape = new MoveShape(this);
 		Command removeShape = new RemoveShape(this);
 		Command resizeShape = new ResizeShape(this);
 		this.document.register("addPage", addPage);
-//		this.document.register("setPage", setPage);
+		this.document.register("setPage", setPage);
 		this.document.register("addShape", addShape);
 		this.document.register("setShape", setShape);
 		this.document.register("moveShape", moveShape);
@@ -77,6 +78,10 @@ public class Model {
 	
 	public Document getDocument() {
 		return this.document;
+	}
+	
+	public void setDocument(Document document) {
+		this.document = document;
 	}
 	
 	public boolean loginUser(String userName, String password) {

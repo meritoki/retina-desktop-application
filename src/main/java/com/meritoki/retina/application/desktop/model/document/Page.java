@@ -217,20 +217,6 @@ public class Page {
             bufferedImage = this.getBufferedImage().getSubimage(x,y,w,h);
         }
         return bufferedImage;
-//		bufferedImage = new BufferedImage((int) shape.getDimension().w, (int) shape.getDimension().h,
-//				BufferedImage.TYPE_INT_RGB);
-//		Graphics2D g2 = bufferedImage.createGraphics();
-//		if (shape.classification.equals(Shape.ELLIPSE)) {
-//			Ellipse2D.Double ellipse = new Ellipse2D.Double(shape.getDimension().x, shape.getDimension().y,
-//					shape.getDimension().w, shape.getDimension().h);
-//			g2.setClip(ellipse);
-//		} else if (shape.classification.equals(Shape.RECTANGLE)) {
-//			Rectangle2D.Double rectangle = new Rectangle2D.Double(shape.getDimension().x, shape.getDimension().y,
-//					shape.getDimension().w, shape.getDimension().h);
-//			g2.setClip(rectangle);
-//		}
-//		g2.drawImage(this.getBufferedImage(), 0, 0, null);
-//                g2.dispose();
     }
 
     /**
@@ -714,3 +700,17 @@ public class Page {
 //  }
 //  return bufferedImage;
 //}
+//bufferedImage = new BufferedImage((int) shape.getDimension().w, (int) shape.getDimension().h,
+//BufferedImage.TYPE_INT_RGB);
+//Graphics2D g2 = bufferedImage.createGraphics();
+//if (shape.classification.equals(Shape.ELLIPSE)) {
+//Ellipse2D.Double ellipse = new Ellipse2D.Double(shape.getDimension().x, shape.getDimension().y,
+//	shape.getDimension().w, shape.getDimension().h);
+//g2.setClip(ellipse);
+//} else if (shape.classification.equals(Shape.RECTANGLE)) {
+//Rectangle2D.Double rectangle = new Rectangle2D.Double(shape.getDimension().x, shape.getDimension().y,
+//	shape.getDimension().w, shape.getDimension().h);
+//g2.setClip(rectangle);
+//}
+//g2.drawImage(this.getBufferedImage(), 0, 0, null);
+//g2.dispose();

@@ -35,10 +35,10 @@ public class Open extends javax.swing.JDialog {
     /**
      * Creates new form Open
      * @param parent
-     * @param modal
+     * @param model
      */
-    public Open(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public Open(java.awt.Frame parent, boolean model) {
+        super(parent, model);
         initComponents();
     }
     
@@ -81,9 +81,8 @@ public class Open extends javax.swing.JDialog {
 
     private void openFileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openFileChooserActionPerformed
         File file = this.openFileChooser.getSelectedFile();
-        Model model = new Model();
-        model.document = DocumentController.open(file);
-        ((Main)this.getParent()).setModel(model);
+        this.model.setDocument(DocumentController.open(file));
+//        ((Main)this.getParent()).setModel(model);
         ((Main)this.getParent()).init();
         ((Main)this.getParent()).repaint();
         this.setVisible(false);

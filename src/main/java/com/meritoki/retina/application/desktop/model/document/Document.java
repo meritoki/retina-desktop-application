@@ -30,16 +30,10 @@ public class Document {
 	
 	public static void main(String[] args) throws IOException{
         Project project = new Project();
-//        File file = new File("~/test.json");
         project.initTest();
         ObjectMapper mapper = new ObjectMapper();
         Model model = new Model();
         model.getDocument().project = project;
-//        model.open(new java.io.File("/home/jorodriguez/test.json"));
-//        mapper.setVisibility(JsonMethod.FIELD, Visibility.ANY);
-//        mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
-//        mapper.writeValue(file, project);
-//        project = mapper.readValue(file, Project.class);
         String jsonInString = mapper.writeValueAsString(model.getDocument());
         ModelClient modelClient = new ModelClient();
         User user = new User();
@@ -50,7 +44,7 @@ public class Document {
         System.out.println(project);
     }
 	@JsonIgnore
-        static Logger logger = LogManager.getLogger(Document.class.getName());
+    static Logger logger = LogManager.getLogger(Document.class.getName());
 	@JsonProperty
     public List<Provider> providerList = new ArrayList<>();
     @JsonProperty
@@ -63,24 +57,18 @@ public class Document {
 	public List<User> userList = new LinkedList<>();
 	@JsonProperty
 	public State state = new State();
-	
+	@JsonIgnore
 	private final HashMap<String, Command> commandMap = new HashMap<>();
 
 	public Document() {
 		this.project = new Project();
 		this.project.initTest();
-                this.providerList.add(new ZooniverseProvider());
+        this.providerList.add(new ZooniverseProvider());
 	}
 	
     public Project getProject() {
 		return this.project;
 	}
-//	@JsonIgnore
-//	public void setScale(double scale) {
-//		if (this.project != null) {
-//			this.project.setScale(scale);
-//		}
-//	}
 
 	public void register(String commandName, Command command) {
         commandMap.put(commandName, command);
@@ -298,3 +286,24 @@ public class Document {
 		}
 	}
 }
+//public static void main(String[] args) throws IOException{
+//    Project project = new Project();
+////    File file = new File("~/test.json");
+//    project.initTest();
+//    ObjectMapper mapper = new ObjectMapper();
+//    Model model = new Model();
+//    model.getDocument().project = project;
+////    model.open(new java.io.File("/home/jorodriguez/test.json"));
+////    mapper.setVisibility(JsonMethod.FIELD, Visibility.ANY);
+////    mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
+////    mapper.writeValue(file, project);
+////    project = mapper.readValue(file, Project.class);
+//    String jsonInString = mapper.writeValueAsString(model.getDocument());
+//    ModelClient modelClient = new ModelClient();
+//    User user = new User();
+//    user.name = "javainuse";
+//    user.password = "password";
+//    modelClient.login(user);
+//    modelClient.uploadProject(jsonInString);
+//    System.out.println(project);
+//}

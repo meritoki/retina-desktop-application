@@ -52,11 +52,14 @@ public class Variable {
 	public Point pressedPoint = new Point();
 	@JsonIgnore
 	public Point releasedPoint = new Point();
+	@JsonIgnore
 	public Point movedPoint = new Point();
 	@JsonIgnore
 	public double scale = 1;
-	
+	@JsonIgnore
 	public int selection = -1;
+	@JsonIgnore
+	public String defaultFileName = "untitled.json";
 	@JsonIgnore
 	public List<String> emptyList = new ArrayList<>();
 	@JsonIgnore

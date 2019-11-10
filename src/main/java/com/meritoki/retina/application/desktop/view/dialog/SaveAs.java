@@ -79,7 +79,7 @@ public class SaveAs extends javax.swing.JDialog {
 
     private void saveFileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveFileChooserActionPerformed
         File file = this.saveFileChooser.getSelectedFile();
-        DocumentController.save(file, ((Main)this.getParent()).model.document);
+        DocumentController.save(file, ((Main)this.getParent()).model.getDocument());
         this.setVisible(false);
     }//GEN-LAST:event_saveFileChooserActionPerformed
 

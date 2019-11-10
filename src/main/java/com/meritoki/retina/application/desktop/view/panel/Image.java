@@ -311,16 +311,22 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 	
     public void generateManifest(String timeStamp, List<Shape> shapeList) {
     	StringBuilder stringBuilder = new StringBuilder();
+    	stringBuilder.append("my_own_id");
+    	stringBuilder.append(",");
+    	stringBuilder.append("the_image");
     	stringBuilder.append("\n");
     	new java.io.File("./"+timeStamp).mkdir();
-    	for(Shape shape: shapeList) {
+    	Shape shape = null;
+    	for(int i = 0;i<shapeList.size();i++) {
+    		shape = shapeList.get(i);
+    		stringBuilder.append(i);
+    		stringBuilder.append(",");
     		NodeController.saveJpg("./"+timeStamp, shape.uuid+".jpg", shape.bufferedImage);
     		stringBuilder.append(shape.uuid+".jpg");
     		stringBuilder.append("\n");
     	}
     	NodeController.saveCsv("./"+timeStamp, "manifest.csv", stringBuilder);
     }
-
 	@Override
 	public void keyTyped(KeyEvent e) {
 	}
