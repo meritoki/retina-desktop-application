@@ -22,11 +22,14 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.meritoki.retina.application.desktop.model.Document;
+
 import com.meritoki.retina.application.desktop.model.Model;
+import com.meritoki.retina.application.desktop.model.document.Document;
 import com.meritoki.retina.application.desktop.model.document.File;
 import com.meritoki.retina.application.desktop.model.document.Page;
 import com.meritoki.retina.application.desktop.model.document.Point;
@@ -96,11 +99,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 			BufferedImage bufferedImage = project.getPage().getBufferedImage();
 			if (bufferedImage != null) {
 				graphics2D.drawImage(bufferedImage, affineTransform, null);
-
 			}
-			// TODO Attempt to build buffered image here instead of above, build it with
-			// each
-			// File bufferedImage.
 			List<File> fileList = project.getPage().getFileList();
 			File file = project.getPage().getFile();
 			com.meritoki.retina.application.desktop.model.document.Dimension d = null;
@@ -254,6 +253,10 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 			e.consume();
 			this.model.getDocument().redo();
 			repaint();
+		} else if((e.getKeyCode() == KeyEvent.VK_M) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) { 
+			String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+			List<Shape> shapeList = this.model.getDocument().getProject().getPage().getShapeList();
+			this.generateManifest(timeStamp, shapeList);
 		} else {
 			e.consume();
 			int keyCode = e.getKeyCode();
@@ -305,6 +308,18 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 			}
 		}
 	}
+	
+    public void generateManifest(String timeStamp, List<Shape> shapeList) {
+    	StringBuilder stringBuilder = new StringBuilder();
+    	stringBuilder.append("\n");
+    	new java.io.File("./"+timeStamp).mkdir();
+    	for(Shape shape: shapeList) {
+    		NodeController.saveJpg("./"+timeStamp, shape.uuid+".jpg", shape.bufferedImage);
+    		stringBuilder.append(shape.uuid+".jpg");
+    		stringBuilder.append("\n");
+    	}
+    	NodeController.saveCsv("./"+timeStamp, "manifest.csv", stringBuilder);
+    }
 
 	@Override
 	public void keyTyped(KeyEvent e) {

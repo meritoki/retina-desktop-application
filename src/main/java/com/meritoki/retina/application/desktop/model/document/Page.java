@@ -20,6 +20,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -208,12 +209,12 @@ public class Page {
 
     public BufferedImage getShapeBufferedImage(Shape shape) {
         BufferedImage bufferedImage = null;
-        //  BufferedImage bufferedImage = null;
         if (this.getBufferedImage() != null) {
-            bufferedImage = this.getBufferedImage().getSubimage((int)shape.getDimension().x,
-                    (int)shape.getDimension().y,
-                    (int)shape.getDimension().w,
-                    (int)shape.getDimension().h);
+        	int x = (int)(shape.getDimension().x / this.scale);
+        	int y = (int)(shape.getDimension().y / this.scale);
+        	int w = (int)(shape.getDimension().w / this.scale);
+        	int h = (int)(shape.getDimension().h / this.scale);
+            bufferedImage = this.getBufferedImage().getSubimage(x,y,w,h);
         }
         return bufferedImage;
 //		bufferedImage = new BufferedImage((int) shape.getDimension().w, (int) shape.getDimension().h,

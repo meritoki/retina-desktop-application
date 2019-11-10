@@ -1,4 +1,4 @@
-package com.meritoki.retina.application.desktop.model;
+package com.meritoki.retina.application.desktop.model.document;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,11 +14,9 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.meritoki.retina.application.desktop.controller.client.ModelClient;
+import com.meritoki.retina.application.desktop.model.Model;
+import com.meritoki.retina.application.desktop.model.User;
 import com.meritoki.retina.application.desktop.model.command.Command;
-import com.meritoki.retina.application.desktop.model.document.Operation;
-import com.meritoki.retina.application.desktop.model.document.Project;
-import com.meritoki.retina.application.desktop.model.document.Shape;
-import com.meritoki.retina.application.desktop.model.document.State;
 import com.meritoki.retina.application.desktop.model.provider.Provider;
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.ZooniverseProvider;
 import com.meritoki.retina.application.desktop.model.vendor.Vendor;

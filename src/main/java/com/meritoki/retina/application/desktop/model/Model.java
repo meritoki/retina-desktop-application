@@ -1,12 +1,5 @@
 package com.meritoki.retina.application.desktop.model;
 
-import java.io.FileInputStream;
-//import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
@@ -24,6 +17,7 @@ import com.meritoki.retina.application.desktop.model.command.MoveShape;
 import com.meritoki.retina.application.desktop.model.command.RemoveShape;
 import com.meritoki.retina.application.desktop.model.command.ResizeShape;
 import com.meritoki.retina.application.desktop.model.command.SetShape;
+import com.meritoki.retina.application.desktop.model.document.Document;
 
 /**
  * Model is a class that is used to maintain the state of the Project for the

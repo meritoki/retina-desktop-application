@@ -5,8 +5,8 @@ import java.io.File;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.retina.application.desktop.model.Document;
 import com.meritoki.retina.application.desktop.model.Model;
+import com.meritoki.retina.application.desktop.model.document.Document;
 import com.meritoki.retina.application.desktop.model.document.Page;
 import com.meritoki.retina.application.desktop.model.document.Project;
 

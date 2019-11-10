@@ -18,8 +18,8 @@ package com.meritoki.retina.application.desktop.view.dialog.image;
 import java.io.File;
 import java.io.IOException;
 
-import com.meritoki.retina.application.desktop.model.Document;
 import com.meritoki.retina.application.desktop.model.Model;
+import com.meritoki.retina.application.desktop.model.document.Document;
 import com.meritoki.retina.application.desktop.model.document.Page;
 import com.meritoki.retina.application.desktop.model.document.Project;
 import com.meritoki.retina.application.desktop.view.frame.Main;
