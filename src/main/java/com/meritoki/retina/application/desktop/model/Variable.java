@@ -60,6 +60,10 @@ public class Variable {
 	public int selection = -1;
 	@JsonIgnore
 	public String defaultFileName = "untitled.json";
+        @JsonIgnore
+        public String documentFileName = null;
+        @JsonIgnore
+        public String documentFilePath = null;
 	@JsonIgnore
 	public List<String> emptyList = new ArrayList<>();
 	@JsonIgnore

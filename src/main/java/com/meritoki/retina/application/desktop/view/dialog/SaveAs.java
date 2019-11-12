@@ -17,6 +17,11 @@ package com.meritoki.retina.application.desktop.view.dialog;
 
 import java.io.File;
 
+import javax.swing.JFileChooser;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.meritoki.retina.application.desktop.controller.document.DocumentController;
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.document.Project;
@@ -28,18 +33,14 @@ import com.meritoki.retina.application.desktop.view.frame.Main;
  */
 public class SaveAs extends javax.swing.JDialog {
 
+	private static Logger logger = LogManager.getLogger(SaveAs.class.getName());
     private Model model = null;
     /**
      * Creates new form Save
      */
-    public SaveAs(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
-        initComponents();
-        this.saveFileChooser.setApproveButtonText("Save");
-        // Set the mnemonic
-        this.saveFileChooser.setApproveButtonMnemonic('S');
-        // Set the tool tip
-        this.saveFileChooser.setApproveButtonToolTipText("Save Tool Tip");
+    public SaveAs(java.awt.Frame parent, boolean flag) {
+        super(parent, flag);
+        this.initComponents();
     }
 
     /**
@@ -54,13 +55,25 @@ public class SaveAs extends javax.swing.JDialog {
         saveFileChooser = new javax.swing.JFileChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
         saveFileChooser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveFileChooserActionPerformed(evt);
             }
         });
-
+        int result = this.saveFileChooser.showSaveDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File file = this.saveFileChooser.getSelectedFile();
+            Model model = ((Main)this.getParent()).model;
+            if(model != null) {
+	            DocumentController.save(file, model.getDocument());
+	            ((Main) this.getParent()).init();
+	            ((Main) this.getParent()).repaint();
+            }
+            this.setVisible(false);
+        } else if (result == JFileChooser.CANCEL_OPTION) {
+            logger.info("Cancel");
+            this.setVisible(false);
+        }
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -78,9 +91,6 @@ public class SaveAs extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void saveFileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveFileChooserActionPerformed
-        File file = this.saveFileChooser.getSelectedFile();
-        DocumentController.save(file, ((Main)this.getParent()).model.getDocument());
-        this.setVisible(false);
     }//GEN-LAST:event_saveFileChooserActionPerformed
 
     /**

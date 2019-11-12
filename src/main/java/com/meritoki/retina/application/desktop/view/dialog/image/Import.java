@@ -18,6 +18,12 @@ package com.meritoki.retina.application.desktop.view.dialog.image;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.JFileChooser;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.meritoki.retina.application.desktop.controller.document.DocumentController;
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.document.Document;
 import com.meritoki.retina.application.desktop.model.document.Page;
@@ -30,19 +36,13 @@ import com.meritoki.retina.application.desktop.view.frame.Main;
  */
 public class Import extends javax.swing.JDialog {
 
+	private static Logger logger = LogManager.getLogger(Import.class.getName());
     /**
      * Creates new form Import
      */
     public Import(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-    	this.openButton.setMultiSelectionEnabled(true);
-    	
-        this.openButton.setApproveButtonText("Open");
-        // Set the mnemonic
-        this.openButton.setApproveButtonMnemonic('O');
-        // Set the tool tip
-        this.openButton.setApproveButtonToolTipText("Open Tool Tip");
     }
 
     /**
@@ -63,7 +63,22 @@ public class Import extends javax.swing.JDialog {
                 openButtonActionPerformed(evt);
             }
         });
-
+        this.openButton.setMultiSelectionEnabled(true);
+        int result = this.openButton.showOpenDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+        	File[] files = this.openButton.getSelectedFiles(); 
+        	Model model = ((Main)this.getParent()).model;
+        	if(model != null) {
+        		model.variable.files = files;
+        		model.getDocument().execute("addPage");
+    	        ((Main)this.getParent()).init();
+    	        ((Main)this.getParent()).repaint();
+        	}
+            this.setVisible(false);
+        } else if (result == JFileChooser.CANCEL_OPTION) {
+            logger.info("Cancel");
+            this.setVisible(false);
+        }
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -81,17 +96,6 @@ public class Import extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void openButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openButtonActionPerformed
-    	File[] files = this.openButton.getSelectedFiles(); 
-    	Model model = ((Main)this.getParent()).model;
-    	
-    	if(model != null) {
-    		model.variable.files = files;
-    		model.getDocument().execute("addPage");
-    		((Main)this.getParent()).setModel(model);	
-	        ((Main)this.getParent()).init();
-	        ((Main)this.getParent()).repaint();
-    	}
-        this.setVisible(false);
     }//GEN-LAST:event_openButtonActionPerformed
 
     /**

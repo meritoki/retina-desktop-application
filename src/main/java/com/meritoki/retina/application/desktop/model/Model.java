@@ -19,6 +19,11 @@ import com.meritoki.retina.application.desktop.model.command.ResizeShape;
 import com.meritoki.retina.application.desktop.model.command.SetPage;
 import com.meritoki.retina.application.desktop.model.command.SetShape;
 import com.meritoki.retina.application.desktop.model.document.Document;
+import com.meritoki.retina.application.desktop.model.provider.Provider;
+import com.meritoki.retina.application.desktop.model.provider.zooniverse.ZooniverseProvider;
+import com.meritoki.retina.application.desktop.model.vendor.Vendor;
+import java.util.ArrayList;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  * Model is a class that is used to maintain the state of the Project for the
@@ -32,7 +37,7 @@ import com.meritoki.retina.application.desktop.model.document.Document;
  */
 public class Model {
 
-	private static Logger logger = LogManager.getLogger(Model.class.getName());
+	private static final Logger logger = LogManager.getLogger(Model.class.getName());
 	@JsonIgnore
 	public Properties properties = null;
 	@JsonIgnore
@@ -43,11 +48,36 @@ public class Model {
 	public Document document = null;
 	@JsonIgnore
 	public Variable variable = null;
-	
+	@JsonProperty
+	public List<Provider> providerList = new ArrayList<>();
+	@JsonProperty
+	public List<Vendor> vendorList = new ArrayList<>();
+
 	public Model() {
 		this.properties = NodeController.openProperties("./retina-desktop.properties");
 		this.userList = UserController.open();
-		this.document = new Document();
+		this.providerList.add(new ZooniverseProvider());
+		this.setDocument(new Document());
+		this.variable = new Variable();
+		if (this.userList.size() == 0) {
+			this.variable.newUser = true;
+			User user = new User();
+			user.name = "anonymous";
+			user.fullName = "anonymous";
+			user.hash = BCryptController.hash("anonymous", 11);
+			user.email = "null";
+			this.userList.add(user);
+		} else {
+			this.variable.loginUser = false;//true;
+		}
+	}
+
+	public Document getDocument() {
+		return this.document;
+	}
+
+	public void setDocument(Document document) {
+		this.document = document;
 		Command addPage = new AddPage(this);
 		Command setPage = new SetPage(this);
 		Command addShape = new AddShape(this);
@@ -62,33 +92,13 @@ public class Model {
 		this.document.register("moveShape", moveShape);
 		this.document.register("removeShape", removeShape);
 		this.document.register("resizeShape", resizeShape);
-		this.variable = new Variable();
-		if(this.userList.size() == 0) {
-			this.variable.newUser = true;
-			User user = new User();
-			user.name = "anonymous";
-			user.fullName = "anonymous";
-			user.hash = BCryptController.hash("anonymous", 11);
-			user.email = "null";
-			this.userList.add(user);
-		} else {
-			this.variable.loginUser = true;
-		}
 	}
-	
-	public Document getDocument() {
-		return this.document;
-	}
-	
-	public void setDocument(Document document) {
-		this.document = document;
-	}
-	
+
 	public boolean loginUser(String userName, String password) {
-		boolean flag =false;
-		for(User u: userList) {
-			if(u.name.equals(userName)) {
-				if(BCryptController.verifyHash(password, u.hash)) {
+		boolean flag = false;
+		for (User u : userList) {
+			if (u.name.equals(userName)) {
+				if (BCryptController.verifyHash(password, u.hash)) {
 					flag = true;
 					this.user = u;
 				}
@@ -96,7 +106,7 @@ public class Model {
 		}
 		return flag;
 	}
-	
+
 	public void registerUser(User user) {
 		this.userList.add(user);
 		UserController.save(userList);

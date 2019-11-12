@@ -29,6 +29,8 @@ public class AddPage extends Command {
 			page.fileList.add(new com.meritoki.retina.application.desktop.model.document.File(file.getParent(),file.getName()));
     		if(project != null) {
     			project.addPage(page);
+    		} else {
+    			System.out.println("project is null");
     		}
     	}
     }

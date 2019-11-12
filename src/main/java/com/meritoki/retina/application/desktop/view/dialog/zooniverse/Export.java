@@ -66,7 +66,7 @@ public class Export extends javax.swing.JDialog {
     }
     
     public void initZooniverse() {
-       	for(Provider provider: this.model.getDocument().providerList) {
+       	for(Provider provider: this.model.providerList) {
     		if(provider instanceof ZooniverseProvider) {
 		        Zooniverse zooniverse = ((ZooniverseProvider)provider).zooniverse;
 		        this.model.variable.zooniverse = zooniverse;
@@ -396,32 +396,23 @@ public class Export extends javax.swing.JDialog {
     private void addNewProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewProjectActionPerformed
         String title = this.projectTitleTextField.getText();
         String description = this.projectDescriptionTextField.getText();
-       	for(Provider provider: this.model.getDocument().providerList) {
-    		if(provider instanceof ZooniverseProvider) {
-		        Zooniverse zooniverse = ((ZooniverseProvider)provider).zooniverse;
-		        if (zooniverse != null) {
-		        	 Project project = new Project(title, description);
-		            zooniverse.createProject(project);
-		            this.initProjectComboBox(zooniverse.getProjectList());
-		        }
-		        break;
-    		}
-    	}
+        Zooniverse zooniverse = this.model.variable.zooniverse;
+        if (zooniverse != null) {
+                 Project project = new Project(title, description);
+            zooniverse.createProject(project);
+            this.initProjectComboBox(zooniverse.getProjectList());
+        }	   
     }//GEN-LAST:event_addNewProjectActionPerformed
 
     private void setCredentialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setCredentialActionPerformed
         Credential credential = new Credential();
         credential.password = this.passwordTextField.getText();
         credential.userName = this.userNameTextField.getText();
-       	for(Provider provider: this.model.getDocument().providerList) {
-            if(provider instanceof ZooniverseProvider) {
-                Zooniverse zooniverse = ((ZooniverseProvider)provider).zooniverse;
-                if (zooniverse != null) {
-                    zooniverse.setCredential(credential);
-                    zooniverse.setConfig();
-                }
-            }
-    	}
+        Zooniverse zooniverse = this.model.variable.zooniverse;
+        if (zooniverse != null) {
+            zooniverse.setCredential(credential);
+            zooniverse.setConfig();
+        }
     }//GEN-LAST:event_setCredentialActionPerformed
 
     private void findProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findProjectButtonActionPerformed
