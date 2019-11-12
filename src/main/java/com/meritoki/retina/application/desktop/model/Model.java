@@ -47,7 +47,7 @@ public class Model {
 	@JsonIgnore
 	public Document document = null;
 	@JsonIgnore
-	public Variable variable = null;
+	public Variable variable = new Variable();
 	@JsonProperty
 	public List<Provider> providerList = new ArrayList<>();
 	@JsonProperty

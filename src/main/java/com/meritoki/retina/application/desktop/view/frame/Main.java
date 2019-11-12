@@ -45,12 +45,12 @@ public final class Main extends JFrame {
     public Model model = null;
     public Login loginDialog = new Login(this,false);
     public Register registerDialog = new Register(this,false);
+    public com.meritoki.retina.application.desktop.view.dialog.Open openDialog = null;
+    public com.meritoki.retina.application.desktop.view.dialog.SaveAs saveAsDialog = null; 
+    public com.meritoki.retina.application.desktop.view.dialog.image.Import imageImportDialog = null;
     public com.meritoki.retina.application.desktop.view.dialog.Image imageDialog = new com.meritoki.retina.application.desktop.view.dialog.Image(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.Rectangle shapeDialog = new com.meritoki.retina.application.desktop.view.dialog.Rectangle(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.Matrix pageDialog = new com.meritoki.retina.application.desktop.view.dialog.Matrix(this, false);
-    public com.meritoki.retina.application.desktop.view.dialog.Open openDialog = null;//new com.meritoki.retina.application.desktop.view.dialog.Open(this, false);
-    public com.meritoki.retina.application.desktop.view.dialog.SaveAs saveAsDialog = null; //new com.meritoki.retina.application.desktop.view.dialog.SaveAs(this, false);
-    public com.meritoki.retina.application.desktop.view.dialog.image.Import imageImportDialog = null;
     public com.meritoki.retina.application.desktop.view.dialog.zooniverse.Export exportZooniverseDialog = new com.meritoki.retina.application.desktop.view.dialog.zooniverse.Export(this, false);
     
     public Main() {
@@ -60,8 +60,9 @@ public final class Main extends JFrame {
         Image image = Toolkit.getDefaultToolkit().getImage(url);
         logger.debug(image);
         this.setIconImage(image);
-        this.init();
         this.setModel(new Model());
+        this.init();
+        
     }
 
     public void setModel(Model model) {
@@ -90,6 +91,8 @@ public final class Main extends JFrame {
         this.imagePanel.setMain(this);
         this.imagePanel.setFocusable(true);
         this.imagePanel.requestFocusInWindow();
+        this.imageDialog.init();
+        this.shapeDialog.init();
 //        this.imageDialog.setVisible(true);
 //        this.shapeDialog.setVisible(true);
     }
