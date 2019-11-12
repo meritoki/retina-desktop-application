@@ -60,10 +60,7 @@
                                   <Component id="projectWorkflowComboBox" min="-2" pref="257" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <Group type="102" alignment="1" attributes="0">
-                              <EmptySpace min="-2" pref="84" max="-2" attributes="0"/>
-                              <Component id="projectComboBox" min="-2" pref="257" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="projectComboBox" alignment="1" min="-2" pref="257" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -373,7 +370,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel11">
       <Properties>
-        <Property name="text" type="java.lang.String" value="name:"/>
+        <Property name="text" type="java.lang.String" value="Title:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="uploadButton">

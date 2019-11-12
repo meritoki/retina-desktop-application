@@ -19,9 +19,9 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import org.apache.logging.log4j.LogManager;
 
-import com.meritoki.retina.application.desktop.model.Document;
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.document.Data;
+import com.meritoki.retina.application.desktop.model.document.Document;
 import com.meritoki.retina.application.desktop.model.document.Page;
 import com.meritoki.retina.application.desktop.model.document.Project;
 

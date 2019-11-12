@@ -1,12 +1,5 @@
 package com.meritoki.retina.application.desktop.model;
 
-import java.io.FileInputStream;
-//import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
@@ -23,7 +16,14 @@ import com.meritoki.retina.application.desktop.model.command.Command;
 import com.meritoki.retina.application.desktop.model.command.MoveShape;
 import com.meritoki.retina.application.desktop.model.command.RemoveShape;
 import com.meritoki.retina.application.desktop.model.command.ResizeShape;
+import com.meritoki.retina.application.desktop.model.command.SetPage;
 import com.meritoki.retina.application.desktop.model.command.SetShape;
+import com.meritoki.retina.application.desktop.model.document.Document;
+import com.meritoki.retina.application.desktop.model.provider.Provider;
+import com.meritoki.retina.application.desktop.model.provider.zooniverse.ZooniverseProvider;
+import com.meritoki.retina.application.desktop.model.vendor.Vendor;
+import java.util.ArrayList;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  * Model is a class that is used to maintain the state of the Project for the
@@ -37,7 +37,7 @@ import com.meritoki.retina.application.desktop.model.command.SetShape;
  */
 public class Model {
 
-	private static Logger logger = LogManager.getLogger(Model.class.getName());
+	private static final Logger logger = LogManager.getLogger(Model.class.getName());
 	@JsonIgnore
 	public Properties properties = null;
 	@JsonIgnore
@@ -48,27 +48,18 @@ public class Model {
 	public Document document = null;
 	@JsonIgnore
 	public Variable variable = null;
-	
+	@JsonProperty
+	public List<Provider> providerList = new ArrayList<>();
+	@JsonProperty
+	public List<Vendor> vendorList = new ArrayList<>();
+
 	public Model() {
 		this.properties = NodeController.openProperties("./retina-desktop.properties");
 		this.userList = UserController.open();
-		this.document = new Document();
-		Command addPage = new AddPage(this);
-//		Command setPage = new SetPage(this);
-		Command addShape = new AddShape(this);
-		Command setShape = new SetShape(this);
-		Command moveShape = new MoveShape(this);
-		Command removeShape = new RemoveShape(this);
-		Command resizeShape = new ResizeShape(this);
-		this.document.register("addPage", addPage);
-//		this.document.register("setPage", setPage);
-		this.document.register("addShape", addShape);
-		this.document.register("setShape", setShape);
-		this.document.register("moveShape", moveShape);
-		this.document.register("removeShape", removeShape);
-		this.document.register("resizeShape", resizeShape);
+		this.providerList.add(new ZooniverseProvider());
+		this.setDocument(new Document());
 		this.variable = new Variable();
-		if(this.userList.size() == 0) {
+		if (this.userList.size() == 0) {
 			this.variable.newUser = true;
 			User user = new User();
 			user.name = "anonymous";
@@ -77,19 +68,37 @@ public class Model {
 			user.email = "null";
 			this.userList.add(user);
 		} else {
-			this.variable.loginUser = true;
+			this.variable.loginUser = false;//true;
 		}
 	}
-	
+
 	public Document getDocument() {
 		return this.document;
 	}
-	
+
+	public void setDocument(Document document) {
+		this.document = document;
+		Command addPage = new AddPage(this);
+		Command setPage = new SetPage(this);
+		Command addShape = new AddShape(this);
+		Command setShape = new SetShape(this);
+		Command moveShape = new MoveShape(this);
+		Command removeShape = new RemoveShape(this);
+		Command resizeShape = new ResizeShape(this);
+		this.document.register("addPage", addPage);
+		this.document.register("setPage", setPage);
+		this.document.register("addShape", addShape);
+		this.document.register("setShape", setShape);
+		this.document.register("moveShape", moveShape);
+		this.document.register("removeShape", removeShape);
+		this.document.register("resizeShape", resizeShape);
+	}
+
 	public boolean loginUser(String userName, String password) {
-		boolean flag =false;
-		for(User u: userList) {
-			if(u.name.equals(userName)) {
-				if(BCryptController.verifyHash(password, u.hash)) {
+		boolean flag = false;
+		for (User u : userList) {
+			if (u.name.equals(userName)) {
+				if (BCryptController.verifyHash(password, u.hash)) {
 					flag = true;
 					this.user = u;
 				}
@@ -97,7 +106,7 @@ public class Model {
 		}
 		return flag;
 	}
-	
+
 	public void registerUser(User user) {
 		this.userList.add(user);
 		UserController.save(userList);

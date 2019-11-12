@@ -12,6 +12,8 @@ import com.meritoki.retina.application.desktop.model.document.Point;
 import com.meritoki.retina.application.desktop.model.document.Script;
 import com.meritoki.retina.application.desktop.model.document.Shape;
 import com.meritoki.retina.application.desktop.model.document.Text;
+import com.meritoki.retina.application.desktop.model.provider.zooniverse.Project;
+import com.meritoki.retina.application.desktop.model.provider.zooniverse.Zooniverse;
 
 public class Variable {
 	@JsonIgnore
@@ -22,6 +24,10 @@ public class Variable {
 	public boolean rectangle = true;
 	@JsonIgnore
 	public boolean ellipse = true;
+	@JsonIgnore
+	public Zooniverse zooniverse = null;
+	@JsonIgnore
+	public List<Project> projectList = null;
 	@JsonIgnore
 	public File pressedFile = null;
 	@JsonIgnore
@@ -46,11 +52,18 @@ public class Variable {
 	public Point pressedPoint = new Point();
 	@JsonIgnore
 	public Point releasedPoint = new Point();
+	@JsonIgnore
 	public Point movedPoint = new Point();
 	@JsonIgnore
 	public double scale = 1;
-	
+	@JsonIgnore
 	public int selection = -1;
+	@JsonIgnore
+	public String defaultFileName = "untitled.json";
+        @JsonIgnore
+        public String documentFileName = null;
+        @JsonIgnore
+        public String documentFilePath = null;
 	@JsonIgnore
 	public List<String> emptyList = new ArrayList<>();
 	@JsonIgnore

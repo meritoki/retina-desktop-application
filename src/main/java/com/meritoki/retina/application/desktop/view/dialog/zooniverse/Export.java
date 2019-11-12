@@ -15,7 +15,9 @@
  */
 package com.meritoki.retina.application.desktop.view.dialog.zooniverse;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 
@@ -23,12 +25,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.retina.application.desktop.model.Model;
+import com.meritoki.retina.application.desktop.model.document.Shape;
 import com.meritoki.retina.application.desktop.model.provider.Provider;
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.Credential;
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.Project;
+import com.meritoki.retina.application.desktop.model.provider.zooniverse.SubjectSet;
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.Workflow;
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.Zooniverse;
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.ZooniverseProvider;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -56,19 +61,25 @@ public class Export extends javax.swing.JDialog {
 
     public void init() {
     	logger.debug("init()");
+    	this.initZooniverse();
         this.initComboBox();
+    }
+    
+    public void initZooniverse() {
+       	for(Provider provider: this.model.providerList) {
+    		if(provider instanceof ZooniverseProvider) {
+		        Zooniverse zooniverse = ((ZooniverseProvider)provider).zooniverse;
+		        this.model.variable.zooniverse = zooniverse;
+    		}
+    	}
     }
 
     public void initComboBox() {
-    	for(Provider provider: this.model.getDocument().providerList) {
-    		if(provider instanceof ZooniverseProvider) {
-		        Zooniverse zooniverse = ((ZooniverseProvider)provider).zooniverse;
-		        List<Project> projectList = (zooniverse != null) ? zooniverse.getProjectList() : null;
-		        this.initProjectComboBox(projectList);
-		        this.initSearchProjectComboBox(new ArrayList<Project>());
-		        this.initProjectWorkflowComboBox(new ArrayList<Workflow>());
-    		}
-    	}
+        List<Project> projectList = (this.model.variable.zooniverse != null) ? this.model.variable.zooniverse.getProjectList() : null;
+        this.initProjectComboBox(projectList);
+        this.initSearchProjectComboBox(new ArrayList<Project>());
+        this.initProjectWorkflowComboBox(new ArrayList<Workflow>());
+
     }
 
     public void initProjectComboBox(List<Project> projectList) {
@@ -216,7 +227,7 @@ public class Export extends javax.swing.JDialog {
             }
         });
 
-        jLabel11.setText("name:");
+        jLabel11.setText("Title:");
 
         uploadButton.setText("Upload");
         uploadButton.addActionListener(new java.awt.event.ActionListener() {
@@ -252,9 +263,7 @@ public class Export extends javax.swing.JDialog {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(updateProjectWorkflowButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(projectWorkflowComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(84, 84, 84)
-                                .addComponent(projectComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addComponent(projectComboBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
@@ -387,100 +396,91 @@ public class Export extends javax.swing.JDialog {
     private void addNewProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewProjectActionPerformed
         String title = this.projectTitleTextField.getText();
         String description = this.projectDescriptionTextField.getText();
-       	for(Provider provider: this.model.getDocument().providerList) {
-    		if(provider instanceof ZooniverseProvider) {
-		        Zooniverse zooniverse = ((ZooniverseProvider)provider).zooniverse;
-		        if (zooniverse != null) {
-		        	 Project project = new Project(title, description);
-		            zooniverse.createProject(project);
-		            this.initProjectComboBox(zooniverse.getProjectList());
-		        }
-		        break;
-    		}
-    	}
+        Zooniverse zooniverse = this.model.variable.zooniverse;
+        if (zooniverse != null) {
+                 Project project = new Project(title, description);
+            zooniverse.createProject(project);
+            this.initProjectComboBox(zooniverse.getProjectList());
+        }	   
     }//GEN-LAST:event_addNewProjectActionPerformed
 
     private void setCredentialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setCredentialActionPerformed
         Credential credential = new Credential();
         credential.password = this.passwordTextField.getText();
         credential.userName = this.userNameTextField.getText();
-       	for(Provider provider: this.model.getDocument().providerList) {
-    		if(provider instanceof ZooniverseProvider) {
-		        Zooniverse zooniverse = ((ZooniverseProvider)provider).zooniverse;
-		        if (zooniverse != null) {
-		            zooniverse.setCredential(credential);
-		            zooniverse.createConfig();
-		        }
-    		}
-    	}
+        Zooniverse zooniverse = this.model.variable.zooniverse;
+        if (zooniverse != null) {
+            zooniverse.setCredential(credential);
+            zooniverse.setConfig();
+        }
     }//GEN-LAST:event_setCredentialActionPerformed
 
     private void findProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findProjectButtonActionPerformed
         String query = this.projectSearchTextField.getText().trim();
-       	for(Provider provider: this.model.getDocument().providerList) {
-    		if(provider instanceof ZooniverseProvider) {
-		        Zooniverse zooniverse = ((ZooniverseProvider)provider).zooniverse;
-		        if (zooniverse != null) {
-		            zooniverse.searchProject(query);
-		            this.initSearchProjectComboBox(zooniverse.getSearchProjectList());
-		        }
-    		}
-    	}
+        Zooniverse zooniverse = this.model.variable.zooniverse;
+        if (zooniverse != null) {
+            if(!query.isEmpty()) {
+                this.model.variable.projectList = zooniverse.getProjectList(query);
+                this.initSearchProjectComboBox(this.model.variable.projectList);
+            } else {
+                JOptionPane.showMessageDialog(this, "Search query is empty");
+            }
+        }
     }//GEN-LAST:event_findProjectButtonActionPerformed
 
+    /**
+     * Function is invoked when pressing the addProject button
+     * @param evt 
+     */
     private void addProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProjectButtonActionPerformed
-       	for(Provider provider: this.model.getDocument().providerList) {
-    		if(provider instanceof ZooniverseProvider) {
-		        Zooniverse zooniverse = ((ZooniverseProvider)provider).zooniverse;
-		        if (zooniverse != null) {
-		            if (zooniverse != null) {
-		                String searchProjectName = (String) this.searchProjectComboBox.getSelectedItem();
-		                if (searchProjectName != null && !searchProjectName.equals("")) {
-		                    for (Project p : zooniverse.getSearchProjectList()) {
-		                        if (p.name.equals(searchProjectName)) {
-		                            zooniverse.getProjectList().add(p);
-		                            break;
-		                        }
-		                    }
-		                    this.initProjectComboBox(zooniverse.getProjectList());
-		                }
-		            }
-		        }
-    		}
-    	}
-        
-
+    	Zooniverse zooniverse = this.model.variable.zooniverse;
+        if (zooniverse != null) {
+            String searchProjectName = (String) this.searchProjectComboBox.getSelectedItem();
+            if(this.model.variable.projectList != null) {
+                for (Project p : this.model.variable.projectList) {
+                    if (p.name.equals(searchProjectName)) {
+                        zooniverse.addProject(p);
+                        break;
+                    }
+                }
+            }
+            this.initProjectComboBox(zooniverse.getProjectList());
+        }
     }//GEN-LAST:event_addProjectButtonActionPerformed
 
     private void updateProjectWorkflowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateProjectWorkflowButtonActionPerformed
-       	for(Provider provider: this.model.getDocument().providerList) {
-    		if(provider instanceof ZooniverseProvider) {
-		        Zooniverse zooniverse = ((ZooniverseProvider)provider).zooniverse;
-		        if (zooniverse != null) {
-		            String projectName = (String) this.projectComboBox.getSelectedItem();
-		            List<Workflow> projectWorkflowList = new ArrayList<Workflow>();
-		            if (projectName != null && !projectName.equals("")) {
-		                for (Project p : zooniverse.getProjectList()) {
-		                    if (p.name.equals(projectName)) {
-		                        zooniverse.updateProjectWorkflowList(p);
-		                        projectWorkflowList = p.getWorkflowList();
-		                        break;
-		                    }
-		                }
-		            }
-		            this.initProjectWorkflowComboBox(projectWorkflowList);
-		        }
-    		}
-    	}
-        
-
+    	Zooniverse zooniverse = this.model.variable.zooniverse;
+        if (zooniverse != null) {
+            String projectName = (String) this.projectComboBox.getSelectedItem();
+            for (Project p : zooniverse.getProjectList()) {
+                if (p.name.equals(projectName)) {
+                    zooniverse.updateProjectWorkflowList(p);
+                    this.initProjectWorkflowComboBox(p.getWorkflowList());
+                    break;
+                }
+            }
+        }	
     }//GEN-LAST:event_updateProjectWorkflowButtonActionPerformed
 
     private void uploadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadButtonActionPerformed
-        String subjectSetName = this.subjectSetNameTextField.getText();
-        
-        
-        
+    	String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+    	String subjectSetTitle = this.subjectSetNameTextField.getText();
+        String projectName = (String) this.projectComboBox.getSelectedItem();
+        String workflowTitle = (String) this.projectWorkflowComboBox.getSelectedItem();
+        Zooniverse zooniverse = this.model.variable.zooniverse;
+        SubjectSet subjectSet = new SubjectSet();
+        List<Shape> shapeList = this.model.getDocument().getProject().getShapeList();
+        subjectSet.title = subjectSetTitle;
+        if (zooniverse != null) {
+        	zooniverse.generateManifest(timeStamp, shapeList);
+            Project project = zooniverse.getProject(projectName);
+            if(project != null) {
+                Workflow workflow = project.getWorkflow(workflowTitle);
+                zooniverse.createSubjectSet(project.getId(), subjectSet);
+                zooniverse.uploadSubjectSet(subjectSet, "./"+timeStamp, "manifest.csv");
+                zooniverse.workflowUploadSubjectSet(workflow, subjectSet);
+            }
+        }
     }//GEN-LAST:event_uploadButtonActionPerformed
 
     /**

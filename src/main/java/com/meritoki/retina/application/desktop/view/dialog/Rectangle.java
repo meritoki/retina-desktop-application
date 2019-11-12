@@ -28,9 +28,9 @@ import javax.swing.DefaultListModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.retina.application.desktop.model.Document;
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.document.Data;
+import com.meritoki.retina.application.desktop.model.document.Document;
 import com.meritoki.retina.application.desktop.model.document.File;
 import com.meritoki.retina.application.desktop.model.document.Page;
 import com.meritoki.retina.application.desktop.model.document.Project;
@@ -113,7 +113,8 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         Document document = (this.model != null) ? this.model.getDocument() : null;
         Project project = (document != null) ? document.getProject() : null;
         Page page = (project != null) ? project.getPage() : null;
-        Shape shape = (page != null) ? page.getFile().getShape() : null;
+        File file = (page != null) ? page.getFile()  :null;
+        Shape shape = (file != null) ? file.getShape() : null;
         Data data = (shape != null) ? shape.data : null;
         List<Text> textList = (shape != null) ? shape.getTextList() : null;
         this.initTextValueComboBox(textList);

@@ -5,8 +5,8 @@ import java.io.File;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.retina.application.desktop.model.Document;
 import com.meritoki.retina.application.desktop.model.Model;
+import com.meritoki.retina.application.desktop.model.document.Document;
 import com.meritoki.retina.application.desktop.model.document.Page;
 import com.meritoki.retina.application.desktop.model.document.Project;
 
@@ -29,6 +29,8 @@ public class AddPage extends Command {
 			page.fileList.add(new com.meritoki.retina.application.desktop.model.document.File(file.getParent(),file.getName()));
     		if(project != null) {
     			project.addPage(page);
+    		} else {
+    			System.out.println("project is null");
     		}
     	}
     }

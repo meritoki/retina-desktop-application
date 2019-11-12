@@ -15,28 +15,17 @@
  */
 package com.meritoki.retina.application.desktop.model.provider.zooniverse;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Yaml;
-
 import com.meritoki.retina.application.desktop.controller.node.NodeController;
+import com.meritoki.retina.application.desktop.model.document.Shape;
 
 /**
  *
@@ -48,27 +37,56 @@ public class Zooniverse {
     public Credential credential = null;
     public Project project;
     public List<Project> projectList = new ArrayList<Project>();
-    @JsonIgnore
-    public List<Project> searchProjectList = new ArrayList<Project>();
-
-    public List<Project> getSearchProjectList() {
-        return searchProjectList;
-    }
-
-    public void setSearchProjectList(List<Project> searchProjectList) {
-        this.searchProjectList = searchProjectList;
-    }
+    public int index = 0;
 
     public Credential getCredential() {
         return credential;
     }
 
-    public void setCredential(Credential credential) {
-        this.credential = credential;
-    }
-
     public List<Project> getProjectList() {
         return projectList;
+    }
+
+    @JsonIgnore
+    public List<Project> getProjectList(String query) {
+        logger.info("searchProject(" + query + ")");
+        List<String> stringList = NodeController.executeCommand("panoptes project ls | grep " + query, 60);
+        List<Project> projectList = new ArrayList<>();
+        if (stringList.size() > 0 && !stringList.get(0).equals("error")) {
+            for (String s : stringList) {
+                String[] result = s.split(" ");
+                String id = result[0].replace("*", "");
+                String name = result[1];
+                String title = this.convertArrayToStringMethod(result, 2);
+                projectList.add(new Project(id, name, title));
+            }
+        }
+        return projectList;
+    }
+
+    /**
+     * Functions gets Page object at current index from Page List
+     *
+     * @return Page
+     */
+    @JsonIgnore
+    public Project getProject() {
+        return (this.projectList.size() > 0) ? this.projectList.get(index) : new Project();
+    }
+    
+    @JsonIgnore
+    public Project getProject(String name) {
+        Project project = null;
+        for(Project p: this.projectList) {
+            if(p.name.equals(name)) {
+                project = p;
+            }
+        }
+        return project;
+    }
+
+    public void setCredential(Credential credential) {
+        this.credential = credential;
     }
 
     public void setProjectList(List<Project> projectList) {
@@ -76,12 +94,38 @@ public class Zooniverse {
     }
 
     @JsonIgnore
-    public void createConfig() {
-        this.createConfig(this.credential);
+    public void setProject(String id) {
+        logger.info("setProject(" + id + ")");
+        Project project = null;
+        for (int i = 0; i < this.projectList.size(); i++) {
+            project = this.projectList.get(i);
+            if (project.id.equals(id)) {
+                this.setIndex(i);;
+                break;
+            }
+        }
     }
 
     @JsonIgnore
-    public void createConfig(Credential credential) {
+    public void setIndex(int index) {
+        logger.debug("setIndex(" + index + ")");
+        if (index >= 0 && index < this.projectList.size()) {
+            this.index = index;
+        }
+    }
+
+    @JsonIgnore
+    public void addProject(Project project) {
+        this.projectList.add(project);
+    }
+
+    @JsonIgnore
+    public void setConfig() {
+        this.setConfig(this.credential);
+    }
+
+    @JsonIgnore
+    public void setConfig(Credential credential) {
         if (credential != null) {
             Map<Object, Object> data = new HashMap<>();
             data.put("username", credential.userName);
@@ -94,14 +138,9 @@ public class Zooniverse {
     }
 
     @JsonIgnore
-    public void setupConfig() {
-
-    }
-
-    @JsonIgnore
     public void createProject(Project project) {
         List<String> stringList = NodeController.executeCommand("panoptes project create " + project.getTitle() + " " + project.getDescription());
-        if(stringList.size() > 0 && !stringList.get(0).equals("error")){
+        if (stringList.size() > 0 && !stringList.get(0).equals("error")) {
             String string = stringList.get(0);
             String[] stringArray = string.split(" ");
             project.setId(stringArray[0]);
@@ -112,32 +151,13 @@ public class Zooniverse {
     }
 
     @JsonIgnore
-    public void searchProject(String query) {
-        logger.info("searchProject(" + query + ")");
-        List<String> stringList = NodeController.executeCommand("panoptes project ls | grep " + query);
-        Project project;
-        List<Project> projectList = new ArrayList<>();
-        if(stringList.size() > 0 && !stringList.get(0).equals("error")){
-            for (String s : stringList) {
-                String[] result = s.split(" ");
-                String id = result[0].replace("*", "");
-                String name = result[1];
-                String title = this.convertArrayToStringMethod(result, 2);
-                project = new Project(id, name, title);
-                projectList.add(project);
-            }
-        }
-        this.searchProjectList = projectList;
-    }
-    
-    @JsonIgnore
     public void updateProjectWorkflowList(Project project) {
-        List<String> stringList = NodeController.executeCommand("panoptes workflow ls -p " + project.getId(),60);
-        if(stringList.size() > 0 && !stringList.get(0).equals("error")){
+        List<String> stringList = NodeController.executeCommand("panoptes workflow ls -p " + project.getId(), 60);
+        if (stringList.size() > 0 && !stringList.get(0).equals("error")) {
             String string = stringList.get(0);
-            for(String s: stringList){
+            for (String s : stringList) {
                 String[] stringArray = string.split(" ");
-                Workflow workflow = new Workflow(stringArray[0],this.convertArrayToStringMethod(stringArray, 1));
+                Workflow workflow = new Workflow(stringArray[0], this.convertArrayToStringMethod(stringArray, 1));
                 project.getWorkflowList().add(workflow);
             }
         }
@@ -146,7 +166,23 @@ public class Zooniverse {
     @JsonIgnore
     public void createSubjectSet(String projectId, SubjectSet subjectSet) {
         List<String> stringList = NodeController.executeCommand("panoptes subject-set create " + projectId + " " + subjectSet.getTitle());
-        subjectSet.setId(stringList.get(0));
+        if (stringList.size() > 0 && !stringList.get(0).equals("error")) {
+            String string = stringList.get(0);
+            for (String s : stringList) {
+                String[] stringArray = string.split(" ");
+                subjectSet.setId(stringArray[0]);
+            }
+        }
+    }
+    
+    @JsonIgnore
+    public void uploadSubjectSet(SubjectSet subjectSet, String filePath, String fileName) {
+        List<String> stringList = NodeController.executeCommand("panoptes subject-set upload-subjects " + subjectSet.getId() + " " + filePath+"/"+fileName);
+    }
+    
+    @JsonIgnore
+    public void workflowUploadSubjectSet(Workflow workflow, SubjectSet subjectSet) {
+        List<String> stringList = NodeController.executeCommand("panoptes workflow add-subject-sets " + workflow.getId() + " " + subjectSet.getId());
     }
 
     @JsonIgnore
@@ -158,4 +194,32 @@ public class Zooniverse {
         }
         return stringBuilder.toString().trim();
     }
+    
+    public void generateManifest(String timeStamp, List<Shape> shapeList) {
+    	StringBuilder stringBuilder = new StringBuilder();
+    	stringBuilder.append("my_own_id");
+    	stringBuilder.append(",");
+    	stringBuilder.append("the_image");
+    	stringBuilder.append("\n");
+    	new File("./"+timeStamp).mkdir();
+    	Shape shape = null;
+    	for(int i = 0;i<shapeList.size();i++) {
+    		shape = shapeList.get(i);
+    		stringBuilder.append(i);
+    		stringBuilder.append(",");
+    		NodeController.saveJpg("./"+timeStamp, shape.uuid+".jpg", shape.bufferedImage);
+    		stringBuilder.append(shape.uuid+".jpg");
+    		stringBuilder.append("\n");
+    	}
+    	NodeController.saveCsv("./"+timeStamp, "manifest.csv", stringBuilder);
+    }
 }
+
+//@JsonIgnore
+//public List<Project> searchProjectList = new ArrayList<Project>();
+//public List<Project> getSearchProjectList() {
+//  return searchProjectList;
+//}
+//public void setSearchProjectList(List<Project> searchProjectList) {
+//  this.searchProjectList = searchProjectList;
+//}

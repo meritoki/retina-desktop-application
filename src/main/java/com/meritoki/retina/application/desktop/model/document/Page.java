@@ -20,6 +20,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -208,28 +209,14 @@ public class Page {
 
     public BufferedImage getShapeBufferedImage(Shape shape) {
         BufferedImage bufferedImage = null;
-        //  BufferedImage bufferedImage = null;
         if (this.getBufferedImage() != null) {
-            bufferedImage = this.getBufferedImage().getSubimage((int)shape.getDimension().x,
-                    (int)shape.getDimension().y,
-                    (int)shape.getDimension().w,
-                    (int)shape.getDimension().h);
+        	int x = (int)(shape.getDimension().x / this.scale);
+        	int y = (int)(shape.getDimension().y / this.scale);
+        	int w = (int)(shape.getDimension().w / this.scale);
+        	int h = (int)(shape.getDimension().h / this.scale);
+            bufferedImage = this.getBufferedImage().getSubimage(x,y,w,h);
         }
         return bufferedImage;
-//		bufferedImage = new BufferedImage((int) shape.getDimension().w, (int) shape.getDimension().h,
-//				BufferedImage.TYPE_INT_RGB);
-//		Graphics2D g2 = bufferedImage.createGraphics();
-//		if (shape.classification.equals(Shape.ELLIPSE)) {
-//			Ellipse2D.Double ellipse = new Ellipse2D.Double(shape.getDimension().x, shape.getDimension().y,
-//					shape.getDimension().w, shape.getDimension().h);
-//			g2.setClip(ellipse);
-//		} else if (shape.classification.equals(Shape.RECTANGLE)) {
-//			Rectangle2D.Double rectangle = new Rectangle2D.Double(shape.getDimension().x, shape.getDimension().y,
-//					shape.getDimension().w, shape.getDimension().h);
-//			g2.setClip(rectangle);
-//		}
-//		g2.drawImage(this.getBufferedImage(), 0, 0, null);
-//                g2.dispose();
     }
 
     /**
@@ -713,3 +700,17 @@ public class Page {
 //  }
 //  return bufferedImage;
 //}
+//bufferedImage = new BufferedImage((int) shape.getDimension().w, (int) shape.getDimension().h,
+//BufferedImage.TYPE_INT_RGB);
+//Graphics2D g2 = bufferedImage.createGraphics();
+//if (shape.classification.equals(Shape.ELLIPSE)) {
+//Ellipse2D.Double ellipse = new Ellipse2D.Double(shape.getDimension().x, shape.getDimension().y,
+//	shape.getDimension().w, shape.getDimension().h);
+//g2.setClip(ellipse);
+//} else if (shape.classification.equals(Shape.RECTANGLE)) {
+//Rectangle2D.Double rectangle = new Rectangle2D.Double(shape.getDimension().x, shape.getDimension().y,
+//	shape.getDimension().w, shape.getDimension().h);
+//g2.setClip(rectangle);
+//}
+//g2.drawImage(this.getBufferedImage(), 0, 0, null);
+//g2.dispose();

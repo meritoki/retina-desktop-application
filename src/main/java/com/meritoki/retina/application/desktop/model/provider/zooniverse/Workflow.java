@@ -26,7 +26,7 @@ public class Workflow {
 
     public String title;
     public String uuid;
-    public int id;
+    public String id;
     public List<SubjectSet> subjectSetList;
 
     public Workflow() {
@@ -35,6 +35,7 @@ public class Workflow {
     }
 
     public Workflow(String id, String title) {
+        this.id = id;
         this.title = title;
         UUID uuid = UUID.randomUUID();
         this.uuid = uuid.toString();
@@ -44,5 +45,9 @@ public class Workflow {
         this.title = title;
         UUID uuid = UUID.randomUUID();
         this.uuid = uuid.toString();
+    }
+    
+    public String getId() {
+        return this.id;
     }
 }

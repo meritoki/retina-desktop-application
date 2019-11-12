@@ -29,21 +29,11 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 public class Project {
     
     static Logger logger = LogManager.getLogger(Project.class.getName());
-    public Credential credential;
+    public String id;
     public String title;
     public String description;
-    public String uuid;
-    public String id;
     public String name;
     public List<Workflow> workflowList = new ArrayList<>();
-
-    public Credential getCredential() {
-        return credential;
-    }
-
-    public void setCredential(Credential credential) {
-        this.credential = credential;
-    }
 
     public String getName() {
         return name;
@@ -54,22 +44,17 @@ public class Project {
     }
 
     public Project() {
-        UUID uuid = UUID.randomUUID();
-        this.uuid = uuid.toString();
+
     }
     
     public Project(String title, String description){
         logger.info("Project("+title+", "+description+")");
-        UUID uuid = UUID.randomUUID();
-        this.uuid = uuid.toString();
         this.title = title;
         this.description = description;
     }
     
     public Project(String id, String name, String title) {
         logger.info("Project("+id+","+name+","+title+")");
-        UUID uuid = UUID.randomUUID();
-        this.uuid = uuid.toString();
         this.id = id;
         this.name = name;
         this.title = title;
@@ -79,6 +64,16 @@ public class Project {
         String[] array = response.split(" ");
         this.setId(array[0].replace("*", ""));
         this.setName(array[1]);
+    }
+    
+    public Workflow getWorkflow(String title) {
+        Workflow workflow = null;
+        for(Workflow w: this.workflowList) {
+            if(w.title.equals(title)) {
+                workflow = w;
+            }
+        }
+        return workflow;
     }
     
     @JsonIgnore
@@ -100,15 +95,6 @@ public class Project {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
     }
 
     public String getId() {

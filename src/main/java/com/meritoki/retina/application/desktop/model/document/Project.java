@@ -30,171 +30,178 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
 public class Project implements Serializable {
-    
-    private static final long serialVersionUID = 1L;
-    
-    static Logger logger = LogManager.getLogger(Project.class.getName());
-    @JsonProperty
-    public String uuid = "";
-    @JsonProperty
-    public List<Page> pageList = new ArrayList<>();
-    @JsonIgnore
-    public int index = 0;
-    @JsonIgnore
-    public File file = new File();
-    @JsonProperty
-    public List<Layout> layoutList = new ArrayList<>();
 
-    
-    public Project(){ 
-        this.uuid = UUID.randomUUID().toString();
-    }
-    
-    public Project(Project project) {
-    	this.uuid = project.uuid;
-    	for(Page p : project.pageList) {
-    		this.pageList.add(new Page(p));
-    	}
-    }
-    
-    @JsonIgnore
-    public void initTest(){
-        Page page = new Page();
-        File file = new File();
-        file.name = "01.jpg";
-        file.path = "./data/image";
-        page.fileList.add(file);
-        file = new File();
-        file.name = "02.jpg";
-        file.path = "./data/image";
-        page.fileList.add(file);
-        pageList.add(page);
-        page = new Page();
-        file = new File();
-        file.name = "02.jpg";
-        file.path = "./data/image";
-        page.fileList.add(file);
-        pageList.add(page);
-        page = new Page();
-        file = new File();
-        file.name = "03.jpg";
-        file.path = "./data/image";
-        page.fileList.add(file);
-        pageList.add(page);
-        page = new Page();
-        file = new File();
-        file.name = "04.jpg";
-        file.path = "./data/image";
-        page.fileList.add(file);
-        pageList.add(page);
-        page = new Page();
-        file = new File();
-        file.name = "05.jpg";
-        file.path = "./data/image";
-        page.fileList.add(file);
-        pageList.add(page);
-        page = new Page();
-        file = new File();
-        file.name = "06.jpg";
-        file.path = "./data/image";
-        page.fileList.add(file);
-        pageList.add(page);
-        page = new Page();
-        file = new File();
-        file.name = "07.jpg";
-        file.path = "./data/image";
-        page.fileList.add(file);
-        pageList.add(page);
-        page = new Page();
-        file = new File();
-        file.name = "08.jpg";
-        file.path = "./data/image";
-        page.fileList.add(file);
-        pageList.add(page);
-        this.setIndex(0);
-    }
-    
-    /**
-     * Get the index of the current Page, used by Dialogs
-     * @return
-     */
-    @JsonIgnore
-	public int getIndex(){
-	    logger.debug("getIndex() this.index="+this.index);
-	    return this.index;
+	private static final long serialVersionUID = 1L;
+
+	static Logger logger = LogManager.getLogger(Project.class.getName());
+	@JsonProperty
+	public String uuid = "";
+	@JsonProperty
+	public List<Page> pageList = new ArrayList<>();
+	@JsonIgnore
+	public int index = 0;
+	@JsonIgnore
+	public File file = new File();
+	@JsonProperty
+	public List<Layout> layoutList = new ArrayList<>();
+
+	public Project() {
+		this.uuid = UUID.randomUUID().toString();
 	}
-    
-    
 
-    /**
-     * Functions gets Page object at current index from Page List
-     * @return Page
-     */
+	public Project(Project project) {
+		this.uuid = project.uuid;
+		for (Page p : project.pageList) {
+			this.pageList.add(new Page(p));
+		}
+	}
+
+	@JsonIgnore
+	public void initTest() {
+		Page page = new Page();
+		File file = new File();
+		file.name = "01.jpg";
+		file.path = "./data/image";
+		page.fileList.add(file);
+		file = new File();
+		file.name = "02.jpg";
+		file.path = "./data/image";
+		page.fileList.add(file);
+		pageList.add(page);
+		page = new Page();
+		file = new File();
+		file.name = "02.jpg";
+		file.path = "./data/image";
+		page.fileList.add(file);
+		pageList.add(page);
+		page = new Page();
+		file = new File();
+		file.name = "03.jpg";
+		file.path = "./data/image";
+		page.fileList.add(file);
+		pageList.add(page);
+		page = new Page();
+		file = new File();
+		file.name = "04.jpg";
+		file.path = "./data/image";
+		page.fileList.add(file);
+		pageList.add(page);
+		page = new Page();
+		file = new File();
+		file.name = "05.jpg";
+		file.path = "./data/image";
+		page.fileList.add(file);
+		pageList.add(page);
+		page = new Page();
+		file = new File();
+		file.name = "06.jpg";
+		file.path = "./data/image";
+		page.fileList.add(file);
+		pageList.add(page);
+		page = new Page();
+		file = new File();
+		file.name = "07.jpg";
+		file.path = "./data/image";
+		page.fileList.add(file);
+		pageList.add(page);
+		page = new Page();
+		file = new File();
+		file.name = "08.jpg";
+		file.path = "./data/image";
+		page.fileList.add(file);
+		pageList.add(page);
+		this.setIndex(0);
+	}
+
+	/**
+	 * Get the index of the current Page, used by Dialogs
+	 * 
+	 * @return
+	 */
+	@JsonIgnore
+	public int getIndex() {
+		logger.debug("getIndex() this.index=" + this.index);
+		return this.index;
+	}
+
+	/**
+	 * Functions gets Page object at current index from Page List
+	 * 
+	 * @return Page
+	 */
 	@JsonIgnore
 	public Page getPage() {
-	    return (this.pageList.size() > 0) ? this.pageList.get(index) : new Page();
+		return (this.pageList.size() > 0) ? this.pageList.get(index) : new Page();
 	}
-	
+
 	/**
 	 * Function get reference to Page List
+	 * 
 	 * @return List<Page>
 	 */
 	@JsonIgnore
-	public List<Page> getPageList(){
-	    return this.pageList;
+	public List<Page> getPageList() {
+		return this.pageList;
 	}
-
-	
-@JsonIgnore
-	public void setIndex(int index) {
-	    logger.debug("setIndex("+index+")");
-	    if(index >= 0 && index < this.pageList.size()) {
-	        this.index = index;
-	    }
-	}
-
-	    @JsonIgnore
-	    public void setPage(String uuid) {
-	        logger.info("setPage("+uuid+")");
-	        Page page = null;
-	        for(int i = 0; i < this.pageList.size(); i++){
-	            page = this.pageList.get(i);
-	            if(page.uuid.equals(uuid)){
-	                this.setIndex(i);;
-	                break;
-	            }
-	        }
-	    }
-
-    @JsonIgnore
-    public void setPageList(List<Page> pageList){
-        logger.info("setPageList("+pageList+")");
-        this.pageList = pageList;
-    }
-
-    @JsonIgnore
-    public void addPage(Page page) {
-    	logger.info("addPage("+page+")");
-    	this.pageList.add(page);
-    }
-
 
 	@JsonIgnore
-    @Override
-    public String toString(){
-        String string = "";
+	public void setIndex(int index) {
+		logger.debug("setIndex(" + index + ")");
+		if (index >= 0 && index < this.pageList.size()) {
+			this.index = index;
+		}
+	}
+
+	@JsonIgnore
+	public void setPage(String uuid) {
+		logger.info("setPage(" + uuid + ")");
+		Page page = null;
+		for (int i = 0; i < this.pageList.size(); i++) {
+			page = this.pageList.get(i);
+			if (page.uuid.equals(uuid)) {
+				this.setIndex(i);
+				;
+				break;
+			}
+		}
+	}
+
+	@JsonIgnore
+	public void setPageList(List<Page> pageList) {
+		logger.info("setPageList(" + pageList + ")");
+		this.pageList = pageList;
+	}
+
+	@JsonIgnore
+	public void addPage(Page page) {
+		logger.info("addPage(" + page + ")");
+		this.pageList.add(page);
+	}
+	
+	public List<Shape> getShapeList() {
+		List<Shape> shapeList = new ArrayList<>();
+		for(Page page: this.pageList) {
+			shapeList.addAll(page.getShapeList());
+		}
+		return shapeList;
+	}
+
+	@JsonIgnore
+	@Override
+	public String toString() {
+		String string = "";
 //        if(logger.isTraceEnabled()){
-            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-            try {
-                string = ow.writeValueAsString(this);
-            } catch (IOException ex) {
-                java.util.logging.Logger.getLogger(Shape.class.getName()).log(Level.SEVERE, null, ex);
-            }
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		try {
+			string = ow.writeValueAsString(this);
+		} catch (IOException ex) {
+			java.util.logging.Logger.getLogger(Shape.class.getName()).log(Level.SEVERE, null, ex);
+		}
 //        } else {
 //            string = this.uuid;
 //        }
-        return string;
-    }
+		return string;
+	}
 }
 
 ///**
