@@ -21,15 +21,10 @@ import java.net.URL;
 import javax.swing.JFrame;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.meritoki.retina.application.desktop.controller.document.DocumentController;
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.document.Document;
-import com.meritoki.retina.application.desktop.model.document.Project;
 import com.meritoki.retina.application.desktop.view.dialog.user.Login;
 import com.meritoki.retina.application.desktop.view.dialog.user.Register;
-
-import java.io.File;
 
 /**
  *
@@ -49,8 +44,8 @@ public final class Main extends JFrame {
     public com.meritoki.retina.application.desktop.view.dialog.SaveAs saveAsDialog = null; 
     public com.meritoki.retina.application.desktop.view.dialog.image.Import imageImportDialog = null;
     public com.meritoki.retina.application.desktop.view.dialog.Image imageDialog = new com.meritoki.retina.application.desktop.view.dialog.Image(this, false);
-    public com.meritoki.retina.application.desktop.view.dialog.Rectangle shapeDialog = new com.meritoki.retina.application.desktop.view.dialog.Rectangle(this, false);
-    public com.meritoki.retina.application.desktop.view.dialog.Matrix pageDialog = new com.meritoki.retina.application.desktop.view.dialog.Matrix(this, false);
+    public com.meritoki.retina.application.desktop.view.dialog.Selection selectionDialog = new com.meritoki.retina.application.desktop.view.dialog.Selection(this, false);
+    public com.meritoki.retina.application.desktop.view.dialog.Matrix matrixDialog = new com.meritoki.retina.application.desktop.view.dialog.Matrix(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.zooniverse.Export exportZooniverseDialog = new com.meritoki.retina.application.desktop.view.dialog.zooniverse.Export(this, false);
     
     public Main() {
@@ -71,8 +66,8 @@ public final class Main extends JFrame {
         this.imagePanel.setModel(this.model);
         this.matrixPanel.setModel(this.model);
         this.imageDialog.setModel(this.model);
-        this.shapeDialog.setModel(this.model);
-        this.pageDialog.setModel(this.model);
+        this.selectionDialog.setModel(this.model);
+        this.matrixDialog.setModel(this.model);
         this.exportZooniverseDialog.setModel(this.model);
         this.registerDialog.setModel(this.model);
         this.registerDialog.setLoginDialog(this.loginDialog);
@@ -92,7 +87,7 @@ public final class Main extends JFrame {
         this.imagePanel.setFocusable(true);
         this.imagePanel.requestFocusInWindow();
         this.imageDialog.init();
-        this.shapeDialog.init();
+        this.selectionDialog.init();
 //        this.imageDialog.setVisible(true);
 //        this.shapeDialog.setVisible(true);
     }
@@ -316,11 +311,11 @@ public final class Main extends JFrame {
     }//GEN-LAST:event_imageMenuItemActionPerformed
 
     private void rectangleMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rectangleMenuItemActionPerformed
-        this.shapeDialog.setVisible(true);
+        this.selectionDialog.setVisible(true);
     }//GEN-LAST:event_rectangleMenuItemActionPerformed
 
     private void pageMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pageMenuItemActionPerformed
-        this.pageDialog.setVisible(true);
+        this.matrixDialog.setVisible(true);
     }//GEN-LAST:event_pageMenuItemActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
