@@ -21,7 +21,7 @@ public class AddPage extends Command {
     public void execute() {
     	logger.info("execute()");
     	this.user = this.model.user;
-		Document document = (model != null) ? model.getDocument() : null;
+		Document document = (this.model != null) ? this.model.getDocument() : null;
         Project project = (document != null) ? document.getProject() : null;
     	Page page = null;
     	for(File file: model.variable.files) {
@@ -29,8 +29,6 @@ public class AddPage extends Command {
 			page.fileList.add(new com.meritoki.retina.application.desktop.model.document.File(file.getParent(),file.getName()));
     		if(project != null) {
     			project.addPage(page);
-    		} else {
-    			System.out.println("project is null");
     		}
     	}
     }

@@ -21,15 +21,10 @@ import java.net.URL;
 import javax.swing.JFrame;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.meritoki.retina.application.desktop.controller.document.DocumentController;
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.document.Document;
-import com.meritoki.retina.application.desktop.model.document.Project;
 import com.meritoki.retina.application.desktop.view.dialog.user.Login;
 import com.meritoki.retina.application.desktop.view.dialog.user.Register;
-
-import java.io.File;
 
 /**
  *
@@ -45,12 +40,12 @@ public final class Main extends JFrame {
     public Model model = null;
     public Login loginDialog = new Login(this,false);
     public Register registerDialog = new Register(this,false);
-    public com.meritoki.retina.application.desktop.view.dialog.Image imageDialog = new com.meritoki.retina.application.desktop.view.dialog.Image(this, false);
-    public com.meritoki.retina.application.desktop.view.dialog.Rectangle shapeDialog = new com.meritoki.retina.application.desktop.view.dialog.Rectangle(this, false);
-    public com.meritoki.retina.application.desktop.view.dialog.Matrix pageDialog = new com.meritoki.retina.application.desktop.view.dialog.Matrix(this, false);
-    public com.meritoki.retina.application.desktop.view.dialog.Open openDialog = null;//new com.meritoki.retina.application.desktop.view.dialog.Open(this, false);
-    public com.meritoki.retina.application.desktop.view.dialog.SaveAs saveAsDialog = null; //new com.meritoki.retina.application.desktop.view.dialog.SaveAs(this, false);
+    public com.meritoki.retina.application.desktop.view.dialog.Open openDialog = null;
+    public com.meritoki.retina.application.desktop.view.dialog.SaveAs saveAsDialog = null; 
     public com.meritoki.retina.application.desktop.view.dialog.image.Import imageImportDialog = null;
+    public com.meritoki.retina.application.desktop.view.dialog.Image imageDialog = new com.meritoki.retina.application.desktop.view.dialog.Image(this, false);
+    public com.meritoki.retina.application.desktop.view.dialog.Selection selectionDialog = new com.meritoki.retina.application.desktop.view.dialog.Selection(this, false);
+    public com.meritoki.retina.application.desktop.view.dialog.Matrix matrixDialog = new com.meritoki.retina.application.desktop.view.dialog.Matrix(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.zooniverse.Export exportZooniverseDialog = new com.meritoki.retina.application.desktop.view.dialog.zooniverse.Export(this, false);
     
     public Main() {
@@ -60,8 +55,9 @@ public final class Main extends JFrame {
         Image image = Toolkit.getDefaultToolkit().getImage(url);
         logger.debug(image);
         this.setIconImage(image);
-        this.init();
         this.setModel(new Model());
+        this.init();
+        
     }
 
     public void setModel(Model model) {
@@ -70,8 +66,8 @@ public final class Main extends JFrame {
         this.imagePanel.setModel(this.model);
         this.matrixPanel.setModel(this.model);
         this.imageDialog.setModel(this.model);
-        this.shapeDialog.setModel(this.model);
-        this.pageDialog.setModel(this.model);
+        this.selectionDialog.setModel(this.model);
+        this.matrixDialog.setModel(this.model);
         this.exportZooniverseDialog.setModel(this.model);
         this.registerDialog.setModel(this.model);
         this.registerDialog.setLoginDialog(this.loginDialog);
@@ -90,6 +86,8 @@ public final class Main extends JFrame {
         this.imagePanel.setMain(this);
         this.imagePanel.setFocusable(true);
         this.imagePanel.requestFocusInWindow();
+        this.imageDialog.init();
+        this.selectionDialog.init();
 //        this.imageDialog.setVisible(true);
 //        this.shapeDialog.setVisible(true);
     }
@@ -122,8 +120,8 @@ public final class Main extends JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
-        imageMenu = new javax.swing.JMenu();
-        sizeMenuItem = new javax.swing.JMenuItem();
+        undoMenuItem = new javax.swing.JMenuItem();
+        redoMenuItem = new javax.swing.JMenuItem();
         windowMenu = new javax.swing.JMenu();
         dialogMenu = new javax.swing.JMenu();
         pageMenuItem = new javax.swing.JMenuItem();
@@ -237,14 +235,24 @@ public final class Main extends JFrame {
         mainMenuBar.add(fileMenu);
 
         editMenu.setText("Edit");
+
+        undoMenuItem.setText("Undo");
+        undoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                undoMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(undoMenuItem);
+
+        redoMenuItem.setText("Redo");
+        redoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                redoMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(redoMenuItem);
+
         mainMenuBar.add(editMenu);
-
-        imageMenu.setText("Image");
-
-        sizeMenuItem.setText("Size");
-        imageMenu.add(sizeMenuItem);
-
-        mainMenuBar.add(imageMenu);
 
         windowMenu.setText("Window");
 
@@ -313,11 +321,11 @@ public final class Main extends JFrame {
     }//GEN-LAST:event_imageMenuItemActionPerformed
 
     private void rectangleMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rectangleMenuItemActionPerformed
-        this.shapeDialog.setVisible(true);
+        this.selectionDialog.setVisible(true);
     }//GEN-LAST:event_rectangleMenuItemActionPerformed
 
     private void pageMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pageMenuItemActionPerformed
-        this.pageDialog.setVisible(true);
+        this.matrixDialog.setVisible(true);
     }//GEN-LAST:event_pageMenuItemActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
@@ -335,6 +343,14 @@ public final class Main extends JFrame {
     private void loginMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginMenuItemActionPerformed
         this.loginDialog.setVisible(true);
     }//GEN-LAST:event_loginMenuItemActionPerformed
+
+    private void undoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_undoMenuItemActionPerformed
+
+    private void redoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_redoMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_redoMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -380,7 +396,6 @@ public final class Main extends JFrame {
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu exportMenu;
     private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenu imageMenu;
     private javax.swing.JMenuItem imageMenuItem;
     private javax.swing.JTabbedPane imagePageTabbedPane;
     private com.meritoki.retina.application.desktop.view.panel.Image imagePanel;
@@ -398,9 +413,10 @@ public final class Main extends JFrame {
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem pageMenuItem;
     private javax.swing.JMenuItem rectangleMenuItem;
+    private javax.swing.JMenuItem redoMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
-    private javax.swing.JMenuItem sizeMenuItem;
+    private javax.swing.JMenuItem undoMenuItem;
     private javax.swing.JMenu windowMenu;
     // End of variables declaration//GEN-END:variables
 }

@@ -194,8 +194,8 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				}
 			}
 		}
-		this.main.shapeDialog.init();
-		this.main.pageDialog.init();
+		this.main.selectionDialog.init();
+		this.main.matrixDialog.init();
 		repaint();
 	}
 
@@ -273,8 +273,8 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				logger.debug("keyPressed(LEFT)");
 				this.model.getDocument().getProject().setIndex(--index);
 				this.main.imageDialog.init();
-				this.main.shapeDialog.init();
-				this.main.pageDialog.init();
+				this.main.selectionDialog.init();
+				this.main.matrixDialog.init();
 				this.repaint();
 				break;
 			}
@@ -282,8 +282,8 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				logger.debug("keyPressed(RIGHT)");
 				this.model.getDocument().getProject().setIndex(++index);
 				this.main.imageDialog.init();
-				this.main.shapeDialog.init();
-				this.main.pageDialog.init();
+				this.main.selectionDialog.init();
+				this.main.matrixDialog.init();
 				this.repaint();
 				break;
 			}
@@ -291,8 +291,8 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				logger.debug("keyPressed(UP)");
 				this.model.getDocument().getProject().setIndex(--index);
 				this.main.imageDialog.init();
-				this.main.shapeDialog.init();
-				this.main.pageDialog.init();
+				this.main.selectionDialog.init();
+				this.main.matrixDialog.init();
 				this.repaint();
 				break;
 			}
@@ -300,8 +300,8 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				logger.debug("keyPressed(DOWN)");
 				this.model.getDocument().getProject().setIndex(++index);
 				this.main.imageDialog.init();
-				this.main.shapeDialog.init();
-				this.main.pageDialog.init();
+				this.main.selectionDialog.init();
+				this.main.matrixDialog.init();
 				this.repaint();
 				break;
 			}

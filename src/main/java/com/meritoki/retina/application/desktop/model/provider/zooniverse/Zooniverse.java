@@ -16,9 +16,7 @@
 package com.meritoki.retina.application.desktop.model.provider.zooniverse;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,9 +94,8 @@ public class Zooniverse {
     @JsonIgnore
     public void setProject(String id) {
         logger.info("setProject(" + id + ")");
-        Project project = null;
         for (int i = 0; i < this.projectList.size(); i++) {
-            project = this.projectList.get(i);
+            Project project = this.projectList.get(i);
             if (project.id.equals(id)) {
                 this.setIndex(i);;
                 break;

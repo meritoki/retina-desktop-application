@@ -42,7 +42,7 @@ import com.meritoki.retina.application.desktop.view.frame.Main;
 /**
  * Class is used to interact with Shapes on a Page.
  */
-public class Rectangle extends javax.swing.JDialog implements MouseListener, KeyListener {
+public class Selection extends javax.swing.JDialog implements MouseListener, KeyListener {
 
 	/**
 	 * Serial Version UID
@@ -51,7 +51,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
 	/**
 	 * Logger for class.
 	 */
-    static Logger logger = LogManager.getLogger(Rectangle.class.getName());
+    static Logger logger = LogManager.getLogger(Selection.class.getName());
     /**
      * Model for class.
      */
@@ -65,9 +65,9 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
      * @param parent
      * @param modal
      */
-    public Rectangle(java.awt.Frame parent, boolean modal) {
+    public Selection(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        this.setTitle("Shape");
+        this.setTitle("Selection");
         this.initComponents();
         this.rectangleList.addMouseListener(this);
         this.rectangleList.addKeyListener(this);
@@ -701,14 +701,18 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Rectangle.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Selection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Rectangle.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Selection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Rectangle.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Selection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Rectangle.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Selection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -717,7 +721,7 @@ public class Rectangle extends javax.swing.JDialog implements MouseListener, Key
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                Rectangle dialog = new Rectangle(new javax.swing.JFrame(), true);
+                Selection dialog = new Selection(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

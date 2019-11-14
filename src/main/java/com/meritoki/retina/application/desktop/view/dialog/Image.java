@@ -149,8 +149,8 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
             project.setPage(selectedItem);
             this.initLabel();
             this.getParent().repaint();
-            ((Main)this.getParent()).shapeDialog.init();
-            ((Main)this.getParent()).pageDialog.init();
+            ((Main)this.getParent()).selectionDialog.init();
+            ((Main)this.getParent()).matrixDialog.init();
         }
     }
     
@@ -189,8 +189,8 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
                 this.initLabel();
                 this.setPageListSelectedIndex(index);
                 this.getParent().repaint();
-                ((Main)this.getParent()).shapeDialog.init();
-                ((Main)this.getParent()).pageDialog.init();
+                ((Main)this.getParent()).selectionDialog.init();
+                ((Main)this.getParent()).matrixDialog.init();
                 break;
             }
             case KeyEvent.VK_RIGHT:{
@@ -201,8 +201,8 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
                 this.initLabel();
                 this.setPageListSelectedIndex(index);
                 this.getParent().repaint();
-                ((Main)this.getParent()).shapeDialog.init();
-                ((Main)this.getParent()).pageDialog.init();
+                ((Main)this.getParent()).selectionDialog.init();
+                ((Main)this.getParent()).matrixDialog.init();
                 break;
             }
 
@@ -224,8 +224,8 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
             project.setPage(uuid);
             this.initLabel();
             this.getParent().repaint();
-            ((Main)this.getParent()).shapeDialog.init();
-            ((Main)this.getParent()).pageDialog.init();
+            ((Main)this.getParent()).selectionDialog.init();
+            ((Main)this.getParent()).matrixDialog.init();
         }
     }
 
