@@ -120,8 +120,8 @@ public final class Main extends JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
-        imageMenu = new javax.swing.JMenu();
-        sizeMenuItem = new javax.swing.JMenuItem();
+        undoMenuItem = new javax.swing.JMenuItem();
+        redoMenuItem = new javax.swing.JMenuItem();
         windowMenu = new javax.swing.JMenu();
         dialogMenu = new javax.swing.JMenu();
         pageMenuItem = new javax.swing.JMenuItem();
@@ -235,14 +235,24 @@ public final class Main extends JFrame {
         mainMenuBar.add(fileMenu);
 
         editMenu.setText("Edit");
+
+        undoMenuItem.setText("Undo");
+        undoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                undoMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(undoMenuItem);
+
+        redoMenuItem.setText("Redo");
+        redoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                redoMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(redoMenuItem);
+
         mainMenuBar.add(editMenu);
-
-        imageMenu.setText("Image");
-
-        sizeMenuItem.setText("Size");
-        imageMenu.add(sizeMenuItem);
-
-        mainMenuBar.add(imageMenu);
 
         windowMenu.setText("Window");
 
@@ -334,6 +344,14 @@ public final class Main extends JFrame {
         this.loginDialog.setVisible(true);
     }//GEN-LAST:event_loginMenuItemActionPerformed
 
+    private void undoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_undoMenuItemActionPerformed
+
+    private void redoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_redoMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_redoMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -378,7 +396,6 @@ public final class Main extends JFrame {
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu exportMenu;
     private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenu imageMenu;
     private javax.swing.JMenuItem imageMenuItem;
     private javax.swing.JTabbedPane imagePageTabbedPane;
     private com.meritoki.retina.application.desktop.view.panel.Image imagePanel;
@@ -396,9 +413,10 @@ public final class Main extends JFrame {
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem pageMenuItem;
     private javax.swing.JMenuItem rectangleMenuItem;
+    private javax.swing.JMenuItem redoMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
-    private javax.swing.JMenuItem sizeMenuItem;
+    private javax.swing.JMenuItem undoMenuItem;
     private javax.swing.JMenu windowMenu;
     // End of variables declaration//GEN-END:variables
 }
