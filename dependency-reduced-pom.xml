@@ -10,7 +10,7 @@
   <groupId>com.meritoki.retina.application.desktop</groupId>
   <artifactId>desktop</artifactId>
   <name>desktop-application</name>
-  <version>0.1.201911</version>
+  <version>0.4.201911</version>
   <build>
     <plugins>
       <plugin>
