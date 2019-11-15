@@ -135,21 +135,22 @@ public class NodeController {
 
 	@JsonIgnore
 	public static void saveJson(String path, String name, Object object) {
-		logger.info("saveJson()");
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY);
-		mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
-		try {
-			mapper.writeValue(new java.io.File(path + "/" + name), object);
-			logger.info("saved...");
-		} catch (IOException ex) {
-			logger.error(ex);
-		}
+		logger.info("saveJson("+path+","+name+", object)");
+		saveJson(new java.io.File(path+"/"+name), object);
+//		ObjectMapper mapper = new ObjectMapper();
+//		mapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY);
+//		mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
+//		try {
+//			mapper.writeValue(new java.io.File(path + "/" + name), object);
+//			logger.info("saved...");
+//		} catch (IOException ex) {
+//			logger.error(ex);
+//		}
 	}
 
 	@JsonIgnore
 	public static void saveJson(File file, Object object) {
-		logger.info("saveJson()");
+		logger.info("saveJson("+file.getAbsolutePath()+",object)");
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY);
 		mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);

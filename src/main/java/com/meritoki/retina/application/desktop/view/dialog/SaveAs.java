@@ -41,19 +41,21 @@ public class SaveAs extends javax.swing.JDialog {
     public SaveAs(java.awt.Frame parent, boolean flag) {
         super(parent, flag);
         this.initComponents();
+        this.saveFileChooser.setSelectedFile(new File("Untitled.json"));
         this.result();
     }
     
     public void result() {
         int result = this.saveFileChooser.showSaveDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
-            File file = this.saveFileChooser.getSelectedFile();
             Model model = ((Main)this.getParent()).model;
+            model.variable.file = this.saveFileChooser.getSelectedFile();
             if(model != null) {
-	            DocumentController.save(file, model.getDocument());
+	            DocumentController.save(model.variable.file, model.getDocument());
 	            ((Main) this.getParent()).init();
 	            ((Main) this.getParent()).repaint();
             }
+            model.variable.newDocument = false;
             this.setVisible(false);
         } else if (result == JFileChooser.CANCEL_OPTION) {
             logger.info("Cancel");
