@@ -21,6 +21,8 @@ import java.net.URL;
 import javax.swing.JFrame;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.meritoki.retina.application.desktop.controller.document.DocumentController;
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.document.Document;
 import com.meritoki.retina.application.desktop.view.dialog.user.Login;
@@ -311,11 +313,16 @@ public final class Main extends JFrame {
 
     private void newMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMenuItemActionPerformed
         this.model.setDocument(new Document());
+        this.model.variable.newDocument = true;
     }//GEN-LAST:event_newMenuItemActionPerformed
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
-    	
-//    	DocumentController.save(file, this.model.getDocument());    
+    	if(this.model.variable.newDocument) {
+    		this.saveAsDialog = new com.meritoki.retina.application.desktop.view.dialog.SaveAs(this, false);
+    	} else {
+        	DocumentController.save(model.variable.file, this.model.getDocument());  
+    	}
+  
     }//GEN-LAST:event_saveMenuItemActionPerformed
 
     private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed

@@ -35,6 +35,8 @@ public class Variable {
 	@JsonIgnore
 	public java.io.File[] files = null;
 	@JsonIgnore
+	public java.io.File file = null;
+	@JsonIgnore
 	public Script script = new Script();
 	@JsonIgnore
 	public Page page = null;
@@ -72,4 +74,5 @@ public class Variable {
 	public List<String> spaceList = Arrays.asList("latitude", "longitude", "locale", "location");
 	@JsonIgnore
 	public List<String> energyList = Arrays.asList("letter", "word", "sentance", "temperature", "pressure");
+	public boolean newDocument = true;
 }

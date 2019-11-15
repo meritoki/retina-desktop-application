@@ -23,7 +23,7 @@ public class DocumentController {
 	
 	@JsonIgnore
 	public static void save(File file, Document object) {
-		logger.info("save()");
+		logger.info("save("+file.getAbsolutePath()+", object)");
 		NodeController.saveJson(file, object);
 	}
 

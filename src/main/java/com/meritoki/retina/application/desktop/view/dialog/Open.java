@@ -53,10 +53,10 @@ public class Open extends javax.swing.JDialog {
 	public void result() {
         int result = this.openFileChooser.showOpenDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
-            File file = this.openFileChooser.getSelectedFile();
             Model model = ((Main)this.getParent()).model;
+            model.variable.file = this.openFileChooser.getSelectedFile();
             if(model != null) {
-	            model.setDocument(DocumentController.open(file));
+	            model.setDocument(DocumentController.open(model.variable.file));
 	            ((Main) this.getParent()).init();
 	            ((Main) this.getParent()).repaint();
             }
