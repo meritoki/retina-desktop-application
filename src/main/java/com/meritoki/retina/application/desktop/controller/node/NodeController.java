@@ -1,9 +1,11 @@
 package com.meritoki.retina.application.desktop.controller.node;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -113,6 +115,22 @@ public class NodeController {
 			ex.printStackTrace();
 		}
 		return properties;
+	}
+
+	@JsonIgnore
+	public static List<String[]> openCsv(String fileName) {
+		String line = "";
+		List<String[]> stringArrayList = new ArrayList<>();
+		try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+			while ((line = br.readLine()) != null) {
+				logger.info(line);
+				String[] array = line.split(",");
+				stringArrayList.add(array);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return stringArrayList;
 	}
 
 	@JsonIgnore

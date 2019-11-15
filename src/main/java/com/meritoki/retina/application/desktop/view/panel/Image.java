@@ -257,6 +257,9 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 			String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 			List<Shape> shapeList = this.model.getDocument().getProject().getPage().getShapeList();
 			this.generateManifest(timeStamp, shapeList);
+		} else if((e.getKeyCode() == KeyEvent.VK_T) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) { 
+			List<String[]> stringArrayList = NodeController.openCsv("import.csv");
+			this.model.getDocument().importText(stringArrayList);
 		} else {
 			e.consume();
 			int keyCode = e.getKeyCode();
