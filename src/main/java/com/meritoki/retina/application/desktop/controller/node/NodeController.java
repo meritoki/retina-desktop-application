@@ -137,15 +137,6 @@ public class NodeController {
 	public static void saveJson(String path, String name, Object object) {
 		logger.info("saveJson("+path+","+name+", object)");
 		saveJson(new java.io.File(path+"/"+name), object);
-//		ObjectMapper mapper = new ObjectMapper();
-//		mapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY);
-//		mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
-//		try {
-//			mapper.writeValue(new java.io.File(path + "/" + name), object);
-//			logger.info("saved...");
-//		} catch (IOException ex) {
-//			logger.error(ex);
-//		}
 	}
 
 	@JsonIgnore
@@ -235,5 +226,4 @@ public class NodeController {
 		}
 		return stringList;
 	}
-
 }
