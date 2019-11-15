@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.meritoki.retina.application.desktop</groupId>
 	<artifactId>desktop</artifactId>
-	<version>0.3.201911</version>
+	<version>0.4.201911</version>
 	<packaging>jar</packaging>
 	<properties>
 		<cayenne.version>4.0.1</cayenne.version>
