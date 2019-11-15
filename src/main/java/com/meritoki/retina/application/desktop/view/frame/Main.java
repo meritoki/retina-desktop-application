@@ -311,7 +311,6 @@ public final class Main extends JFrame {
 
     private void newMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMenuItemActionPerformed
         this.model.setDocument(new Document());
-//        this.imageImportDialog.setVisible(true);
     }//GEN-LAST:event_newMenuItemActionPerformed
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
@@ -352,12 +351,11 @@ public final class Main extends JFrame {
     }//GEN-LAST:event_loginMenuItemActionPerformed
 
     private void undoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoMenuItemActionPerformed
-        // TODO add your handling code here:
-    	
+        this.model.getDocument().undo();
     }//GEN-LAST:event_undoMenuItemActionPerformed
 
     private void redoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_redoMenuItemActionPerformed
-        // TODO add your handling code here:
+        this.model.getDocument().redo();
     }//GEN-LAST:event_redoMenuItemActionPerformed
 
     private void importZooniverseMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importZooniverseMenuItemActionPerformed
