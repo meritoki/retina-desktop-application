@@ -265,7 +265,7 @@ public final class Main extends JFrame {
 
         dialogMenu.setText("Dialog");
 
-        pageMenuItem.setText("Page");
+        pageMenuItem.setText("Matrix");
         pageMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 pageMenuItemActionPerformed(evt);
@@ -281,7 +281,7 @@ public final class Main extends JFrame {
         });
         dialogMenu.add(imageMenuItem);
 
-        rectangleMenuItem.setText("Rectangle");
+        rectangleMenuItem.setText("Selection");
         rectangleMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 rectangleMenuItemActionPerformed(evt);

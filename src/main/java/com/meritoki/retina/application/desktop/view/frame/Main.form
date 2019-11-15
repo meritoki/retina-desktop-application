@@ -129,7 +129,7 @@
               <SubComponents>
                 <MenuItem class="javax.swing.JMenuItem" name="pageMenuItem">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Page"/>
+                    <Property name="text" type="java.lang.String" value="Matrix"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pageMenuItemActionPerformed"/>
@@ -145,7 +145,7 @@
                 </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="rectangleMenuItem">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Rectangle"/>
+                    <Property name="text" type="java.lang.String" value="Selection"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rectangleMenuItemActionPerformed"/>
