@@ -47,6 +47,7 @@ public final class Main extends JFrame {
     public com.meritoki.retina.application.desktop.view.dialog.Selection selectionDialog = new com.meritoki.retina.application.desktop.view.dialog.Selection(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.Matrix matrixDialog = new com.meritoki.retina.application.desktop.view.dialog.Matrix(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.zooniverse.Export exportZooniverseDialog = new com.meritoki.retina.application.desktop.view.dialog.zooniverse.Export(this, false);
+    public com.meritoki.retina.application.desktop.view.dialog.zooniverse.Import importZooniverseDialog = new com.meritoki.retina.application.desktop.view.dialog.zooniverse.Import(this, false);
     
     public Main() {
         initComponents();
@@ -69,6 +70,7 @@ public final class Main extends JFrame {
         this.selectionDialog.setModel(this.model);
         this.matrixDialog.setModel(this.model);
         this.exportZooniverseDialog.setModel(this.model);
+        this.importZooniverseDialog.setModel(this.model);
         this.registerDialog.setModel(this.model);
         this.registerDialog.setLoginDialog(this.loginDialog);
         this.loginDialog.setModel(this.model);
@@ -115,7 +117,7 @@ public final class Main extends JFrame {
         saveAsMenuItem = new javax.swing.JMenuItem();
         importMenu = new javax.swing.JMenu();
         importImageMenuItem = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        importZooniverseMenuItem = new javax.swing.JMenuItem();
         exportMenu = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
@@ -212,8 +214,13 @@ public final class Main extends JFrame {
         });
         importMenu.add(importImageMenuItem);
 
-        jMenuItem2.setText("Zooniverse");
-        importMenu.add(jMenuItem2);
+        importZooniverseMenuItem.setText("Zooniverse");
+        importZooniverseMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importZooniverseMenuItemActionPerformed(evt);
+            }
+        });
+        importMenu.add(importZooniverseMenuItem);
 
         fileMenu.add(importMenu);
 
@@ -353,6 +360,10 @@ public final class Main extends JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_redoMenuItemActionPerformed
 
+    private void importZooniverseMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importZooniverseMenuItemActionPerformed
+        this.importZooniverseDialog.setVisible(true);
+    }//GEN-LAST:event_importZooniverseMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -402,7 +413,7 @@ public final class Main extends JFrame {
     private com.meritoki.retina.application.desktop.view.panel.Image imagePanel;
     private javax.swing.JMenuItem importImageMenuItem;
     private javax.swing.JMenu importMenu;
-    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem importZooniverseMenuItem;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JScrollPane jScrollPane1;
