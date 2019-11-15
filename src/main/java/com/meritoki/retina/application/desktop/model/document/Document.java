@@ -14,10 +14,13 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import com.meritoki.retina.application.desktop.controller.client.ModelClient;
+import com.meritoki.retina.application.desktop.controller.json.JsonController;
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.User;
 import com.meritoki.retina.application.desktop.model.command.Command;
 import com.meritoki.retina.application.desktop.model.provider.Provider;
+import com.meritoki.retina.application.desktop.model.provider.zooniverse.Reference;
+import com.meritoki.retina.application.desktop.model.provider.zooniverse.Task;
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.ZooniverseProvider;
 import com.meritoki.retina.application.desktop.model.vendor.Vendor;
 
@@ -68,10 +71,12 @@ public class Document {
         return this.project;
     }
 
+    @JsonIgnore
     public void register(String commandName, Command command) {
         commandMap.put(commandName, command);
     }
 
+    @JsonIgnore
     public void execute(String commandName) {
         Command command = commandMap.get(commandName);
         if (command == null) {
@@ -86,11 +91,47 @@ public class Document {
         this.state.undoStack.push(newCommand);
         command.reset();
     }
+    
+    public boolean importText(List<String[]> stringArrayList) {
+    	logger.info("importText(...)");
+    	boolean flag = false;
+    	for(int i = 0; i< stringArrayList.size(); i++) {
+    		String[] stringArray = stringArrayList.get(i);
+    		String value = null;
+    		for(String string: stringArray) {
+    			if(string.contains("value")) {
+    				value = string.split(":")[1].replace("\"", "");
+    			}
+    		}
+    		String uuid = null;
+    		for(String string: stringArray) {
+    			if(string.contains("the_image")) {
+    				uuid = string.split(":")[1].replace(".jpg", "").replace("}", "").replace("\"", "");
+    			}
+    		}
+    		System.out.println(value+" "+uuid);
+    		if(uuid != null && value != null) {
+	    		for(Page page: this.getProject().getPageList()) {
+	    			for(Shape shape: page.getShapeList()) {
+	    				if(uuid.equals(shape.uuid)) {
+	    					Text text = new Text();
+	    					text.value = value;
+	    					shape.addText(text);
+	    					flag = true;
+	    				}
+	    			}
+	    		}
+    		}
+    	}
+    	return flag;
+    }
 
+    @JsonIgnore
     public void addUser(User user) {
         this.userList.add(user);
     }
 
+    @JsonIgnore
     public boolean containsUser(User user) {
         boolean flag = false;
         for (User u : this.userList) {

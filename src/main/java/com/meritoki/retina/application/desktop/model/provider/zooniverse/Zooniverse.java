@@ -181,6 +181,11 @@ public class Zooniverse {
     public void workflowUploadSubjectSet(Workflow workflow, SubjectSet subjectSet) {
         List<String> stringList = NodeController.executeCommand("panoptes workflow add-subject-sets " + workflow.getId() + " " + subjectSet.getId());
     }
+    
+    public void downloadClassification(Project project, String fileName) {
+    	List<String> stringList = NodeController.executeCommand("panoptes project download --generate "+project.id+" "+fileName, 60*10);
+    }
+    
 
     @JsonIgnore
     public String convertArrayToStringMethod(String[] strArray, int start) {
