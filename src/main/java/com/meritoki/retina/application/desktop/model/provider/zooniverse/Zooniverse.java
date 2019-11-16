@@ -120,6 +120,10 @@ public class Zooniverse {
     public void setConfig() {
         this.setConfig(this.credential);
     }
+    
+    public String getConfigPath() {
+    	return NodeController.getRetinaHome()+NodeController.getSeperator()+"provider"+NodeController.getSeperator()+"zooniverse";
+    }
 
     @JsonIgnore
     public void setConfig(Credential credential) {
@@ -128,8 +132,9 @@ public class Zooniverse {
             data.put("username", credential.userName);
             data.put("password", credential.password);
             data.put("endpoint", "https://www.zooniverse.org");
-            NodeController.saveYaml("./", "config.yml", data);
-            NodeController.executeCommand("cp ./config.yml ~/.panoptes/");
+            new File(this.getConfigPath()).mkdirs();
+            NodeController.saveYaml(this.getConfigPath(), "config.yml", data);
+            NodeController.executeCommand("cp "+this.getConfigPath()+NodeController.getSeperator()+"config.yml "+NodeController.getPanoptesHome());
 //            NodeController.executeCommand("panoptes configure");
         }
     }

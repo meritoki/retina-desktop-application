@@ -55,6 +55,10 @@ public class NodeController {
 		return getUserHome()+getSeperator()+".retina";
 	}
 	
+	public static String getPanoptesHome() {
+		return getUserHome()+getSeperator()+".panoptes";
+	}
+	
 	public static BufferedImage openBufferedImage(String filePath, String fileName) {
 		logger.info("openBufferedImage(" + filePath + ", " + fileName + ")");
 		return openBufferedImage(new java.io.File(filePath + getSeperator() + fileName));
@@ -176,6 +180,7 @@ public class NodeController {
 
 	@JsonIgnore
 	public static void saveYaml(String filePath, String fileName, Object object) {
+		logger.info("saveYaml("+filePath+", "+fileName+", object)");
 		DumperOptions options = new DumperOptions();
 		options.setPrettyFlow(true);
 		options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
