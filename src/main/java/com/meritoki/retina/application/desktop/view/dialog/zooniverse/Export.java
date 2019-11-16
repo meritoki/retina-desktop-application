@@ -24,6 +24,7 @@ import javax.swing.DefaultComboBoxModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.meritoki.retina.application.desktop.controller.node.NodeController;
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.document.Shape;
 import com.meritoki.retina.application.desktop.model.provider.Provider;
@@ -113,6 +114,10 @@ public class Export extends javax.swing.JDialog {
             }
         }
         this.projectWorkflowComboBox.setModel(new DefaultComboBoxModel(array));
+    }
+    
+    public String getSubjectSetPath() {
+    	return NodeController.getRetinaHome()+NodeController.getSeperator()+"provider"+NodeController.getSeperator()+"zooniverse"+NodeController.getSeperator()+"subject-set"+NodeController.getSeperator();
     }
 
     /**
@@ -472,14 +477,15 @@ public class Export extends javax.swing.JDialog {
         List<Shape> shapeList = this.model.getDocument().getProject().getShapeList();
         subjectSet.title = subjectSetTitle;
         if (zooniverse != null) {
-        	zooniverse.generateManifest(timeStamp, shapeList);
-            Project project = zooniverse.getProject(projectName);
-            if(project != null) {
-                Workflow workflow = project.getWorkflow(workflowTitle);
-                zooniverse.createSubjectSet(project.getId(), subjectSet);
-                zooniverse.uploadSubjectSet(subjectSet, "./"+timeStamp, "manifest.csv");
-                zooniverse.workflowUploadSubjectSet(workflow, subjectSet);
-            }
+        	zooniverse.generateManifest(this.getSubjectSetPath()+timeStamp, shapeList);
+//            Project project = zooniverse.getProject(projectName);
+//            if(project != null) {
+//                Workflow workflow = project.getWorkflow(workflowTitle);
+//                zooniverse.createSubjectSet(project.getId(), subjectSet);
+////                zooniverse.uploadSubjectSet(subjectSet, "./"+timeStamp, "manifest.csv");
+//                zooniverse.uploadSubjectSet(subjectSet, this.getSubjectSetPath()+timeStamp, "manifest.csv");
+//                zooniverse.workflowUploadSubjectSet(workflow, subjectSet);
+//            }
         }
     }//GEN-LAST:event_uploadButtonActionPerformed
 

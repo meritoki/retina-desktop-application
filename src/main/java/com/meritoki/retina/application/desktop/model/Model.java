@@ -41,7 +41,7 @@ public class Model {
 	@JsonIgnore
 	public Properties properties = null;
 	@JsonIgnore
-	public List<User> userList = null;
+	public List<User> userList = new ArrayList<User>();
 	@JsonIgnore
 	public User user = null;
 	@JsonIgnore
@@ -54,8 +54,14 @@ public class Model {
 	public List<Vendor> vendorList = new ArrayList<>();
 
 	public Model() {
+		//Make ~/.retina Directory
+		if(!new java.io.File(NodeController.getRetinaHome()).exists()) {
+			new java.io.File(NodeController.getRetinaHome()).mkdirs();
+		}
 		this.properties = NodeController.openProperties("./retina-desktop.properties");
-		this.userList = UserController.open();
+		if(UserController.exists()) {
+			this.userList = UserController.open();
+		}
 		this.providerList.add(new ZooniverseProvider());
 		this.setDocument(new Document());
 		this.variable = new Variable();
@@ -67,6 +73,7 @@ public class Model {
 			user.hash = BCryptController.hash("anonymous", 11);
 			user.email = "null";
 			this.userList.add(user);
+			UserController.save(this.userList);
 		} else {
 			this.variable.loginUser = false;//true;
 		}

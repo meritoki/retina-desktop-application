@@ -93,6 +93,10 @@ public class Import extends javax.swing.JDialog {
         }
         this.searchProjectComboBox.setModel(new DefaultComboBoxModel(array));
     }
+    
+    public String getClassificationPath() {
+    	return NodeController.getRetinaHome()+NodeController.getSeperator()+"provider"+NodeController.getSeperator()+"zooniverse"+NodeController.getSeperator()+"classification"+NodeController.getSeperator();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -236,8 +240,9 @@ public class Import extends javax.swing.JDialog {
             if (this.model.variable.projectList != null) {
                 for (Project p : this.model.variable.projectList) {
                     if (p.name.equals(searchProjectName)) {
-                        zooniverse.downloadClassification(p, "./"+timeStamp + ".csv");
-                        if(!this.model.getDocument().importText(NodeController.openCsv("./"+timeStamp+".csv"))) {
+//                        zooniverse.downloadClassification(p, "./"+timeStamp + ".csv");
+                    	zooniverse.downloadClassification(p, this.getClassificationPath()+timeStamp + ".csv");
+                        if(!this.model.getDocument().importText(NodeController.openCsv(this.getClassificationPath()+timeStamp+".csv"))) {
                         	JOptionPane.showMessageDialog(this, "No shape uuid matches");
                         }
                         break;

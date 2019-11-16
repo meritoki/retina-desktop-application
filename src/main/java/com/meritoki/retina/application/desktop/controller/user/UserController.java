@@ -1,5 +1,6 @@
 package com.meritoki.retina.application.desktop.controller.user;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
@@ -31,12 +32,16 @@ public class UserController {
 	}
 	
 	private static Logger logger = LogManager.getLogger(UserController.class.getName());
-	public static String filePath = "./";
+	public static String filePath = NodeController.getRetinaHome()+NodeController.getSeperator();
 	public static String fileName = "users.json";
 	
 	public static void save(Object object) {
 		logger.info("save()");
 		NodeController.saveJson(filePath, fileName, object);
+	}
+	
+	public static boolean exists() {
+		return new File(filePath+fileName).exists();
 	}
 	
 	@JsonIgnore
@@ -45,15 +50,5 @@ public class UserController {
 		List<User> userList = null;
 		userList = (List<User>)NodeController.openJson(new java.io.File(filePath+"/"+fileName), new TypeReference<List<User>>(){});
 		return userList;
-	}
-	
-	public static boolean login(List<User> userList, User user) {
-		
-		
-		return true;
-	}
-	
-	public static void register(User user) {
-		
 	}
 }

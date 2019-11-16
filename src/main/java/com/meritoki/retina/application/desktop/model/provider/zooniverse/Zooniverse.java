@@ -197,23 +197,24 @@ public class Zooniverse {
         return stringBuilder.toString().trim();
     }
     
-    public void generateManifest(String timeStamp, List<Shape> shapeList) {
+    public void generateManifest(String manifestPath, List<Shape> shapeList) {
+    	logger.info("generateManifest("+manifestPath+", shapeList)");
     	StringBuilder stringBuilder = new StringBuilder();
     	stringBuilder.append("my_own_id");
     	stringBuilder.append(",");
     	stringBuilder.append("the_image");
     	stringBuilder.append("\n");
-    	new File("./"+timeStamp).mkdir();
+    	new File(manifestPath).mkdirs();
     	Shape shape = null;
     	for(int i = 0;i<shapeList.size();i++) {
     		shape = shapeList.get(i);
     		stringBuilder.append(i);
     		stringBuilder.append(",");
-    		NodeController.saveJpg("./"+timeStamp, shape.uuid+".jpg", shape.bufferedImage);
+    		NodeController.saveJpg(manifestPath, shape.uuid+".jpg", shape.bufferedImage);
     		stringBuilder.append(shape.uuid+".jpg");
     		stringBuilder.append("\n");
     	}
-    	NodeController.saveCsv("./"+timeStamp, "manifest.csv", stringBuilder);
+    	NodeController.saveCsv(manifestPath, "manifest.csv", stringBuilder);
     }
 }
 
