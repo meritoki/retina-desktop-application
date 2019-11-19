@@ -6,7 +6,7 @@ public class ClientController {
 //	@JsonIgnore
 //	public ModelClient modelClient = new ModelClient();
 //	@JsonIgnore
-//	public FileClient fileClient = new FileClient();
+	public FileClient fileClient = new FileClient();
 //	@JsonIgnore
 //	public UserClient userClient = new UserClient();
 	

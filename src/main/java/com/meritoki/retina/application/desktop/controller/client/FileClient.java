@@ -88,35 +88,27 @@ public class FileClient {
 		MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
 		body.add("file", new FileSystemResource(file));
 		HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-		String serverUrl = "http://localhost:8302/";
+		String serverUrl = "http://localhost:8302/upload";
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate.postForEntity(serverUrl, requestEntity, String.class);
 	}
 
 	public void downloadFile(String fileName) { // This method will download file using RestTemplate
-	    RestTemplate restTemplate = new RestTemplate();
-	    restTemplate.getMessageConverters().add(
-	            new ByteArrayHttpMessageConverter());
-
-	    HttpHeaders headers = new HttpHeaders();
-	    headers.setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM));
-
-	    HttpEntity<String> entity = new HttpEntity<String>(headers);
-
-	    ResponseEntity<byte[]> response = restTemplate.exchange(
-	            "http://localhost:8302/download/"+fileName,
-	            HttpMethod.GET, entity, byte[].class, "1");
-
-	    if (response.getStatusCode() == HttpStatus.OK) {
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.getMessageConverters().add(new ByteArrayHttpMessageConverter());
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM));
+		HttpEntity<String> entity = new HttpEntity<String>(headers);
+		ResponseEntity<byte[]> response = restTemplate.exchange("http://localhost:8302/download/" + fileName,
+				HttpMethod.GET, entity, byte[].class, "1");
+		if (response.getStatusCode() == HttpStatus.OK) {
 			try {
 				Files.write(Paths.get(fileName), response.getBody());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-	    }
+		}
 	}
-
 
 	public static void main(String args[]) {
 		FileClient fileClient = new FileClient();
