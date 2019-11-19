@@ -16,36 +16,48 @@
 package com.meritoki.retina.application.desktop.controller.client;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.meritoki.retina.application.desktop.model.document.File;
 
 public class FileClient {
 
-    private static final Logger log = LoggerFactory.getLogger(FileClient.class);
-    private String url = "http://localhost:8302";
-    private Properties properties = null;
-    
-    public void setProperties(Properties properties) {
-    	this.properties = properties;
-    }
-    
-    public boolean checkHealth() {
-    	boolean flag = false;
-    	RestTemplate restTemplate = new RestTemplate();
-    	String uri = new String(url+"/actuator/health");
-    	String responseJson = restTemplate.getForObject(uri, String.class);
-    	ObjectMapper mapper = new ObjectMapper();
+	private static final Logger log = LoggerFactory.getLogger(FileClient.class);
+	private String url = "http://localhost:8302";
+	private Properties properties = null;
+
+	public void setProperties(Properties properties) {
+		this.properties = properties;
+	}
+
+	public boolean checkHealth() {
+		boolean flag = false;
+		RestTemplate restTemplate = new RestTemplate();
+		String uri = new String(url + "/actuator/health");
+		String responseJson = restTemplate.getForObject(uri, String.class);
+		ObjectMapper mapper = new ObjectMapper();
 		Status status = null;
 		try {
 			status = mapper.readValue(responseJson, Status.class);
@@ -56,34 +68,59 @@ public class FileClient {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if(status.status.equals("UP")) {
+		if (status.status.equals("UP")) {
 			flag = true;
 		}
 		return flag;
-    }
-    
-    
-    
-    public void importProject(String project) {
-    	RestTemplate restTemplate = new RestTemplate();
-    	String uri = new String(url+"/import");
-    	HttpHeaders headers = new HttpHeaders();
-    	headers.setContentType(MediaType.APPLICATION_JSON);
-    	HttpEntity<String> entity = new HttpEntity<String>(project, headers);
-    	String string = restTemplate.postForObject(uri, entity, String.class);
-    	System.out.println(string);
-    }
-    
-    
+	}
 
-//    public static void main(String args[]) {
-//        Map<String, String> vars = new HashMap<String, String>();
-//        vars.put("uuid", "123");
-//        RestTemplate rt = new RestTemplate();
-//        String uri = new String("http://localhost:8080/machine/register");
-//        FileTest u = new FileTest();
-//        u.uuid = "123";
-//        String returns = rt.postForObject(uri, u, String.class, vars);
-//        System.out.println(returns);
-//    }
+	public void registerFile(File file) {
+		Map<String, String> vars = new HashMap<String, String>();
+		vars.put("uuid", file.uuid);
+		RestTemplate restTemplate = new RestTemplate();
+		String uri = new String("http://localhost:8302/register");
+		String returns = restTemplate.postForObject(uri, file, String.class, vars);
+	}
+
+	public void uploadFile(java.io.File file) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+		MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+		body.add("file", new FileSystemResource(file));
+		HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+		String serverUrl = "http://localhost:8302/";
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<String> response = restTemplate.postForEntity(serverUrl, requestEntity, String.class);
+	}
+
+	public void downloadFile(String fileName) { // This method will download file using RestTemplate
+	    RestTemplate restTemplate = new RestTemplate();
+	    restTemplate.getMessageConverters().add(
+	            new ByteArrayHttpMessageConverter());
+
+	    HttpHeaders headers = new HttpHeaders();
+	    headers.setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM));
+
+	    HttpEntity<String> entity = new HttpEntity<String>(headers);
+
+	    ResponseEntity<byte[]> response = restTemplate.exchange(
+	            "http://localhost:8302/download/"+fileName,
+	            HttpMethod.GET, entity, byte[].class, "1");
+
+	    if (response.getStatusCode() == HttpStatus.OK) {
+			try {
+				Files.write(Paths.get(fileName), response.getBody());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }
+	}
+
+
+	public static void main(String args[]) {
+		FileClient fileClient = new FileClient();
+		fileClient.uploadFile(new java.io.File("./data/image/01.jpg"));
+		fileClient.downloadFile("./01.jpg");
+	}
 }
