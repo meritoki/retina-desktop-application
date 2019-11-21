@@ -40,7 +40,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meritoki.retina.application.desktop.model.document.File;
+//import com.meritoki.retina.application.desktop.model.document.File;
+import com.meritoki.retina.application.desktop.controller.client.json.File;
 
 public class FileClient {
 
@@ -74,12 +75,69 @@ public class FileClient {
 		return flag;
 	}
 
-	public void registerFile(File file) {
-		Map<String, String> vars = new HashMap<String, String>();
-		vars.put("uuid", file.uuid);
+//	public void registerFile(String uuid) {
+		////////////////////////////////////
+//		Map<String, String> vars = new HashMap<String, String>();
+//		vars.put("uuid", file.uuid);
+//		RestTemplate restTemplate = new RestTemplate();
+//		String uri = new String("http://localhost:8302/register");
+//		String returns = restTemplate.postForObject(uri, file, String.class, vars);
+		////////////////////
+//		RestTemplate restTemplate = new RestTemplate();
+//		String url = new String("http://localhost:8302/register");
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setContentType(MediaType.APPLICATION_JSON);
+//		MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+//		map.add("uuid", uuid);
+//		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+//		ResponseEntity<String> response = restTemplate.postForEntity( url, request , String.class );
+
+//	}
+	
+//	public void registerFile(File file) {
+//		Map<String, String> vars = new HashMap<String, String>();
+//		vars.put("uuid", file.uuid);
+//		RestTemplate restTemplate = new RestTemplate();
+//		String uri = new String("http://localhost:8302/register");
+//		String returns = restTemplate.postForObject(uri, file, String.class, vars);
+//	}
+	
+	public void registerFile(String uuid) {
+//		Map<String, String> vars = new HashMap<String, String>();
+		File file = new File();
+		file.uuid = uuid;
 		RestTemplate restTemplate = new RestTemplate();
 		String uri = new String("http://localhost:8302/register");
-		String returns = restTemplate.postForObject(uri, file, String.class, vars);
+		String returns = restTemplate.postForObject(uri, file, String.class);
+		System.out.println(returns);
+	}
+	
+	public boolean checkFile(String uuid) {
+		File file = new File();
+		file.uuid = uuid;
+		RestTemplate restTemplate = new RestTemplate();
+		String uri = new String("http://localhost:8302/check");
+		String returns = restTemplate.postForObject(uri, file, String.class);
+		boolean flag = Boolean.parseBoolean(returns);
+		return flag;
+	}
+	
+	public void markFile(String uuid) {
+		File file = new File();
+		file.uuid = uuid;
+		RestTemplate restTemplate = new RestTemplate();
+		String uri = new String("http://localhost:8302/mark");
+		String returns = restTemplate.postForObject(uri, file, String.class);
+		System.out.println(returns);
+	}
+	
+	public void unmarkFile(String uuid) {
+		File file = new File();
+		file.uuid = uuid;
+		RestTemplate restTemplate = new RestTemplate();
+		String uri = new String("http://localhost:8302/unmark");
+		String returns = restTemplate.postForObject(uri, file, String.class);
+		System.out.println(returns);
 	}
 
 	public void uploadFile(java.io.File file) {
@@ -112,7 +170,12 @@ public class FileClient {
 
 	public static void main(String args[]) {
 		FileClient fileClient = new FileClient();
-		fileClient.uploadFile(new java.io.File("./data/image/01.jpg"));
-		fileClient.downloadFile("./01.jpg");
+		fileClient.registerFile("123");
+		fileClient.markFile("123");
+		System.out.println(fileClient.checkFile("123"));
+		fileClient.unmarkFile("123");
+		System.out.println(fileClient.checkFile("123"));
+//		fileClient.uploadFile(new java.io.File("./data/image/01.jpg"));
+//		fileClient.downloadFile("./01.jpg");
 	}
 }

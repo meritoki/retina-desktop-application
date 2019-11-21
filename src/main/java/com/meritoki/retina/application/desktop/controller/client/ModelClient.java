@@ -29,28 +29,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.User;
+import com.meritoki.retina.application.desktop.model.document.Document;
 import com.meritoki.retina.application.desktop.model.document.Point;
 import com.meritoki.retina.application.desktop.model.document.Shape;
 
 public class ModelClient {
 
-	public static void main(String[] args) {
-		ModelClient modelClient = new ModelClient();
-		System.out.println(modelClient.checkHealth());
-	}
-
 	private static final Logger logger = LoggerFactory.getLogger(ModelClient.class);
 	private String url = "http://localhost:8301";
-	private Model model = null;
 	private Token token = null;
-	
-	public void setModel(Model model) {
-		this.model = model;
-	}
 
 	public boolean checkHealth() {
 		boolean flag = false;
@@ -109,16 +101,22 @@ public class ModelClient {
 		}
 	}
 
-	public void uploadProject(String project) {
-		logger.info("uploadProject(" + project + ")");
-		RestTemplate restTemplate = new RestTemplate();
-		String uri = new String(url + "/import");
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.set("Authorization", "Bearer " + this.token.token);
-		HttpEntity<String> entity = new HttpEntity<String>(project, headers);
-		String string = restTemplate.postForObject(uri, entity, String.class);
-		System.out.println(string);
+	public void uploadDocument(Document document) {
+		logger.info("uploadDocument(" + document + ")");
+		ObjectMapper mapper = new ObjectMapper();
+		String documentJson;
+		try {
+			documentJson = mapper.writeValueAsString(document);
+			RestTemplate restTemplate = new RestTemplate();
+			String uri = new String(url + "/import");
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.set("Authorization", "Bearer " + this.token.token);
+			HttpEntity<String> entity = new HttpEntity<String>(documentJson, headers);
+			String string = restTemplate.postForObject(uri, entity, String.class);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public String downloadProject(String uuid) {

@@ -75,4 +75,5 @@ public class Variable {
 	@JsonIgnore
 	public List<String> energyList = Arrays.asList("letter", "word", "sentance", "temperature", "pressure");
 	public boolean newDocument = true;
+	public String cachePath = null;
 }

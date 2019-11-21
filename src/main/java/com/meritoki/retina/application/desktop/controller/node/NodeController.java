@@ -54,6 +54,10 @@ public class NodeController {
 	public static String getRetinaHome() {
 		return getUserHome()+getSeperator()+".retina";
 	}
+
+	public static String getImageCache() {
+		return getRetinaHome()+getSeperator()+"image";
+	}
 	
 	public static String getPanoptesHome() {
 		return getUserHome()+getSeperator()+".panoptes";
