@@ -37,6 +37,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,7 +47,7 @@ import com.meritoki.retina.application.desktop.controller.node.NodeController;
 
 public class FileClient {
 
-	private static final Logger log = LoggerFactory.getLogger(FileClient.class);
+	private static final Logger logger = LoggerFactory.getLogger(FileClient.class);
 	private String url = "http://localhost:8302";
 	private Properties properties = null;
 
@@ -56,21 +57,26 @@ public class FileClient {
 
 	public boolean checkHealth() {
 		boolean flag = false;
-		RestTemplate restTemplate = new RestTemplate();
-		String uri = new String(url + "/actuator/health");
-		String responseJson = restTemplate.getForObject(uri, String.class);
-		ObjectMapper mapper = new ObjectMapper();
 		Status status = null;
 		try {
-			status = mapper.readValue(responseJson, Status.class);
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+			RestTemplate restTemplate = new RestTemplate();
+			String uri = new String(url + "/actuator/health");
+			String responseJson = restTemplate.getForObject(uri, String.class);
+			ObjectMapper mapper = new ObjectMapper();
+
+			try {
+				status = mapper.readValue(responseJson, Status.class);
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} catch (ResourceAccessException e) {
+			logger.error("ResourceAccessException");
 		}
-		if (status.status.equals("UP")) {
+		if (status != null && status.status.equals("UP")) {
 			flag = true;
 		}
 		return flag;
