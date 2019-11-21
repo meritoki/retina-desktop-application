@@ -42,6 +42,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.meritoki.retina.application.desktop.model.document.File;
 import com.meritoki.retina.application.desktop.controller.client.json.File;
+import com.meritoki.retina.application.desktop.controller.node.NodeController;
 
 public class FileClient {
 
@@ -74,40 +75,13 @@ public class FileClient {
 		}
 		return flag;
 	}
-
-//	public void registerFile(String uuid) {
-		////////////////////////////////////
-//		Map<String, String> vars = new HashMap<String, String>();
-//		vars.put("uuid", file.uuid);
-//		RestTemplate restTemplate = new RestTemplate();
-//		String uri = new String("http://localhost:8302/register");
-//		String returns = restTemplate.postForObject(uri, file, String.class, vars);
-		////////////////////
-//		RestTemplate restTemplate = new RestTemplate();
-//		String url = new String("http://localhost:8302/register");
-//		HttpHeaders headers = new HttpHeaders();
-//		headers.setContentType(MediaType.APPLICATION_JSON);
-//		MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
-//		map.add("uuid", uuid);
-//		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
-//		ResponseEntity<String> response = restTemplate.postForEntity( url, request , String.class );
-
-//	}
-	
-//	public void registerFile(File file) {
-//		Map<String, String> vars = new HashMap<String, String>();
-//		vars.put("uuid", file.uuid);
-//		RestTemplate restTemplate = new RestTemplate();
-//		String uri = new String("http://localhost:8302/register");
-//		String returns = restTemplate.postForObject(uri, file, String.class, vars);
-//	}
 	
 	public void registerFile(String uuid) {
 //		Map<String, String> vars = new HashMap<String, String>();
 		File file = new File();
 		file.uuid = uuid;
 		RestTemplate restTemplate = new RestTemplate();
-		String uri = new String("http://localhost:8302/register");
+		String uri = new String(url+"/register");
 		String returns = restTemplate.postForObject(uri, file, String.class);
 		System.out.println(returns);
 	}
@@ -116,7 +90,7 @@ public class FileClient {
 		File file = new File();
 		file.uuid = uuid;
 		RestTemplate restTemplate = new RestTemplate();
-		String uri = new String("http://localhost:8302/check");
+		String uri = new String(url+"/check");
 		String returns = restTemplate.postForObject(uri, file, String.class);
 		boolean flag = Boolean.parseBoolean(returns);
 		return flag;
@@ -126,7 +100,7 @@ public class FileClient {
 		File file = new File();
 		file.uuid = uuid;
 		RestTemplate restTemplate = new RestTemplate();
-		String uri = new String("http://localhost:8302/mark");
+		String uri = new String(url+"/mark");
 		String returns = restTemplate.postForObject(uri, file, String.class);
 		System.out.println(returns);
 	}
@@ -135,7 +109,7 @@ public class FileClient {
 		File file = new File();
 		file.uuid = uuid;
 		RestTemplate restTemplate = new RestTemplate();
-		String uri = new String("http://localhost:8302/unmark");
+		String uri = new String(url+"/unmark");
 		String returns = restTemplate.postForObject(uri, file, String.class);
 		System.out.println(returns);
 	}
@@ -146,7 +120,7 @@ public class FileClient {
 		MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
 		body.add("file", new FileSystemResource(file));
 		HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-		String serverUrl = "http://localhost:8302/upload";
+		String serverUrl = url+"/upload";
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate.postForEntity(serverUrl, requestEntity, String.class);
 	}
@@ -157,11 +131,11 @@ public class FileClient {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM));
 		HttpEntity<String> entity = new HttpEntity<String>(headers);
-		ResponseEntity<byte[]> response = restTemplate.exchange("http://localhost:8302/download/" + fileName,
+		ResponseEntity<byte[]> response = restTemplate.exchange(url+"/download/" + fileName,
 				HttpMethod.GET, entity, byte[].class, "1");
 		if (response.getStatusCode() == HttpStatus.OK) {
 			try {
-				Files.write(Paths.get(fileName), response.getBody());
+				Files.write(Paths.get(NodeController.getImageCache()+NodeController.getSeperator()+fileName), response.getBody());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -179,3 +153,30 @@ public class FileClient {
 //		fileClient.downloadFile("./01.jpg");
 	}
 }
+
+//public void registerFile(String uuid) {
+	////////////////////////////////////
+//	Map<String, String> vars = new HashMap<String, String>();
+//	vars.put("uuid", file.uuid);
+//	RestTemplate restTemplate = new RestTemplate();
+//	String uri = new String("http://localhost:8302/register");
+//	String returns = restTemplate.postForObject(uri, file, String.class, vars);
+	////////////////////
+//	RestTemplate restTemplate = new RestTemplate();
+//	String url = new String("http://localhost:8302/register");
+//	HttpHeaders headers = new HttpHeaders();
+//	headers.setContentType(MediaType.APPLICATION_JSON);
+//	MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+//	map.add("uuid", uuid);
+//	HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+//	ResponseEntity<String> response = restTemplate.postForEntity( url, request , String.class );
+
+//}
+
+//public void registerFile(File file) {
+//	Map<String, String> vars = new HashMap<String, String>();
+//	vars.put("uuid", file.uuid);
+//	RestTemplate restTemplate = new RestTemplate();
+//	String uri = new String("http://localhost:8302/register");
+//	String returns = restTemplate.postForObject(uri, file, String.class, vars);
+//}

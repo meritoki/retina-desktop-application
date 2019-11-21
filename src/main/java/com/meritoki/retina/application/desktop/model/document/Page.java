@@ -248,8 +248,8 @@ public class Page {
 	            	} else {
 	            		if(ClientController.fileClient.checkHealth()) {
 	            			if(ClientController.fileClient.checkFile(file.uuid)) {
-	            				ClientController.fileClient.downloadFile(file.getUUID()+".jpg");
-	            				ClientController.fileClient.unmarkFile(file.uuid);
+	            				ClientController.fileClient.downloadFile(file.getUUID()+file.getExtension());
+//	            				ClientController.fileClient.unmarkFile(file.uuid);
 	            			} else {
 	            				ClientController.fileClient.markFile(file.uuid);
 	            			}

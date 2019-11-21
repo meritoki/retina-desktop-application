@@ -239,6 +239,10 @@ public class File {
 	public String getNameAndExtension() {
 		return this.name+"."+this.extension;
 	}
+	
+	public String getExtension() {
+		return this.extension;
+	}
 
 	public double getOffset() {
 		return this.offset;
