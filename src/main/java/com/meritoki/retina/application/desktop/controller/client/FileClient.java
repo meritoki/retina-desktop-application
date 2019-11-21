@@ -56,6 +56,7 @@ public class FileClient {
 	}
 
 	public boolean checkHealth() {
+		logger.info("checkHealth()");
 		boolean flag = false;
 		Status status = null;
 		try {
@@ -83,7 +84,7 @@ public class FileClient {
 	}
 	
 	public void registerFile(String uuid) {
-//		Map<String, String> vars = new HashMap<String, String>();
+		logger.info("registerFile("+uuid+")");
 		File file = new File();
 		file.uuid = uuid;
 		RestTemplate restTemplate = new RestTemplate();
@@ -93,6 +94,7 @@ public class FileClient {
 	}
 	
 	public boolean checkFile(String uuid) {
+		logger.info("checkFile("+uuid+")");
 		File file = new File();
 		file.uuid = uuid;
 		RestTemplate restTemplate = new RestTemplate();
@@ -121,6 +123,7 @@ public class FileClient {
 	}
 
 	public void uploadFile(java.io.File file) {
+		logger.info("uploadFile("+file+")");
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 		MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
@@ -132,6 +135,8 @@ public class FileClient {
 	}
 
 	public void downloadFile(String fileName) { // This method will download file using RestTemplate
+		logger.info("downloadFile("+fileName+")");
+		try {
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.getMessageConverters().add(new ByteArrayHttpMessageConverter());
 		HttpHeaders headers = new HttpHeaders();
@@ -146,15 +151,19 @@ public class FileClient {
 				e.printStackTrace();
 			}
 		}
+		} catch (ResourceAccessException e) {
+			logger.error("ResourceAccessException");
+		}
 	}
 
 	public static void main(String args[]) {
 		FileClient fileClient = new FileClient();
-		fileClient.registerFile("123");
-		fileClient.markFile("123");
-		System.out.println(fileClient.checkFile("123"));
-		fileClient.unmarkFile("123");
-		System.out.println(fileClient.checkFile("123"));
+//		fileClient.registerFile("123");
+//		fileClient.markFile("123");
+//		System.out.println(fileClient.checkFile("123"));
+//		fileClient.unmarkFile("123");
+//		System.out.println(fileClient.checkFile("123"));
+		fileClient.downloadFile("4e894202-6e63-4932-85a5-30cbfbda53c2.jpg");
 //		fileClient.uploadFile(new java.io.File("./data/image/01.jpg"));
 //		fileClient.downloadFile("./01.jpg");
 	}

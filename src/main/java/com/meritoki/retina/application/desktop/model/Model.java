@@ -67,7 +67,7 @@ public class Model {
 		}
 		this.providerList.add(new ZooniverseProvider());
 		Document document = new Document();
-		document.test();
+//		document.test();
 		this.setDocument(document);
 		this.variable = new Variable();
 		if (this.userList.size() == 0) {

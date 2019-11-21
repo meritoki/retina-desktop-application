@@ -232,6 +232,7 @@ public class Page {
         for (File file : this.fileList) {
             if (file.getBufferedImage() == null) {
             	BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getImageCache(), file.uuid+"."+file.extension);
+            	System.out.println("test");
             	if(bufferedImage == null) {
 	            	bufferedImage = NodeController.openBufferedImage(file.getPath(), file.getNameAndExtension());
 	            	if(bufferedImage != null) {
@@ -248,15 +249,24 @@ public class Page {
 	            	} else {
 	            		if(ClientController.fileClient.checkHealth()) {
 	            			if(ClientController.fileClient.checkFile(file.uuid)) {
-	            				ClientController.fileClient.downloadFile(file.getUUID()+file.getExtension());
+	            				ClientController.fileClient.downloadFile(file.getUUID()+"."+file.getExtension());
 //	            				ClientController.fileClient.unmarkFile(file.uuid);
 	            			} else {
 	            				ClientController.fileClient.markFile(file.uuid);
 	            			}
 	            		}
 	            	}
-            	}    
-            }
+            	}  
+            	else {
+                	file.setBufferedImage(bufferedImage);
+            		if(ClientController.fileClient.checkHealth()) {
+    	    			ClientController.fileClient.registerFile(file.uuid);
+    	    			if(ClientController.fileClient.checkFile(file.uuid)) {
+    	    				ClientController.fileClient.uploadFile(new java.io.File(NodeController.getImageCache()+NodeController.getSeperator()+file.uuid+"."+file.extension));
+    	    			}
+            		}
+                }
+            } 
             file.setOffset(offset);
             file.setScale(this.scale);
             offset += file.getWidth();
