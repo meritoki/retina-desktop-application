@@ -19,9 +19,9 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -80,7 +80,9 @@ public class UserClient {
 		return flag;
 	}
 	
-	public void login(User user) {
+	public boolean login(User user) {
+		logger.info("login("+user+")");
+		boolean flag = false;
 		RestTemplate restTemplate = new RestTemplate();
 		String uri = new String(url + "/authenticate");
 		HttpHeaders headers = new HttpHeaders();
@@ -95,6 +97,7 @@ public class UserClient {
 				this.token = mapper.readValue(responseJson, Token.class);
 				this.properties.setProperty("token", this.token.token);
 				NodeController.saveProperties("./", "retina-desktop.properties", this.properties);
+				flag = true;
 			} catch (JsonParseException e) {
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
@@ -105,5 +108,6 @@ public class UserClient {
 		} catch (ResourceAccessException e) {
 			logger.error("ResourceAccessException");
 		}
+		return flag;
 	}
 }

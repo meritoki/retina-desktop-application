@@ -18,7 +18,9 @@ package com.meritoki.retina.application.desktop.view.frame;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.net.URL;
+
 import javax.swing.JFrame;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -79,8 +81,8 @@ public final class Main extends JFrame {
         this.loginDialog.setRegisterDialog(this.registerDialog);
         if(this.model.variable.newUser) {
         	this.registerDialog.setVisible(true);
-        } else {
-//        	this.loginDialog.setVisible(true);
+        } else if (this.model.variable.loginUser){
+        	this.loginDialog.setVisible(true);
         }
     }
 

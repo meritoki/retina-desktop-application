@@ -1,7 +1,6 @@
 package com.meritoki.retina.application.desktop.model.document;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,19 +10,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.ObjectMapper;
 
 import com.meritoki.retina.application.desktop.controller.client.ClientController;
-import com.meritoki.retina.application.desktop.controller.client.ModelClient;
-import com.meritoki.retina.application.desktop.controller.json.JsonController;
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.User;
 import com.meritoki.retina.application.desktop.model.command.Command;
-import com.meritoki.retina.application.desktop.model.provider.Provider;
-import com.meritoki.retina.application.desktop.model.provider.zooniverse.Reference;
-import com.meritoki.retina.application.desktop.model.provider.zooniverse.Task;
-import com.meritoki.retina.application.desktop.model.provider.zooniverse.ZooniverseProvider;
-import com.meritoki.retina.application.desktop.model.vendor.Vendor;
 
 /**
  * Document

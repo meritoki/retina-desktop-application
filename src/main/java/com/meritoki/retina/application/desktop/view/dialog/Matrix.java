@@ -16,7 +16,9 @@
 package com.meritoki.retina.application.desktop.view.dialog;
 
 import java.util.List;
+
 import javax.swing.DefaultListModel;
+
 import org.apache.logging.log4j.LogManager;
 
 import com.meritoki.retina.application.desktop.model.Model;

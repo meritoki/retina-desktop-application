@@ -19,7 +19,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,7 +36,6 @@ import com.meritoki.retina.application.desktop.model.provider.zooniverse.Subject
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.Workflow;
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.Zooniverse;
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.ZooniverseProvider;
-import javax.swing.JOptionPane;
 
 /**
  *

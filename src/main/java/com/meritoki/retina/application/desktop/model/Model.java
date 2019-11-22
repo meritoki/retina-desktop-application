@@ -1,12 +1,15 @@
 package com.meritoki.retina.application.desktop.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 
+import com.meritoki.retina.application.desktop.controller.client.ClientController;
 import com.meritoki.retina.application.desktop.controller.node.NodeController;
 import com.meritoki.retina.application.desktop.controller.security.BCryptController;
 import com.meritoki.retina.application.desktop.controller.user.UserController;
@@ -22,8 +25,6 @@ import com.meritoki.retina.application.desktop.model.document.Document;
 import com.meritoki.retina.application.desktop.model.provider.Provider;
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.ZooniverseProvider;
 import com.meritoki.retina.application.desktop.model.vendor.Vendor;
-import java.util.ArrayList;
-import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  * Model is a class that is used to maintain the state of the Project for the
@@ -80,7 +81,7 @@ public class Model {
 			this.userList.add(user);
 			UserController.save(this.userList);
 		} else {
-			this.variable.loginUser = false;//true;
+			this.variable.loginUser = true;
 		}
 	}
 
@@ -108,11 +109,17 @@ public class Model {
 
 	public boolean loginUser(String userName, String password) {
 		boolean flag = false;
-		for (User u : userList) {
-			if (u.name.equals(userName)) {
-				if (BCryptController.verifyHash(password, u.hash)) {
-					flag = true;
-					this.user = u;
+//		if(ClientController.userClient.checkHealth()) {
+		User user = new User(userName, password);
+		flag = ClientController.userClient.login(user);
+//		} else {
+		if(!flag) {
+			for (User u : userList) {
+				if (u.name.equals(userName)) {
+					if (BCryptController.verifyHash(password, u.hash)) {
+						flag = true;
+						this.user = u;
+					}
 				}
 			}
 		}

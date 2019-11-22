@@ -15,13 +15,12 @@
  */
 package com.meritoki.retina.application.desktop.view.dialog.user;
 
-import com.meritoki.retina.application.desktop.model.Model;
-import com.meritoki.retina.application.desktop.view.dialog.Image;
-
 import javax.swing.JOptionPane;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.meritoki.retina.application.desktop.model.Model;
 
 /**
  *

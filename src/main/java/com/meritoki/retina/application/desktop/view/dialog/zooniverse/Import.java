@@ -15,26 +15,24 @@
  */
 package com.meritoki.retina.application.desktop.view.dialog.zooniverse;
 
-import com.meritoki.retina.application.desktop.controller.document.DocumentController;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.meritoki.retina.application.desktop.controller.node.NodeController;
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.provider.Provider;
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.Credential;
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.Project;
-import com.meritoki.retina.application.desktop.model.provider.zooniverse.Workflow;
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.Zooniverse;
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.ZooniverseProvider;
-import com.meritoki.retina.application.desktop.view.frame.Main;
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  *

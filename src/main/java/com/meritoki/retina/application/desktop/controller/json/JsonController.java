@@ -10,8 +10,6 @@ import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import com.meritoki.retina.application.desktop.controller.node.NodeController;
-
 public class JsonController {
 
 	private static Logger logger = LogManager.getLogger(JsonController.class.getName());

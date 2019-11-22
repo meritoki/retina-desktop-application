@@ -17,10 +17,6 @@ package com.meritoki.retina.application.desktop.model.document;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,7 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
-import javax.imageio.ImageIO;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -38,7 +34,6 @@ import org.codehaus.jackson.map.ObjectWriter;
 
 import com.meritoki.retina.application.desktop.controller.client.ClientController;
 import com.meritoki.retina.application.desktop.controller.node.NodeController;
-import com.meritoki.retina.application.desktop.model.Model;
 
 /**
  * The Page class is used to hold a list of shapes. The list of shapes can be

@@ -16,18 +16,13 @@
 package com.meritoki.retina.application.desktop.view.dialog.image;
 
 import java.io.File;
-import java.io.IOException;
 
 import javax.swing.JFileChooser;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.retina.application.desktop.controller.document.DocumentController;
 import com.meritoki.retina.application.desktop.model.Model;
-import com.meritoki.retina.application.desktop.model.document.Document;
-import com.meritoki.retina.application.desktop.model.document.Page;
-import com.meritoki.retina.application.desktop.model.document.Project;
 import com.meritoki.retina.application.desktop.view.frame.Main;
 
 /**
