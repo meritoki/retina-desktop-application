@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 osvaldo.rodriguez.
+ * Copyright 2019 Meritoki All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -37,82 +35,166 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meritoki.retina.application.desktop.model.document.File;
+import com.meritoki.retina.application.desktop.controller.client.json.File;
+import com.meritoki.retina.application.desktop.controller.node.NodeController;
 
 public class FileClient {
 
-	private static final Logger log = LoggerFactory.getLogger(FileClient.class);
-	private String url = "http://localhost:8302";
+	private static Logger logger = LogManager.getLogger(FileClient.class.getName());
+	private String url = null;
 	private Properties properties = null;
 
-	public void setProperties(Properties properties) {
-		this.properties = properties;
+	public FileClient() {
+		this.properties = NodeController.openProperties("./retina-desktop.properties");
+		boolean gateway = Boolean.parseBoolean((String) this.properties.get("gateway"));
+		if(gateway) {
+			this.url = this.properties.getProperty("service.web.gateway.url")+"/file";
+		} else {
+			this.url = this.properties.getProperty("service.web.file.url");
+		}
 	}
 
 	public boolean checkHealth() {
+		logger.info("checkHealth()");
 		boolean flag = false;
-		RestTemplate restTemplate = new RestTemplate();
-		String uri = new String(url + "/actuator/health");
-		String responseJson = restTemplate.getForObject(uri, String.class);
-		ObjectMapper mapper = new ObjectMapper();
 		Status status = null;
 		try {
-			status = mapper.readValue(responseJson, Status.class);
-		} catch (JsonParseException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+			RestTemplate restTemplate = new RestTemplate();
+			String uri = new String(url + "/actuator/health");
+			String responseJson = restTemplate.getForObject(uri, String.class);
+			ObjectMapper mapper = new ObjectMapper();
+
+			try {
+				status = mapper.readValue(responseJson, Status.class);
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} catch (ResourceAccessException e) {
+			logger.error("ResourceAccessException");
 		}
-		if (status.status.equals("UP")) {
+		if (status != null && status.status.equals("UP")) {
 			flag = true;
 		}
 		return flag;
 	}
-
-	public void registerFile(File file) {
-		Map<String, String> vars = new HashMap<String, String>();
-		vars.put("uuid", file.uuid);
+	
+	public void registerFile(String uuid) {
+		logger.info("registerFile("+uuid+")");
+		File file = new File();
+		file.uuid = uuid;
 		RestTemplate restTemplate = new RestTemplate();
-		String uri = new String("http://localhost:8302/register");
-		String returns = restTemplate.postForObject(uri, file, String.class, vars);
+		String uri = new String(url+"/register");
+		String returns = restTemplate.postForObject(uri, file, String.class);
+		System.out.println(returns);
+	}
+	
+	public boolean checkFile(String uuid) {
+		logger.info("checkFile("+uuid+")");
+		File file = new File();
+		file.uuid = uuid;
+		RestTemplate restTemplate = new RestTemplate();
+		String uri = new String(url+"/check");
+		String returns = restTemplate.postForObject(uri, file, String.class);
+		boolean flag = Boolean.parseBoolean(returns);
+		return flag;
+	}
+	
+	public void markFile(String uuid) {
+		File file = new File();
+		file.uuid = uuid;
+		RestTemplate restTemplate = new RestTemplate();
+		String uri = new String(url+"/mark");
+		String returns = restTemplate.postForObject(uri, file, String.class);
+		System.out.println(returns);
+	}
+	
+	public void unmarkFile(String uuid) {
+		File file = new File();
+		file.uuid = uuid;
+		RestTemplate restTemplate = new RestTemplate();
+		String uri = new String(url+"/unmark");
+		String returns = restTemplate.postForObject(uri, file, String.class);
+		System.out.println(returns);
 	}
 
 	public void uploadFile(java.io.File file) {
+		logger.info("uploadFile("+file+")");
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 		MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
 		body.add("file", new FileSystemResource(file));
 		HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-		String serverUrl = "http://localhost:8302/upload";
+		String serverUrl = url+"/upload";
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate.postForEntity(serverUrl, requestEntity, String.class);
 	}
 
 	public void downloadFile(String fileName) { // This method will download file using RestTemplate
+		logger.info("downloadFile("+fileName+")");
+		try {
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.getMessageConverters().add(new ByteArrayHttpMessageConverter());
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM));
 		HttpEntity<String> entity = new HttpEntity<String>(headers);
-		ResponseEntity<byte[]> response = restTemplate.exchange("http://localhost:8302/download/" + fileName,
+		ResponseEntity<byte[]> response = restTemplate.exchange(url+"/download/" + fileName,
 				HttpMethod.GET, entity, byte[].class, "1");
 		if (response.getStatusCode() == HttpStatus.OK) {
 			try {
-				Files.write(Paths.get(fileName), response.getBody());
+				Files.write(Paths.get(NodeController.getImageCache()+NodeController.getSeperator()+fileName), response.getBody());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}
+		} catch (ResourceAccessException e) {
+			logger.error("ResourceAccessException");
 		}
 	}
 
 	public static void main(String args[]) {
 		FileClient fileClient = new FileClient();
-		fileClient.uploadFile(new java.io.File("./data/image/01.jpg"));
-		fileClient.downloadFile("./01.jpg");
+//		fileClient.registerFile("123");
+//		fileClient.markFile("123");
+//		System.out.println(fileClient.checkFile("123"));
+//		fileClient.unmarkFile("123");
+//		System.out.println(fileClient.checkFile("123"));
+		fileClient.downloadFile("4e894202-6e63-4932-85a5-30cbfbda53c2.jpg");
+//		fileClient.uploadFile(new java.io.File("./data/image/01.jpg"));
+//		fileClient.downloadFile("./01.jpg");
 	}
 }
+
+//public void registerFile(String uuid) {
+	////////////////////////////////////
+//	Map<String, String> vars = new HashMap<String, String>();
+//	vars.put("uuid", file.uuid);
+//	RestTemplate restTemplate = new RestTemplate();
+//	String uri = new String("http://localhost:8302/register");
+//	String returns = restTemplate.postForObject(uri, file, String.class, vars);
+	////////////////////
+//	RestTemplate restTemplate = new RestTemplate();
+//	String url = new String("http://localhost:8302/register");
+//	HttpHeaders headers = new HttpHeaders();
+//	headers.setContentType(MediaType.APPLICATION_JSON);
+//	MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+//	map.add("uuid", uuid);
+//	HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+//	ResponseEntity<String> response = restTemplate.postForEntity( url, request , String.class );
+
+//}
+
+//public void registerFile(File file) {
+//	Map<String, String> vars = new HashMap<String, String>();
+//	vars.put("uuid", file.uuid);
+//	RestTemplate restTemplate = new RestTemplate();
+//	String uri = new String("http://localhost:8302/register");
+//	String returns = restTemplate.postForObject(uri, file, String.class, vars);
+//}

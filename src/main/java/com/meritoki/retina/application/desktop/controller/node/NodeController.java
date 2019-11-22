@@ -5,10 +5,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.file.FileSystems;
 import java.util.ArrayList;
@@ -54,6 +56,10 @@ public class NodeController {
 	public static String getRetinaHome() {
 		return getUserHome()+getSeperator()+".retina";
 	}
+
+	public static String getImageCache() {
+		return getRetinaHome()+getSeperator()+"image";
+	}
 	
 	public static String getPanoptesHome() {
 		return getUserHome()+getSeperator()+".panoptes";
@@ -76,14 +82,16 @@ public class NodeController {
 	}
 
 	public static void saveJpg(String filePath, String fileName, BufferedImage bufferedImage) {
-		logger.info(filePath + ", " + fileName + ", " + bufferedImage);
+//		logger.info("saveJpg"+filePath + ", " + fileName + ", " + bufferedImage);
 		saveJpg(new File(filePath + getSeperator() + fileName), bufferedImage);
 	}
 
 	@JsonIgnore
 	public static void saveJpg(File file, BufferedImage bufferedImage) {
+		logger.info("saveJpg("+file+", "+bufferedImage+")");
 		try {
 			ImageIO.write(bufferedImage, "jpg", file);
+			logger.info("saved...");
 		} catch (IOException ex) {
 			logger.error(ex);
 		}
@@ -174,7 +182,12 @@ public class NodeController {
 	}
 
 	@JsonIgnore
-	public static void saveProperties(Properties properties) {
+	public static void saveProperties(String path, String name, Properties properties) {
+	       try (OutputStream output = new FileOutputStream(path+name)) {
+	            properties.store(output, null);
+	        } catch (IOException io) {
+	            io.printStackTrace();
+	        }
 
 	}
 

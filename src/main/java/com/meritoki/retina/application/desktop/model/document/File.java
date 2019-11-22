@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
@@ -26,11 +27,11 @@ public class File {
 	@JsonProperty
 	public String uuid = null;
 	@JsonProperty
-	public String name = null;
-	@JsonProperty
 	public String path = null;
 	@JsonProperty
-	public String cachePath = null;
+	public String name = null;
+	@JsonProperty
+	public String extension = null;
 	@JsonIgnore
 	public BufferedImage bufferedImage = null;
 	@JsonIgnore
@@ -71,7 +72,7 @@ public class File {
 		this.uuid = file.uuid;
 		this.name = file.name;
 		this.path = file.path;
-		this.cachePath = file.cachePath;
+		this.extension = file.extension;
 		this.bufferedImage = file.bufferedImage;
 		this.width = file.width;
 		this.height = file.height;
@@ -83,6 +84,10 @@ public class File {
 			this.shapeList.add(new Shape(shape));
 		}
 	}
+	
+	public String getUUID() {
+		return this.uuid;
+	}
 
 	/**
 	 * Constructor accepts a file path and name parameters
@@ -93,7 +98,13 @@ public class File {
 		this.uuid = UUID.randomUUID().toString();
 		this.path = path;
 		this.name = name;
-		this.setBufferedImage(NodeController.openBufferedImage(this.path, this.name));
+		this.extension = this.getExtension(this.name);
+		this.name = this.name.replace("."+this.extension, ""); 
+//		this.setBufferedImage(NodeController.openBufferedImage(this.path, this.name+"."+this.extension));
+	}
+	
+	public String getExtension(String fileName) {
+		return fileName.substring(fileName.lastIndexOf(".")+1);
 	}
 	
 	/**
@@ -223,6 +234,14 @@ public class File {
 
 	public String getName() {
 		return this.name;
+	}
+	
+	public String getNameAndExtension() {
+		return this.name+"."+this.extension;
+	}
+	
+	public String getExtension() {
+		return this.extension;
 	}
 
 	public double getOffset() {

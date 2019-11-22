@@ -36,6 +36,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
+import com.meritoki.retina.application.desktop.controller.client.ClientController;
 import com.meritoki.retina.application.desktop.controller.node.NodeController;
 import com.meritoki.retina.application.desktop.model.Model;
 
@@ -230,8 +231,42 @@ public class Page {
         double offset = 0;
         for (File file : this.fileList) {
             if (file.getBufferedImage() == null) {
-                file.setBufferedImage(NodeController.openBufferedImage(file.getPath(), file.getName()));
-            }
+            	BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getImageCache(), file.uuid+"."+file.extension);
+            	if(bufferedImage == null) {
+	            	bufferedImage = NodeController.openBufferedImage(file.getPath(), file.getNameAndExtension());
+	            	if(bufferedImage != null) {
+	            		file.setBufferedImage(bufferedImage);
+	            		if(file.extension.equals("jpg") || file.extension.equals("jpeg")) {
+	            			NodeController.saveJpg(NodeController.getImageCache(), file.uuid+"."+file.extension, bufferedImage);
+	            		}
+	            		//TODO Add support for PNG
+	            		if(ClientController.fileClient.checkHealth()) {
+	    	    			ClientController.fileClient.registerFile(file.uuid);
+	    	    			if(ClientController.fileClient.checkFile(file.uuid)) {
+	    	    				ClientController.fileClient.uploadFile(new java.io.File(NodeController.getImageCache()+NodeController.getSeperator()+file.uuid+"."+file.extension));
+	    	    			}
+	            		}
+	            	} else {
+	            		if(ClientController.fileClient.checkHealth()) {
+	            			if(ClientController.fileClient.checkFile(file.uuid)) {
+	            				ClientController.fileClient.downloadFile(file.getUUID()+"."+file.getExtension());
+//	            				ClientController.fileClient.unmarkFile(file.uuid);
+	            			} else {
+	            				ClientController.fileClient.markFile(file.uuid);
+	            			}
+	            		}
+	            	}
+            	}  
+            	else {
+                	file.setBufferedImage(bufferedImage);
+            		if(ClientController.fileClient.checkHealth()) {
+    	    			ClientController.fileClient.registerFile(file.uuid);
+    	    			if(ClientController.fileClient.checkFile(file.uuid)) {
+    	    				ClientController.fileClient.uploadFile(new java.io.File(NodeController.getImageCache()+NodeController.getSeperator()+file.uuid+"."+file.extension));
+    	    			}
+            		}
+                }
+            } 
             file.setOffset(offset);
             file.setScale(this.scale);
             offset += file.getWidth();

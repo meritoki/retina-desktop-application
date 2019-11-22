@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 jorodriguez.
+ * Copyright 2019 Meritoki All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,12 @@
 package com.meritoki.retina.application.desktop.controller.client;
 
 import java.io.IOException;
+import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -28,7 +29,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meritoki.retina.application.desktop.model.Model;
+import com.meritoki.retina.application.desktop.controller.node.NodeController;
 import com.meritoki.retina.application.desktop.model.User;
 
 /**
@@ -37,10 +38,47 @@ import com.meritoki.retina.application.desktop.model.User;
  */
 public class UserClient {
 	
-	private static final Logger logger = LoggerFactory.getLogger(UserClient.class);
-	private String url = "http://localhost:8300";
-	private Model model = null;
+	private static Logger logger = LogManager.getLogger(UserClient.class.getName());
+	private String url = null;
 	private Token token = null;
+	public Properties properties = null;
+	
+	public UserClient() {
+		this.properties = NodeController.openProperties("./retina-desktop.properties");
+		boolean gateway = Boolean.parseBoolean((String) this.properties.get("gateway"));
+		if(gateway) {
+			this.url = this.properties.getProperty("service.web.gateway.url")+"/user";
+		} else {
+			this.url = this.properties.getProperty("service.web.user.url");
+		}
+	}
+	
+	public boolean checkHealth() {
+		logger.info("checkHealth()");
+		boolean flag = false;
+		Status status = null;
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+			String uri = new String(url + "/actuator/health");
+			String responseJson = restTemplate.getForObject(uri, String.class);
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				status = mapper.readValue(responseJson, Status.class);
+			} catch (JsonParseException e) {
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} catch (ResourceAccessException e) {
+			logger.error("ResourceAccessException");
+		}
+		if (status != null && status.status.equals("UP")) {
+			flag = true;
+		}
+		return flag;
+	}
 	
 	public void login(User user) {
 		RestTemplate restTemplate = new RestTemplate();
@@ -55,7 +93,8 @@ public class UserClient {
 			ObjectMapper mapper = new ObjectMapper();
 			try {
 				this.token = mapper.readValue(responseJson, Token.class);
-				logger.info("login(user) token.token = "+token.token);
+				this.properties.setProperty("token", this.token.token);
+				NodeController.saveProperties("./", "retina-desktop.properties", this.properties);
 			} catch (JsonParseException e) {
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
@@ -67,6 +106,4 @@ public class UserClient {
 			logger.error("ResourceAccessException");
 		}
 	}
-	
-	
 }

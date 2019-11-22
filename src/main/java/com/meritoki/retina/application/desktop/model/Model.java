@@ -58,12 +58,17 @@ public class Model {
 		if(!new java.io.File(NodeController.getRetinaHome()).exists()) {
 			new java.io.File(NodeController.getRetinaHome()).mkdirs();
 		}
+		if(!new java.io.File(NodeController.getImageCache()).exists()) {
+			new java.io.File(NodeController.getImageCache()).mkdirs();
+		}
 		this.properties = NodeController.openProperties("./retina-desktop.properties");
 		if(UserController.exists()) {
 			this.userList = UserController.open();
 		}
 		this.providerList.add(new ZooniverseProvider());
-		this.setDocument(new Document());
+		Document document = new Document();
+		document.test();
+		this.setDocument(document);
 		this.variable = new Variable();
 		if (this.userList.size() == 0) {
 			this.variable.newUser = true;
