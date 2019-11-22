@@ -232,7 +232,6 @@ public class Page {
         for (File file : this.fileList) {
             if (file.getBufferedImage() == null) {
             	BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getImageCache(), file.uuid+"."+file.extension);
-            	System.out.println("test");
             	if(bufferedImage == null) {
 	            	bufferedImage = NodeController.openBufferedImage(file.getPath(), file.getNameAndExtension());
 	            	if(bufferedImage != null) {
@@ -240,6 +239,7 @@ public class Page {
 	            		if(file.extension.equals("jpg") || file.extension.equals("jpeg")) {
 	            			NodeController.saveJpg(NodeController.getImageCache(), file.uuid+"."+file.extension, bufferedImage);
 	            		}
+	            		//TODO Add support for PNG
 	            		if(ClientController.fileClient.checkHealth()) {
 	    	    			ClientController.fileClient.registerFile(file.uuid);
 	    	    			if(ClientController.fileClient.checkFile(file.uuid)) {

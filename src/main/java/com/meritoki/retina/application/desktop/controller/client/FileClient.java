@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 osvaldo.rodriguez.
+ * Copyright 2019 Meritoki All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -41,18 +39,23 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.meritoki.retina.application.desktop.model.document.File;
 import com.meritoki.retina.application.desktop.controller.client.json.File;
 import com.meritoki.retina.application.desktop.controller.node.NodeController;
 
 public class FileClient {
 
-	private static final Logger logger = LoggerFactory.getLogger(FileClient.class);
-	private String url = "http://localhost:8302";
+	private static Logger logger = LogManager.getLogger(FileClient.class.getName());
+	private String url = null;
 	private Properties properties = null;
 
-	public void setProperties(Properties properties) {
-		this.properties = properties;
+	public FileClient() {
+		this.properties = NodeController.openProperties("./retina-desktop.properties");
+		boolean gateway = Boolean.parseBoolean((String) this.properties.get("gateway"));
+		if(gateway) {
+			this.url = this.properties.getProperty("service.web.gateway.url")+"/file";
+		} else {
+			this.url = this.properties.getProperty("service.web.file.url");
+		}
 	}
 
 	public boolean checkHealth() {
