@@ -182,6 +182,7 @@ public class NodeController {
 
 	@JsonIgnore
 	public static void saveProperties(String path, String name, Properties properties) {
+		logger.info("saveProperties("+path+","+name+", properties");
 	       try (OutputStream output = new FileOutputStream(path+name)) {
 	            properties.store(output, null);
 	        } catch (IOException io) {

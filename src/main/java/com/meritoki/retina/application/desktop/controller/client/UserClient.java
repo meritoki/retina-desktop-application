@@ -40,8 +40,9 @@ public class UserClient {
 	
 	private static Logger logger = LogManager.getLogger(UserClient.class.getName());
 	private String url = null;
-	private Token token = null;
+//	private Token token = null;
 	public Properties properties = null;
+	public String token = null;
 	
 	public UserClient() {
 		this.properties = NodeController.openProperties("./retina-desktop.properties");
@@ -94,8 +95,8 @@ public class UserClient {
 			String responseJson = restTemplate.postForObject(uri, entity, String.class);
 			ObjectMapper mapper = new ObjectMapper();
 			try {
-				this.token = mapper.readValue(responseJson, Token.class);
-				this.properties.setProperty("token", this.token.token);
+				Token token = mapper.readValue(responseJson, Token.class);
+				this.properties.setProperty("token", token.token);
 				NodeController.saveProperties("./", "retina-desktop.properties", this.properties);
 				flag = true;
 			} catch (JsonParseException e) {
@@ -109,5 +110,10 @@ public class UserClient {
 			logger.error("ResourceAccessException");
 		}
 		return flag;
+	}
+	
+	public static void main(String[] args) {
+		UserClient userClient = new UserClient();
+		userClient.checkHealth();
 	}
 }

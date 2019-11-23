@@ -109,11 +109,10 @@ public class Model {
 
 	public boolean loginUser(String userName, String password) {
 		boolean flag = false;
-//		if(ClientController.userClient.checkHealth()) {
-		User user = new User(userName, password);
-		flag = ClientController.userClient.login(user);
-//		} else {
-		if(!flag) {
+		if(ClientController.userClient.checkHealth()) {
+			User user = new User(userName, password);
+			flag = ClientController.userClient.login(user);
+		} else {
 			for (User u : userList) {
 				if (u.name.equals(userName)) {
 					if (BCryptController.verifyHash(password, u.hash)) {

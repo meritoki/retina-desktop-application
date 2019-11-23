@@ -238,14 +238,14 @@ public class Page {
 	            		if(ClientController.fileClient.checkHealth()) {
 	    	    			ClientController.fileClient.registerFile(file.uuid);
 	    	    			if(ClientController.fileClient.checkFile(file.uuid)) {
-	    	    				ClientController.fileClient.uploadFile(new java.io.File(NodeController.getImageCache()+NodeController.getSeperator()+file.uuid+"."+file.extension));
+	    	    				ClientController.fileClient.uploadFile(NodeController.getImageCache()+NodeController.getSeperator(),file.uuid+"."+file.extension);
 	    	    			}
 	            		}
 	            	} else {
 	            		if(ClientController.fileClient.checkHealth()) {
 	            			if(ClientController.fileClient.checkFile(file.uuid)) {
-	            				ClientController.fileClient.downloadFile(file.getUUID()+"."+file.getExtension());
-//	            				ClientController.fileClient.unmarkFile(file.uuid);
+	            				ClientController.fileClient.downloadFile(NodeController.getImageCache()+NodeController.getSeperator(),file.getUUID()+"."+file.getExtension());
+	            				ClientController.fileClient.unmarkFile(file.uuid);
 	            			} else {
 	            				ClientController.fileClient.markFile(file.uuid);
 	            			}
@@ -257,7 +257,7 @@ public class Page {
             		if(ClientController.fileClient.checkHealth()) {
     	    			ClientController.fileClient.registerFile(file.uuid);
     	    			if(ClientController.fileClient.checkFile(file.uuid)) {
-    	    				ClientController.fileClient.uploadFile(new java.io.File(NodeController.getImageCache()+NodeController.getSeperator()+file.uuid+"."+file.extension));
+    	    				ClientController.fileClient.uploadFile(NodeController.getImageCache()+NodeController.getSeperator(),file.uuid+"."+file.extension);
     	    			}
             		}
                 }

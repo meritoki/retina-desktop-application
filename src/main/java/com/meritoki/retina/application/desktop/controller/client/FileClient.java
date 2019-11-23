@@ -38,6 +38,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meritoki.retina.application.desktop.controller.client.json.File;
 import com.meritoki.retina.application.desktop.controller.node.NodeController;
@@ -88,47 +89,122 @@ public class FileClient {
 	
 	public void registerFile(String uuid) {
 		logger.info("registerFile("+uuid+")");
+		ObjectMapper mapper = new ObjectMapper();
 		File file = new File();
 		file.uuid = uuid;
-		RestTemplate restTemplate = new RestTemplate();
-		String uri = new String(url+"/register");
-		String returns = restTemplate.postForObject(uri, file, String.class);
-		System.out.println(returns);
+		String fileJson;
+		try {
+			fileJson = mapper.writeValueAsString(file);
+			RestTemplate restTemplate = new RestTemplate();
+			String uri = new String(url+"/register");
+			this.properties = NodeController.openProperties("./retina-desktop.properties");
+			String token = this.properties.getProperty("token");
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.set("Authorization", "Bearer " + token);
+			HttpEntity<String> entity = new HttpEntity<String>(fileJson, headers);
+			String returns = restTemplate.postForObject(uri, entity, String.class);
+			System.out.println(returns);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public boolean checkFile(String uuid) {
 		logger.info("checkFile("+uuid+")");
+		ObjectMapper mapper = new ObjectMapper();
 		File file = new File();
 		file.uuid = uuid;
-		RestTemplate restTemplate = new RestTemplate();
-		String uri = new String(url+"/check");
-		String returns = restTemplate.postForObject(uri, file, String.class);
-		boolean flag = Boolean.parseBoolean(returns);
+		String fileJson;
+		boolean flag = false;
+		try {
+			fileJson = mapper.writeValueAsString(file);
+			RestTemplate restTemplate = new RestTemplate();
+			String uri = new String(url+"/check");
+			this.properties = NodeController.openProperties("./retina-desktop.properties");
+			String token = this.properties.getProperty("token");
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.set("Authorization", "Bearer " + token);
+			HttpEntity<String> entity = new HttpEntity<String>(fileJson, headers);
+			String returns = restTemplate.postForObject(uri, entity, String.class);
+			flag = Boolean.parseBoolean(returns);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+//		File file = new File();
+//		file.uuid = uuid;
+//		RestTemplate restTemplate = new RestTemplate();
+//		String uri = new String(url+"/check");
+//		String returns = restTemplate.postForObject(uri, file, String.class);
+//		boolean 
 		return flag;
 	}
 	
 	public void markFile(String uuid) {
+		logger.info("markFile("+uuid+")");
+		ObjectMapper mapper = new ObjectMapper();
 		File file = new File();
 		file.uuid = uuid;
-		RestTemplate restTemplate = new RestTemplate();
-		String uri = new String(url+"/mark");
-		String returns = restTemplate.postForObject(uri, file, String.class);
-		System.out.println(returns);
+		String fileJson;
+		try {
+			fileJson = mapper.writeValueAsString(file);
+			RestTemplate restTemplate = new RestTemplate();
+			String uri = new String(url+"/mark");
+			this.properties = NodeController.openProperties("./retina-desktop.properties");
+			String token = this.properties.getProperty("token");
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.set("Authorization", "Bearer " + token);
+			HttpEntity<String> entity = new HttpEntity<String>(fileJson, headers);
+			String returns = restTemplate.postForObject(uri, entity, String.class);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+//		File file = new File();
+//		file.uuid = uuid;
+//		RestTemplate restTemplate = new RestTemplate();
+//		String uri = new String(url+"/mark");
+//		String returns = restTemplate.postForObject(uri, file, String.class);
+//		System.out.println(returns);
 	}
 	
 	public void unmarkFile(String uuid) {
+		logger.info("unmarkFile("+uuid+")");
+		ObjectMapper mapper = new ObjectMapper();
 		File file = new File();
 		file.uuid = uuid;
-		RestTemplate restTemplate = new RestTemplate();
-		String uri = new String(url+"/unmark");
-		String returns = restTemplate.postForObject(uri, file, String.class);
-		System.out.println(returns);
+		String fileJson;
+		try {
+			fileJson = mapper.writeValueAsString(file);
+			RestTemplate restTemplate = new RestTemplate();
+			String uri = new String(url+"/unmark");
+			this.properties = NodeController.openProperties("./retina-desktop.properties");
+			String token = this.properties.getProperty("token");
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.set("Authorization", "Bearer " + token);
+			HttpEntity<String> entity = new HttpEntity<String>(fileJson, headers);
+			String returns = restTemplate.postForObject(uri, entity, String.class);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+//		File file = new File();
+//		file.uuid = uuid;
+//		RestTemplate restTemplate = new RestTemplate();
+//		String uri = new String(url+"/unmark");
+//		String returns = restTemplate.postForObject(uri, file, String.class);
+//		System.out.println(returns);
 	}
 
-	public void uploadFile(java.io.File file) {
-		logger.info("uploadFile("+file+")");
+	public void uploadFile(String filePath, String fileName) {
+		logger.info("uploadFile("+filePath+","+fileName+")");
+		java.io.File file = new java.io.File(filePath+fileName);
+		this.properties = NodeController.openProperties("./retina-desktop.properties");
+		String token = this.properties.getProperty("token");
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+		headers.set("Authorization", "Bearer " + token);
 		MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
 		body.add("file", new FileSystemResource(file));
 		HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
@@ -137,19 +213,21 @@ public class FileClient {
 		ResponseEntity<String> response = restTemplate.postForEntity(serverUrl, requestEntity, String.class);
 	}
 
-	public void downloadFile(String fileName) { // This method will download file using RestTemplate
+	public void downloadFile(String path, String fileName) { // This method will download file using RestTemplate
 		logger.info("downloadFile("+fileName+")");
 		try {
 		RestTemplate restTemplate = new RestTemplate();
 		restTemplate.getMessageConverters().add(new ByteArrayHttpMessageConverter());
+		String token = this.properties.getProperty("token");
 		HttpHeaders headers = new HttpHeaders();
+		headers.set("Authorization", "Bearer " + token);
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM));
 		HttpEntity<String> entity = new HttpEntity<String>(headers);
 		ResponseEntity<byte[]> response = restTemplate.exchange(url+"/download/" + fileName,
 				HttpMethod.GET, entity, byte[].class, "1");
 		if (response.getStatusCode() == HttpStatus.OK) {
 			try {
-				Files.write(Paths.get(NodeController.getImageCache()+NodeController.getSeperator()+fileName), response.getBody());
+				Files.write(Paths.get(path+fileName), response.getBody());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -161,14 +239,15 @@ public class FileClient {
 
 	public static void main(String args[]) {
 		FileClient fileClient = new FileClient();
-//		fileClient.registerFile("123");
-//		fileClient.markFile("123");
+		fileClient.checkHealth();
+		fileClient.registerFile("123");
+		System.out.println(fileClient.checkFile("123"));
+		fileClient.markFile("123");
+		fileClient.unmarkFile("123");
 //		System.out.println(fileClient.checkFile("123"));
-//		fileClient.unmarkFile("123");
-//		System.out.println(fileClient.checkFile("123"));
-		fileClient.downloadFile("4e894202-6e63-4932-85a5-30cbfbda53c2.jpg");
+//		fileClient.downloadFile("4e894202-6e63-4932-85a5-30cbfbda53c2.jpg");
 //		fileClient.uploadFile(new java.io.File("./data/image/01.jpg"));
-//		fileClient.downloadFile("./01.jpg");
+		fileClient.downloadFile(NodeController.getImageCache()+NodeController.getSeperator(),"01.jpg");
 	}
 }
 
