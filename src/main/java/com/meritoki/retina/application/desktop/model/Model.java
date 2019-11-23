@@ -10,6 +10,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.meritoki.retina.application.desktop.controller.client.ClientController;
+import com.meritoki.retina.application.desktop.controller.document.DocumentController;
 import com.meritoki.retina.application.desktop.controller.node.NodeController;
 import com.meritoki.retina.application.desktop.controller.security.BCryptController;
 import com.meritoki.retina.application.desktop.controller.user.UserController;
@@ -67,8 +68,9 @@ public class Model {
 			this.userList = UserController.open();
 		}
 		this.providerList.add(new ZooniverseProvider());
-		Document document = new Document();
-		document.test();
+//		Document document = new Document();
+//		document.test();
+		Document document = DocumentController.open("./archive/","Document20191121.json");
 		this.setDocument(document);
 		this.variable = new Variable();
 		if (this.userList.size() == 0) {
@@ -81,7 +83,7 @@ public class Model {
 			this.userList.add(user);
 			UserController.save(this.userList);
 		} else {
-			this.variable.loginUser = true;
+			this.variable.loginUser = false;
 		}
 	}
 

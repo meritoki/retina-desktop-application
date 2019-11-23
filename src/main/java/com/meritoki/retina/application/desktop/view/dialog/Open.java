@@ -55,9 +55,11 @@ public class Open extends javax.swing.JDialog {
             Model model = ((Main)this.getParent()).model;
             model.variable.file = this.openFileChooser.getSelectedFile();
             if(model != null) {
+                ((Main)this.getParent()).showLoad();
 	            model.setDocument(DocumentController.open(model.variable.file));
 	            ((Main) this.getParent()).init();
 	            ((Main) this.getParent()).repaint();
+                ((Main)this.getParent()).disposeLoad();
             }
             this.setVisible(false);
         } else if (result == JFileChooser.CANCEL_OPTION) {

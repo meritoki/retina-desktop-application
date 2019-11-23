@@ -29,6 +29,7 @@ import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.document.Document;
 import com.meritoki.retina.application.desktop.view.dialog.user.Login;
 import com.meritoki.retina.application.desktop.view.dialog.user.Register;
+import com.meritoki.retina.application.desktop.view.window.Load;
 
 /**
  *
@@ -52,6 +53,7 @@ public final class Main extends JFrame {
     public com.meritoki.retina.application.desktop.view.dialog.Matrix matrixDialog = new com.meritoki.retina.application.desktop.view.dialog.Matrix(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.zooniverse.Export exportZooniverseDialog = new com.meritoki.retina.application.desktop.view.dialog.zooniverse.Export(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.zooniverse.Import importZooniverseDialog = new com.meritoki.retina.application.desktop.view.dialog.zooniverse.Import(this, false);
+    public Load load;
     
     public Main() {
         initComponents();
@@ -62,7 +64,16 @@ public final class Main extends JFrame {
         this.setIconImage(image);
         this.setModel(new Model());
         this.init();
-        
+    }
+    
+    public void showLoad() {
+       this.load = new Load(this);
+       this.load.validate();
+       this.load.repaint();
+    }
+    
+    public void disposeLoad() {
+        this.load.dispose();
     }
 
     public void setModel(Model model) {
