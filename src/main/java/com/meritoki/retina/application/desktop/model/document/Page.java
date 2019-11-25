@@ -133,6 +133,7 @@ public class Page {
      */
     @JsonIgnore
     public File getFile(Point point) {
+    	logger.info("getFile(" + point + ")");
         File f = null;
         for (File file : this.getFileList()) {
             f = file;
@@ -340,6 +341,7 @@ public class Page {
 
     @JsonIgnore
     public void setFile(String uuid) {
+    	logger.info("setFile("+uuid+")");
         File file = null;
         List<File> fileList = this.getFileList();
         for (int i = 0; i < fileList.size(); i++) {
@@ -358,6 +360,7 @@ public class Page {
      */
     @JsonIgnore
     public void addShape(Shape shape) {
+    	logger.info("addShape("+shape+")");
         for (File f : this.getFileList()) {
             if (f.containsShape(shape)) {
                 f.addShape(shape);
@@ -370,6 +373,7 @@ public class Page {
 
     @JsonIgnore
     public void addFile(File file) {
+    	logger.info("addFile("+file+")");
         file.setScale(this.scale);
         this.fileList.add(file);
     }

@@ -63,44 +63,44 @@ public class Project implements Serializable {
 		}
 	}
 
-	@JsonIgnore
-	public void test() {
-		Page page = new Page();
-		File file = new File("./data/image", "01.jpg");
-		page.fileList.add(file);
-		file = new File("./data/image","02.jpg");
-		page.fileList.add(file);
-		pageList.add(page);
-		page = new Page();
-		file = new File("./data/image","02.jpg");
-		page.fileList.add(file);
-		pageList.add(page);
-		page = new Page();
-		file = new File("./data/image","03.jpg");
-		page.fileList.add(file);
-		pageList.add(page);
-		page = new Page();
-		file = new File("./data/image","04.jpg");
-		page.fileList.add(file);
-		pageList.add(page);
-		page = new Page();
-		file = new File("./data/image","05.jpg");
-		page.fileList.add(file);
-		pageList.add(page);
-		page = new Page();
-		file = new File("./data/image","06.jpg");
-		page.fileList.add(file);
-		pageList.add(page);
-		page = new Page();
-		file = new File("./data/image","07.jpg");
-		page.fileList.add(file);
-		pageList.add(page);
-		page = new Page();
-		file = new File("./data/image","08.jpg");
-		page.fileList.add(file);
-		pageList.add(page);
-		this.setIndex(0);
-	}
+//	@JsonIgnore
+//	public void test() {
+//		Page page = new Page();
+//		File file = new File("./data/image", "01.jpg");
+//		page.fileList.add(file);
+//		file = new File("./data/image","02.jpg");
+//		page.fileList.add(file);
+//		pageList.add(page);
+//		page = new Page();
+//		file = new File("./data/image","02.jpg");
+//		page.fileList.add(file);
+//		pageList.add(page);
+//		page = new Page();
+//		file = new File("./data/image","03.jpg");
+//		page.fileList.add(file);
+//		pageList.add(page);
+//		page = new Page();
+//		file = new File("./data/image","04.jpg");
+//		page.fileList.add(file);
+//		pageList.add(page);
+//		page = new Page();
+//		file = new File("./data/image","05.jpg");
+//		page.fileList.add(file);
+//		pageList.add(page);
+//		page = new Page();
+//		file = new File("./data/image","06.jpg");
+//		page.fileList.add(file);
+//		pageList.add(page);
+//		page = new Page();
+//		file = new File("./data/image","07.jpg");
+//		page.fileList.add(file);
+//		pageList.add(page);
+//		page = new Page();
+//		file = new File("./data/image","08.jpg");
+//		page.fileList.add(file);
+//		pageList.add(page);
+//		this.setIndex(0);
+//	}
 
 	/**
 	 * Get the index of the current Page, used by Dialogs

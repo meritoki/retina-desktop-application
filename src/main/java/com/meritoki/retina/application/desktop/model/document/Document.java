@@ -26,7 +26,7 @@ public class Document {
 
     public static void main(String[] args) throws IOException {
         Model model = new Model();
-        model.getDocument().test();
+//        model.getDocument().test();
         User user = new User("javainuse", "password");
         ClientController.modelClient.login(user);
         ClientController.modelClient.uploadDocument(model.getDocument());
@@ -50,10 +50,10 @@ public class Document {
         this.uuid = UUID.randomUUID().toString();
         this.project = new Project(this);
     }
-    
-	public void test() {
-		this.project.test();
-	}
+//    
+//	public void test() {
+//		this.project.test();
+//	}
     
     public Project getProject() {
         return this.project;

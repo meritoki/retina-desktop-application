@@ -14,6 +14,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
+import com.meritoki.retina.application.desktop.controller.node.NodeController;
+
 /**
  * Class is used to manage reference to file in filesystem
  * @author jorodriguez
@@ -150,6 +152,7 @@ public class File {
 	 * @return
 	 */
 	public Shape getShape(Point point) {
+		logger.info("getShape("+point+")");
 		Shape s = null;
 		for (Shape shape : this.shapeList) {
 			if (shape.containsPoint(this.getFilePoint(point))) {
@@ -339,6 +342,7 @@ public class File {
 	 */
 	@JsonIgnore
 	public void addShape(Shape shape) {
+		logger.info("addShape("+shape+")");
 		shape.pointList = this.getFilePointList(shape.pointList);
 		this.shapeList.add(shape);
 	}
@@ -359,6 +363,7 @@ public class File {
 
 	@JsonIgnore
 	public boolean containsShape(Shape shape) {
+		logger.info("containsShape("+shape+")");
 		boolean flag = false;
 		if(this.containsPoint(new Point(shape.pointList.get(0)))){
 			flag = true;
