@@ -19,11 +19,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.meritoki.retina.application.desktop.controller.node.NodeController;
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.document.Shape;
 import com.meritoki.retina.application.desktop.model.provider.Provider;
@@ -33,7 +36,9 @@ import com.meritoki.retina.application.desktop.model.provider.zooniverse.Subject
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.Workflow;
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.Zooniverse;
 import com.meritoki.retina.application.desktop.model.provider.zooniverse.ZooniverseProvider;
-import javax.swing.JOptionPane;
+import com.meritoki.retina.application.desktop.view.frame.Main;
+import com.meritoki.retina.application.desktop.view.window.Load;
+import javax.swing.JFrame;
 
 /**
  *
@@ -113,6 +118,10 @@ public class Export extends javax.swing.JDialog {
             }
         }
         this.projectWorkflowComboBox.setModel(new DefaultComboBoxModel(array));
+    }
+    
+    public String getSubjectSetPath() {
+    	return NodeController.getRetinaHome()+NodeController.getSeperator()+"provider"+NodeController.getSeperator()+"zooniverse"+NodeController.getSeperator()+"subject-set"+NodeController.getSeperator();
     }
 
     /**
@@ -420,8 +429,10 @@ public class Export extends javax.swing.JDialog {
         Zooniverse zooniverse = this.model.variable.zooniverse;
         if (zooniverse != null) {
             if(!query.isEmpty()) {
+                ((Main)this.getParent()).showLoad();
                 this.model.variable.projectList = zooniverse.getProjectList(query);
                 this.initSearchProjectComboBox(this.model.variable.projectList);
+                ((Main)this.getParent()).disposeLoad();
             } else {
                 JOptionPane.showMessageDialog(this, "Search query is empty");
             }
@@ -451,6 +462,7 @@ public class Export extends javax.swing.JDialog {
     private void updateProjectWorkflowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateProjectWorkflowButtonActionPerformed
     	Zooniverse zooniverse = this.model.variable.zooniverse;
         if (zooniverse != null) {
+            ((Main)this.getParent()).showLoad();
             String projectName = (String) this.projectComboBox.getSelectedItem();
             for (Project p : zooniverse.getProjectList()) {
                 if (p.name.equals(projectName)) {
@@ -459,6 +471,7 @@ public class Export extends javax.swing.JDialog {
                     break;
                 }
             }
+            ((Main)this.getParent()).disposeLoad();
         }	
     }//GEN-LAST:event_updateProjectWorkflowButtonActionPerformed
 
@@ -472,14 +485,16 @@ public class Export extends javax.swing.JDialog {
         List<Shape> shapeList = this.model.getDocument().getProject().getShapeList();
         subjectSet.title = subjectSetTitle;
         if (zooniverse != null) {
-        	zooniverse.generateManifest(timeStamp, shapeList);
+            ((Main)this.getParent()).showLoad();
+            zooniverse.generateManifest(this.getSubjectSetPath()+timeStamp, shapeList);
             Project project = zooniverse.getProject(projectName);
             if(project != null) {
                 Workflow workflow = project.getWorkflow(workflowTitle);
                 zooniverse.createSubjectSet(project.getId(), subjectSet);
-                zooniverse.uploadSubjectSet(subjectSet, "./"+timeStamp, "manifest.csv");
+                zooniverse.uploadSubjectSet(subjectSet, this.getSubjectSetPath()+timeStamp, "manifest.csv");
                 zooniverse.workflowUploadSubjectSet(workflow, subjectSet);
             }
+            ((Main)this.getParent()).disposeLoad();
         }
     }//GEN-LAST:event_uploadButtonActionPerformed
 

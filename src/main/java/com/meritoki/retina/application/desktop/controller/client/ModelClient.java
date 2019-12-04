@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 osvaldo.rodriguez.
+ * Copyright 2019 Meritoki All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,38 +18,39 @@ package com.meritoki.retina.application.desktop.controller.client;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meritoki.retina.application.desktop.model.Model;
+import com.meritoki.retina.application.desktop.controller.node.NodeController;
 import com.meritoki.retina.application.desktop.model.User;
+import com.meritoki.retina.application.desktop.model.document.Document;
 import com.meritoki.retina.application.desktop.model.document.Point;
 import com.meritoki.retina.application.desktop.model.document.Shape;
 
 public class ModelClient {
 
-	public static void main(String[] args) {
-		ModelClient modelClient = new ModelClient();
-		System.out.println(modelClient.checkHealth());
-	}
-
-	private static final Logger logger = LoggerFactory.getLogger(ModelClient.class);
-	private String url = "http://localhost:8301";
-	private Model model = null;
+	private static Logger logger = LogManager.getLogger(ModelClient.class.getName());
+	private String url = null;
 	private Token token = null;
+	private Properties properties;
 	
-	public void setModel(Model model) {
-		this.model = model;
+	public ModelClient() {
+		this.properties = NodeController.openProperties("./retina-desktop.properties");
+		boolean gateway = Boolean.parseBoolean((String) this.properties.get("gateway"));
+		if(gateway) {
+			this.url = this.properties.getProperty("service.web.gateway.url")+"/model";
+		} else {
+			this.url = this.properties.getProperty("service.web.model.url");
+		}
 	}
 
 	public boolean checkHealth() {
@@ -60,7 +61,6 @@ public class ModelClient {
 			String uri = new String(url + "/actuator/health");
 			String responseJson = restTemplate.getForObject(uri, String.class);
 			ObjectMapper mapper = new ObjectMapper();
-
 			try {
 				status = mapper.readValue(responseJson, Status.class);
 			} catch (JsonParseException e) {
@@ -109,16 +109,22 @@ public class ModelClient {
 		}
 	}
 
-	public void uploadProject(String project) {
-		logger.info("uploadProject(" + project + ")");
-		RestTemplate restTemplate = new RestTemplate();
-		String uri = new String(url + "/import");
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.set("Authorization", "Bearer " + this.token.token);
-		HttpEntity<String> entity = new HttpEntity<String>(project, headers);
-		String string = restTemplate.postForObject(uri, entity, String.class);
-		System.out.println(string);
+	public void uploadDocument(Document document) {
+		logger.info("uploadDocument(" + document + ")");
+		ObjectMapper mapper = new ObjectMapper();
+		String documentJson;
+		try {
+			documentJson = mapper.writeValueAsString(document);
+			RestTemplate restTemplate = new RestTemplate();
+			String uri = new String(url + "/import");
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.set("Authorization", "Bearer " + this.token.token);
+			HttpEntity<String> entity = new HttpEntity<String>(documentJson, headers);
+			String string = restTemplate.postForObject(uri, entity, String.class);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public String downloadProject(String uuid) {

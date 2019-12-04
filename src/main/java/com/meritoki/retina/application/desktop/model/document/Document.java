@@ -1,7 +1,6 @@
 package com.meritoki.retina.application.desktop.model.document;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,18 +10,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.ObjectMapper;
 
-import com.meritoki.retina.application.desktop.controller.client.ModelClient;
-import com.meritoki.retina.application.desktop.controller.json.JsonController;
+import com.meritoki.retina.application.desktop.controller.client.ClientController;
 import com.meritoki.retina.application.desktop.model.Model;
 import com.meritoki.retina.application.desktop.model.User;
 import com.meritoki.retina.application.desktop.model.command.Command;
-import com.meritoki.retina.application.desktop.model.provider.Provider;
-import com.meritoki.retina.application.desktop.model.provider.zooniverse.Reference;
-import com.meritoki.retina.application.desktop.model.provider.zooniverse.Task;
-import com.meritoki.retina.application.desktop.model.provider.zooniverse.ZooniverseProvider;
-import com.meritoki.retina.application.desktop.model.vendor.Vendor;
 
 /**
  * Document
@@ -33,26 +25,18 @@ import com.meritoki.retina.application.desktop.model.vendor.Vendor;
 public class Document {
 
     public static void main(String[] args) throws IOException {
-        Project project = new Project();
-        project.initTest();
-        ObjectMapper mapper = new ObjectMapper();
         Model model = new Model();
-        model.getDocument().project = project;
-        String jsonInString = mapper.writeValueAsString(model.getDocument());
-        ModelClient modelClient = new ModelClient();
-        User user = new User();
-        user.name = "javainuse";
-        user.password = "password";
-        modelClient.login(user);
-        modelClient.uploadProject(jsonInString);
-        System.out.println(project);
+//        model.getDocument().test();
+        User user = new User("javainuse", "password");
+        ClientController.modelClient.login(user);
+        ClientController.modelClient.uploadDocument(model.getDocument());
     }
     @JsonIgnore
     static Logger logger = LogManager.getLogger(Document.class.getName());
     @JsonProperty
     public String uuid = null;
     @JsonProperty
-    public Project project = new Project();
+    public Project project = null;
     @JsonProperty
     public LinkedList<State> stateStack = new LinkedList<>();
     @JsonProperty
@@ -64,9 +48,13 @@ public class Document {
 
     public Document() {
         this.uuid = UUID.randomUUID().toString();
-//        this.project.initTest();
+        this.project = new Project(this);
     }
-
+//    
+//	public void test() {
+//		this.project.test();
+//	}
+    
     public Project getProject() {
         return this.project;
     }

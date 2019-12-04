@@ -24,7 +24,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.meritoki.retina.application.desktop.controller.document.DocumentController;
 import com.meritoki.retina.application.desktop.model.Model;
-import com.meritoki.retina.application.desktop.model.document.Project;
 import com.meritoki.retina.application.desktop.view.frame.Main;
 
 /**

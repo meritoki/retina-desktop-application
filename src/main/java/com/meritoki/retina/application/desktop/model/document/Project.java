@@ -44,9 +44,16 @@ public class Project implements Serializable {
 	public File file = new File();
 	@JsonProperty
 	public List<Layout> layoutList = new ArrayList<>();
+	@JsonIgnore
+	public Document document = null;
 
 	public Project() {
 		this.uuid = UUID.randomUUID().toString();
+	}
+	
+	public Project(Document document) {
+		this.uuid = UUID.randomUUID().toString();
+		this.document = document;
 	}
 
 	public Project(Project project) {
@@ -56,62 +63,44 @@ public class Project implements Serializable {
 		}
 	}
 
-	@JsonIgnore
-	public void initTest() {
-		Page page = new Page();
-		File file = new File();
-		file.name = "01.jpg";
-		file.path = "./data/image";
-		page.fileList.add(file);
-		file = new File();
-		file.name = "02.jpg";
-		file.path = "./data/image";
-		page.fileList.add(file);
-		pageList.add(page);
-		page = new Page();
-		file = new File();
-		file.name = "02.jpg";
-		file.path = "./data/image";
-		page.fileList.add(file);
-		pageList.add(page);
-		page = new Page();
-		file = new File();
-		file.name = "03.jpg";
-		file.path = "./data/image";
-		page.fileList.add(file);
-		pageList.add(page);
-		page = new Page();
-		file = new File();
-		file.name = "04.jpg";
-		file.path = "./data/image";
-		page.fileList.add(file);
-		pageList.add(page);
-		page = new Page();
-		file = new File();
-		file.name = "05.jpg";
-		file.path = "./data/image";
-		page.fileList.add(file);
-		pageList.add(page);
-		page = new Page();
-		file = new File();
-		file.name = "06.jpg";
-		file.path = "./data/image";
-		page.fileList.add(file);
-		pageList.add(page);
-		page = new Page();
-		file = new File();
-		file.name = "07.jpg";
-		file.path = "./data/image";
-		page.fileList.add(file);
-		pageList.add(page);
-		page = new Page();
-		file = new File();
-		file.name = "08.jpg";
-		file.path = "./data/image";
-		page.fileList.add(file);
-		pageList.add(page);
-		this.setIndex(0);
-	}
+//	@JsonIgnore
+//	public void test() {
+//		Page page = new Page();
+//		File file = new File("./data/image", "01.jpg");
+//		page.fileList.add(file);
+//		file = new File("./data/image","02.jpg");
+//		page.fileList.add(file);
+//		pageList.add(page);
+//		page = new Page();
+//		file = new File("./data/image","02.jpg");
+//		page.fileList.add(file);
+//		pageList.add(page);
+//		page = new Page();
+//		file = new File("./data/image","03.jpg");
+//		page.fileList.add(file);
+//		pageList.add(page);
+//		page = new Page();
+//		file = new File("./data/image","04.jpg");
+//		page.fileList.add(file);
+//		pageList.add(page);
+//		page = new Page();
+//		file = new File("./data/image","05.jpg");
+//		page.fileList.add(file);
+//		pageList.add(page);
+//		page = new Page();
+//		file = new File("./data/image","06.jpg");
+//		page.fileList.add(file);
+//		pageList.add(page);
+//		page = new Page();
+//		file = new File("./data/image","07.jpg");
+//		page.fileList.add(file);
+//		pageList.add(page);
+//		page = new Page();
+//		file = new File("./data/image","08.jpg");
+//		page.fileList.add(file);
+//		pageList.add(page);
+//		this.setIndex(0);
+//	}
 
 	/**
 	 * Get the index of the current Page, used by Dialogs

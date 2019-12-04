@@ -17,10 +17,6 @@ package com.meritoki.retina.application.desktop.model.document;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,7 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
-import javax.imageio.ImageIO;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -36,8 +32,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
+import com.meritoki.retina.application.desktop.controller.client.ClientController;
 import com.meritoki.retina.application.desktop.controller.node.NodeController;
-import com.meritoki.retina.application.desktop.model.Model;
 
 /**
  * The Page class is used to hold a list of shapes. The list of shapes can be
@@ -137,6 +133,7 @@ public class Page {
      */
     @JsonIgnore
     public File getFile(Point point) {
+    	logger.info("getFile(" + point + ")");
         File f = null;
         for (File file : this.getFileList()) {
             f = file;
@@ -230,8 +227,42 @@ public class Page {
         double offset = 0;
         for (File file : this.fileList) {
             if (file.getBufferedImage() == null) {
-                file.setBufferedImage(NodeController.openBufferedImage(file.getPath(), file.getName()));
-            }
+            	BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getImageCache(), file.uuid+"."+file.extension);
+            	if(bufferedImage == null) {
+	            	bufferedImage = NodeController.openBufferedImage(file.getPath(), file.getNameAndExtension());
+	            	if(bufferedImage != null) {
+	            		file.setBufferedImage(bufferedImage);
+	            		if(file.extension.equals("jpg") || file.extension.equals("jpeg")) {
+	            			NodeController.saveJpg(NodeController.getImageCache(), file.uuid+"."+file.extension, bufferedImage);
+	            		}
+	            		//TODO Add support for PNG
+	            		if(ClientController.fileClient.checkHealth()) {
+	    	    			ClientController.fileClient.registerFile(file.uuid);
+	    	    			if(ClientController.fileClient.checkFile(file.uuid)) {
+	    	    				ClientController.fileClient.uploadFile(NodeController.getImageCache()+NodeController.getSeperator(),file.uuid+"."+file.extension);
+	    	    			}
+	            		}
+	            	} else {
+	            		if(ClientController.fileClient.checkHealth()) {
+	            			if(ClientController.fileClient.checkFile(file.uuid)) {
+	            				ClientController.fileClient.downloadFile(NodeController.getImageCache()+NodeController.getSeperator(),file.getUUID()+"."+file.getExtension());
+	            				ClientController.fileClient.unmarkFile(file.uuid);
+	            			} else {
+	            				ClientController.fileClient.markFile(file.uuid);
+	            			}
+	            		}
+	            	}
+            	}  
+            	else {
+                	file.setBufferedImage(bufferedImage);
+            		if(ClientController.fileClient.checkHealth()) {
+    	    			ClientController.fileClient.registerFile(file.uuid);
+    	    			if(ClientController.fileClient.checkFile(file.uuid)) {
+    	    				ClientController.fileClient.uploadFile(NodeController.getImageCache()+NodeController.getSeperator(),file.uuid+"."+file.extension);
+    	    			}
+            		}
+                }
+            } 
             file.setOffset(offset);
             file.setScale(this.scale);
             offset += file.getWidth();
@@ -310,6 +341,7 @@ public class Page {
 
     @JsonIgnore
     public void setFile(String uuid) {
+    	logger.info("setFile("+uuid+")");
         File file = null;
         List<File> fileList = this.getFileList();
         for (int i = 0; i < fileList.size(); i++) {
@@ -328,6 +360,7 @@ public class Page {
      */
     @JsonIgnore
     public void addShape(Shape shape) {
+    	logger.info("addShape("+shape+")");
         for (File f : this.getFileList()) {
             if (f.containsShape(shape)) {
                 f.addShape(shape);
@@ -340,6 +373,7 @@ public class Page {
 
     @JsonIgnore
     public void addFile(File file) {
+    	logger.info("addFile("+file+")");
         file.setScale(this.scale);
         this.fileList.add(file);
     }

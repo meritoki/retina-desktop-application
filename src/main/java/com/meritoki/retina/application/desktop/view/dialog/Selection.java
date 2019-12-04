@@ -23,8 +23,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

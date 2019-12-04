@@ -1,6 +1,6 @@
 WORKSPACE=$(pwd)
 mvn package
-#./dependency.sh
+./dependency.sh
 echo WORKSPACE $WORKSPACE
 cp retina.sh.src retina.sh
 echo "WORKSPACE=${WORKSPACE}" | cat - retina.sh > /tmp/out && mv /tmp/out retina.sh

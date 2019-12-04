@@ -18,4 +18,10 @@ public class User {
 	public User(){
         this.uuid = UUID.randomUUID().toString();
     }
+	
+	public User(String name, String password){
+        this.uuid = UUID.randomUUID().toString();
+        this.name = name;
+        this.password = password;
+    }
 }

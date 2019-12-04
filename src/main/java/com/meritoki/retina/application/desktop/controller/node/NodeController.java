@@ -5,16 +5,18 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
 
@@ -34,14 +36,37 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 import com.meritoki.retina.application.desktop.model.User;
-import com.meritoki.retina.application.desktop.model.provider.zooniverse.Zooniverse;
 
 public class NodeController {
 	private static Logger logger = LogManager.getLogger(NodeController.class.getName());
 
+	public static void main(String[] args) {
+		System.out.println(getUserHome());
+	}
+	
+	public static String getSeperator() {
+		return FileSystems.getDefault().getSeparator();
+	}
+	
+	public static String getUserHome() {
+		return System.getProperty("user.home");
+	}
+	
+	public static String getRetinaHome() {
+		return getUserHome()+getSeperator()+".retina";
+	}
+
+	public static String getImageCache() {
+		return getRetinaHome()+getSeperator()+"image";
+	}
+	
+	public static String getPanoptesHome() {
+		return getUserHome()+getSeperator()+".panoptes";
+	}
+	
 	public static BufferedImage openBufferedImage(String filePath, String fileName) {
 		logger.info("openBufferedImage(" + filePath + ", " + fileName + ")");
-		return openBufferedImage(new java.io.File(filePath + "/" + fileName));
+		return openBufferedImage(new java.io.File(filePath + getSeperator() + fileName));
 	}
 
 	public static BufferedImage openBufferedImage(java.io.File file) {
@@ -56,14 +81,16 @@ public class NodeController {
 	}
 
 	public static void saveJpg(String filePath, String fileName, BufferedImage bufferedImage) {
-		logger.info(filePath + ", " + fileName + ", " + bufferedImage);
-		saveJpg(new File(filePath + "/" + fileName), bufferedImage);
+//		logger.info("saveJpg"+filePath + ", " + fileName + ", " + bufferedImage);
+		saveJpg(new File(filePath + getSeperator() + fileName), bufferedImage);
 	}
 
 	@JsonIgnore
 	public static void saveJpg(File file, BufferedImage bufferedImage) {
+		logger.info("saveJpg("+file+", "+bufferedImage+")");
 		try {
 			ImageIO.write(bufferedImage, "jpg", file);
+			logger.info("saved...");
 		} catch (IOException ex) {
 			logger.error(ex);
 		}
@@ -136,7 +163,7 @@ public class NodeController {
 	@JsonIgnore
 	public static void saveJson(String path, String name, Object object) {
 		logger.info("saveJson("+path+","+name+", object)");
-		saveJson(new java.io.File(path+"/"+name), object);
+		saveJson(new java.io.File(path+getSeperator()+name), object);
 	}
 
 	@JsonIgnore
@@ -154,19 +181,26 @@ public class NodeController {
 	}
 
 	@JsonIgnore
-	public static void saveProperties(Properties properties) {
+	public static void saveProperties(String path, String name, Properties properties) {
+		logger.info("saveProperties("+path+","+name+", properties");
+	       try (OutputStream output = new FileOutputStream(path+name)) {
+	            properties.store(output, null);
+	        } catch (IOException io) {
+	            io.printStackTrace();
+	        }
 
 	}
 
 	@JsonIgnore
 	public static void saveYaml(String filePath, String fileName, Object object) {
+		logger.info("saveYaml("+filePath+", "+fileName+", object)");
 		DumperOptions options = new DumperOptions();
 		options.setPrettyFlow(true);
 		options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
 		Yaml yaml = new Yaml(options);
 		FileWriter writer;
 		try {
-			writer = new FileWriter(filePath + "/" + fileName);
+			writer = new FileWriter(filePath + getSeperator() + fileName);
 			yaml.dump(object, writer);
 		} catch (IOException ex) {
 			logger.error(ex);
@@ -175,7 +209,8 @@ public class NodeController {
 
 	@JsonIgnore
 	public static void saveCsv(String filePath, String fileName, Object object) {
-		try (PrintWriter writer = new PrintWriter(new File(filePath + "/" + fileName))) {
+		logger.info("saveCsv("+filePath+", "+fileName+", object)");
+		try (PrintWriter writer = new PrintWriter(new File(filePath + getSeperator() + fileName))) {
 			if (object instanceof StringBuilder)
 				writer.write(((StringBuilder) object).toString());
 			System.out.println("saved...");

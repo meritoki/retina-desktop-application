@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.logging.log4j.LogManager;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -207,6 +208,11 @@ public class Shape {
     }
     
     @JsonProperty
+    public String getUUID() {
+    	return this.uuid;
+    }
+    
+    @JsonProperty
 	public Data getData(){
 	    return this.data;
 	}
@@ -245,7 +251,7 @@ public class Shape {
     
     @JsonIgnore
     public boolean containsPoint(Point point){
-    	logger.trace("containsPoint("+point+")");
+    	logger.info("containsPoint("+point+")");
         boolean flag = false;
         Point startPoint = new Point();
         Point stopPoint = new Point();
@@ -410,7 +416,7 @@ public class Shape {
                 Logger.getLogger(Shape.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            string = "uuid="+this.uuid;//+", scale="+this.scale;
+            string = this.uuid+this.pointList;
         }
         return string;
     }

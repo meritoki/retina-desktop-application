@@ -15,15 +15,14 @@
  */
 package com.meritoki.retina.application.desktop.view.dialog;
 
-import java.io.File;
-
-import com.meritoki.retina.application.desktop.controller.document.DocumentController;
-import com.meritoki.retina.application.desktop.model.Model;
-import com.meritoki.retina.application.desktop.view.frame.Main;
 import javax.swing.JFileChooser;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.meritoki.retina.application.desktop.controller.document.DocumentController;
+import com.meritoki.retina.application.desktop.model.Model;
+import com.meritoki.retina.application.desktop.view.frame.Main;
 
 /**
  *
@@ -56,9 +55,11 @@ public class Open extends javax.swing.JDialog {
             Model model = ((Main)this.getParent()).model;
             model.variable.file = this.openFileChooser.getSelectedFile();
             if(model != null) {
+                ((Main)this.getParent()).showLoad();
 	            model.setDocument(DocumentController.open(model.variable.file));
 	            ((Main) this.getParent()).init();
 	            ((Main) this.getParent()).repaint();
+                ((Main)this.getParent()).disposeLoad();
             }
             this.setVisible(false);
         } else if (result == JFileChooser.CANCEL_OPTION) {

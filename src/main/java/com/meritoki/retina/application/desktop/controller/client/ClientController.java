@@ -1,13 +1,7 @@
 package com.meritoki.retina.application.desktop.controller.client;
 
-
 public class ClientController {
-
-//	@JsonIgnore
-//	public ModelClient modelClient = new ModelClient();
-//	@JsonIgnore
-//	public FileClient fileClient = new FileClient();
-//	@JsonIgnore
-//	public UserClient userClient = new UserClient();
-	
+	public static ModelClient modelClient = new ModelClient();
+	public static FileClient fileClient = new FileClient();
+	public static UserClient userClient = new UserClient();
 }

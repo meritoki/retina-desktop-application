@@ -20,8 +20,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.codehaus.jackson.annotate.JsonIgnore;
+
 import com.meritoki.retina.application.desktop.controller.node.NodeController;
 import com.meritoki.retina.application.desktop.model.document.Shape;
 
@@ -120,6 +122,10 @@ public class Zooniverse {
     public void setConfig() {
         this.setConfig(this.credential);
     }
+    
+    public String getConfigPath() {
+    	return NodeController.getRetinaHome()+NodeController.getSeperator()+"provider"+NodeController.getSeperator()+"zooniverse";
+    }
 
     @JsonIgnore
     public void setConfig(Credential credential) {
@@ -128,8 +134,9 @@ public class Zooniverse {
             data.put("username", credential.userName);
             data.put("password", credential.password);
             data.put("endpoint", "https://www.zooniverse.org");
-            NodeController.saveYaml("./", "config.yml", data);
-            NodeController.executeCommand("cp ./config.yml ~/.panoptes/");
+            new File(this.getConfigPath()).mkdirs();
+            NodeController.saveYaml(this.getConfigPath(), "config.yml", data);
+            NodeController.executeCommand("cp "+this.getConfigPath()+NodeController.getSeperator()+"config.yml "+NodeController.getPanoptesHome());
 //            NodeController.executeCommand("panoptes configure");
         }
     }
@@ -197,23 +204,24 @@ public class Zooniverse {
         return stringBuilder.toString().trim();
     }
     
-    public void generateManifest(String timeStamp, List<Shape> shapeList) {
+    public void generateManifest(String manifestPath, List<Shape> shapeList) {
+    	logger.info("generateManifest("+manifestPath+", shapeList)");
     	StringBuilder stringBuilder = new StringBuilder();
     	stringBuilder.append("my_own_id");
     	stringBuilder.append(",");
     	stringBuilder.append("the_image");
     	stringBuilder.append("\n");
-    	new File("./"+timeStamp).mkdir();
+    	new File(manifestPath).mkdirs();
     	Shape shape = null;
     	for(int i = 0;i<shapeList.size();i++) {
     		shape = shapeList.get(i);
     		stringBuilder.append(i);
     		stringBuilder.append(",");
-    		NodeController.saveJpg("./"+timeStamp, shape.uuid+".jpg", shape.bufferedImage);
+    		NodeController.saveJpg(manifestPath, shape.uuid+".jpg", shape.bufferedImage);
     		stringBuilder.append(shape.uuid+".jpg");
     		stringBuilder.append("\n");
     	}
-    	NodeController.saveCsv("./"+timeStamp, "manifest.csv", stringBuilder);
+    	NodeController.saveCsv(manifestPath, "manifest.csv", stringBuilder);
     }
 }
 
