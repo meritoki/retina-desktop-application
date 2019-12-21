@@ -515,7 +515,7 @@ public class Page {
             }
         }
         if (string != null) {
-//            logger.info(string);
+            logger.info(string);
         }
     }
 
