@@ -50,7 +50,7 @@ public final class Main extends JFrame {
     public com.meritoki.retina.application.desktop.view.dialog.image.Import imageImportDialog = null;
     public com.meritoki.retina.application.desktop.view.dialog.Image imageDialog = new com.meritoki.retina.application.desktop.view.dialog.Image(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.Selection selectionDialog = new com.meritoki.retina.application.desktop.view.dialog.Selection(this, false);
-    public com.meritoki.retina.application.desktop.view.dialog.Matrix matrixDialog = new com.meritoki.retina.application.desktop.view.dialog.Matrix(this, false);
+//    public com.meritoki.retina.application.desktop.view.dialog.Matrix matrixDialog = new com.meritoki.retina.application.desktop.view.dialog.Matrix(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.zooniverse.Export exportZooniverseDialog = new com.meritoki.retina.application.desktop.view.dialog.zooniverse.Export(this, false);
     public com.meritoki.retina.application.desktop.view.dialog.zooniverse.Import importZooniverseDialog = new com.meritoki.retina.application.desktop.view.dialog.zooniverse.Import(this, false);
     public Load load;
@@ -79,11 +79,14 @@ public final class Main extends JFrame {
     public void setModel(Model model) {
         logger.debug("setModel(" + model + ")");
         this.model = model;
+        //Panel
         this.imagePanel.setModel(this.model);
         this.matrixPanel.setModel(this.model);
+        this.tablePanel.setModel(this.model);
+        this.documentPanel.setModel(this.model);
+        //Dialog
         this.imageDialog.setModel(this.model);
         this.selectionDialog.setModel(this.model);
-        this.matrixDialog.setModel(this.model);
         this.exportZooniverseDialog.setModel(this.model);
         this.importZooniverseDialog.setModel(this.model);
         this.registerDialog.setModel(this.model);
@@ -105,8 +108,8 @@ public final class Main extends JFrame {
         this.imagePanel.requestFocusInWindow();
         this.imageDialog.init();
         this.selectionDialog.init();
-//        this.imageDialog.setVisible(true);
-//        this.shapeDialog.setVisible(true);
+        this.imageDialog.setVisible(true);
+        this.selectionDialog.setVisible(true);
     }
 
     /**
@@ -123,6 +126,8 @@ public final class Main extends JFrame {
         imagePanel = new com.meritoki.retina.application.desktop.view.panel.Image();
         jScrollPane2 = new javax.swing.JScrollPane();
         matrixPanel = new com.meritoki.retina.application.desktop.view.panel.Matrix();
+        tablePanel = new com.meritoki.retina.application.desktop.view.panel.Table();
+        documentPanel = new com.meritoki.retina.application.desktop.view.panel.Document();
         mainMenuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         loginMenuItem = new javax.swing.JMenuItem();
@@ -166,16 +171,30 @@ public final class Main extends JFrame {
         matrixPanel.setLayout(matrixPanelLayout);
         matrixPanelLayout.setHorizontalGroup(
             matrixPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1028, Short.MAX_VALUE)
+            .addGap(0, 1030, Short.MAX_VALUE)
         );
         matrixPanelLayout.setVerticalGroup(
             matrixPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 512, Short.MAX_VALUE)
+            .addGap(0, 514, Short.MAX_VALUE)
         );
 
         jScrollPane2.setViewportView(matrixPanel);
 
         imagePageTabbedPane.addTab("Matrix", jScrollPane2);
+        imagePageTabbedPane.addTab("Table", tablePanel);
+
+        javax.swing.GroupLayout documentPanelLayout = new javax.swing.GroupLayout(documentPanel);
+        documentPanel.setLayout(documentPanelLayout);
+        documentPanelLayout.setHorizontalGroup(
+            documentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1030, Short.MAX_VALUE)
+        );
+        documentPanelLayout.setVerticalGroup(
+            documentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 514, Short.MAX_VALUE)
+        );
+
+        imagePageTabbedPane.addTab("Document", documentPanel);
 
         fileMenu.setText("File");
 
@@ -351,7 +370,7 @@ public final class Main extends JFrame {
     }//GEN-LAST:event_rectangleMenuItemActionPerformed
 
     private void pageMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pageMenuItemActionPerformed
-        this.matrixDialog.setVisible(true);
+//        this.matrixDialog.setVisible(true);
     }//GEN-LAST:event_pageMenuItemActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
@@ -423,6 +442,7 @@ public final class Main extends JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu dialogMenu;
+    private com.meritoki.retina.application.desktop.view.panel.Document documentPanel;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu exportMenu;
     private javax.swing.JMenu fileMenu;
@@ -446,6 +466,7 @@ public final class Main extends JFrame {
     private javax.swing.JMenuItem redoMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
+    private com.meritoki.retina.application.desktop.view.panel.Table tablePanel;
     private javax.swing.JMenuItem undoMenuItem;
     private javax.swing.JMenu windowMenu;
     // End of variables declaration//GEN-END:variables

@@ -219,12 +219,18 @@ public class Shape {
 
 	@JsonIgnore
 	public double getCenterX(){
-	    return (this.pointList.get(0).x + this.pointList.get(1).x)/2;
+		Dimension dimension = this.getDimension();
+		double x = dimension.x+(dimension.w/2);
+		return x;
+//	    return (this.pointList.get(0).x + this.pointList.get(1).x)/2;
 	}
 
 	@JsonIgnore
 	public double getCenterY(){
-	    return (this.pointList.get(0).y+this.pointList.get(1).y)/2;
+		Dimension dimension = this.getDimension();
+		double y = dimension.y+(dimension.h/2);
+		return y;
+//	    return (this.pointList.get(0).y+this.pointList.get(1).y)/2;
 	}
 	
 	public List<Point> getPointList() {
@@ -416,7 +422,7 @@ public class Shape {
                 Logger.getLogger(Shape.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            string = this.uuid+this.pointList;
+            string = "("+this.data.getText().value+","+this.getCenterX()+","+this.getCenterY()+")";
         }
         return string;
     }
