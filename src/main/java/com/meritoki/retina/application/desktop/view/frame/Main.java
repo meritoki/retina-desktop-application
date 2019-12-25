@@ -121,11 +121,13 @@ public final class Main extends JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        table1 = new com.meritoki.retina.application.desktop.view.panel.Table();
         imagePageTabbedPane = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         imagePanel = new com.meritoki.retina.application.desktop.view.panel.Image();
         jScrollPane2 = new javax.swing.JScrollPane();
         matrixPanel = new com.meritoki.retina.application.desktop.view.panel.Matrix();
+        jScrollPane3 = new javax.swing.JScrollPane();
         tablePanel = new com.meritoki.retina.application.desktop.view.panel.Table();
         documentPanel = new com.meritoki.retina.application.desktop.view.panel.Document();
         mainMenuBar = new javax.swing.JMenuBar();
@@ -181,7 +183,10 @@ public final class Main extends JFrame {
         jScrollPane2.setViewportView(matrixPanel);
 
         imagePageTabbedPane.addTab("Matrix", jScrollPane2);
-        imagePageTabbedPane.addTab("Table", tablePanel);
+
+        jScrollPane3.setViewportView(tablePanel);
+
+        imagePageTabbedPane.addTab("Table", jScrollPane3);
 
         javax.swing.GroupLayout documentPanelLayout = new javax.swing.GroupLayout(documentPanel);
         documentPanel.setLayout(documentPanelLayout);
@@ -456,6 +461,7 @@ public final class Main extends JFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JMenuItem loginMenuItem;
     private javax.swing.JMenuBar mainMenuBar;
     private com.meritoki.retina.application.desktop.view.panel.Matrix matrixPanel;
@@ -466,6 +472,7 @@ public final class Main extends JFrame {
     private javax.swing.JMenuItem redoMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
+    private com.meritoki.retina.application.desktop.view.panel.Table table1;
     private com.meritoki.retina.application.desktop.view.panel.Table tablePanel;
     private javax.swing.JMenuItem undoMenuItem;
     private javax.swing.JMenu windowMenu;

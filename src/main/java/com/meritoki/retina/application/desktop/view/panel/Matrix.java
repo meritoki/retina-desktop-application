@@ -100,6 +100,7 @@ public class Matrix extends JPanel implements MouseListener, MouseWheelListener,
 
 	@Override
 	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		if (this.model != null) {
 			Document document = (this.model != null) ? this.model.getDocument() : null;
@@ -114,7 +115,7 @@ public class Matrix extends JPanel implements MouseListener, MouseWheelListener,
 			if (dataMatrix != null) {
 				int w = getWidth();
 				int h = getHeight();
-				int boxWidth = (int) (w * 0.15);
+				int boxWidth = (int) (w * 0.05);
 				int boxHeight = (int) (h * 0.05);
 				height = dataMatrix.size() * boxHeight;
 				Data data;
@@ -138,35 +139,21 @@ public class Matrix extends JPanel implements MouseListener, MouseWheelListener,
 							switch (unitType) {
 							case Unit.DATA: {
 								g2.setColor(Color.BLACK);
-								if (text.value.equals("")) {
-									g2.drawString("D", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-								} else {
-									g2.drawString(text.value, widthIndex, heightIndex + (boxHeight / 2));
-								}
+								g2.drawString("D", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
 								break;
 							}
 							case Unit.TIME: {
-								if (text.value.equals("")) {
-									g2.drawString("T", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-								} else {
-									g2.drawString(text.value, widthIndex, heightIndex + (boxHeight / 2));
-								}
+								g2.drawString("T", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
 								break;
 							}
 							case Unit.SPACE: {
-								if (text.value.equals("")) {
-									g2.drawString("S", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-								} else {
-									g2.drawString(text.value, widthIndex, heightIndex);
-								}
+								g2.drawString("S", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
 								break;
 							}
 							case Unit.ENERGY: {
-								if (text.value.equals("")) {
-									g2.drawString("E", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-								} else {
-									g2.drawString(text.value, widthIndex, heightIndex + (boxHeight / 2));
-								}
+								
+								g2.drawString("E", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
+						
 								break;
 							}
 							}

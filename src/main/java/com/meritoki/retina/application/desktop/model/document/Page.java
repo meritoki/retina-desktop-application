@@ -240,7 +240,7 @@ public class Page {
 			int y = (int) (shape.getDimension().y / this.scale);
 			int w = (int) (shape.getDimension().w / this.scale);
 			int h = (int) (shape.getDimension().h / this.scale);
-			bufferedImage = this.getBufferedImage().getSubimage(x, y, w, h);
+//			bufferedImage = this.getBufferedImage().getSubimage(x, y, w, h);
 		}
 		return bufferedImage;
 	}
@@ -493,16 +493,16 @@ public class Page {
 		List<ArrayList<Shape>> shapeMatrix = new ArrayList<>();
 		List<Shape> shapeList = this.getShapeList();
 		if (shapeList != null && shapeList.size() > 0) {
-			logger.info("initShapeMatrix() shapeList = " + shapeList);
+//			logger.info("initShapeMatrix() shapeList = " + shapeList);
 			Shape shape = null;
 			boolean flag = true;
 			for (int i = 0; i < shapeList.size(); i++) {
 				// Set shape
 				shape = shapeList.get(i);
 				// Init new columnList, has shapes added to it
-				logger.info("initShapeMatrix() shape=" + shape);
+//				logger.info("initShapeMatrix() shape=" + shape);
 				for (List<Shape> rowList : shapeMatrix) {
-					logger.info("initShapeMatrix() rowList=" + rowList);
+//					logger.info("initShapeMatrix() rowList=" + rowList);
 					if (this.isShapeListYInThreshold(rowList, shape)) {
 						rowList.add(shape);
 						flag = false;
@@ -566,7 +566,7 @@ public class Page {
 		sum += shape.getCenterY();
 		count +=1;
 		average = sum / count;
-		logger.info("getShapeListYAverage(" + shapeList + "," + shape+ ") average=" + average);
+//		logger.info("getShapeListYAverage(" + shapeList + "," + shape+ ") average=" + average);
 		return average;
 	}
 
@@ -579,10 +579,10 @@ public class Page {
 //		for (Shape s : shapeList) {
 		a = shape.getCenterY();
 		a = Math.abs(average - a);
-		logger.info("isShapeListYInThreshold(" + shapeList + ", " + shape+ ") a=" + a);
-		if (a > this.threshold) {
-			logger.info("isShapeListYInThreshold(" + shapeList + ", " + shape+ ") (" + a
-					+ " > " + this.threshold + ")");
+//		logger.info("isShapeListYInThreshold(" + shapeList + ", " + shape+ ") a=" + a);
+		if (a > (this.threshold*this.scale)) {
+//			logger.info("isShapeListYInThreshold(" + shapeList + ", " + shape+ ") (" + a
+//					+ " > " + this.threshold + ")");
 			flag = false;
 		}
 //			else {
