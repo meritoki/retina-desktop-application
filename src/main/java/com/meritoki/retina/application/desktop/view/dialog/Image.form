@@ -65,11 +65,15 @@
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      <Component id="resetImageScriptButton" min="-2" pref="123" max="-2" attributes="0"/>
+                      <Component id="resetPageScriptButton" min="-2" pref="123" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="executeImageScriptButton" min="-2" pref="133" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="setImageList" min="-2" pref="116" max="-2" attributes="0"/>
+                      <Component id="setPageList" min="-2" pref="116" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -113,14 +117,16 @@
                   <Component id="listSizeValueLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="imageListScrollPane" min="-2" pref="206" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="imageListScrollPane" min="-2" pref="189" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="imageScriptScrollPane" min="-2" pref="178" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="executeImageScriptButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="resetImageScriptButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="setImageList" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="resetPageScriptButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="setPageList" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -178,12 +184,12 @@
         <Property name="text" type="java.lang.String" value="null"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="setImageList">
+    <Component class="javax.swing.JButton" name="setPageList">
       <Properties>
         <Property name="text" type="java.lang.String" value="Set"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="setImageListActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="setPageListActionPerformed"/>
       </Events>
     </Component>
     <Container class="javax.swing.JScrollPane" name="imageListScrollPane">
@@ -193,7 +199,7 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JList" name="imageList">
+        <Component class="javax.swing.JList" name="pageList">
           <Properties>
             <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
               <StringArray count="5">
@@ -215,7 +221,7 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTextArea" name="imageScriptTextArea">
+        <Component class="javax.swing.JTextArea" name="pageScriptTextArea">
           <Properties>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="5"/>
@@ -231,19 +237,19 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="executeImageScriptButtonActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="resetImageScriptButton">
+    <Component class="javax.swing.JButton" name="resetPageScriptButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Reset"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="resetImageScriptButtonActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="resetPageScriptButtonActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator1">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="List:"/>
+        <Property name="text" type="java.lang.String" value="List"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
@@ -254,6 +260,11 @@
     <Component class="javax.swing.JLabel" name="listSizeValueLabel">
       <Properties>
         <Property name="text" type="java.lang.String" value="null"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel3">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Script"/>
       </Properties>
     </Component>
   </SubComponents>

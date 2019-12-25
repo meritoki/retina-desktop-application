@@ -16,6 +16,7 @@
 package com.meritoki.retina.application.desktop.view.panel;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -24,7 +25,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.util.LinkedList;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -37,6 +39,8 @@ import com.meritoki.retina.application.desktop.model.document.Data;
 import com.meritoki.retina.application.desktop.model.document.Document;
 import com.meritoki.retina.application.desktop.model.document.Page;
 import com.meritoki.retina.application.desktop.model.document.Project;
+import com.meritoki.retina.application.desktop.model.document.Shape;
+import com.meritoki.retina.application.desktop.model.document.Text;
 import com.meritoki.retina.application.desktop.model.document.Unit;
 import com.meritoki.retina.application.desktop.view.frame.Main;
 
@@ -79,15 +83,30 @@ public class Matrix extends JPanel implements MouseListener, MouseWheelListener,
 		logger.debug("setModel(" + model + ")");
 		this.model = model;
 	}
+	
+
+	@Override
+	public Dimension getPreferredSize() {
+		Dimension dimension = new Dimension(1028, 512);
+		Document document = (this.model != null) ? this.model.getDocument() : null;
+		Project project = (document != null) ? document.getProject() : null;
+		Page page = (project != null) ? project.getPage() : null;
+		BufferedImage bufferedImage = (page != null) ? page.getBufferedImage() : null;
+		if (bufferedImage != null) {
+			dimension.setSize(bufferedImage.getWidth(), bufferedImage.getHeight());
+		}
+		return dimension;
+	}
 
 	@Override
 	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		if (this.model != null) {
-			Document document = (this.model != null) ?this.model.getDocument() : null; 
-			Project project = (document != null)? document.project: null;
+			Document document = (this.model != null) ? this.model.getDocument() : null;
+			Project project = (document != null) ? document.project : null;
 			Page page = (project != null) ? project.getPage() : null;
-			List<LinkedList<Data>> dataMatrix = (page != null) ? page.getDataMatrix() : null;
+			List<ArrayList<Shape>> dataMatrix = (page != null) ? page.getShapeMatrix() : null;
 			int width = 0;
 			int height = 0;
 			int heightIndex = 0;
@@ -113,8 +132,9 @@ public class Matrix extends JPanel implements MouseListener, MouseWheelListener,
 						g2.setColor(Color.BLACK);
 						g2.drawRect(widthIndex, heightIndex, boxWidth, boxHeight);
 
-						data = dataMatrix.get(i).get(j);
+						data = dataMatrix.get(i).get(j).data;
 						if (data != null) {
+							Text text = data.text;
 							String unitType = data.unit.type;
 							switch (unitType) {
 							case Unit.DATA: {
@@ -123,18 +143,17 @@ public class Matrix extends JPanel implements MouseListener, MouseWheelListener,
 								break;
 							}
 							case Unit.TIME: {
-								g2.setColor(Color.BLUE);
 								g2.drawString("T", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
 								break;
 							}
 							case Unit.SPACE: {
-								g2.setColor(Color.RED);
 								g2.drawString("S", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
 								break;
 							}
 							case Unit.ENERGY: {
-								g2.setColor(Color.GREEN);
+								
 								g2.drawString("E", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
+						
 								break;
 							}
 							}

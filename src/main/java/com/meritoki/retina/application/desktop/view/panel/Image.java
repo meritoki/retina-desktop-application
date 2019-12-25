@@ -117,8 +117,9 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				}
 
 			}
-			List<Shape> shapeList = project.getPage().getShapeList();
+			List<Shape> shapeList = project.getPage().getShapeMatrixShapeList();
 			Shape shape = project.getPage().getShape();
+			Shape previousShape = null;
 			if (shapeList != null) {
 				for (Shape s : shapeList) {
 					d = s.getDimension();
@@ -134,6 +135,12 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 						Rectangle2D.Double rectangle = new Rectangle2D.Double(d.x, d.y, d.w, d.h);
 						graphics2D.draw(rectangle);
 					}
+					if(previousShape != null) {
+						com.meritoki.retina.application.desktop.model.document.Dimension dimension = previousShape.getDimension();
+//					    g.drawLine(X1, Y1, X2, Y2);
+						graphics2D.drawLine((int)(dimension.x+(dimension.w/2)), (int)(dimension.y+(dimension.h/2)), (int)(d.x+(d.w/2)), (int)( d.y+(d.h/2)));
+					}
+					previousShape = s;
 //                                        NodeController.saveJpg("./", s.uuid+".jpg", s.bufferedImage);
 				}
 			}
@@ -196,7 +203,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 			}
 		}
 		this.main.selectionDialog.init();
-		this.main.matrixDialog.init();
+//		this.main.matrixDialog.init();
 		repaint();
 	}
 
@@ -278,7 +285,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				this.model.getDocument().getProject().setIndex(--index);
 				this.main.imageDialog.init();
 				this.main.selectionDialog.init();
-				this.main.matrixDialog.init();
+//				this.main.matrixDialog.init();
 				this.repaint();
 				break;
 			}
@@ -287,7 +294,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				this.model.getDocument().getProject().setIndex(++index);
 				this.main.imageDialog.init();
 				this.main.selectionDialog.init();
-				this.main.matrixDialog.init();
+//				this.main.matrixDialog.init();
 				this.repaint();
 				break;
 			}
@@ -296,7 +303,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				this.model.getDocument().getProject().setIndex(--index);
 				this.main.imageDialog.init();
 				this.main.selectionDialog.init();
-				this.main.matrixDialog.init();
+//				this.main.matrixDialog.init();
 				this.repaint();
 				break;
 			}
@@ -305,7 +312,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 				this.model.getDocument().getProject().setIndex(++index);
 				this.main.imageDialog.init();
 				this.main.selectionDialog.init();
-				this.main.matrixDialog.init();
+//				this.main.matrixDialog.init();
 				this.repaint();
 				break;
 			}
