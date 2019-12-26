@@ -532,6 +532,7 @@ public class Page {
 	@JsonIgnore
 	public void printMatrix(List<ArrayList<Shape>> matrix) {
 //    	logger.info("printDataMatrix(...)");
+//<<<<<<< HEAD
 		String string = null;
 		if (matrix != null && matrix.size() > 0) {
 			string = "\n";
@@ -758,6 +759,170 @@ public class Page {
 		}
 		return bufferedImage;
 	}
+//=======
+//        String string = null;
+//        if (data != null && data.size() > 0) {
+//            string = "\n";
+//            for (int i = 0; i < data.size(); i++) {
+//                for (int j = 0; j < data.get(i).size(); j++) {
+//                    if (data.get(i).get(j) != null) {
+//                        string += "*";
+//                    }
+//                }
+//                if (i < (data.size() - 1)) {
+//                    string += "\n";
+//                }
+//            }
+//        }
+//        if (string != null) {
+//            logger.info(string);
+//        }
+//    }
+//
+//    @JsonIgnore
+//    public boolean isShapeListYInThreshold(List<Shape> shapeList, int averageY, int threshold) {
+//        logger.debug("isShapeListYInThreshold(" + shapeList + ", " + averageY + ", " + threshold + ")");
+//        boolean flag = true;
+//        double a = 0;
+//        for (Shape shape : shapeList) {
+//            a = shape.getCenterY();
+//            a = Math.abs(averageY - a);
+//            if (a > threshold) {
+//                flag = false;
+//                break;
+//            }
+//        }
+//        return flag;
+//    }
+//
+//    @JsonIgnore
+//    public double getFileListMinMargin() {
+//        double min = 65536;
+//        for (File file : this.getFileList()) {
+//            if (file.margin < min) {
+//                min = file.margin;
+//            }
+//        }
+//        return min;
+//    }
+//
+//    @JsonIgnore
+//    public double getFileListMaxMargin() {
+//        double max = -65536;
+//        for (File file : this.getFileList()) {
+//            if (file.margin > max) {
+//                max = file.margin;
+//            }
+//        }
+//        return max;
+//    }
+//
+//    @JsonIgnore
+//    public int getShapeListYAverage(List<Shape> shapeList, Shape rectangle) {
+//        logger.debug("getShapeListYAverage(" + shapeList + ", " + rectangle + ")");
+//        int count = 0;
+//        int sum = 0;
+//        for (Shape r : shapeList) {
+//            sum += r.getCenterY();
+//            count += 1;
+//        }
+//        count += 1;
+//        sum += rectangle.getCenterY();
+//        return sum / count;
+//    }
+//
+//    @JsonIgnore
+//    public List<List<Shape>> sortRowList(List<List<Shape>> rowList) {
+//        for (int i = 0; i < rowList.size(); i++) {
+//            this.sortColumnList(rowList.get(i));
+//            for (int j = rowList.size() - 1; j > i; j--) {
+//                if (rowList.get(i).get(0).getCenterY() > rowList.get(j).get(0).getCenterY()) {
+//                    List<Shape> tmp = rowList.get(i);
+//                    rowList.set(i, rowList.get(j));
+//                    rowList.set(j, tmp);
+//                }
+//            }
+//        }
+//        return rowList;
+//    }
+//
+//    @JsonIgnore
+//    public List<Shape> sortColumnList(List<Shape> shapeList) {
+//        for (int i = 0; i < shapeList.size(); i++) {
+//            for (int j = shapeList.size() - 1; j > i; j--) {
+//                if (shapeList.get(i).pointList.get(0).x > shapeList.get(j).pointList.get(0).x) {
+//                    Shape tmp = shapeList.get(i);
+//                    shapeList.set(i, shapeList.get(j));
+//                    shapeList.set(j, tmp);
+//                }
+//            }
+//        }
+//        return shapeList;
+//    }
+//
+//    @JsonIgnore
+//    public boolean columnListContains(List<Shape> shapeList, Shape shape) {
+//        boolean flag = false;
+//        for (Shape s : shapeList) {
+//            if (s.uuid.equals(shape.uuid)) {
+//                flag = true;
+//            }
+//        }
+//        return flag;
+//    }
+//
+//    @JsonIgnore
+//    public boolean rowListContains(List<List<Shape>> shapeList, Shape shape) {
+//        boolean flag = false;
+//        for (List<Shape> s : shapeList) {
+//            flag = this.columnListContains(s, shape);
+//            if (flag) {
+//                break;
+//            }
+//        }
+//        return flag;
+//    }
+//
+//    @JsonIgnore
+//    public BufferedImage modFile(File a) { // BufferedImage img1,BufferedImage img2) {
+//        logger.debug("modFile(" + a + ")");
+//        BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+//        if (a.bufferedImage != null) {
+//            int width = a.bufferedImage.getWidth();
+//            int height = a.bufferedImage.getHeight();
+//            bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+//            Graphics2D graphics2D = bufferedImage.createGraphics();
+//            Color oldColor = graphics2D.getColor();
+//            graphics2D.setPaint(Color.BLACK);
+//            graphics2D.fillRect(0, 0, width, height);
+//            graphics2D.setColor(oldColor);
+//            graphics2D.drawImage(a.bufferedImage, null, 0, (int) a.margin);
+//            graphics2D.dispose();
+//        }
+//        return bufferedImage;
+//    }
+//
+//    @JsonIgnore
+//    public BufferedImage joinFile(File a, File b) {
+//        logger.debug("joinFiles(" + a + "," + b + ")");
+//        BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+//        if (a.bufferedImage != null && b.bufferedImage != null) {
+//            int width = a.bufferedImage.getWidth() + b.bufferedImage.getWidth();
+//            int height = Math.max(a.bufferedImage.getHeight() + (int) a.margin,
+//                    b.bufferedImage.getHeight() + (int) b.margin);// +offset;
+//            bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+//            Graphics2D graphics2D = bufferedImage.createGraphics();
+//            Color oldColor = graphics2D.getColor();
+//            graphics2D.setPaint(Color.BLACK);
+//            graphics2D.fillRect(0, 0, width, height);
+//            graphics2D.setColor(oldColor);
+//            graphics2D.drawImage(a.bufferedImage, null, 0, (int) a.margin);
+//            graphics2D.drawImage(b.bufferedImage, null, a.bufferedImage.getWidth(), (int) b.margin);
+//            graphics2D.dispose();
+//        }
+//        return bufferedImage;
+//    }
+//>>>>>>> feature/vision
 
 //    public BufferedImage joinBufferedImage(BufferedImage img1,BufferedImage img2) {
 //    	logger.info("joinBufferedImage("+img1+","+img2+")");
