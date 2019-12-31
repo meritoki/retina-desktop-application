@@ -7,6 +7,7 @@ import java.util.List;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import com.meritoki.retina.application.desktop.model.document.File;
+import com.meritoki.retina.application.desktop.model.document.Network;
 import com.meritoki.retina.application.desktop.model.document.Page;
 import com.meritoki.retina.application.desktop.model.document.Point;
 import com.meritoki.retina.application.desktop.model.document.Script;
@@ -62,10 +63,10 @@ public class Variable {
 	public int selection = -1;
 	@JsonIgnore
 	public String defaultFileName = "untitled.json";
-        @JsonIgnore
-        public String documentFileName = null;
-        @JsonIgnore
-        public String documentFilePath = null;
+	@JsonIgnore
+	public String documentFileName = null;
+	@JsonIgnore
+	public String documentFilePath = null;
 	@JsonIgnore
 	public List<String> emptyList = new ArrayList<>();
 	@JsonIgnore
@@ -73,7 +74,11 @@ public class Variable {
 	@JsonIgnore
 	public List<String> spaceList = Arrays.asList("latitude", "longitude", "locale", "location");
 	@JsonIgnore
-	public List<String> energyList = Arrays.asList("label","letter", "word", "sentance", "temperature", "pressure");
+	public List<String> energyList = Arrays.asList("label", "letter", "word", "sentance", "temperature", "pressure");
+	@JsonIgnore
 	public boolean newDocument = true;
+	@JsonIgnore
 	public String cachePath = null;
+	@JsonIgnore
+	public Network network = null;
 }
