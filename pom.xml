@@ -2,9 +2,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.meritoki.retina.application.desktop</groupId>
-	<artifactId>desktop</artifactId>
-	<version>0.5.201911</version>
+	<groupId>com.meritoki.app.desktop</groupId>
+	<artifactId>retina</artifactId>
+	<version>0.6.202005</version>
 	<packaging>jar</packaging>
 	<properties>
 		<cayenne.version>4.0.1</cayenne.version>

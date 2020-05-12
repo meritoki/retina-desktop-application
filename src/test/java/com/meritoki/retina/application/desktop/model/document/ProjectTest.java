@@ -8,6 +8,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.meritoki.app.desktop.retina.model.document.File;
+import com.meritoki.app.desktop.retina.model.document.Page;
+import com.meritoki.app.desktop.retina.model.document.Point;
+import com.meritoki.app.desktop.retina.model.document.Project;
+import com.meritoki.app.desktop.retina.model.document.Shape;
+
 class ProjectTest {
 
 	static Project project = null;
