@@ -64,12 +64,12 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="importImageMenuItemActionPerformed"/>
                   </Events>
                 </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="importZooniverseMenuItem">
+                <MenuItem class="javax.swing.JMenuItem" name="zooniverseImportMenuItem">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Zooniverse"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="importZooniverseMenuItemActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="zooniverseImportMenuItemActionPerformed"/>
                   </Events>
                 </MenuItem>
               </SubComponents>
@@ -79,17 +79,17 @@
                 <Property name="text" type="java.lang.String" value="Export"/>
               </Properties>
               <SubComponents>
-                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem3">
+                <MenuItem class="javax.swing.JMenuItem" name="zooniverseExportMenuItem">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Zooniverse"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem3ActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="zooniverseExportMenuItemActionPerformed"/>
                   </Events>
                 </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem4">
+                <MenuItem class="javax.swing.JMenuItem" name="microsoftExportMenuItem">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Excel"/>
+                    <Property name="text" type="java.lang.String" value="Microsoft"/>
                   </Properties>
                 </MenuItem>
               </SubComponents>

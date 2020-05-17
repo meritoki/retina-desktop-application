@@ -33,7 +33,9 @@ import com.meritoki.app.desktop.retina.model.provider.zooniverse.Credential;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Project;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Zooniverse;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.ZooniverseProvider;
+import com.meritoki.app.desktop.retina.view.dialog.LoadDialog;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -47,6 +49,7 @@ public class ZooniverseImportDialog extends javax.swing.JDialog {
     private static final long serialVersionUID = 6833970920926871138L;
     private static Logger logger = LogManager.getLogger(ZooniverseImportDialog.class.getName());
     public Model model;
+        public LoadDialog loadDialog;
 
     /**
      * Instantiate neew Zooniverse Import Dialog
@@ -54,12 +57,30 @@ public class ZooniverseImportDialog extends javax.swing.JDialog {
     public ZooniverseImportDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.loadDialog = new LoadDialog(parent, true);
     }
 
     public void setModel(Model model) {
         logger.debug("setModel(" + model + ")");
         this.model = model;
         this.init();
+        
+    }
+    
+        private void showLoad() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                loadDialog.setVisible(true);
+            }
+        });
+    }
+
+    private void hideLoad() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                loadDialog.setVisible(false);
+            }
+        });
     }
 
     public void init() {
@@ -223,10 +244,10 @@ public class ZooniverseImportDialog extends javax.swing.JDialog {
         Zooniverse zooniverse = this.model.variable.zooniverse;
         if (zooniverse != null) {
             if (!query.isEmpty()) {
-                ((MainFrame)this.getParent()).showLoad();
+                this.showLoad();
                 this.model.variable.projectList = zooniverse.getProjectList(query);
                 this.initSearchProjectComboBox(this.model.variable.projectList);
-                ((MainFrame)this.getParent()).disposeLoad();
+                this.hideLoad();
             } else {
                 JOptionPane.showMessageDialog(this, "Search query is empty");
             }
@@ -239,7 +260,7 @@ public class ZooniverseImportDialog extends javax.swing.JDialog {
         if (zooniverse != null) {
             String searchProjectName = (String) this.searchProjectComboBox.getSelectedItem();
             if (this.model.variable.projectList != null) {
-                ((MainFrame)this.getParent()).showLoad();
+                this.showLoad();
                 for (Project p : this.model.variable.projectList) {
                     if (p.name.equals(searchProjectName)) {
 //                        zooniverse.downloadClassification(p, "./"+timeStamp + ".csv");
@@ -250,7 +271,7 @@ public class ZooniverseImportDialog extends javax.swing.JDialog {
                         break;
                     }
                 }
-                ((MainFrame)this.getParent()).disposeLoad();
+                this.hideLoad();
             }
         }
     }//GEN-LAST:event_importButtonActionPerformed

@@ -50,36 +50,29 @@ public final class MainFrame extends JFrame {
     private static final long serialVersionUID = 4699683145704846741L;
     private static Logger logger = LogManager.getLogger(MainFrame.class.getName());
     public Model model = null;
-    public UserLoginDialog loginDialog = new UserLoginDialog(this,false);
-    public UserRegisterDialog registerDialog = new UserRegisterDialog(this,false);
+    public UserLoginDialog loginDialog = new UserLoginDialog(this, false);
+    public UserRegisterDialog registerDialog = new UserRegisterDialog(this, false);
     public OpenDialog openDialog = null;
-    public SaveAsDialog saveAsDialog = null; 
+    public SaveAsDialog saveAsDialog = null;
     public ImageImportDialog imageImportDialog = null;
     public ImageDialog imageDialog = new ImageDialog(this, false);
     public SelectionDialog selectionDialog = new SelectionDialog(this, false);
     public ZooniverseExportDialog zooniverseExportDialog = new ZooniverseExportDialog(this, false);
     public ZooniverseImportDialog zooniverseImportDialog = new ZooniverseImportDialog(this, false);
     public Load load;
-    
-    public MainFrame() {
-        initComponents();
-        URL url = getClass().getResource("/icon.gif");
-        logger.debug(url);
-        Image image = Toolkit.getDefaultToolkit().getImage(url);
-        logger.debug(image);
-        this.setIconImage(image);
-        this.setModel(new Model());
+
+    public MainFrame(Model model) {
+        this.initComponents();
+        this.setModel(model);
+        this.initIconImage();
         this.init();
     }
-    
-    public void showLoad() {
-       this.load = new Load(this);
-       this.load.validate();
-       this.load.repaint();
-    }
-    
-    public void disposeLoad() {
-        this.load.dispose();
+
+    public void initIconImage() {
+        URL url = getClass().getResource("/Icon.png");
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Image image = toolkit.createImage(url);
+        this.setIconImage(image);
     }
 
     public void setModel(Model model) {
@@ -99,10 +92,10 @@ public final class MainFrame extends JFrame {
         this.registerDialog.setLoginDialog(this.loginDialog);
         this.loginDialog.setModel(this.model);
         this.loginDialog.setRegisterDialog(this.registerDialog);
-        if(this.model.variable.newUser) {
-        	this.registerDialog.setVisible(true);
-        } else if (this.model.variable.loginUser){
-        	this.loginDialog.setVisible(true);
+        if (this.model.variable.newUser) {
+            this.registerDialog.setVisible(true);
+        } else if (this.model.variable.loginUser) {
+            this.loginDialog.setVisible(true);
         }
     }
 
@@ -145,10 +138,10 @@ public final class MainFrame extends JFrame {
         saveAsMenuItem = new javax.swing.JMenuItem();
         importMenu = new javax.swing.JMenu();
         importImageMenuItem = new javax.swing.JMenuItem();
-        importZooniverseMenuItem = new javax.swing.JMenuItem();
+        zooniverseImportMenuItem = new javax.swing.JMenuItem();
         exportMenu = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
+        zooniverseExportMenuItem = new javax.swing.JMenuItem();
+        microsoftExportMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         undoMenuItem = new javax.swing.JMenuItem();
         redoMenuItem = new javax.swing.JMenuItem();
@@ -259,28 +252,28 @@ public final class MainFrame extends JFrame {
         });
         importMenu.add(importImageMenuItem);
 
-        importZooniverseMenuItem.setText("Zooniverse");
-        importZooniverseMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        zooniverseImportMenuItem.setText("Zooniverse");
+        zooniverseImportMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importZooniverseMenuItemActionPerformed(evt);
+                zooniverseImportMenuItemActionPerformed(evt);
             }
         });
-        importMenu.add(importZooniverseMenuItem);
+        importMenu.add(zooniverseImportMenuItem);
 
         fileMenu.add(importMenu);
 
         exportMenu.setText("Export");
 
-        jMenuItem3.setText("Zooniverse");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+        zooniverseExportMenuItem.setText("Zooniverse");
+        zooniverseExportMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
+                zooniverseExportMenuItemActionPerformed(evt);
             }
         });
-        exportMenu.add(jMenuItem3);
+        exportMenu.add(zooniverseExportMenuItem);
 
-        jMenuItem4.setText("Excel");
-        exportMenu.add(jMenuItem4);
+        microsoftExportMenuItem.setText("Microsoft");
+        exportMenu.add(microsoftExportMenuItem);
 
         fileMenu.add(exportMenu);
 
@@ -360,16 +353,16 @@ public final class MainFrame extends JFrame {
     }//GEN-LAST:event_newMenuItemActionPerformed
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
-    	if(this.model.variable.newDocument) {
-    		this.saveAsDialog = new com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog(this, false);
-    	} else {
-        	DocumentController.save(model.variable.file, this.model.getDocument());  
-    	}
-  
+        if (this.model.variable.newDocument) {
+            this.saveAsDialog = new com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog(this, false);
+        } else {
+            DocumentController.save(model.variable.file, this.model.getDocument());
+        }
+
     }//GEN-LAST:event_saveMenuItemActionPerformed
 
     private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
-    	this.openDialog = new com.meritoki.app.desktop.retina.view.dialog.OpenDialog(this, false);
+        this.openDialog = new com.meritoki.app.desktop.retina.view.dialog.OpenDialog(this, false);
     }//GEN-LAST:event_openMenuItemActionPerformed
 
     private void imageMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imageMenuItemActionPerformed
@@ -384,12 +377,12 @@ public final class MainFrame extends JFrame {
 //        this.matrixDialog.setVisible(true);
     }//GEN-LAST:event_pageMenuItemActionPerformed
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+    private void zooniverseExportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zooniverseExportMenuItemActionPerformed
         this.zooniverseExportDialog.setVisible(true);
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
+    }//GEN-LAST:event_zooniverseExportMenuItemActionPerformed
 
     private void saveAsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsMenuItemActionPerformed
-    	this.saveAsDialog = new com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog(this, false);
+        this.saveAsDialog = new com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog(this, false);
     }//GEN-LAST:event_saveAsMenuItemActionPerformed
 
     private void importImageMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importImageMenuItemActionPerformed
@@ -408,9 +401,9 @@ public final class MainFrame extends JFrame {
         this.model.getDocument().redo();
     }//GEN-LAST:event_redoMenuItemActionPerformed
 
-    private void importZooniverseMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importZooniverseMenuItemActionPerformed
+    private void zooniverseImportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zooniverseImportMenuItemActionPerformed
         this.zooniverseImportDialog.setVisible(true);
-    }//GEN-LAST:event_importZooniverseMenuItemActionPerformed
+    }//GEN-LAST:event_zooniverseImportMenuItemActionPerformed
 
     /**
      * @param args the command line arguments
@@ -462,15 +455,13 @@ public final class MainFrame extends JFrame {
     private com.meritoki.app.desktop.retina.view.panel.ImagePanel imagePanel;
     private javax.swing.JMenuItem importImageMenuItem;
     private javax.swing.JMenu importMenu;
-    private javax.swing.JMenuItem importZooniverseMenuItem;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JMenuItem loginMenuItem;
     private javax.swing.JMenuBar mainMenuBar;
     private com.meritoki.app.desktop.retina.view.panel.MatrixPanel matrixPanel;
+    private javax.swing.JMenuItem microsoftExportMenuItem;
     private javax.swing.JMenuItem newMenuItem;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem pageMenuItem;
@@ -482,5 +473,7 @@ public final class MainFrame extends JFrame {
     private com.meritoki.app.desktop.retina.view.panel.TablePanel tablePanel;
     private javax.swing.JMenuItem undoMenuItem;
     private javax.swing.JMenu windowMenu;
+    private javax.swing.JMenuItem zooniverseExportMenuItem;
+    private javax.swing.JMenuItem zooniverseImportMenuItem;
     // End of variables declaration//GEN-END:variables
 }

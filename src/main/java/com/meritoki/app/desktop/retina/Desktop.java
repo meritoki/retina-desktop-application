@@ -15,6 +15,7 @@
  */
 package com.meritoki.app.desktop.retina;
 
+import com.meritoki.app.desktop.retina.model.Model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,8 +28,9 @@ public class Desktop {
 
     public static void main(String args[]) {
         logger.info("Starting Retina Desktop Application..."); 
-        final MainFrame main = new MainFrame();
-        final SplashWindow splash = new SplashWindow("/splash.png", main, 4000);
+        final Model model = new Model();
+        final MainFrame mainFrame = new MainFrame(model);
+        final SplashWindow splashWindow = new SplashWindow("/Splash.png", mainFrame, 4000);
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -47,7 +49,7 @@ public class Desktop {
         }
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                main.setVisible(true);
+                mainFrame.setVisible(true);
            }
         });
     }

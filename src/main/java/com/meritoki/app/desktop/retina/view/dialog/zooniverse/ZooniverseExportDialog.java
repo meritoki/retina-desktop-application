@@ -36,10 +36,12 @@ import com.meritoki.app.desktop.retina.model.provider.zooniverse.SubjectSet;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Workflow;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Zooniverse;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.ZooniverseProvider;
+import com.meritoki.app.desktop.retina.view.dialog.LoadDialog;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 import com.meritoki.app.desktop.retina.view.window.Load;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -47,37 +49,55 @@ import javax.swing.JFrame;
  */
 public class ZooniverseExportDialog extends javax.swing.JDialog {
 
-	private static final long serialVersionUID = 3200033012988617201L;
-	private static Logger logger = LogManager.getLogger(ZooniverseExportDialog.class.getName());
-	public Model model;
+    private static final long serialVersionUID = 3200033012988617201L;
+    private static Logger logger = LogManager.getLogger(ZooniverseExportDialog.class.getName());
+    public Model model;
+    public LoadDialog loadDialog;
 
     /**
      * Instantiate new Zooniverse Export Dialog
      */
     public ZooniverseExportDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-        initComponents();
+        this.initComponents();
+        this.loadDialog = new LoadDialog(parent, true);
+    }
+
+    private void showLoad() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                loadDialog.setVisible(true);
+            }
+        });
+    }
+
+    private void hideLoad() {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                loadDialog.setVisible(false);
+            }
+        });
     }
 
     public void setModel(Model model) {
-    	logger.debug("setModel("+model+")");
+        logger.debug("setModel(" + model + ")");
         this.model = model;
         this.init();
     }
 
     public void init() {
-    	logger.debug("init()");
-    	this.initZooniverse();
+        logger.debug("init()");
+        this.initZooniverse();
         this.initComboBox();
     }
-    
+
     public void initZooniverse() {
-       	for(Provider provider: this.model.providerList) {
-    		if(provider instanceof ZooniverseProvider) {
-		        Zooniverse zooniverse = ((ZooniverseProvider)provider).zooniverse;
-		        this.model.variable.zooniverse = zooniverse;
-    		}
-    	}
+        for (Provider provider : this.model.providerList) {
+            if (provider instanceof ZooniverseProvider) {
+                Zooniverse zooniverse = ((ZooniverseProvider) provider).zooniverse;
+                this.model.variable.zooniverse = zooniverse;
+            }
+        }
     }
 
     public void initComboBox() {
@@ -90,7 +110,7 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
 
     public void initProjectComboBox(List<Project> projectList) {
         String[] array = new String[0];
-        if (projectList != null && projectList.size()>0) {
+        if (projectList != null && projectList.size() > 0) {
             array = new String[projectList.size()];
             for (int i = 0; i < array.length; i++) {
                 array[i] = projectList.get(i).name;
@@ -101,7 +121,7 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
 
     public void initSearchProjectComboBox(List<com.meritoki.app.desktop.retina.model.provider.zooniverse.Project> projectList) {
         String[] array = new String[0];
-        if (projectList != null && projectList.size()>0) {
+        if (projectList != null && projectList.size() > 0) {
             array = new String[projectList.size()];
             for (int i = 0; i < array.length; i++) {
                 array[i] = projectList.get(i).name;
@@ -112,7 +132,7 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
 
     public void initProjectWorkflowComboBox(List<com.meritoki.app.desktop.retina.model.provider.zooniverse.Workflow> workflowList) {
         String[] array = new String[0];
-        if (workflowList != null && workflowList.size()>0) {
+        if (workflowList != null && workflowList.size() > 0) {
             array = new String[workflowList.size()];
             for (int i = 0; i < array.length; i++) {
                 array[i] = workflowList.get(i).title;
@@ -120,9 +140,9 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
         }
         this.projectWorkflowComboBox.setModel(new DefaultComboBoxModel(array));
     }
-    
+
     public String getSubjectSetPath() {
-    	return NodeController.getRetinaHome()+NodeController.getSeperator()+"provider"+NodeController.getSeperator()+"zooniverse"+NodeController.getSeperator()+"subject-set"+NodeController.getSeperator();
+        return NodeController.getRetinaHome() + NodeController.getSeperator() + "provider" + NodeController.getSeperator() + "zooniverse" + NodeController.getSeperator() + "subject-set" + NodeController.getSeperator();
     }
 
     /**
@@ -408,10 +428,10 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
         String description = this.projectDescriptionTextField.getText();
         Zooniverse zooniverse = this.model.variable.zooniverse;
         if (zooniverse != null) {
-                 Project project = new Project(title, description);
+            Project project = new Project(title, description);
             zooniverse.createProject(project);
             this.initProjectComboBox(zooniverse.getProjectList());
-        }	   
+        }
     }//GEN-LAST:event_addNewProjectActionPerformed
 
     private void setCredentialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setCredentialActionPerformed
@@ -429,11 +449,11 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
         String query = this.projectSearchTextField.getText().trim();
         Zooniverse zooniverse = this.model.variable.zooniverse;
         if (zooniverse != null) {
-            if(!query.isEmpty()) {
-                ((MainFrame)this.getParent()).showLoad();
+            if (!query.isEmpty()) {
+                this.showLoad();
                 this.model.variable.projectList = zooniverse.getProjectList(query);
                 this.initSearchProjectComboBox(this.model.variable.projectList);
-                ((MainFrame)this.getParent()).disposeLoad();
+                this.hideLoad();
             } else {
                 JOptionPane.showMessageDialog(this, "Search query is empty");
             }
@@ -442,13 +462,14 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
 
     /**
      * Function is invoked when pressing the addProject button
-     * @param evt 
+     *
+     * @param evt
      */
     private void addProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProjectButtonActionPerformed
-    	Zooniverse zooniverse = this.model.variable.zooniverse;
+        Zooniverse zooniverse = this.model.variable.zooniverse;
         if (zooniverse != null) {
             String searchProjectName = (String) this.searchProjectComboBox.getSelectedItem();
-            if(this.model.variable.projectList != null) {
+            if (this.model.variable.projectList != null) {
                 for (Project p : this.model.variable.projectList) {
                     if (p.name.equals(searchProjectName)) {
                         zooniverse.addProject(p);
@@ -461,9 +482,9 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_addProjectButtonActionPerformed
 
     private void updateProjectWorkflowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateProjectWorkflowButtonActionPerformed
-    	Zooniverse zooniverse = this.model.variable.zooniverse;
+        Zooniverse zooniverse = this.model.variable.zooniverse;
         if (zooniverse != null) {
-            ((MainFrame)this.getParent()).showLoad();
+            this.showLoad();
             String projectName = (String) this.projectComboBox.getSelectedItem();
             for (Project p : zooniverse.getProjectList()) {
                 if (p.name.equals(projectName)) {
@@ -472,13 +493,13 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
                     break;
                 }
             }
-            ((MainFrame)this.getParent()).disposeLoad();
-        }	
+            this.hideLoad();
+        }
     }//GEN-LAST:event_updateProjectWorkflowButtonActionPerformed
 
     private void uploadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadButtonActionPerformed
-    	String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-    	String subjectSetTitle = this.subjectSetNameTextField.getText();
+        String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        String subjectSetTitle = this.subjectSetNameTextField.getText();
         String projectName = (String) this.projectComboBox.getSelectedItem();
         String workflowTitle = (String) this.projectWorkflowComboBox.getSelectedItem();
         Zooniverse zooniverse = this.model.variable.zooniverse;
@@ -486,16 +507,16 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
         List<Shape> shapeList = this.model.getDocument().getProject().getShapeList();
         subjectSet.title = subjectSetTitle;
         if (zooniverse != null) {
-            ((MainFrame)this.getParent()).showLoad();
-            zooniverse.generateManifest(this.getSubjectSetPath()+timeStamp, shapeList);
+            this.showLoad();
+            zooniverse.generateManifest(this.getSubjectSetPath() + timeStamp, shapeList);
             Project project = zooniverse.getProject(projectName);
-            if(project != null) {
+            if (project != null) {
                 Workflow workflow = project.getWorkflow(workflowTitle);
                 zooniverse.createSubjectSet(project.getId(), subjectSet);
-                zooniverse.uploadSubjectSet(subjectSet, this.getSubjectSetPath()+timeStamp, "manifest.csv");
+                zooniverse.uploadSubjectSet(subjectSet, this.getSubjectSetPath() + timeStamp, "manifest.csv");
                 zooniverse.workflowUploadSubjectSet(workflow, subjectSet);
             }
-            ((MainFrame)this.getParent()).disposeLoad();
+            this.hideLoad();
         }
     }//GEN-LAST:event_uploadButtonActionPerformed
 
