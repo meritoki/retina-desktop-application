@@ -7,14 +7,13 @@ import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.ModelPrototype;
 import com.meritoki.app.desktop.retina.model.User;
-import com.meritoki.app.desktop.retina.model.document.Operation;
 
 public class Command implements CommandInterface {
 	private static Logger logger = LogManager.getLogger(Command.class.getName());
 	@JsonIgnore
-	public Model model;
+	public ModelPrototype model;
 	@JsonProperty
 	public String name;
 	@JsonProperty

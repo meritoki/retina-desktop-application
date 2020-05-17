@@ -5,13 +5,12 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.model.Model;
-import com.meritoki.app.desktop.retina.model.document.Operation;
+import com.meritoki.app.desktop.retina.model.ModelPrototype;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 
 public class SetShape extends Command {
 	private static Logger logger = LogManager.getLogger(SetShape.class.getName());
-	public SetShape(Model project) {
+	public SetShape(ModelPrototype project) {
 		this.model = project;
 		this.name = "setShape";
 	}

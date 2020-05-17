@@ -29,7 +29,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.controller.script.ScriptController;
-import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.ModelPrototype;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Project;
@@ -52,7 +52,7 @@ public class ImageDialog extends javax.swing.JDialog implements MouseListener, K
 	/**
 	 * Reference to Model class.
 	 */
-    private Model model;
+    private ModelPrototype model;
     
     private MainFrame main;
     
@@ -74,7 +74,7 @@ public class ImageDialog extends javax.swing.JDialog implements MouseListener, K
      * Function set Model for instance.
      * @param model
      */
-    public void setModel(Model model){
+    public void setModel(ModelPrototype model){
         logger.debug("setModel("+model+")");
         this.model = model;
         this.init();

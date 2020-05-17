@@ -33,6 +33,7 @@ public class Project implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	@JsonIgnore
 	static Logger logger = LogManager.getLogger(Project.class.getName());
 	@JsonProperty
 	public String uuid = "";

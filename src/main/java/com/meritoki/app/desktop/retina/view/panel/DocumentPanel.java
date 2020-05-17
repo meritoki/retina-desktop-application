@@ -18,7 +18,7 @@ package com.meritoki.app.desktop.retina.view.panel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.ModelPrototype;
 
 /**
  *
@@ -27,7 +27,7 @@ import com.meritoki.app.desktop.retina.model.Model;
 public class DocumentPanel extends javax.swing.JPanel {
 
     private static Logger logger = LogManager.getLogger(DocumentPanel.class.getName());
-    private Model model = null;
+    private ModelPrototype model = null;
 
     /**
      * Creates new form Document
@@ -36,7 +36,7 @@ public class DocumentPanel extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void setModel(Model model) {
+    public void setModel(ModelPrototype model) {
         logger.debug("setModel(" + model + ")");
         this.model = model;
     }

@@ -22,7 +22,7 @@ import javax.swing.JFileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.ModelPrototype;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 /**
@@ -47,7 +47,7 @@ public class ImageImportDialog extends javax.swing.JDialog {
 		int result = this.imageFileChooser.showOpenDialog(null);
 		if (result == JFileChooser.APPROVE_OPTION) {
 			File[] files = this.imageFileChooser.getSelectedFiles();
-			Model model = ((MainFrame) this.getParent()).model;
+			ModelPrototype model = ((MainFrame) this.getParent()).model;
 			if (model != null) {
 				model.variable.files = files;
 				model.getDocument().execute("addPage");

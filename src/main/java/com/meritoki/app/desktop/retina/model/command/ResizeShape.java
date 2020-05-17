@@ -5,14 +5,13 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.model.Model;
-import com.meritoki.app.desktop.retina.model.document.Operation;
+import com.meritoki.app.desktop.retina.model.ModelPrototype;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 
 public class ResizeShape extends Command {
 	private static Logger logger = LogManager.getLogger(ResizeShape.class.getName());
-	public ResizeShape(Model model) {
+	public ResizeShape(ModelPrototype model) {
 		this.model = model;
 		this.name = "resizeShape";
 	}

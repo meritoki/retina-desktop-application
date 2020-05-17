@@ -20,7 +20,7 @@ import javax.swing.JOptionPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.ModelPrototype;
 
 /**
  *
@@ -29,7 +29,7 @@ import com.meritoki.app.desktop.retina.model.Model;
 public class UserLoginDialog extends javax.swing.JDialog {
     private static Logger logger = LogManager.getLogger(UserLoginDialog.class.getName());
     
-    private Model model;
+    private ModelPrototype model;
     private UserRegisterDialog registerDialog;
     /**
      * Creates new form Login
@@ -43,7 +43,7 @@ public class UserLoginDialog extends javax.swing.JDialog {
      * Function set Model for instance.
      * @param model
      */
-    public void setModel(Model model){
+    public void setModel(ModelPrototype model){
         logger.debug("setModel("+model+")");
         this.model = model;
         this.init();

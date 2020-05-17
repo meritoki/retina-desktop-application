@@ -1,24 +1,28 @@
 package com.meritoki.app.desktop.retina.model.document;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
 public class Point {
+	@JsonIgnore
+    static Logger logger = LogManager.getLogger(Point.class.getName());
 	@JsonProperty
 	public double x = 0;
 	@JsonProperty
 	public double y = 0;
 	
 	public Point() {
-		
 	}
 	
+	/** 
+	 * Copy constructor
+	 * @param p
+	 */
 	public Point(Point p) {
 		this.x = p.x;
 		this.y = p.y;
@@ -44,8 +48,8 @@ public class Point {
         ObjectWriter ow = new ObjectMapper().writer();//.withDefaultPrettyPrinter();
         try {
             string = ow.writeValueAsString(this);
-        } catch (IOException ex) {
-            Logger.getLogger(Shape.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException e) {
+            logger.error("IOException "+e.getMessage());
         }
         return string;
     }

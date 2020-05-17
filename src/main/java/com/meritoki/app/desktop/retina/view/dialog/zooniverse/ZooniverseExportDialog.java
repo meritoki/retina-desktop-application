@@ -27,7 +27,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
-import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.ModelPrototype;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Credential;
@@ -51,7 +51,7 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
 
     private static final long serialVersionUID = 3200033012988617201L;
     private static Logger logger = LogManager.getLogger(ZooniverseExportDialog.class.getName());
-    public Model model;
+    public ModelPrototype model;
     public LoadDialog loadDialog;
 
     /**
@@ -79,7 +79,7 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
         });
     }
 
-    public void setModel(Model model) {
+    public void setModel(ModelPrototype model) {
         logger.debug("setModel(" + model + ")");
         this.model = model;
         this.init();

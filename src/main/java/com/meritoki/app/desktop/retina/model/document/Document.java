@@ -12,9 +12,10 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.meritoki.app.desktop.retina.controller.client.ClientController;
-import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.ModelPrototype;
 import com.meritoki.app.desktop.retina.model.User;
 import com.meritoki.app.desktop.retina.model.command.Command;
+import com.meritoki.app.desktop.retina.model.command.Operation;
 
 /**
  * Document
@@ -25,7 +26,7 @@ import com.meritoki.app.desktop.retina.model.command.Command;
 public class Document {
 
     public static void main(String[] args) throws IOException {
-        Model model = new Model();
+        ModelPrototype model = new ModelPrototype();
 //        model.getDocument().test();
         User user = new User("javainuse", "password");
         ClientController.modelClient.login(user);

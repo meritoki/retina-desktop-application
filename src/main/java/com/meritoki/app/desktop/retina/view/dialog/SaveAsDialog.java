@@ -23,7 +23,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.controller.document.DocumentController;
-import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.ModelPrototype;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 /**
@@ -33,7 +33,7 @@ import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 public class SaveAsDialog extends javax.swing.JDialog {
 
     private static Logger logger = LogManager.getLogger(SaveAsDialog.class.getName());
-    private Model model = null;
+    private ModelPrototype model = null;
     /**
      * Creates new form Save
      */
@@ -47,7 +47,7 @@ public class SaveAsDialog extends javax.swing.JDialog {
     public void result() {
         int result = this.saveFileChooser.showSaveDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
-            Model model = ((MainFrame)this.getParent()).model;
+            ModelPrototype model = ((MainFrame)this.getParent()).model;
             model.variable.file = this.saveFileChooser.getSelectedFile();
             if(model != null) {
 	            DocumentController.save(model.variable.file, model.getDocument());

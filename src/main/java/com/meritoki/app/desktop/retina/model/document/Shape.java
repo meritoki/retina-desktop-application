@@ -22,10 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -34,7 +33,7 @@ import org.codehaus.jackson.map.ObjectWriter;
 public class Shape {
     
 	@JsonIgnore
-    private static org.apache.logging.log4j.Logger logger = LogManager.getLogger(Shape.class.getName());
+    private static Logger logger = LogManager.getLogger(Shape.class.getName());
     @JsonIgnore
     public static final int TOP = 0;
     @JsonIgnore
@@ -80,6 +79,10 @@ public class Shape {
          this.uuid = UUID.randomUUID().toString();
     }
     
+    /**
+     * Copy constructor
+     * @param shape
+     */
     public Shape(Shape shape) {
     	this.uuid = shape.uuid;
     	this.classification = shape.classification;
@@ -419,7 +422,7 @@ public class Shape {
             try {
                 string = ow.writeValueAsString(this);
             } catch (IOException ex) {
-                Logger.getLogger(Shape.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error("IOException "+ex.getMessage());
             }
         } else {
             string = "("+this.data.getText().value+","+this.getCenterX()+","+this.getCenterY()+")";

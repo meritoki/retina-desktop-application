@@ -24,7 +24,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.controller.parser.Parser;
-import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.ModelPrototype;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Project;
@@ -37,7 +37,7 @@ import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 public class TablePanel extends javax.swing.JPanel {
 
 	private static Logger logger = LogManager.getLogger(TablePanel.class.getName());
-	private Model model = null;
+	private ModelPrototype model = null;
 	private MainFrame main = null;
 
 	/**
@@ -51,7 +51,7 @@ public class TablePanel extends javax.swing.JPanel {
 		this.main = main;
 	}
 
-	public void setModel(Model model) {
+	public void setModel(ModelPrototype model) {
 		logger.debug("setModel(" + model + ")");
 		this.model = model;
 		this.init();

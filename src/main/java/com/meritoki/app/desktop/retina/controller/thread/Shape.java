@@ -1,6 +1,6 @@
 package com.meritoki.app.desktop.retina.controller.thread;
 
-import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.ModelPrototype;
 
 /** 
  * Class iterates over shapes in Project to train the vision web service.
@@ -10,9 +10,9 @@ import com.meritoki.app.desktop.retina.model.Model;
 public class Shape implements Runnable {
 
 	boolean flag = true;
-	public Model model = null;
+	public ModelPrototype model = null;
 	
-	public Shape(Model model) {
+	public Shape(ModelPrototype model) {
 		this.model = model;
 	}
 	

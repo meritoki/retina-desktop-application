@@ -1,4 +1,4 @@
-package com.meritoki.app.desktop.retina.model.document;
+package com.meritoki.app.desktop.retina.model.command;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 

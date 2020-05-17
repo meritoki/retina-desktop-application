@@ -5,14 +5,14 @@ import java.io.File;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.ModelPrototype;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Project;
 
 public class AddPage extends Command {
 	private static Logger logger = LogManager.getLogger(AddPage.class.getName());
-	public AddPage(Model project) {
+	public AddPage(ModelPrototype project) {
 		this.model = project;
 		this.name = "addPage";
 	}

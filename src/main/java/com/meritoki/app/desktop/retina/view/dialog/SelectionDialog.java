@@ -30,7 +30,7 @@ import javax.swing.DefaultListModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.ModelPrototype;
 import com.meritoki.app.desktop.retina.model.document.Data;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.File;
@@ -58,7 +58,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	/**
 	 * Model for class.
 	 */
-	private Model model = null;
+	private ModelPrototype model = null;
 	
 	private MainFrame main = null;
 
@@ -77,7 +77,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 		this.rectangleList.addKeyListener(this);
 	}
 
-	public void setModel(Model model) {
+	public void setModel(ModelPrototype model) {
 		logger.debug("setModel(" + model + ")");
 		this.model = model;
 		this.init();

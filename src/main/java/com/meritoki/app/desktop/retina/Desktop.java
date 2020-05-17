@@ -15,7 +15,7 @@
  */
 package com.meritoki.app.desktop.retina;
 
-import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.ModelPrototype;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,7 +28,7 @@ public class Desktop {
 
     public static void main(String args[]) {
         logger.info("Starting Retina Desktop Application..."); 
-        final Model model = new Model();
+        final ModelPrototype model = new ModelPrototype();
         final MainFrame mainFrame = new MainFrame(model);
         final SplashWindow splashWindow = new SplashWindow("/Splash.png", mainFrame, 4000);
         try {

@@ -29,7 +29,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
-import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.ModelPrototype;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.File;
 import com.meritoki.app.desktop.retina.model.document.Page;
@@ -50,7 +50,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 	private static final long serialVersionUID = 3989576625299550361L;
 	private static Logger logger = LogManager.getLogger(ImagePanel.class.getName());
 	private MainFrame main = null;
-	private Model model = null;
+	private ModelPrototype model = null;
 
 	public ImagePanel() {
 		super();
@@ -64,7 +64,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 		this.main = main;
 	}
 
-	public void setModel(Model model) {
+	public void setModel(ModelPrototype model) {
 		logger.debug("setModel(" + model + ")");
 		this.model = model;
 		this.setPreferredSize(this.getPreferredSize());

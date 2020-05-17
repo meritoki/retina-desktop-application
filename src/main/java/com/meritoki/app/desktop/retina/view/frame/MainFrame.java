@@ -25,7 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.controller.document.DocumentController;
-import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.ModelPrototype;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.view.dialog.ImageDialog;
 import com.meritoki.app.desktop.retina.view.dialog.OpenDialog;
@@ -49,7 +49,7 @@ public final class MainFrame extends JFrame {
      */
     private static final long serialVersionUID = 4699683145704846741L;
     private static Logger logger = LogManager.getLogger(MainFrame.class.getName());
-    public Model model = null;
+    public ModelPrototype model = null;
     public UserLoginDialog loginDialog = new UserLoginDialog(this, false);
     public UserRegisterDialog registerDialog = new UserRegisterDialog(this, false);
     public OpenDialog openDialog = null;
@@ -61,7 +61,7 @@ public final class MainFrame extends JFrame {
     public ZooniverseImportDialog zooniverseImportDialog = new ZooniverseImportDialog(this, false);
     public Load load;
 
-    public MainFrame(Model model) {
+    public MainFrame(ModelPrototype model) {
         this.initComponents();
         this.setModel(model);
         this.initIconImage();
@@ -75,7 +75,7 @@ public final class MainFrame extends JFrame {
         this.setIconImage(image);
     }
 
-    public void setModel(Model model) {
+    public void setModel(ModelPrototype model) {
         logger.debug("setModel(" + model + ")");
         this.model = model;
         //Panel

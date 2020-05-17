@@ -21,7 +21,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.controller.document.DocumentController;
-import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.ModelPrototype;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 import javax.swing.SwingUtilities;
 
@@ -36,7 +36,7 @@ public class OpenDialog extends javax.swing.JDialog {
      */
     private static final long serialVersionUID = 6241323189102604811L;
     private static Logger logger = LogManager.getLogger(OpenDialog.class.getName());
-    private Model model = null;
+    private ModelPrototype model = null;
     public LoadDialog loadDialog;
 
     /**
@@ -71,7 +71,7 @@ public class OpenDialog extends javax.swing.JDialog {
     public void result() {
         int result = this.openFileChooser.showOpenDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
-            Model model = ((MainFrame) this.getParent()).model;
+            ModelPrototype model = ((MainFrame) this.getParent()).model;
             model.variable.file = this.openFileChooser.getSelectedFile();
             if (model != null) {
                 this.showLoad();

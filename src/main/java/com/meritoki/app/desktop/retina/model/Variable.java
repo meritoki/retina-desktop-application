@@ -7,7 +7,6 @@ import java.util.List;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import com.meritoki.app.desktop.retina.model.document.File;
-import com.meritoki.app.desktop.retina.model.document.Network;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Script;
@@ -79,6 +78,4 @@ public class Variable {
 	public boolean newDocument = true;
 	@JsonIgnore
 	public String cachePath = null;
-	@JsonIgnore
-	public Network network = null;
 }

@@ -34,7 +34,7 @@ import javax.swing.JPanel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.ModelPrototype;
 import com.meritoki.app.desktop.retina.model.document.Data;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Page;
@@ -53,7 +53,7 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 	private static final long serialVersionUID = 6483831845668642285L;
 	private static Logger logger = LogManager.getLogger(Data.class.getName());
 	private MainFrame main = null;
-	private Model model = null;
+	private ModelPrototype model = null;
 
 	/**
 	 * Instantiate new Matrix Panel
@@ -79,7 +79,7 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 	 * 
 	 * @param model
 	 */
-	public void setModel(Model model) {
+	public void setModel(ModelPrototype model) {
 		logger.debug("setModel(" + model + ")");
 		this.model = model;
 	}

@@ -5,15 +5,14 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.model.Model;
-import com.meritoki.app.desktop.retina.model.document.Operation;
+import com.meritoki.app.desktop.retina.model.ModelPrototype;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 
 
 public class MoveShape extends Command {
 	private static Logger logger = LogManager.getLogger(MoveShape.class.getName());
-	public MoveShape(Model project) {
+	public MoveShape(ModelPrototype project) {
 		this.model = project;
 		this.name = "moveShape";
 	}

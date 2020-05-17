@@ -26,18 +26,23 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.document.Shape;
+import com.meritoki.app.desktop.retina.model.provider.Provider;
 
 /**
  *
  * @author osvaldo.rodriguez
  */
-public class Zooniverse {
+public class Zooniverse extends Provider {
 
     static org.apache.logging.log4j.Logger logger = LogManager.getLogger(Zooniverse.class.getName());
     public Credential credential = null;
     public Project project;
     public List<Project> projectList = new ArrayList<Project>();
     public int index = 0;
+    
+    public Zooniverse() {
+    	super("zooniverse");
+    }
 
     public Credential getCredential() {
         return credential;
@@ -224,12 +229,3 @@ public class Zooniverse {
     	NodeController.saveCsv(manifestPath, "manifest.csv", stringBuilder);
     }
 }
-
-//@JsonIgnore
-//public List<Project> searchProjectList = new ArrayList<Project>();
-//public List<Project> getSearchProjectList() {
-//  return searchProjectList;
-//}
-//public void setSearchProjectList(List<Project> searchProjectList) {
-//  this.searchProjectList = searchProjectList;
-//}
