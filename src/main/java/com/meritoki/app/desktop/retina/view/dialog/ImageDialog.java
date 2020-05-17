@@ -29,10 +29,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.controller.script.ScriptController;
-import com.meritoki.app.desktop.retina.model.ModelPrototype;
+import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Page;
-import com.meritoki.app.desktop.retina.model.document.Project;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 /**
@@ -52,7 +51,7 @@ public class ImageDialog extends javax.swing.JDialog implements MouseListener, K
 	/**
 	 * Reference to Model class.
 	 */
-    private ModelPrototype model;
+    private Model model;
     
     private MainFrame main;
     
@@ -74,7 +73,7 @@ public class ImageDialog extends javax.swing.JDialog implements MouseListener, K
      * Function set Model for instance.
      * @param model
      */
-    public void setModel(ModelPrototype model){
+    public void setModel(Model model){
         logger.debug("setModel("+model+")");
         this.model = model;
         this.init();
@@ -92,11 +91,10 @@ public class ImageDialog extends javax.swing.JDialog implements MouseListener, K
     public void initLabel(){
         logger.debug("initLabel()");
         Document document = (this.model != null) ? this.model.getDocument() : null;
-        Project project = (document != null) ? document.getProject() : null;
-        Page page = (project != null)? project.getPage():null;
+        Page page = (document != null)? document.getPage():null;
         BufferedImage bufferedPage = (page != null)?page.getBufferedImage():null;
-        int pageIndex = (project != null)? project.getIndex():0;
-        List<Page> pageList = (project != null)? project.getPageList():null;
+        int pageIndex = (document != null)? document.getIndex():0;
+        List<Page> pageList = (document != null)? document.getPageList():null;
         this.indexValueLabel.setText(pageIndex+"");
         if(page!=null){
         	if(page.fileList.size() == 1) {
@@ -122,9 +120,8 @@ public class ImageDialog extends javax.swing.JDialog implements MouseListener, K
     public void initList(){
         logger.debug("initList()");
         Document document = (this.model != null) ? this.model.getDocument() : null;
-        Project project = (document != null) ? document.getProject() : null;
-        int pageIndex = (project != null)? project.getIndex():0;
-        List<Page> pageList = (project != null)? project.getPageList():null;
+        int pageIndex = (document != null)? document.getIndex():0;
+        List<Page> pageList = (document != null)? document.getPageList():null;
         this.initPageList(pageList);
         this.setPageListSelectedIndex(pageIndex);
     }
@@ -151,8 +148,7 @@ public class ImageDialog extends javax.swing.JDialog implements MouseListener, K
         if(e.getClickCount()==1){
             String selectedItem = (String) this.pageList.getSelectedValue();
             Document document = (this.model != null) ? this.model.getDocument() : null;
-            Project project = (document != null) ? document.getProject() : null;
-            project.setPage(selectedItem);
+            document.setPage(selectedItem);
             this.initLabel();
             this.main.repaint();
             this.main.selectionDialog.init();
@@ -184,14 +180,13 @@ public class ImageDialog extends javax.swing.JDialog implements MouseListener, K
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
         Document document = (this.model != null) ? this.model.getDocument() : null;
-        Project project = (document != null) ? document.getProject() : null;
-        int index = project.getIndex();
+        int index = document.getIndex();
         switch(keyCode) {
             case KeyEvent.VK_LEFT:{
                 logger.debug("keyPressed LEFT");
-                index = project.getIndex();
+                index = document.getIndex();
                 index=index-1;
-                project.setIndex(index);
+                document.setIndex(index);
                 this.initLabel();
                 this.setPageListSelectedIndex(index);
                 this.getParent().repaint();
@@ -201,9 +196,9 @@ public class ImageDialog extends javax.swing.JDialog implements MouseListener, K
             }
             case KeyEvent.VK_RIGHT:{
                 logger.debug("keyPressed RIGHT");
-                index = project.getIndex();
+                index = document.getIndex();
                 index=index+1;
-                project.setIndex(index);
+                document.setIndex(index);
                 this.initLabel();
                 this.setPageListSelectedIndex(index);
                 this.getParent().repaint();
@@ -224,10 +219,9 @@ public class ImageDialog extends javax.swing.JDialog implements MouseListener, K
     public void keyReleased(KeyEvent e) {
         String uuid = (String)pageList.getSelectedValue();
         Document document = (this.model != null) ? this.model.getDocument() : null;
-        Project project = (document != null) ? document.getProject() : null;
-        Page page = project.getPage();
+        Page page = document.getPage();
         if(page != null && !uuid.equals(page.uuid)){
-            project.setPage(uuid);
+            document.setPage(uuid);
             this.initLabel();
             this.getParent().repaint();
             ((MainFrame)this.getParent()).selectionDialog.init();
@@ -427,29 +421,26 @@ public class ImageDialog extends javax.swing.JDialog implements MouseListener, K
     private void setPageListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setPageListActionPerformed
         //COMMAND
     	Document document = (this.model != null) ? this.model.getDocument() : null;
-        Project project = (document != null) ? document.getProject() : null;
-    	project.pageList = this.model.variable.pageList;
+    	document.pageList = document.state.pageList;
         this.pageScriptTextArea.setText("");
     }//GEN-LAST:event_setPageListActionPerformed
 
     private void executeImageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeImageScriptButtonActionPerformed
         String value = this.pageScriptTextArea.getText();
         Document document = (this.model != null) ? this.model.getDocument() : null;
-        Project project = (document != null) ? document.getProject() : null;
-        this.model.variable.pageList = new ArrayList<>(project.getPageList());//BUG 201912212221 this step is stripping the fileList, which it why the shapes do not appear after a join.
+        document.state.pageList = new ArrayList<>(document.getPageList());//BUG 201912212221 this step is stripping the fileList, which it why the shapes do not appear after a join.
 //        this.model.variable.script.setPageList(this.model.variable.pageList);
         try {
-            ScriptController.sortPageList(this.model.variable.pageList, value);
+            ScriptController.sortPageList(document.state.pageList, value);
         } catch (Exception ex) {
             System.err.println(ex);
         }
-        this.initPageList(this.model.variable.pageList);
+        this.initPageList(document.state.pageList);
     }//GEN-LAST:event_executeImageScriptButtonActionPerformed
 
     private void resetPageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetPageScriptButtonActionPerformed
     	Document document = (this.model != null) ? this.model.getDocument() : null;
-        Project project = (document != null) ? document.getProject() : null;
-    	this.initPageList(project.getPageList());
+    	this.initPageList(document.getPageList());
     }//GEN-LAST:event_resetPageScriptButtonActionPerformed
 
     /**

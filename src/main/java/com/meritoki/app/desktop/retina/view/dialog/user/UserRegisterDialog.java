@@ -18,8 +18,9 @@ package com.meritoki.app.desktop.retina.view.dialog.user;
 import javax.swing.JOptionPane;
 
 import com.meritoki.app.desktop.retina.controller.security.BCryptController;
-import com.meritoki.app.desktop.retina.model.ModelPrototype;
-import com.meritoki.app.desktop.retina.model.User;
+import com.meritoki.app.desktop.retina.controller.user.UserController;
+import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.document.user.User;
 
 /**
  *
@@ -31,7 +32,7 @@ public class UserRegisterDialog extends javax.swing.JDialog {
 	 * 
 	 */
 	private static final long serialVersionUID = -2547360091322488397L;
-	public ModelPrototype model = null;
+	public Model model = null;
 	public UserLoginDialog login = null;
     /**
      * Creates new form Register
@@ -41,7 +42,7 @@ public class UserRegisterDialog extends javax.swing.JDialog {
         initComponents();
     }
     
-    public void setModel(ModelPrototype model) {
+    public void setModel(Model model) {
     	this.model = model;
     }
     
@@ -220,7 +221,8 @@ public class UserRegisterDialog extends javax.swing.JDialog {
         }
         
         if(success) {
-        	this.model.registerUser(user);
+        	UserController userController = new UserController(this.model);
+        	userController.registerUser(user);
         	this.setVisible(false);
         	this.login.setVisible(true);
         }else {

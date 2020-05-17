@@ -6,6 +6,10 @@ public class Controller implements ControllerInterface {
 
 	protected Model model;
 	
+	public Controller(Model model) {
+		this.model = model;
+	}
+	
 	@Override
 	public void setModel(Model model) {
 		this.model = model;

@@ -23,6 +23,10 @@ import org.apache.logging.log4j.Logger;
  */
 public class ControlDialog extends javax.swing.JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2331545906092555561L;
 	private static Logger logger = LogManager.getLogger(ControlDialog.class.getName());
 //	public Model model = null;
 //	public Main main = null;

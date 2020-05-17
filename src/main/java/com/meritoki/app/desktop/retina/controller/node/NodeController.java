@@ -35,7 +35,7 @@ import org.codehaus.jackson.type.TypeReference;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
-import com.meritoki.app.desktop.retina.model.User;
+import com.meritoki.app.desktop.retina.model.document.user.User;
 
 public class NodeController {
 	private static Logger logger = LogManager.getLogger(NodeController.class.getName());

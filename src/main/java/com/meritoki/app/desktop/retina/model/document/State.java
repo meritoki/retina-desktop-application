@@ -1,27 +1,66 @@
 package com.meritoki.app.desktop.retina.model.document;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
 
-import com.meritoki.app.desktop.retina.model.User;
-import com.meritoki.app.desktop.retina.model.command.Command;
+import com.meritoki.app.desktop.retina.model.document.user.User;
 
-/**
- * State is a class for...
- * @author jorodriguez
- *
- */
 public class State {
-	@JsonProperty
-	public User user;
-	@JsonProperty
-	public Project project;
-	@JsonProperty
-	public LinkedList<Command> undoStack = new LinkedList<>();
+
 	@JsonIgnore
-	public LinkedList<Command> redoStack = new LinkedList<>();
-	@JsonProperty
-	public int index = 0;
+	public boolean rectangle = true;
+	@JsonIgnore
+	public boolean ellipse = true;
+	@JsonIgnore
+	public File pressedFile = null;
+	@JsonIgnore
+	public File releasedFile = null;
+	@JsonIgnore
+	public java.io.File[] files = null;
+
+	@JsonIgnore
+	public Script script = null;
+	@JsonIgnore
+	public Page page = null;
+	@JsonIgnore
+	public Shape pressedShape = null;
+	@JsonIgnore
+	public Text text = null;
+	@JsonIgnore
+	public List<Page> pageList = null;
+	@JsonIgnore
+	public List<Shape> shapeList = null;
+	@JsonIgnore
+	public List<Text> textList = null;
+	@JsonIgnore
+	public Point pressedPoint = new Point();
+	@JsonIgnore
+	public Point releasedPoint = new Point();
+	@JsonIgnore
+	public Point movedPoint = new Point();
+	@JsonIgnore
+	public double scale = 1;
+	@JsonIgnore
+	public int selection = -1;
+	@JsonIgnore
+	public String defaultFileName = "untitled.json";
+	@JsonIgnore
+	public String documentFileName = null;
+	@JsonIgnore
+	public String documentFilePath = null;
+	@JsonIgnore
+	public List<String> emptyList = new ArrayList<>();
+	@JsonIgnore
+	public List<String> timeList = Arrays.asList("year", "month", "week", "day", "hour", "minute", "second");
+	@JsonIgnore
+	public List<String> spaceList = Arrays.asList("latitude", "longitude", "locale", "location");
+	@JsonIgnore
+	public List<String> energyList = Arrays.asList("label", "letter", "word", "sentance", "temperature", "pressure");
+	@JsonIgnore
+	public String cachePath = null;
+	@JsonIgnore
+	public User user = null;
 }

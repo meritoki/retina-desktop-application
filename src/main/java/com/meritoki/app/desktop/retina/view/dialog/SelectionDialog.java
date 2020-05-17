@@ -30,12 +30,11 @@ import javax.swing.DefaultListModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.model.ModelPrototype;
+import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Data;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.File;
 import com.meritoki.app.desktop.retina.model.document.Page;
-import com.meritoki.app.desktop.retina.model.document.Project;
 import com.meritoki.app.desktop.retina.model.document.Script;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.Text;
@@ -58,7 +57,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	/**
 	 * Model for class.
 	 */
-	private ModelPrototype model = null;
+	private Model model = null;
 	
 	private MainFrame main = null;
 
@@ -77,7 +76,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 		this.rectangleList.addKeyListener(this);
 	}
 
-	public void setModel(ModelPrototype model) {
+	public void setModel(Model model) {
 		logger.debug("setModel(" + model + ")");
 		this.model = model;
 		this.init();
@@ -92,8 +91,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	public void initLabel() {
 		logger.debug("initLabel()");
 		Document document = (this.model != null) ? this.model.getDocument() : null;
-		Project project = (document != null) ? document.getProject() : null;
-		Page page = (project != null) ? project.getPage() : null;
+		Page page = (document != null) ? document.getPage() : null;
 		File file = (page != null) ? page.getFile() : null;
 		Shape shape = (file != null) ? file.getShape() : null;
 		List<Text> textList = (shape != null) ? shape.getTextList() : null;
@@ -102,8 +100,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	public void initList() {
 		logger.debug("initList()");
 		Document document = (this.model != null) ? this.model.getDocument() : null;
-		Project project = (document != null) ? document.getProject() : null;
-		Page page = (project != null) ? project.getPage() : null;
+		Page page = (document != null) ? document.getPage() : null;
 		List<Shape> shapeList = (page != null) ? page.getShapeMatrixShapeList() : null;
 		if (shapeList == null) {
 			shapeList = (page != null) ? page.getShapeList() : null;
@@ -118,8 +115,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	public void initComboBox() {
 		logger.debug("initComboBox()");
 		Document document = (this.model != null) ? this.model.getDocument() : null;
-		Project project = (document != null) ? document.getProject() : null;
-		Page page = (project != null) ? project.getPage() : null;
+		Page page = (document != null) ? document.getPage() : null;
 		File file = (page != null) ? page.getFile() : null;
 		Shape shape = (file != null) ? file.getShape() : null;
 		Data data = (shape != null) ? shape.data : null;
@@ -135,24 +131,24 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 			this.unitTypeComboBox.setSelectedItem(data.unit.type);
 			switch (data.unit.type) {
 			case "data": {
-				this.initUnitValueComboBox(this.model.variable.emptyList);
+				this.initUnitValueComboBox(this.model.document.state.emptyList);
 				break;
 			}
 			case "time": {
-				this.initUnitValueComboBox(this.model.variable.timeList);
+				this.initUnitValueComboBox(this.model.document.state.timeList);
 				break;
 			}
 			case "space": {
-				this.initUnitValueComboBox(this.model.variable.spaceList);
+				this.initUnitValueComboBox(this.model.document.state.spaceList);
 				break;
 			}
 			case "energy": {
-				this.initUnitValueComboBox(this.model.variable.energyList);
+				this.initUnitValueComboBox(this.model.document.state.energyList);
 				break;
 			}
 			}
 		} else {
-			this.initUnitValueComboBox(this.model.variable.emptyList);
+			this.initUnitValueComboBox(this.model.document.state.emptyList);
 		}
 	}
 
@@ -172,8 +168,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 		boolean flag = this.textValueDefaultCheckBox.isSelected();
 		if (flag) {
 			Document document = (this.model != null) ? this.model.getDocument() : null;
-			Project project = (document != null) ? document.getProject() : null;
-			Page page = (project != null) ? project.getPage() : null;
+			Page page = (document != null) ? document.getPage() : null;
 			Shape shape = (page != null) ? page.getFile().getShape() : null;
 			Data data = (shape != null) ? shape.getData() : null;
 			if (data != null) {
@@ -196,19 +191,19 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 				int selectedIndex = unitTypeComboBox.getSelectedIndex();
 				switch (selectedIndex) {
 				case 0: {
-					initUnitValueComboBox(model.variable.emptyList);
+					initUnitValueComboBox(model.document.state.emptyList);
 					break;
 				}
 				case 1: {
-					initUnitValueComboBox(model.variable.timeList);
+					initUnitValueComboBox(model.document.state.timeList);
 					break;
 				}
 				case 2: {
-					initUnitValueComboBox(model.variable.spaceList);
+					initUnitValueComboBox(model.document.state.spaceList);
 					break;
 				}
 				case 3: {
-					initUnitValueComboBox(model.variable.energyList);
+					initUnitValueComboBox(model.document.state.energyList);
 					break;
 				}
 				}
@@ -249,13 +244,12 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getClickCount() == 1) {
-			Page page = this.model.getDocument().getProject().getPage();
+			Page page = this.model.getDocument().getPage();
 			if (page != null) {
 				String selectedItem = (String) this.rectangleList.getSelectedValue();
 				logger.info("mouseClicked(e) selectedItem=" + selectedItem);
 				Document document = (this.model != null) ? this.model.getDocument() : null;
-				Project project = (document != null) ? document.getProject() : null;
-				project.getPage().setShape(selectedItem);
+				document.getPage().setShape(selectedItem);
 				this.getParent().repaint();
 				this.init();
 			}
@@ -289,8 +283,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	public void keyPressed(KeyEvent e) {
 		int keyCode = e.getKeyCode();
 		Document document = (this.model != null) ? this.model.getDocument() : null;
-		Project project = (document != null) ? document.getProject() : null;
-		Page page = (project != null) ? project.getPage() : null;
+		Page page = (document != null) ? document.getPage() : null;
 		if (page != null) {
 			int index = page.getIndex();
 			switch (keyCode) {
@@ -334,10 +327,9 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	public void keyReleased(KeyEvent e) {
 		String uuid = (String) rectangleList.getSelectedValue();
 		Document document = (this.model != null) ? this.model.getDocument() : null;
-		Project project = (document != null) ? document.getProject() : null;
-		Page page = (project != null) ? project.getPage() : null;
+		Page page = (document != null) ? document.getPage() : null;
 		if (page != null && !uuid.equals(page.getFile().getShape().uuid)) {
-			project.getPage().getFile().setShape(uuid);
+			document.getPage().getFile().setShape(uuid);
 			this.init();
 			this.getParent().repaint();
 		}
@@ -688,8 +680,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 		Text text = new Text();
 		text.value = value;
 		Document document = (this.model != null) ? this.model.getDocument() : null;
-		Project project = (document != null) ? document.getProject() : null;
-		Page page = (project != null) ? project.getPage() : null;
+		Page page = (document != null) ? document.getPage() : null;
 		Shape shape = (page != null) ? page.getFile().getShape() : null;
 		if (shape != null) {
 			shape.addText(text);
@@ -703,8 +694,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 		boolean flag = this.textValueDefaultCheckBox.isSelected();
 		if (flag) {
 			Document document = (this.model != null) ? this.model.getDocument() : null;
-			Project project = (document != null) ? document.getProject() : null;
-			Page page = (project != null) ? project.getPage() : null;
+			Page page = (document != null) ? document.getPage() : null;
 			Shape shape = (page != null) ? page.getFile().getShape() : null;
 			if (shape != null) {
 				this.textValueComboBox.setSelectedItem(shape.getDefaultText().value);
@@ -719,8 +709,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	private void deleteRectangleButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_deleteRectangleButtonActionPerformed
 		int index = this.rectangleList.getSelectedIndex();
 		Document document = (this.model != null) ? this.model.getDocument() : null;
-		Project project = (document != null) ? document.getProject() : null;
-		Page page = (project != null) ? project.getPage() : null;
+		Page page = (document != null) ? document.getPage() : null;
 		page.getShapeList().remove(index);
 		this.init();
 		((MainFrame) this.getParent()).repaint();
@@ -729,8 +718,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	private void applyUnitButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_applyUnitButtonActionPerformed
 		logger.info("applyUnitButtonActionPerformed(...)");
 		Document document = (this.model != null) ? this.model.getDocument() : null;
-		Project project = (document != null) ? document.getProject() : null;
-		Page page = (project != null) ? project.getPage() : null;
+		Page page = (document != null) ? document.getPage() : null;
 		Shape shape = (page != null) ? page.getFile().getShape() : null;
 		Data data = (shape != null) ? shape.getData() : null;
 		if (data != null) {
@@ -760,17 +748,17 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	}// GEN-LAST:event_applyUnitButtonActionPerformed
 
 	private void rectangleButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_rectangleButtonActionPerformed
-		this.model.variable.rectangle = true;
-		this.model.variable.ellipse = false;
+		this.model.document.state.rectangle = true;
+		this.model.document.state.ellipse = false;
 	}// GEN-LAST:event_rectangleButtonActionPerformed
 
 	private void ellipseButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_ellipseButtonActionPerformed
-		this.model.variable.rectangle = false;
-		this.model.variable.ellipse = true;
+		this.model.document.state.rectangle = false;
+		this.model.document.state.ellipse = true;
 	}// GEN-LAST:event_ellipseButtonActionPerformed
 
 	private void setTextButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_setTextButtonActionPerformed
-		Shape shape = this.model.getDocument().getProject().getPage().getShape();
+		Shape shape = this.model.getDocument().getPage().getShape();
 		Data data = (shape != null) ? shape.data : null;
 		Text text = (data != null) ? data.text : null;
 		String value = (String) this.textValueComboBox.getSelectedItem();
@@ -786,8 +774,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 		//Executes the latest instructions added to the text field.
 		String value = this.scriptTextArea.getText();
 		Document document = (this.model != null) ? this.model.getDocument() : null;
-		Project project = (document != null) ? document.getProject() : null;
-		Page page = (project != null) ? project.getPage() : null;
+		Page page = (document != null) ? document.getPage() : null;
 		if(page != null) {
 			page.script.value+=value;
 			this.scriptTextArea.setText("");
@@ -801,7 +788,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 //		String value = this.scriptTextArea.getText();
 //		Document document = (this.model != null) ? this.model.getDocument() : null;
 //		Project project = (document != null) ? document.getProject() : null;
-//		Page page = (project != null) ? project.getPage() : null;
+//		Page page = (document != null) ? document.getPage() : null;
 //		if(page != null) {
 //			page.script.value+=value;
 //			this.scriptTextArea.setText("");
@@ -813,8 +800,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_resetButtonActionPerformed
 		logger.info("resetButtonActionPerformed()");
 		Document document = (this.model != null) ? this.model.getDocument() : null;
-		Project project = (document != null) ? document.getProject() : null;
-		Page page = (project != null) ? project.getPage() : null;
+		Page page = (document != null) ? document.getPage() : null;
 		Script script = (page != null) ? page.script : null;
 		if (page != null && script != null) {
 			this.scriptTextArea.setText(script.value);

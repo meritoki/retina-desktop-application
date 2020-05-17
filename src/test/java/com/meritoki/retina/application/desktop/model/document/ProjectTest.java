@@ -1,22 +1,22 @@
 package com.meritoki.retina.application.desktop.model.document;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.File;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
-import com.meritoki.app.desktop.retina.model.document.Project;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 
 class ProjectTest {
 
-	static Project project = null;
+	static Document project = null;
 	static String pageZeroUUID = null;
 	static String pageOneUUID = null;
 	static String pageTwoUUID = null;
@@ -32,7 +32,7 @@ class ProjectTest {
 
 	@BeforeAll
 	public static void initialize() {
-		project = new Project();
+		project = new Document();
 		Page page = new Page();
 		File file = new File("./data/image", "01.jpg");
 		page.addFile(file);

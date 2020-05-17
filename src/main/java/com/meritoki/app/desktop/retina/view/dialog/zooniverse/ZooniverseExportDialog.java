@@ -22,12 +22,13 @@ import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
-import com.meritoki.app.desktop.retina.model.ModelPrototype;
+import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Credential;
@@ -35,13 +36,7 @@ import com.meritoki.app.desktop.retina.model.provider.zooniverse.Project;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.SubjectSet;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Workflow;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Zooniverse;
-import com.meritoki.app.desktop.retina.model.provider.zooniverse.ZooniverseProvider;
 import com.meritoki.app.desktop.retina.view.dialog.LoadDialog;
-import com.meritoki.app.desktop.retina.view.frame.MainFrame;
-import com.meritoki.app.desktop.retina.view.window.Load;
-
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 /**
  *
@@ -51,8 +46,9 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
 
     private static final long serialVersionUID = 3200033012988617201L;
     private static Logger logger = LogManager.getLogger(ZooniverseExportDialog.class.getName());
-    public ModelPrototype model;
+    public Model model;
     public LoadDialog loadDialog;
+    public Zooniverse zooniverse;
 
     /**
      * Instantiate new Zooniverse Export Dialog
@@ -79,7 +75,7 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
         });
     }
 
-    public void setModel(ModelPrototype model) {
+    public void setModel(Model model) {
         logger.debug("setModel(" + model + ")");
         this.model = model;
         this.init();
@@ -92,16 +88,15 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
     }
 
     public void initZooniverse() {
-        for (Provider provider : this.model.providerList) {
-            if (provider instanceof ZooniverseProvider) {
-                Zooniverse zooniverse = ((ZooniverseProvider) provider).zooniverse;
-                this.model.variable.zooniverse = zooniverse;
+        for (Provider provider : this.model.getSystem().providerList) {
+            if (provider instanceof Zooniverse) {
+                this.zooniverse = (Zooniverse) provider;
             }
         }
     }
 
     public void initComboBox() {
-        List<Project> projectList = (this.model.variable.zooniverse != null) ? this.model.variable.zooniverse.getProjectList() : null;
+        List<Project> projectList = (this.zooniverse != null) ? this.zooniverse.getProjectList() : null;
         this.initProjectComboBox(projectList);
         this.initSearchProjectComboBox(new ArrayList<Project>());
         this.initProjectWorkflowComboBox(new ArrayList<Workflow>());
@@ -426,7 +421,6 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
     private void addNewProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewProjectActionPerformed
         String title = this.projectTitleTextField.getText();
         String description = this.projectDescriptionTextField.getText();
-        Zooniverse zooniverse = this.model.variable.zooniverse;
         if (zooniverse != null) {
             Project project = new Project(title, description);
             zooniverse.createProject(project);
@@ -438,7 +432,6 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
         Credential credential = new Credential();
         credential.password = this.passwordTextField.getText();
         credential.userName = this.userNameTextField.getText();
-        Zooniverse zooniverse = this.model.variable.zooniverse;
         if (zooniverse != null) {
             zooniverse.setCredential(credential);
             zooniverse.setConfig();
@@ -447,12 +440,11 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
 
     private void findProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findProjectButtonActionPerformed
         String query = this.projectSearchTextField.getText().trim();
-        Zooniverse zooniverse = this.model.variable.zooniverse;
         if (zooniverse != null) {
             if (!query.isEmpty()) {
                 this.showLoad();
-                this.model.variable.projectList = zooniverse.getProjectList(query);
-                this.initSearchProjectComboBox(this.model.variable.projectList);
+               	this.zooniverse.projectList = zooniverse.getProjectList(query);
+                this.initSearchProjectComboBox(this.zooniverse.projectList);
                 this.hideLoad();
             } else {
                 JOptionPane.showMessageDialog(this, "Search query is empty");
@@ -466,11 +458,10 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
      * @param evt
      */
     private void addProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProjectButtonActionPerformed
-        Zooniverse zooniverse = this.model.variable.zooniverse;
         if (zooniverse != null) {
             String searchProjectName = (String) this.searchProjectComboBox.getSelectedItem();
-            if (this.model.variable.projectList != null) {
-                for (Project p : this.model.variable.projectList) {
+            if (this.zooniverse.projectList != null) {
+                for (Project p : this.zooniverse.projectList) {
                     if (p.name.equals(searchProjectName)) {
                         zooniverse.addProject(p);
                         break;
@@ -482,7 +473,6 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_addProjectButtonActionPerformed
 
     private void updateProjectWorkflowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateProjectWorkflowButtonActionPerformed
-        Zooniverse zooniverse = this.model.variable.zooniverse;
         if (zooniverse != null) {
             this.showLoad();
             String projectName = (String) this.projectComboBox.getSelectedItem();
@@ -502,9 +492,8 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
         String subjectSetTitle = this.subjectSetNameTextField.getText();
         String projectName = (String) this.projectComboBox.getSelectedItem();
         String workflowTitle = (String) this.projectWorkflowComboBox.getSelectedItem();
-        Zooniverse zooniverse = this.model.variable.zooniverse;
         SubjectSet subjectSet = new SubjectSet();
-        List<Shape> shapeList = this.model.getDocument().getProject().getShapeList();
+        List<Shape> shapeList = this.model.getDocument().getShapeList();
         subjectSet.title = subjectSetTitle;
         if (zooniverse != null) {
             this.showLoad();

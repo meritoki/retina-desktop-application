@@ -20,7 +20,8 @@ import javax.swing.JOptionPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.model.ModelPrototype;
+import com.meritoki.app.desktop.retina.controller.user.UserController;
+import com.meritoki.app.desktop.retina.model.Model;
 
 /**
  *
@@ -29,7 +30,7 @@ import com.meritoki.app.desktop.retina.model.ModelPrototype;
 public class UserLoginDialog extends javax.swing.JDialog {
     private static Logger logger = LogManager.getLogger(UserLoginDialog.class.getName());
     
-    private ModelPrototype model;
+    private Model model;
     private UserRegisterDialog registerDialog;
     /**
      * Creates new form Login
@@ -43,7 +44,7 @@ public class UserLoginDialog extends javax.swing.JDialog {
      * Function set Model for instance.
      * @param model
      */
-    public void setModel(ModelPrototype model){
+    public void setModel(Model model){
         logger.debug("setModel("+model+")");
         this.model = model;
         this.init();
@@ -163,7 +164,8 @@ public class UserLoginDialog extends javax.swing.JDialog {
         String userName = this.userNameTextField.getText();
         String password = new String(this.userPasswordField.getPassword());
 //        User user = new User();
-        if(this.model.loginUser(userName, password)) {
+        UserController userController = new UserController(this.model);
+        if(userController.loginUser(userName, password)) {
         	JOptionPane.showMessageDialog(this, "Welcome");
         	this.setVisible(false);
         } else {
@@ -178,7 +180,8 @@ public class UserLoginDialog extends javax.swing.JDialog {
     private void skipButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_skipButtonActionPerformed
         String userName = "anonymous";
         String password = "anonymous";
-        if(this.model.loginUser(userName, password)) {
+        UserController userController = new UserController(this.model);
+        if(userController.loginUser(userName, password)) {
         	JOptionPane.showMessageDialog(this, "Welcome");
         	this.setVisible(false);
         } else {

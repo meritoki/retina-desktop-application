@@ -9,8 +9,12 @@ import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.type.TypeReference;
 
+import com.meritoki.app.desktop.retina.controller.Controller;
+import com.meritoki.app.desktop.retina.controller.client.ClientController;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
-import com.meritoki.app.desktop.retina.model.User;
+import com.meritoki.app.desktop.retina.controller.security.BCryptController;
+import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.document.user.User;
 
 /**
  * User controller is responsible for loading the users 
@@ -20,7 +24,7 @@ import com.meritoki.app.desktop.retina.model.User;
  * @author jorodriguez
  *
  */
-public class UserController {
+public class UserController extends Controller {
 	
 	public static void main(String[] args) {
 		List<User> userList = new ArrayList<>();
@@ -35,6 +39,10 @@ public class UserController {
 	private static Logger logger = LogManager.getLogger(UserController.class.getName());
 	public static String filePath = NodeController.getRetinaHome()+NodeController.getSeperator();
 	public static String fileName = "users.json";
+	
+	public UserController(Model model) {
+		super(model);
+	}
 	
 	public static void save(Object object) {
 		logger.info("save()");
@@ -51,5 +59,29 @@ public class UserController {
 		List<User> userList = null;
 		userList = (List<User>)NodeController.openJson(new java.io.File(filePath+"/"+fileName), new TypeReference<List<User>>(){});
 		return userList;
+	}
+	
+
+	public boolean loginUser(String userName, String password) {
+		boolean flag = false;
+		if(ClientController.userClient.checkHealth()) {
+			User user = new User(userName, password);
+			flag = ClientController.userClient.login(user);
+		} else {
+			for (User u : model.system.userList) {
+				if (u.name.equals(userName)) {
+					if (BCryptController.verifyHash(password, u.hash)) {
+						flag = true;
+						this.model.system.user = u;
+					}
+				}
+			}
+		}
+		return flag;
+	}
+
+	public void registerUser(User user) {
+		this.model.system.userList.add(user);
+		UserController.save(this.model.system.userList);
 	}
 }

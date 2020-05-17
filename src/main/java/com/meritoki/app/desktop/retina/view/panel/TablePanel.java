@@ -17,17 +17,15 @@ package com.meritoki.app.desktop.retina.view.panel;
 
 import java.awt.Graphics;
 
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.controller.parser.Parser;
-import com.meritoki.app.desktop.retina.model.ModelPrototype;
+import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Page;
-import com.meritoki.app.desktop.retina.model.document.Project;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 /**
@@ -36,8 +34,12 @@ import com.meritoki.app.desktop.retina.view.frame.MainFrame;
  */
 public class TablePanel extends javax.swing.JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4834508823328218806L;
 	private static Logger logger = LogManager.getLogger(TablePanel.class.getName());
-	private ModelPrototype model = null;
+	private Model model = null;
 	private MainFrame main = null;
 
 	/**
@@ -51,7 +53,7 @@ public class TablePanel extends javax.swing.JPanel {
 		this.main = main;
 	}
 
-	public void setModel(ModelPrototype model) {
+	public void setModel(Model model) {
 		logger.debug("setModel(" + model + ")");
 		this.model = model;
 		this.init();
@@ -65,8 +67,7 @@ public class TablePanel extends javax.swing.JPanel {
 		logger.info("initDataTable()");
 		Parser parser = new Parser();
 		Document document = (this.model != null) ? this.model.getDocument() : null;
-		Project project = (document != null) ? document.getProject() : null;
-		Page page = (project != null) ? project.getPage() : null;
+		Page page = (document != null) ? document.getPage() : null;
 		if (page != null) {
 			logger.info("initDataTable() page");
 //			Object[][] objectMatrix = parser.parseData(page.getShapeMatrixShapeList());

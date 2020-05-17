@@ -45,7 +45,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meritoki.app.desktop.retina.controller.client.json.File;
 import com.meritoki.app.desktop.retina.controller.client.json.Network;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
-import com.meritoki.app.desktop.retina.model.User;
+import com.meritoki.app.desktop.retina.model.document.user.User;
 
 public class VisionClient {
 

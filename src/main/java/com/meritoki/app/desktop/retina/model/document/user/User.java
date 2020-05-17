@@ -1,4 +1,4 @@
-package com.meritoki.app.desktop.retina.model;
+package com.meritoki.app.desktop.retina.model.document.user;
 
 import java.util.UUID;
 

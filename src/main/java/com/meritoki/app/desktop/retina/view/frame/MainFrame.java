@@ -25,7 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.controller.document.DocumentController;
-import com.meritoki.app.desktop.retina.model.ModelPrototype;
+import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.view.dialog.ImageDialog;
 import com.meritoki.app.desktop.retina.view.dialog.OpenDialog;
@@ -49,7 +49,7 @@ public final class MainFrame extends JFrame {
      */
     private static final long serialVersionUID = 4699683145704846741L;
     private static Logger logger = LogManager.getLogger(MainFrame.class.getName());
-    public ModelPrototype model = null;
+    public Model model = null;
     public UserLoginDialog loginDialog = new UserLoginDialog(this, false);
     public UserRegisterDialog registerDialog = new UserRegisterDialog(this, false);
     public OpenDialog openDialog = null;
@@ -61,7 +61,7 @@ public final class MainFrame extends JFrame {
     public ZooniverseImportDialog zooniverseImportDialog = new ZooniverseImportDialog(this, false);
     public Load load;
 
-    public MainFrame(ModelPrototype model) {
+    public MainFrame(Model model) {
         this.initComponents();
         this.setModel(model);
         this.initIconImage();
@@ -75,7 +75,7 @@ public final class MainFrame extends JFrame {
         this.setIconImage(image);
     }
 
-    public void setModel(ModelPrototype model) {
+    public void setModel(Model model) {
         logger.debug("setModel(" + model + ")");
         this.model = model;
         //Panel
@@ -92,9 +92,9 @@ public final class MainFrame extends JFrame {
         this.registerDialog.setLoginDialog(this.loginDialog);
         this.loginDialog.setModel(this.model);
         this.loginDialog.setRegisterDialog(this.registerDialog);
-        if (this.model.variable.newUser) {
+        if (this.model.system.newUser) {
             this.registerDialog.setVisible(true);
-        } else if (this.model.variable.loginUser) {
+        } else if (this.model.system.loginUser) {
             this.loginDialog.setVisible(true);
         }
     }
@@ -348,15 +348,15 @@ public final class MainFrame extends JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void newMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMenuItemActionPerformed
-        this.model.setDocument(new Document());
-        this.model.variable.newDocument = true;
+        this.model.document = (new Document());
+        this.model.system.newDocument = true;
     }//GEN-LAST:event_newMenuItemActionPerformed
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
-        if (this.model.variable.newDocument) {
+        if (this.model.system.newDocument) {
             this.saveAsDialog = new com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog(this, false);
         } else {
-            DocumentController.save(model.variable.file, this.model.getDocument());
+            DocumentController.save(model.system.file, this.model.document);
         }
 
     }//GEN-LAST:event_saveMenuItemActionPerformed
