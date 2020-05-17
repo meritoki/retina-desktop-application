@@ -48,10 +48,6 @@ public class TablePanel extends javax.swing.JPanel {
 	public TablePanel() {
 		initComponents();
 	}
-	
-	public void setMain(MainFrame main) {
-		this.main = main;
-	}
 
 	public void setModel(Model model) {
 		logger.debug("setModel(" + model + ")");

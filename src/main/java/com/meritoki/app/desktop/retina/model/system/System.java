@@ -17,12 +17,12 @@ import com.meritoki.app.desktop.retina.model.provider.zooniverse.Zooniverse;
 import com.meritoki.app.desktop.retina.model.vendor.Vendor;
 
 public class System {
+	@JsonIgnore
+	public Properties properties = null;
 	@JsonProperty
 	public List<Provider> providerList = new ArrayList<>();
 	@JsonProperty
 	public List<Vendor> vendorList = new ArrayList<>();
-	@JsonIgnore
-	public Properties properties = null;
 	@JsonIgnore
 	public List<User> userList = new ArrayList<User>();
 	@JsonIgnore

@@ -26,7 +26,11 @@ import com.meritoki.app.desktop.retina.model.Model;
  */
 public class DocumentPanel extends javax.swing.JPanel {
 
-    private static Logger logger = LogManager.getLogger(DocumentPanel.class.getName());
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -4686022365967082684L;
+	private static Logger logger = LogManager.getLogger(DocumentPanel.class.getName());
     private Model model = null;
 
     /**

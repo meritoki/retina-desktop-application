@@ -51,7 +51,6 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 
 	private static final long serialVersionUID = 6483831845668642285L;
 	private static Logger logger = LogManager.getLogger(Data.class.getName());
-	private MainFrame main = null;
 	private Model model = null;
 
 	/**
@@ -62,15 +61,6 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 		this.setOpaque(true);
 		this.setBackground(Color.white);
 
-	}
-
-	/**
-	 * Set the parent component Main
-	 * 
-	 * @param main
-	 */
-	public void setMain(MainFrame main) {
-		this.main = main;
 	}
 
 	/**

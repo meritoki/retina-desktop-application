@@ -86,9 +86,9 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 	 * Need to refactor this method so that it is much more simple
 	 */
 	@Override
-	protected void paintComponent(Graphics graphics) {
-		logger.trace("paintComponent(" + graphics + ")");
-		super.paintComponent(graphics);
+	public void paint(Graphics graphics) {
+		logger.trace("paint(" + graphics + ")");
+		super.paint(graphics);
 		if (this.model != null) {
 			Graphics2D graphics2D = (Graphics2D) graphics.create();
 			Document document = (this.model != null) ? this.model.getDocument() : null;
