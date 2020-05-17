@@ -22,18 +22,18 @@ import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.controller.document.DocumentController;
 import com.meritoki.app.desktop.retina.model.Model;
-import com.meritoki.app.desktop.retina.view.frame.Main;
+import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 /**
  *
  * @author osvaldo.rodriguez
  */
-public class Open extends javax.swing.JDialog {
+public class OpenDialog extends javax.swing.JDialog {
 
 	/**
 	 *
 	 */
-	private static Logger logger = LogManager.getLogger(Open.class.getName());
+	private static Logger logger = LogManager.getLogger(OpenDialog.class.getName());
 	private static final long serialVersionUID = 6241323189102604811L;
 	private Model model = null;
 
@@ -43,7 +43,7 @@ public class Open extends javax.swing.JDialog {
 	 * @param parent
 	 * @param model
 	 */
-	public Open(java.awt.Frame parent, boolean flag) {
+	public OpenDialog(java.awt.Frame parent, boolean flag) {
 		super(parent, flag);
 		this.initComponents();
                 this.result();
@@ -52,14 +52,14 @@ public class Open extends javax.swing.JDialog {
 	public void result() {
         int result = this.openFileChooser.showOpenDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
-            Model model = ((Main)this.getParent()).model;
+            Model model = ((MainFrame)this.getParent()).model;
             model.variable.file = this.openFileChooser.getSelectedFile();
             if(model != null) {
-                ((Main)this.getParent()).showLoad();
+                ((MainFrame)this.getParent()).showLoad();
 	            model.setDocument(DocumentController.open(model.variable.file));
-	            ((Main) this.getParent()).init();
-	            ((Main) this.getParent()).repaint();
-                ((Main)this.getParent()).disposeLoad();
+	            ((MainFrame) this.getParent()).init();
+	            ((MainFrame) this.getParent()).repaint();
+                ((MainFrame)this.getParent()).disposeLoad();
             }
             this.setVisible(false);
         } else if (result == JFileChooser.CANCEL_OPTION) {
@@ -121,20 +121,21 @@ public class Open extends javax.swing.JDialog {
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(Open.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(OpenDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(Open.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(OpenDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(Open.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(OpenDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(Open.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(OpenDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
+		// </editor-fold>
 		// </editor-fold>
 
 		/* Create and display the dialog */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				Open dialog = new Open(new javax.swing.JFrame(), true);
+				OpenDialog dialog = new OpenDialog(new javax.swing.JFrame(), true);
 				dialog.addWindowListener(new java.awt.event.WindowAdapter() {
 					@Override
 					public void windowClosing(java.awt.event.WindowEvent e) {

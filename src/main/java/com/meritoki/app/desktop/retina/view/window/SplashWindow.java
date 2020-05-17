@@ -31,8 +31,8 @@ import javax.swing.SwingUtilities;
  *
  * @author osvaldo.rodriguez
  */
-public class Splash extends JWindow {
-	public Splash(String filename, JFrame f, int waitTime) {
+public class SplashWindow extends JWindow {
+	public SplashWindow(String filename, JFrame f, int waitTime) {
 		super(f);
 		JLabel l = new JLabel(new ImageIcon(getClass().getResource(filename)));
 		getContentPane().add(l, BorderLayout.CENTER);

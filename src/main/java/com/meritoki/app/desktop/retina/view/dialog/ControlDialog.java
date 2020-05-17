@@ -21,16 +21,16 @@ import org.apache.logging.log4j.Logger;
  *
  * @author jorodriguez
  */
-public class Control extends javax.swing.JDialog {
+public class ControlDialog extends javax.swing.JDialog {
 
-	private static Logger logger = LogManager.getLogger(Control.class.getName());
+	private static Logger logger = LogManager.getLogger(ControlDialog.class.getName());
 //	public Model model = null;
 //	public Main main = null;
 //
 	/**
 	 * Creates new form Control
 	 */
-	public Control(java.awt.Frame parent, boolean modal) {
+	public ControlDialog(java.awt.Frame parent, boolean modal) {
 		super(parent, modal);
 		this.initComponents();
 	}
@@ -397,20 +397,21 @@ public class Control extends javax.swing.JDialog {
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(Control.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(ControlDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(Control.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(ControlDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(Control.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(ControlDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(Control.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(ControlDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
+		// </editor-fold>
 		// </editor-fold>
 
 		/* Create and display the dialog */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				Control dialog = new Control(new javax.swing.JFrame(), true);
+				ControlDialog dialog = new ControlDialog(new javax.swing.JFrame(), true);
 				dialog.addWindowListener(new java.awt.event.WindowAdapter() {
 					@Override
 					public void windowClosing(java.awt.event.WindowEvent e) {

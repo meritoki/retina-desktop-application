@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 osvaldo.rodriguez.
+ * Copyright 2019 jorodriguez.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,51 +15,18 @@
  */
 package com.meritoki.app.desktop.retina.view.dialog;
 
-import java.io.File;
-
-import javax.swing.JFileChooser;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.meritoki.app.desktop.retina.controller.document.DocumentController;
-import com.meritoki.app.desktop.retina.model.Model;
-import com.meritoki.app.desktop.retina.view.frame.Main;
-
 /**
  *
- * @author osvaldo.rodriguez
+ * @author jorodriguez
  */
-public class SaveAs extends javax.swing.JDialog {
+public class TableDialog extends javax.swing.JDialog {
 
-    private static Logger logger = LogManager.getLogger(SaveAs.class.getName());
-    private Model model = null;
     /**
-     * Creates new form Save
+     * Creates new form Table
      */
-    public SaveAs(java.awt.Frame parent, boolean flag) {
-        super(parent, flag);
-        this.initComponents();
-        this.saveFileChooser.setSelectedFile(new File("Untitled.json"));
-        this.result();
-    }
-    
-    public void result() {
-        int result = this.saveFileChooser.showSaveDialog(null);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            Model model = ((Main)this.getParent()).model;
-            model.variable.file = this.saveFileChooser.getSelectedFile();
-            if(model != null) {
-	            DocumentController.save(model.variable.file, model.getDocument());
-	            ((Main) this.getParent()).init();
-	            ((Main) this.getParent()).repaint();
-            }
-            model.variable.newDocument = false;
-            this.setVisible(false);
-        } else if (result == JFileChooser.CANCEL_OPTION) {
-            logger.info("Cancel");
-            this.setVisible(false);
-        }
+    public TableDialog(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
+        initComponents();
     }
 
     /**
@@ -71,23 +38,17 @@ public class SaveAs extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        saveFileChooser = new javax.swing.JFileChooser();
-
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(saveFileChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(0, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(saveFileChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGap(0, 300, Short.MAX_VALUE)
         );
 
         pack();
@@ -110,13 +71,13 @@ public class SaveAs extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SaveAs.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TableDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SaveAs.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TableDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SaveAs.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TableDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SaveAs.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TableDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -124,7 +85,7 @@ public class SaveAs extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                SaveAs dialog = new SaveAs(new javax.swing.JFrame(), true);
+                TableDialog dialog = new TableDialog(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -137,7 +98,5 @@ public class SaveAs extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JFileChooser saveFileChooser;
     // End of variables declaration//GEN-END:variables
-
 }

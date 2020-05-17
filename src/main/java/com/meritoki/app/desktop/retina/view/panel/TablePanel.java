@@ -28,26 +28,26 @@ import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Project;
-import com.meritoki.app.desktop.retina.view.frame.Main;
+import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 /**
  *
  * @author osvaldo.rodriguez
  */
-public class Table extends javax.swing.JPanel {
+public class TablePanel extends javax.swing.JPanel {
 
-	private static Logger logger = LogManager.getLogger(Table.class.getName());
+	private static Logger logger = LogManager.getLogger(TablePanel.class.getName());
 	private Model model = null;
-	private Main main = null;
+	private MainFrame main = null;
 
 	/**
 	 * Creates new form Table
 	 */
-	public Table() {
+	public TablePanel() {
 		initComponents();
 	}
 	
-	public void setMain(Main main) {
+	public void setMain(MainFrame main) {
 		this.main = main;
 	}
 

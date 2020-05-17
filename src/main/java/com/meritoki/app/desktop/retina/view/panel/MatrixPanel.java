@@ -42,23 +42,23 @@ import com.meritoki.app.desktop.retina.model.document.Project;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.Text;
 import com.meritoki.app.desktop.retina.model.document.Unit;
-import com.meritoki.app.desktop.retina.view.frame.Main;
+import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 /**
  *
  * @author osvaldo.rodriguez
  */
-public class Matrix extends JPanel implements MouseListener, MouseWheelListener, KeyListener {
+public class MatrixPanel extends JPanel implements MouseListener, MouseWheelListener, KeyListener {
 
 	private static final long serialVersionUID = 6483831845668642285L;
 	private static Logger logger = LogManager.getLogger(Data.class.getName());
-	private Main main = null;
+	private MainFrame main = null;
 	private Model model = null;
 
 	/**
 	 * Instantiate new Matrix Panel
 	 */
-	public Matrix() {
+	public MatrixPanel() {
 		super();
 		this.setOpaque(true);
 		this.setBackground(Color.white);
@@ -70,7 +70,7 @@ public class Matrix extends JPanel implements MouseListener, MouseWheelListener,
 	 * 
 	 * @param main
 	 */
-	public void setMain(Main main) {
+	public void setMain(MainFrame main) {
 		this.main = main;
 	}
 

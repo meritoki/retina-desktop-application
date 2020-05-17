@@ -18,8 +18,8 @@ package com.meritoki.app.desktop.retina;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.view.frame.Main;
-import com.meritoki.app.desktop.retina.view.window.Splash;
+import com.meritoki.app.desktop.retina.view.frame.MainFrame;
+import com.meritoki.app.desktop.retina.view.window.SplashWindow;
 
 public class Desktop {
 
@@ -27,8 +27,8 @@ public class Desktop {
 
     public static void main(String args[]) {
         logger.info("Starting Retina Desktop Application..."); 
-        final Main main = new Main();
-        final Splash splash = new Splash("/splash.png", main, 4000);
+        final MainFrame main = new MainFrame();
+        final SplashWindow splash = new SplashWindow("/splash.png", main, 4000);
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {

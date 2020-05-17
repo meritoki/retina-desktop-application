@@ -24,15 +24,15 @@ import com.meritoki.app.desktop.retina.model.Model;
  *
  * @author osvaldo.rodriguez
  */
-public class Document extends javax.swing.JPanel {
+public class DocumentPanel extends javax.swing.JPanel {
 
-    private static Logger logger = LogManager.getLogger(Document.class.getName());
+    private static Logger logger = LogManager.getLogger(DocumentPanel.class.getName());
     private Model model = null;
 
     /**
      * Creates new form Document
      */
-    public Document() {
+    public DocumentPanel() {
         initComponents();
     }
 

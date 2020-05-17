@@ -40,12 +40,12 @@ import com.meritoki.app.desktop.retina.model.document.Script;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.Text;
 import com.meritoki.app.desktop.retina.model.document.Unit;
-import com.meritoki.app.desktop.retina.view.frame.Main;
+import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 /**
  * Class is used to interact with Shapes on a Page.
  */
-public class Selection extends javax.swing.JDialog implements MouseListener, KeyListener {
+public class SelectionDialog extends javax.swing.JDialog implements MouseListener, KeyListener {
 
 	/**
 	 * Serial Version UID
@@ -54,13 +54,13 @@ public class Selection extends javax.swing.JDialog implements MouseListener, Key
 	/**
 	 * Logger for class.
 	 */
-	static Logger logger = LogManager.getLogger(Selection.class.getName());
+	static Logger logger = LogManager.getLogger(SelectionDialog.class.getName());
 	/**
 	 * Model for class.
 	 */
 	private Model model = null;
 	
-	private Main main = null;
+	private MainFrame main = null;
 
 	/**
 	 * Creates new form Rectangle
@@ -68,10 +68,10 @@ public class Selection extends javax.swing.JDialog implements MouseListener, Key
 	 * @param parent
 	 * @param modal
 	 */
-	public Selection(java.awt.Frame parent, boolean modal) {
+	public SelectionDialog(java.awt.Frame parent, boolean modal) {
 		super(parent, modal);
 		this.setTitle("Selection");
-        this.main = (Main)this.getParent();
+        this.main = (MainFrame)this.getParent();
 		this.initComponents();
 		this.rectangleList.addMouseListener(this);
 		this.rectangleList.addKeyListener(this);
@@ -723,7 +723,7 @@ public class Selection extends javax.swing.JDialog implements MouseListener, Key
 		Page page = (project != null) ? project.getPage() : null;
 		page.getShapeList().remove(index);
 		this.init();
-		((Main) this.getParent()).repaint();
+		((MainFrame) this.getParent()).repaint();
 	}// GEN-LAST:event_deleteRectangleButtonActionPerformed
 
 	private void applyUnitButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_applyUnitButtonActionPerformed
@@ -845,14 +845,22 @@ public class Selection extends javax.swing.JDialog implements MouseListener, Key
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(Selection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(SelectionDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(Selection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(SelectionDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(Selection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(SelectionDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(Selection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+			java.util.logging.Logger.getLogger(SelectionDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
+		// </editor-fold>
+		// </editor-fold>
+		// </editor-fold>
+		// </editor-fold>
+		// </editor-fold>
+		// </editor-fold>
+		// </editor-fold>
+		// </editor-fold>
 		// </editor-fold>
 		// </editor-fold>
 		// </editor-fold>
@@ -865,7 +873,7 @@ public class Selection extends javax.swing.JDialog implements MouseListener, Key
 		/* Create and display the dialog */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				Selection dialog = new Selection(new javax.swing.JFrame(), true);
+				SelectionDialog dialog = new SelectionDialog(new javax.swing.JFrame(), true);
 				dialog.addWindowListener(new java.awt.event.WindowAdapter() {
 					@Override
 					public void windowClosing(java.awt.event.WindowEvent e) {

@@ -36,7 +36,7 @@ import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Project;
 import com.meritoki.app.desktop.retina.model.document.Shape;
-import com.meritoki.app.desktop.retina.view.frame.Main;
+import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 /**
  * Image extends JPanel and contains many of the functions and features for
@@ -45,14 +45,14 @@ import com.meritoki.app.desktop.retina.view.frame.Main;
  * @author jorodriguez
  *
  */
-public class Image extends JPanel implements MouseListener, MouseWheelListener, KeyListener {
+public class ImagePanel extends JPanel implements MouseListener, MouseWheelListener, KeyListener {
 
 	private static final long serialVersionUID = 3989576625299550361L;
-	private static Logger logger = LogManager.getLogger(Image.class.getName());
-	private Main main = null;
+	private static Logger logger = LogManager.getLogger(ImagePanel.class.getName());
+	private MainFrame main = null;
 	private Model model = null;
 
-	public Image() {
+	public ImagePanel() {
 		super();
 		this.setBackground(Color.black);
 		this.addMouseListener(this);
@@ -60,7 +60,7 @@ public class Image extends JPanel implements MouseListener, MouseWheelListener, 
 		this.addKeyListener(this);
 	}
 
-	public void setMain(Main main) {
+	public void setMain(MainFrame main) {
 		this.main = main;
 	}
 

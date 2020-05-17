@@ -36,7 +36,7 @@ import com.meritoki.app.desktop.retina.model.provider.zooniverse.SubjectSet;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Workflow;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Zooniverse;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.ZooniverseProvider;
-import com.meritoki.app.desktop.retina.view.frame.Main;
+import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 import com.meritoki.app.desktop.retina.view.window.Load;
 
 import javax.swing.JFrame;
@@ -45,16 +45,16 @@ import javax.swing.JFrame;
  *
  * @author osvaldo.rodriguez
  */
-public class Export extends javax.swing.JDialog {
+public class ZooniverseExportDialog extends javax.swing.JDialog {
 
 	private static final long serialVersionUID = 3200033012988617201L;
-	private static Logger logger = LogManager.getLogger(Export.class.getName());
+	private static Logger logger = LogManager.getLogger(ZooniverseExportDialog.class.getName());
 	public Model model;
 
     /**
      * Instantiate new Zooniverse Export Dialog
      */
-    public Export(java.awt.Frame parent, boolean modal) {
+    public ZooniverseExportDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
@@ -430,10 +430,10 @@ public class Export extends javax.swing.JDialog {
         Zooniverse zooniverse = this.model.variable.zooniverse;
         if (zooniverse != null) {
             if(!query.isEmpty()) {
-                ((Main)this.getParent()).showLoad();
+                ((MainFrame)this.getParent()).showLoad();
                 this.model.variable.projectList = zooniverse.getProjectList(query);
                 this.initSearchProjectComboBox(this.model.variable.projectList);
-                ((Main)this.getParent()).disposeLoad();
+                ((MainFrame)this.getParent()).disposeLoad();
             } else {
                 JOptionPane.showMessageDialog(this, "Search query is empty");
             }
@@ -463,7 +463,7 @@ public class Export extends javax.swing.JDialog {
     private void updateProjectWorkflowButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateProjectWorkflowButtonActionPerformed
     	Zooniverse zooniverse = this.model.variable.zooniverse;
         if (zooniverse != null) {
-            ((Main)this.getParent()).showLoad();
+            ((MainFrame)this.getParent()).showLoad();
             String projectName = (String) this.projectComboBox.getSelectedItem();
             for (Project p : zooniverse.getProjectList()) {
                 if (p.name.equals(projectName)) {
@@ -472,7 +472,7 @@ public class Export extends javax.swing.JDialog {
                     break;
                 }
             }
-            ((Main)this.getParent()).disposeLoad();
+            ((MainFrame)this.getParent()).disposeLoad();
         }	
     }//GEN-LAST:event_updateProjectWorkflowButtonActionPerformed
 
@@ -486,7 +486,7 @@ public class Export extends javax.swing.JDialog {
         List<Shape> shapeList = this.model.getDocument().getProject().getShapeList();
         subjectSet.title = subjectSetTitle;
         if (zooniverse != null) {
-            ((Main)this.getParent()).showLoad();
+            ((MainFrame)this.getParent()).showLoad();
             zooniverse.generateManifest(this.getSubjectSetPath()+timeStamp, shapeList);
             Project project = zooniverse.getProject(projectName);
             if(project != null) {
@@ -495,7 +495,7 @@ public class Export extends javax.swing.JDialog {
                 zooniverse.uploadSubjectSet(subjectSet, this.getSubjectSetPath()+timeStamp, "manifest.csv");
                 zooniverse.workflowUploadSubjectSet(workflow, subjectSet);
             }
-            ((Main)this.getParent()).disposeLoad();
+            ((MainFrame)this.getParent()).disposeLoad();
         }
     }//GEN-LAST:event_uploadButtonActionPerformed
 

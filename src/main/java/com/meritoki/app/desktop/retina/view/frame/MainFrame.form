@@ -2,7 +2,7 @@
 
 <Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
-    <Component class="com.meritoki.app.desktop.retina.view.panel.Table" name="table1">
+    <Component class="com.meritoki.app.desktop.retina.view.panel.TablePanel" name="table1">
     </Component>
     <Menu class="javax.swing.JMenuBar" name="mainMenuBar">
       <SubComponents>
@@ -208,7 +208,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Container class="com.meritoki.app.desktop.retina.view.panel.Image" name="imagePanel">
+            <Container class="com.meritoki.app.desktop.retina.view.panel.ImagePanel" name="imagePanel">
 
               <Layout>
                 <DimensionLayout dim="0">
@@ -236,7 +236,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Container class="com.meritoki.app.desktop.retina.view.panel.Matrix" name="matrixPanel">
+            <Container class="com.meritoki.app.desktop.retina.view.panel.MatrixPanel" name="matrixPanel">
 
               <Layout>
                 <DimensionLayout dim="0">
@@ -264,11 +264,11 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="com.meritoki.app.desktop.retina.view.panel.Table" name="tablePanel">
+            <Component class="com.meritoki.app.desktop.retina.view.panel.TablePanel" name="tablePanel">
             </Component>
           </SubComponents>
         </Container>
-        <Container class="com.meritoki.app.desktop.retina.view.panel.Document" name="documentPanel">
+        <Container class="com.meritoki.app.desktop.retina.view.panel.DocumentPanel" name="documentPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Document">

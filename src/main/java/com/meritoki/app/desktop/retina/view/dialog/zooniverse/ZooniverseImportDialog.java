@@ -33,25 +33,25 @@ import com.meritoki.app.desktop.retina.model.provider.zooniverse.Credential;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Project;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Zooniverse;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.ZooniverseProvider;
-import com.meritoki.app.desktop.retina.view.frame.Main;
+import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 /**
  *
  * @author osvaldo.rodriguez
  */
-public class Import extends javax.swing.JDialog {
+public class ZooniverseImportDialog extends javax.swing.JDialog {
 
     /**
      *
      */
     private static final long serialVersionUID = 6833970920926871138L;
-    private static Logger logger = LogManager.getLogger(Import.class.getName());
+    private static Logger logger = LogManager.getLogger(ZooniverseImportDialog.class.getName());
     public Model model;
 
     /**
      * Instantiate neew Zooniverse Import Dialog
      */
-    public Import(java.awt.Frame parent, boolean modal) {
+    public ZooniverseImportDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
@@ -223,10 +223,10 @@ public class Import extends javax.swing.JDialog {
         Zooniverse zooniverse = this.model.variable.zooniverse;
         if (zooniverse != null) {
             if (!query.isEmpty()) {
-                ((Main)this.getParent()).showLoad();
+                ((MainFrame)this.getParent()).showLoad();
                 this.model.variable.projectList = zooniverse.getProjectList(query);
                 this.initSearchProjectComboBox(this.model.variable.projectList);
-                ((Main)this.getParent()).disposeLoad();
+                ((MainFrame)this.getParent()).disposeLoad();
             } else {
                 JOptionPane.showMessageDialog(this, "Search query is empty");
             }
@@ -239,7 +239,7 @@ public class Import extends javax.swing.JDialog {
         if (zooniverse != null) {
             String searchProjectName = (String) this.searchProjectComboBox.getSelectedItem();
             if (this.model.variable.projectList != null) {
-                ((Main)this.getParent()).showLoad();
+                ((MainFrame)this.getParent()).showLoad();
                 for (Project p : this.model.variable.projectList) {
                     if (p.name.equals(searchProjectName)) {
 //                        zooniverse.downloadClassification(p, "./"+timeStamp + ".csv");
@@ -250,7 +250,7 @@ public class Import extends javax.swing.JDialog {
                         break;
                     }
                 }
-                ((Main)this.getParent()).disposeLoad();
+                ((MainFrame)this.getParent()).disposeLoad();
             }
         }
     }//GEN-LAST:event_importButtonActionPerformed
@@ -286,14 +286,18 @@ public class Import extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Import.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ZooniverseImportDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Import.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ZooniverseImportDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Import.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ZooniverseImportDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Import.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ZooniverseImportDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        // </editor-fold>
+        // </editor-fold>
+        // </editor-fold>
+        // </editor-fold>
         // </editor-fold>
         // </editor-fold>
         // </editor-fold>
@@ -302,7 +306,7 @@ public class Import extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                Import dialog = new Import(new javax.swing.JFrame(), true);
+                ZooniverseImportDialog dialog = new ZooniverseImportDialog(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

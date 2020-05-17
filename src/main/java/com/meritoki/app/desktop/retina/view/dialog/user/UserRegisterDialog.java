@@ -25,18 +25,18 @@ import com.meritoki.app.desktop.retina.model.User;
  *
  * @author jorodriguez
  */
-public class Register extends javax.swing.JDialog {
+public class UserRegisterDialog extends javax.swing.JDialog {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2547360091322488397L;
 	public Model model = null;
-	public Login login = null;
+	public UserLoginDialog login = null;
     /**
      * Creates new form Register
      */
-    public Register(java.awt.Frame parent, boolean modal) {
+    public UserRegisterDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
@@ -45,7 +45,7 @@ public class Register extends javax.swing.JDialog {
     	this.model = model;
     }
     
-    public void setLoginDialog(Login loginDialog) {
+    public void setLoginDialog(UserLoginDialog loginDialog) {
     	this.login = loginDialog;
     }
 
@@ -254,20 +254,21 @@ public class Register extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Register.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UserRegisterDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Register.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UserRegisterDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Register.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UserRegisterDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Register.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(UserRegisterDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                Register dialog = new Register(new javax.swing.JFrame(), true);
+                UserRegisterDialog dialog = new UserRegisterDialog(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

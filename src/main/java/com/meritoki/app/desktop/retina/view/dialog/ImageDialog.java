@@ -33,13 +33,13 @@ import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Project;
-import com.meritoki.app.desktop.retina.view.frame.Main;
+import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 /**
  *
  * @author osvaldo.rodriguez
  */
-public class Image extends javax.swing.JDialog implements MouseListener, KeyListener {
+public class ImageDialog extends javax.swing.JDialog implements MouseListener, KeyListener {
 
     /**
 	 * Serial Version UID
@@ -48,23 +48,23 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
 	/**
 	 * Logger for class.
 	 */
-	private static Logger logger = LogManager.getLogger(Image.class.getName());
+	private static Logger logger = LogManager.getLogger(ImageDialog.class.getName());
 	/**
 	 * Reference to Model class.
 	 */
     private Model model;
     
-    private Main main;
+    private MainFrame main;
     
     /**
      * Image dialog class.
      * @param parent
      * @param modal
      */
-    public Image(java.awt.Frame parent, boolean modal) {
+    public ImageDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         this.setTitle("Page");
-        this.main = (Main)this.getParent();
+        this.main = (MainFrame)this.getParent();
         this.initComponents();
         this.pageList.addMouseListener(this);
         this.pageList.addKeyListener(this);
@@ -195,7 +195,7 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
                 this.initLabel();
                 this.setPageListSelectedIndex(index);
                 this.getParent().repaint();
-                ((Main)this.getParent()).selectionDialog.init();
+                ((MainFrame)this.getParent()).selectionDialog.init();
 //                ((Main)this.getParent()).matrixDialog.init();
                 break;
             }
@@ -207,7 +207,7 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
                 this.initLabel();
                 this.setPageListSelectedIndex(index);
                 this.getParent().repaint();
-                ((Main)this.getParent()).selectionDialog.init();
+                ((MainFrame)this.getParent()).selectionDialog.init();
 //                ((Main)this.getParent()).matrixDialog.init();
                 break;
             }
@@ -230,7 +230,7 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
             project.setPage(uuid);
             this.initLabel();
             this.getParent().repaint();
-            ((Main)this.getParent()).selectionDialog.init();
+            ((MainFrame)this.getParent()).selectionDialog.init();
 //            ((Main)this.getParent()).matrixDialog.init();
         }
     }
@@ -469,21 +469,23 @@ public class Image extends javax.swing.JDialog implements MouseListener, KeyList
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Image.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ImageDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Image.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ImageDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Image.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ImageDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Image.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ImageDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                Image dialog = new Image(new javax.swing.JFrame(), true);
+                ImageDialog dialog = new ImageDialog(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
