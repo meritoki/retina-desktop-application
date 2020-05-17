@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,8 +14,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
-import com.meritoki.app.desktop.retina.controller.client.ClientController;
-import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.command.AddPage;
 import com.meritoki.app.desktop.retina.model.document.command.AddShape;
 import com.meritoki.app.desktop.retina.model.document.command.Command;
@@ -40,7 +37,7 @@ public class Document {
 	@JsonProperty
 	public String uuid = null;
 	@JsonProperty
-	public LinkedList<Event> stateStack = new LinkedList<>();
+	public LinkedList<Event> eventStack = new LinkedList<>();
 	@JsonProperty
 	public List<User> userList = new LinkedList<>();
 	@JsonProperty
@@ -49,7 +46,6 @@ public class Document {
 	public State state = new State();
 	@JsonIgnore
 	private final HashMap<String, Command> commandMap = new HashMap<>();
-	// Project Attributes
 	@JsonProperty
 	public List<Page> pageList = new ArrayList<>();
 	@JsonIgnore

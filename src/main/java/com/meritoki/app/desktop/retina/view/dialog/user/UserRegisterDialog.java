@@ -17,7 +17,7 @@ package com.meritoki.app.desktop.retina.view.dialog.user;
 
 import javax.swing.JOptionPane;
 
-import com.meritoki.app.desktop.retina.controller.security.BCryptController;
+import com.meritoki.app.desktop.retina.controller.security.SecurityController;
 import com.meritoki.app.desktop.retina.controller.user.UserController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.user.User;
@@ -213,7 +213,7 @@ public class UserRegisterDialog extends javax.swing.JDialog {
         }
         
         if(password.equals(confirmPassword)) {
-        	String hash = BCryptController.hash(confirmPassword, 11);
+        	String hash = SecurityController.hash(confirmPassword, 11);
         	user.hash = hash;
         }else {
         	message += "Passwords do not match\n";

@@ -261,4 +261,23 @@ public class NodeController {
 		}
 		return stringList;
 	}
+	
+	@JsonIgnore
+	public static Object toJson(String string, Class className) {
+		logger.info("toJson(" + string + ", " + className + ")");
+		Object object = null;
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
+		try {
+			object = mapper.readValue(string, className);
+			logger.info("opened...");
+		} catch (JsonGenerationException e) {
+			logger.error(e);
+		} catch (JsonMappingException e) {
+			logger.error(e);
+		} catch (IOException e) {
+			logger.error(e);
+		}
+		return object;
+	}
 }

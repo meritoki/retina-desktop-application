@@ -36,7 +36,6 @@ import com.meritoki.app.desktop.retina.view.dialog.user.UserLoginDialog;
 import com.meritoki.app.desktop.retina.view.dialog.user.UserRegisterDialog;
 import com.meritoki.app.desktop.retina.view.dialog.zooniverse.ZooniverseExportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.zooniverse.ZooniverseImportDialog;
-import com.meritoki.app.desktop.retina.view.window.Load;
 
 /**
  *
@@ -59,7 +58,6 @@ public final class MainFrame extends JFrame {
     public SelectionDialog selectionDialog = new SelectionDialog(this, false);
     public ZooniverseExportDialog zooniverseExportDialog = new ZooniverseExportDialog(this, false);
     public ZooniverseImportDialog zooniverseImportDialog = new ZooniverseImportDialog(this, false);
-    public Load load;
 
     public MainFrame(Model model) {
         this.initComponents();

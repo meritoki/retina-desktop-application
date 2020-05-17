@@ -9,7 +9,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
-import com.meritoki.app.desktop.retina.controller.security.BCryptController;
+import com.meritoki.app.desktop.retina.controller.security.SecurityController;
 import com.meritoki.app.desktop.retina.controller.user.UserController;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
@@ -53,7 +53,7 @@ public class System {
 			User user = new User();
 			user.name = "anonymous";
 			user.fullName = "anonymous";
-			user.hash = BCryptController.hash("anonymous", 11);
+			user.hash = SecurityController.hash("anonymous", 11);
 			user.email = "null";
 			this.userList.add(user);
 			UserController.save(this.userList);

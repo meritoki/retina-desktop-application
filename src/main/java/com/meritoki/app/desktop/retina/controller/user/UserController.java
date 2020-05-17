@@ -12,7 +12,7 @@ import org.codehaus.jackson.type.TypeReference;
 import com.meritoki.app.desktop.retina.controller.Controller;
 import com.meritoki.app.desktop.retina.controller.client.ClientController;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
-import com.meritoki.app.desktop.retina.controller.security.BCryptController;
+import com.meritoki.app.desktop.retina.controller.security.SecurityController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 
@@ -70,7 +70,7 @@ public class UserController extends Controller {
 		} else {
 			for (User u : model.system.userList) {
 				if (u.name.equals(userName)) {
-					if (BCryptController.verifyHash(password, u.hash)) {
+					if (SecurityController.verifyHash(password, u.hash)) {
 						flag = true;
 						this.model.system.user = u;
 					}

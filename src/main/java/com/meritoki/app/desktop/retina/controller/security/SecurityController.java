@@ -6,11 +6,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
 
-public class BCryptController {
-	private static Logger log = LogManager.getLogger(BCryptController.class.getName());
+public class SecurityController {
+	private static Logger log = LogManager.getLogger(SecurityController.class.getName());
     private final int logRounds;
 
-    public BCryptController(int logRounds) {
+    public SecurityController(int logRounds) {
         this.logRounds = logRounds;
     }
 
