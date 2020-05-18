@@ -20,21 +20,21 @@ public class AddShape extends Command {
     @Override // Command
     public void execute() {
     	logger.info("execute()");
-    	this.user = this.document.state.user;
-    	if(this.minimumSize(this.document.state.pressedPoint, this.document.state.releasedPoint, this.document.state.scale)) {
-			this.document.state.pressedShape = new Shape();
-			this.document.state.pressedShape.type = this.document.state.type;
-			this.document.state.pressedShape.setAddScale(this.document.state.scale);
-			this.document.state.pressedShape.setScale(this.document.state.scale);
-			this.document.state.pressedShape.pointList.add(new Point(this.document.state.pressedPoint));
-			this.document.state.pressedShape.pointList.add(new Point(this.document.state.releasedPoint));
-			this.document.state.pressedShape.normalizePointList();
-	    	this.document.getPage().addShape(this.document.state.pressedShape);
+    	this.user = this.document.cache.user;
+    	if(this.minimumSize(this.document.cache.pressedPoint, this.document.cache.releasedPoint, this.document.cache.scale)) {
+			this.document.cache.pressedShape = new Shape();
+			this.document.cache.pressedShape.type = this.document.cache.type;
+			this.document.cache.pressedShape.setAddScale(this.document.cache.scale);
+			this.document.cache.pressedShape.setScale(this.document.cache.scale);
+			this.document.cache.pressedShape.pointList.add(new Point(this.document.cache.pressedPoint));
+			this.document.cache.pressedShape.pointList.add(new Point(this.document.cache.releasedPoint));
+			this.document.cache.pressedShape.normalizePointList();
+	    	this.document.getPage().addShape(this.document.cache.pressedShape);
 			Operation operation = new Operation();
-			operation.object = new Shape(this.document.state.pressedShape);
+			operation.object = new Shape(this.document.cache.pressedShape);
 			operation.sign = 1;
 			operation.id = UUID.randomUUID().toString();
-			operation.uuid = this.document.state.pressedShape.uuid;
+			operation.uuid = this.document.cache.pressedShape.uuid;
 			this.operationList.push(operation);
     	} else {
     		logger.error("execute() shape size");

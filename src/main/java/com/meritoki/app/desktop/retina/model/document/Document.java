@@ -36,7 +36,7 @@ public class Document {
 	@JsonProperty
 	public Pattern pattern;
 	@JsonProperty
-	public State state = new State();
+	public Cache cache = new Cache();
 	@JsonProperty
 	public List<Layout> layoutList = new ArrayList<>();
 

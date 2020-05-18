@@ -421,21 +421,21 @@ public class ImageDialog extends javax.swing.JDialog implements MouseListener, K
     private void setPageListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setPageListActionPerformed
         //COMMAND
     	Document document = (this.model != null) ? this.model.getDocument() : null;
-    	document.pageList = document.state.pageList;
+    	document.pageList = document.cache.pageList;
         this.pageScriptTextArea.setText("");
     }//GEN-LAST:event_setPageListActionPerformed
 
     private void executeImageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeImageScriptButtonActionPerformed
         String value = this.pageScriptTextArea.getText();
         Document document = (this.model != null) ? this.model.getDocument() : null;
-        document.state.pageList = new ArrayList<>(document.getPageList());//BUG 201912212221 this step is stripping the fileList, which it why the shapes do not appear after a join.
+        document.cache.pageList = new ArrayList<>(document.getPageList());//BUG 201912212221 this step is stripping the fileList, which it why the shapes do not appear after a join.
 //        this.model.variable.script.setPageList(this.model.variable.pageList);
         try {
-            ScriptController.sortPageList(document.state.pageList, value);
+            ScriptController.sortPageList(document.cache.pageList, value);
         } catch (Exception ex) {
             System.err.println(ex);
         }
-        this.initPageList(document.state.pageList);
+        this.initPageList(document.cache.pageList);
     }//GEN-LAST:event_executeImageScriptButtonActionPerformed
 
     private void resetPageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetPageScriptButtonActionPerformed

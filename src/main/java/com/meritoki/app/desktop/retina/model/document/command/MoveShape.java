@@ -19,33 +19,33 @@ public class MoveShape extends Command {
     @Override // Command
     public void execute() {
     	logger.info("execute()");
-    	this.user = this.document.state.user;
+    	this.user = this.document.cache.user;
 		Operation operation = new Operation();
-		operation.object = new Shape(this.document.state.pressedShape);
+		operation.object = new Shape(this.document.cache.pressedShape);
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
-		operation.uuid = this.document.state.pressedShape.uuid;
+		operation.uuid = this.document.cache.pressedShape.uuid;
 		this.operationList.push(operation);
-		this.document.state.movedPoint = this.getMovedPoint(new Point(this.document.state.releasedPoint), new Point(this.document.state.pressedPoint));
+		this.document.cache.movedPoint = this.getMovedPoint(new Point(this.document.cache.releasedPoint), new Point(this.document.cache.pressedPoint));
 		Shape shape = null;
-		if (this.document.state.releasedImage != null &&!this.document.state.pressedImage.equals(this.document.state.releasedImage)) {
-			shape = new Shape(this.document.state.pressedShape);
+		if (this.document.cache.releasedImage != null &&!this.document.cache.pressedImage.equals(this.document.cache.releasedImage)) {
+			shape = new Shape(this.document.cache.pressedShape);
 			shape.pointList.get(0).x = shape.dimension.x;
 			shape.pointList.get(0).y = shape.dimension.y;
 			shape.pointList.get(1).x = shape.dimension.x + shape.dimension.w;
 			shape.pointList.get(1).y = shape.dimension.y + shape.dimension.h;
-			shape.move(this.document.state.movedPoint);
-			this.document.state.pressedImage.removeShape(shape.uuid);
-			this.document.state.releasedImage.addShape(shape);
+			shape.move(this.document.cache.movedPoint);
+			this.document.cache.pressedImage.removeShape(shape.uuid);
+			this.document.cache.releasedImage.addShape(shape);
 		} else {
-			this.document.state.pressedShape.move(this.document.state.movedPoint);
-			shape = this.document.state.pressedShape;
+			this.document.cache.pressedShape.move(this.document.cache.movedPoint);
+			shape = this.document.cache.pressedShape;
 		}		
 		operation = new Operation();
 		operation.object = new Shape(shape);
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
-		operation.uuid = this.document.state.pressedShape.uuid;
+		operation.uuid = this.document.cache.pressedShape.uuid;
 		this.operationList.push(operation);
     }
     

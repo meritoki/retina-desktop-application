@@ -2,6 +2,7 @@ package com.meritoki.app.desktop.retina.model.system;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -18,7 +19,14 @@ import com.meritoki.app.desktop.retina.model.vendor.Vendor;
 import com.meritoki.app.desktop.retina.model.vendor.microsoft.Microsoft;
 
 public class System {
-	
+	@JsonIgnore
+	public List<String> emptyList = new ArrayList<>();
+	@JsonIgnore
+	public List<String> timeList = Arrays.asList("year", "month", "week", "day", "hour", "minute", "second");
+	@JsonIgnore
+	public List<String> spaceList = Arrays.asList("latitude", "longitude", "locale", "location");
+	@JsonIgnore
+	public List<String> energyList = Arrays.asList("label", "letter", "word", "sentance", "temperature", "pressure");
 	@JsonIgnore
 	public Properties properties = null;
 	@JsonProperty

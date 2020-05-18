@@ -132,24 +132,24 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 			this.unitTypeComboBox.setSelectedItem(data.unit.type);
 			switch (data.unit.type) {
 			case "data": {
-				this.initUnitValueComboBox(this.model.document.state.emptyList);
+				this.initUnitValueComboBox(this.model.system.emptyList);
 				break;
 			}
 			case "time": {
-				this.initUnitValueComboBox(this.model.document.state.timeList);
+				this.initUnitValueComboBox(this.model.system.timeList);
 				break;
 			}
 			case "space": {
-				this.initUnitValueComboBox(this.model.document.state.spaceList);
+				this.initUnitValueComboBox(this.model.system.spaceList);
 				break;
 			}
 			case "energy": {
-				this.initUnitValueComboBox(this.model.document.state.energyList);
+				this.initUnitValueComboBox(this.model.system.energyList);
 				break;
 			}
 			}
 		} else {
-			this.initUnitValueComboBox(this.model.document.state.emptyList);
+			this.initUnitValueComboBox(this.model.system.emptyList);
 		}
 	}
 
@@ -192,19 +192,19 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 				int selectedIndex = unitTypeComboBox.getSelectedIndex();
 				switch (selectedIndex) {
 				case 0: {
-					initUnitValueComboBox(model.document.state.emptyList);
+					initUnitValueComboBox(model.system.emptyList);
 					break;
 				}
 				case 1: {
-					initUnitValueComboBox(model.document.state.timeList);
+					initUnitValueComboBox(model.system.timeList);
 					break;
 				}
 				case 2: {
-					initUnitValueComboBox(model.document.state.spaceList);
+					initUnitValueComboBox(model.system.spaceList);
 					break;
 				}
 				case 3: {
-					initUnitValueComboBox(model.document.state.energyList);
+					initUnitValueComboBox(model.system.energyList);
 					break;
 				}
 				}
@@ -750,11 +750,11 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 
 	private void rectangleButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_rectangleButtonActionPerformed
 		
-		this.model.document.state.type = com.meritoki.app.desktop.retina.model.document.Type.RECTANGLE;
+		this.model.document.cache.type = com.meritoki.app.desktop.retina.model.document.Type.RECTANGLE;
 	}// GEN-LAST:event_rectangleButtonActionPerformed
 
 	private void ellipseButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_ellipseButtonActionPerformed
-		this.model.document.state.type = com.meritoki.app.desktop.retina.model.document.Type.ELLIPSE;
+		this.model.document.cache.type = com.meritoki.app.desktop.retina.model.document.Type.ELLIPSE;
 	}// GEN-LAST:event_ellipseButtonActionPerformed
 
 	private void setTextButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_setTextButtonActionPerformed

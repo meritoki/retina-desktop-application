@@ -320,9 +320,9 @@ public class Page {
 			for (Image f : this.getImageList()) {
 				if (file == null) {
 					file = new Image(f);
-					bufferedImage = this.modFile(file);
+					bufferedImage = this.modifyImage(file);
 				} else {
-					bufferedImage = this.joinFile(file, f);
+					bufferedImage = this.joinImages(file, f);
 				}
 			}
 			this.bufferedImage = bufferedImage;
@@ -732,8 +732,8 @@ public class Page {
 	}
 
 	@JsonIgnore
-	public BufferedImage modFile(Image a) { // BufferedImage img1,BufferedImage img2) {
-		logger.debug("modFile(" + a + ")");
+	public BufferedImage modifyImage(Image a) { // BufferedImage img1,BufferedImage img2) {
+		logger.debug("modifyImage(" + a + ")");
 		BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
 		if (a.bufferedImage != null) {
 			int width = a.bufferedImage.getWidth();
@@ -751,8 +751,8 @@ public class Page {
 	}
 
 	@JsonIgnore
-	public BufferedImage joinFile(Image a, Image b) {
-		logger.debug("joinFiles(" + a + "," + b + ")");
+	public BufferedImage joinImages(Image a, Image b) {
+		logger.debug("joinImages(" + a + "," + b + ")");
 		BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
 		if (a.bufferedImage != null && b.bufferedImage != null) {
 			int width = a.bufferedImage.getWidth() + b.bufferedImage.getWidth();

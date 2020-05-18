@@ -53,7 +53,7 @@ public class ImageImportDialog extends javax.swing.JDialog {
 			File[] files = this.imageFileChooser.getSelectedFiles();
 			Model model = ((MainFrame) this.getParent()).model;
 			if (model != null) {
-				model.document.state.fileArray = files;
+				model.document.cache.fileArray = files;
 				model.getDocument().pattern.execute("addPage");
 				((MainFrame) this.getParent()).init();
 				((MainFrame) this.getParent()).repaint();

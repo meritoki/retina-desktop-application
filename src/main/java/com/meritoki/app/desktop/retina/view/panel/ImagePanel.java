@@ -93,9 +93,9 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 			Graphics2D graphics2D = (Graphics2D) graphics.create();
 			Document document = (this.model != null) ? this.model.getDocument() : null;
 
-			document.getPage().setScale(this.model.document.state.scale);
+			document.getPage().setScale(this.model.document.cache.scale);
 			AffineTransform affineTransform = new AffineTransform();
-			affineTransform.scale(this.model.document.state.scale, this.model.document.state.scale);
+			affineTransform.scale(this.model.document.cache.scale, this.model.document.cache.scale);
 			BufferedImage bufferedImage = document.getPage().getBufferedImage();
 			if (bufferedImage != null) {
 				graphics2D.drawImage(bufferedImage, affineTransform, null);
@@ -175,17 +175,17 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 	@Override
 	public void mousePressed(MouseEvent e) {
 		e.consume();
-		this.model.document.state.pressedPoint = new Point();
-		this.model.document.state.pressedPoint.x = e.getX();
-		this.model.document.state.pressedPoint.y = e.getY();
+		this.model.document.cache.pressedPoint = new Point();
+		this.model.document.cache.pressedPoint.x = e.getX();
+		this.model.document.cache.pressedPoint.y = e.getY();
 		logger.trace(
-				"mousePressed(e) this.model.document.state.pressedPoint=" + this.model.document.state.pressedPoint);
-		this.model.document.state.pressedImage = this.model.getDocument().getPage()
-				.getFile(new Point(this.model.document.state.pressedPoint));
-		if (this.model.document.state.pressedImage != null) {
-			this.model.getDocument().getPage().setFile(this.model.document.state.pressedImage.uuid);
-			this.model.document.state.pressedShape = this.model.getDocument().getPage()
-					.getShape(new Point(this.model.document.state.pressedPoint));
+				"mousePressed(e) this.model.document.state.pressedPoint=" + this.model.document.cache.pressedPoint);
+		this.model.document.cache.pressedImage = this.model.getDocument().getPage()
+				.getFile(new Point(this.model.document.cache.pressedPoint));
+		if (this.model.document.cache.pressedImage != null) {
+			this.model.getDocument().getPage().setFile(this.model.document.cache.pressedImage.uuid);
+			this.model.document.cache.pressedShape = this.model.getDocument().getPage()
+					.getShape(new Point(this.model.document.cache.pressedPoint));
 		}
 	}
 
@@ -195,19 +195,19 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		e.consume();
-		this.model.document.state.releasedPoint = new Point(e.getX(), e.getY());
-		if (this.model.document.state.pressedPoint.equals(this.model.document.state.releasedPoint)) {
-			if (this.model.document.state.pressedShape != null)
+		this.model.document.cache.releasedPoint = new Point(e.getX(), e.getY());
+		if (this.model.document.cache.pressedPoint.equals(this.model.document.cache.releasedPoint)) {
+			if (this.model.document.cache.pressedShape != null)
 				this.model.getDocument().pattern.execute("setShape");
 		} else {
-			this.model.document.state.selection = this.model.getDocument().getPage()
-					.intersectShape(this.model.document.state.pressedPoint);
-			if (this.model.document.state.selection != null) {
+			this.model.document.cache.selection = this.model.getDocument().getPage()
+					.intersectShape(this.model.document.cache.pressedPoint);
+			if (this.model.document.cache.selection != null) {
 				this.model.getDocument().pattern.execute("resizeShape");
 			} else {
-				if (this.model.document.state.pressedShape != null) {
-					this.model.document.state.releasedImage = this.model.getDocument().getPage()
-							.getFile(this.model.document.state.releasedPoint);
+				if (this.model.document.cache.pressedShape != null) {
+					this.model.document.cache.releasedImage = this.model.getDocument().getPage()
+							.getFile(this.model.document.cache.releasedPoint);
 					this.model.getDocument().pattern.execute("moveShape");
 				} else {
 					this.model.getDocument().pattern.execute("addShape");
@@ -234,10 +234,10 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		double delta = 0.05f * e.getPreciseWheelRotation();
-		this.model.document.state.scale += delta;
-		if (this.model.document.state.scale >= 0 && this.model.document.state.scale <= 2) {
-			logger.trace("mouseWheelMoved(...) scale = " + this.model.document.state.scale);
-			this.model.getDocument().getPage().setScale(this.model.document.state.scale);
+		this.model.document.cache.scale += delta;
+		if (this.model.document.cache.scale >= 0 && this.model.document.cache.scale <= 2) {
+			logger.trace("mouseWheelMoved(...) scale = " + this.model.document.cache.scale);
+			this.model.getDocument().getPage().setScale(this.model.document.cache.scale);
 			revalidate();
 			repaint();
 		}
@@ -287,7 +287,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 			switch (keyCode) {
 			case KeyEvent.VK_BACK_SPACE: {
 				logger.debug("KeyPressed(BACK_SPACE)");
-				this.model.document.state.pressedShape = this.model.getDocument().getPage().getShape();
+				this.model.document.cache.pressedShape = this.model.getDocument().getPage().getShape();
 				this.model.getDocument().pattern.execute("removeShape");
 				this.repaint();
 				break;

@@ -20,9 +20,9 @@ public class AddPage extends Command {
     @Override
     public void execute() {
     	logger.info("execute()");
-    	this.user = this.document.state.user;
+    	this.user = this.document.cache.user;
     	Page page = null;
-    	for(File file: this.document.state.fileArray) {
+    	for(File file: this.document.cache.fileArray) {
     		page = new Page();
 			page.imageList.add(new Image(file.getParent(),file.getName()));
     		this.document.addPage(page);

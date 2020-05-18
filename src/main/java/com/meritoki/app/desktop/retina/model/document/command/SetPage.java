@@ -16,7 +16,7 @@ public class SetPage extends Command {
     @Override // Command
     public void execute() {
     	logger.info("execute()");
-    	this.user = this.document.state.user;
-    	this.document.getPage().setShape(this.document.state.pressedShape.uuid);
+    	this.user = this.document.cache.user;
+    	this.document.getPage().setShape(this.document.cache.pressedShape.uuid);
     }
 }
