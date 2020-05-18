@@ -73,7 +73,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 	public Dimension getPreferredSize() {
 		Dimension dimension = new Dimension(1028, 512);
 		Document document = (this.model != null) ? this.model.getDocument() : null;
-		
+
 		Page page = (document != null) ? document.getPage() : null;
 		BufferedImage bufferedImage = (page != null) ? page.getBufferedImage() : null;
 		if (bufferedImage != null) {
@@ -92,7 +92,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 		if (this.model != null) {
 			Graphics2D graphics2D = (Graphics2D) graphics.create();
 			Document document = (this.model != null) ? this.model.getDocument() : null;
-			
+
 			document.getPage().setScale(this.model.document.state.scale);
 			AffineTransform affineTransform = new AffineTransform();
 			affineTransform.scale(this.model.document.state.scale, this.model.document.state.scale);
@@ -127,17 +127,25 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 					} else {
 						graphics2D.setColor(Color.BLUE);
 					}
-					if (s.classification.equals(Shape.ELLIPSE)) {
+					switch (s.type) {
+					case ELLIPSE: {
 						Ellipse2D.Double ellipse = new Ellipse2D.Double(d.x, d.y, d.w, d.h);
 						graphics2D.draw(ellipse);
-					} else if (s.classification.equals(Shape.RECTANGLE)) {
+						break;
+					}
+					case RECTANGLE: {
 						Rectangle2D.Double rectangle = new Rectangle2D.Double(d.x, d.y, d.w, d.h);
 						graphics2D.draw(rectangle);
+						break;
 					}
-					if(previousShape != null) {
-						com.meritoki.app.desktop.retina.model.document.Dimension dimension = previousShape.getDimension();
+					}
+					if (previousShape != null) {
+						com.meritoki.app.desktop.retina.model.document.Dimension dimension = previousShape
+								.getDimension();
 //					    g.drawLine(X1, Y1, X2, Y2);
-						graphics2D.drawLine((int)(dimension.x+(dimension.w/2)), (int)(dimension.y+(dimension.h/2)), (int)(d.x+(d.w/2)), (int)( d.y+(d.h/2)));
+						graphics2D.drawLine((int) (dimension.x + (dimension.w / 2)),
+								(int) (dimension.y + (dimension.h / 2)), (int) (d.x + (d.w / 2)),
+								(int) (d.y + (d.h / 2)));
 					}
 					previousShape = s;
 //                                        NodeController.saveJpg("./", s.uuid+".jpg", s.bufferedImage);
@@ -170,11 +178,14 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 		this.model.document.state.pressedPoint = new Point();
 		this.model.document.state.pressedPoint.x = e.getX();
 		this.model.document.state.pressedPoint.y = e.getY();
-		logger.trace("mousePressed(e) this.model.document.state.pressedPoint=" + this.model.document.state.pressedPoint);
-		this.model.document.state.pressedFile = this.model.getDocument().getPage().getFile(new Point(this.model.document.state.pressedPoint));
+		logger.trace(
+				"mousePressed(e) this.model.document.state.pressedPoint=" + this.model.document.state.pressedPoint);
+		this.model.document.state.pressedFile = this.model.getDocument().getPage()
+				.getFile(new Point(this.model.document.state.pressedPoint));
 		if (this.model.document.state.pressedFile != null) {
 			this.model.getDocument().getPage().setFile(this.model.document.state.pressedFile.uuid);
-			this.model.document.state.pressedShape = this.model.getDocument().getPage().getShape(new Point(this.model.document.state.pressedPoint));
+			this.model.document.state.pressedShape = this.model.getDocument().getPage()
+					.getShape(new Point(this.model.document.state.pressedPoint));
 		}
 	}
 
@@ -184,17 +195,19 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		e.consume();
-		this.model.document.state.releasedPoint = new Point(e.getX(),e.getY());
+		this.model.document.state.releasedPoint = new Point(e.getX(), e.getY());
 		if (this.model.document.state.pressedPoint.equals(this.model.document.state.releasedPoint)) {
-			if(this.model.document.state.pressedShape != null)
+			if (this.model.document.state.pressedShape != null)
 				this.model.getDocument().execute("setShape");
 		} else {
-			this.model.document.state.selection = this.model.getDocument().getPage().intersectShape(this.model.document.state.pressedPoint);
-			if (this.model.document.state.selection > -1) {
+			this.model.document.state.selection = this.model.getDocument().getPage()
+					.intersectShape(this.model.document.state.pressedPoint);
+			if (this.model.document.state.selection != null) {
 				this.model.getDocument().execute("resizeShape");
 			} else {
 				if (this.model.document.state.pressedShape != null) {
-					this.model.document.state.releasedFile = this.model.getDocument().getPage().getFile(this.model.document.state.releasedPoint);
+					this.model.document.state.releasedFile = this.model.getDocument().getPage()
+							.getFile(this.model.document.state.releasedPoint);
 					this.model.getDocument().execute("moveShape");
 				} else {
 					this.model.getDocument().execute("addShape");
@@ -260,11 +273,11 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 			e.consume();
 			this.model.getDocument().redo();
 			repaint();
-		} else if((e.getKeyCode() == KeyEvent.VK_M) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) { 
+		} else if ((e.getKeyCode() == KeyEvent.VK_M) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
 			String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 			List<Shape> shapeList = this.model.getDocument().getPage().getShapeList();
 			this.generateManifest(timeStamp, shapeList);
-		} else if((e.getKeyCode() == KeyEvent.VK_T) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) { 
+		} else if ((e.getKeyCode() == KeyEvent.VK_T) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
 			List<String[]> stringArrayList = NodeController.openCsv("import.csv");
 			this.model.getDocument().importText(stringArrayList);
 		} else {
@@ -318,25 +331,26 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 			}
 		}
 	}
-	
-    public void generateManifest(String timeStamp, List<Shape> shapeList) {
-    	StringBuilder stringBuilder = new StringBuilder();
-    	stringBuilder.append("my_own_id");
-    	stringBuilder.append(",");
-    	stringBuilder.append("the_image");
-    	stringBuilder.append("\n");
-    	new java.io.File("./"+timeStamp).mkdir();
-    	Shape shape = null;
-    	for(int i = 0;i<shapeList.size();i++) {
-    		shape = shapeList.get(i);
-    		stringBuilder.append(i);
-    		stringBuilder.append(",");
-    		NodeController.saveJpg("./"+timeStamp, shape.uuid+".jpg", shape.bufferedImage);
-    		stringBuilder.append(shape.uuid+".jpg");
-    		stringBuilder.append("\n");
-    	}
-    	NodeController.saveCsv("./"+timeStamp, "manifest.csv", stringBuilder);
-    }
+
+	public void generateManifest(String timeStamp, List<Shape> shapeList) {
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("my_own_id");
+		stringBuilder.append(",");
+		stringBuilder.append("the_image");
+		stringBuilder.append("\n");
+		new java.io.File("./" + timeStamp).mkdir();
+		Shape shape = null;
+		for (int i = 0; i < shapeList.size(); i++) {
+			shape = shapeList.get(i);
+			stringBuilder.append(i);
+			stringBuilder.append(",");
+			NodeController.saveJpg("./" + timeStamp, shape.uuid + ".jpg", shape.bufferedImage);
+			stringBuilder.append(shape.uuid + ".jpg");
+			stringBuilder.append("\n");
+		}
+		NodeController.saveCsv("./" + timeStamp, "manifest.csv", stringBuilder);
+	}
+
 	@Override
 	public void keyTyped(KeyEvent e) {
 	}

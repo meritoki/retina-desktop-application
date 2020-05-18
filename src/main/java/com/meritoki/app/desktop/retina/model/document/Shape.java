@@ -34,28 +34,8 @@ public class Shape {
     
 	@JsonIgnore
     private static Logger logger = LogManager.getLogger(Shape.class.getName());
-    @JsonIgnore
-    public static final int TOP = 0;
-    @JsonIgnore
-    public static final int BOTTOM = 1;
-    @JsonIgnore
-    public static final int LEFT = 2;
-    @JsonIgnore
-    public static final int RIGHT = 3;
-    @JsonIgnore
-    public static final int TOP_LEFT = 4;
-    @JsonIgnore
-    public static final int TOP_RIGHT = 5;
-    @JsonIgnore
-    public static final int BOTTOM_LEFT = 6;
-    @JsonIgnore
-    public static final int BOTTOM_RIGHT = 7;
-    @JsonIgnore
-    public static final String RECTANGLE = "rectangle";
-    @JsonIgnore
-    public static final String ELLIPSE = "ellipse";
-    @JsonProperty
-    public String classification = null;
+	@JsonProperty
+	public Type type;
     @JsonProperty
     public List<Point> pointList = new ArrayList<>(2);
     @JsonProperty
@@ -85,7 +65,7 @@ public class Shape {
      */
     public Shape(Shape shape) {
     	this.uuid = shape.uuid;
-    	this.classification = shape.classification;
+    	this.type = shape.type;
     	this.scale = shape.scale;
     	this.addScale = shape.addScale;
     	this.dimension = new Dimension(shape.getDimension());
@@ -283,15 +263,15 @@ public class Shape {
     
     public boolean intersects(Point point) {
     	boolean flag  = false;
-    	if(this.intersect(point)>-1) {
+    	if(this.intersect(point) != null) {
     		flag = true;
     	}
     	return flag;
     }
     
     @JsonIgnore
-    public int intersect(Point point){
-        int selection = -1;
+    public Selection intersect(Point point){
+        Selection selection = null;
         Point startPoint = new Point();
         Point stopPoint = new Point();
         startPoint.x = this.pointList.get(0).x*this.scale;
@@ -322,33 +302,34 @@ public class Shape {
         if(point.y >= (startPoint.y) && point.y < (startPoint.y+margin) && point.x > startPoint.x && point.x < stopPoint.x) {
         	//Works
         	logger.info("intersect("+point+") TOP");
-        	selection = TOP;
+        	selection = Selection.TOP;
 //        } else if(point.y > (stopPoint.y-margin) && point.y < (stopPoint.y+margin) && point.x > startPoint.x && point.x < stopPoint.x) {
         } else if(point.y > (stopPoint.y-margin) && point.y <= (stopPoint.y) && point.x > startPoint.x && point.x < stopPoint.x) {
         	//Not working
         	logger.info("intersect("+point+") BOTTOM");
-        	selection = BOTTOM;
+        	selection = Selection.BOTTOM;
 //        } else if(point.x > (startPoint.x-margin) && point.x < (startPoint.x+margin) && point.y > startPoint.y && point.y < stopPoint.y) {
         } else if(point.x >= (startPoint.x) && point.x < (startPoint.x+margin) && point.y > startPoint.y && point.y < stopPoint.y) {
         	//Works
         	logger.info("intersect("+point+") LEFT");
-        	selection = LEFT;
+        	selection = Selection.LEFT;
 //        } else if(point.x > (stopPoint.x-margin) && point.x < (stopPoint.x+margin) && point.y > startPoint.y && point.y < stopPoint.y) {
         } else if(point.x > (stopPoint.x-margin) && point.x <= (stopPoint.x) && point.y > startPoint.y && point.y < stopPoint.y) {
         	//Not working
         	logger.info("intersect("+point+") RIGHT");
-        	selection = RIGHT;
+        	selection = Selection.RIGHT;
         }
         return selection;
     }
+    
+
     
     /**
      * DIMENSION 2
      * @param point
      * @param selection
      */
-    public void resize(Point point, int selection) {
-    	
+    public void resize(Point point, Selection selection) {
     	Point startPoint = new Point();
         Point stopPoint = new Point();
         startPoint.x = this.pointList.get(0).x*this.scale;
@@ -430,7 +411,80 @@ public class Shape {
         return string;
     }
 }
-
+//@JsonIgnore
+//public static final String RECTANGLE = "rectangle";
+//@JsonIgnore
+//public static final String ELLIPSE = "ellipse";
+//@JsonProperty
+//public String classification = null;s
+//@JsonIgnore
+//public int intersect(Point point){
+//  int selection = -1;
+//  Point startPoint = new Point();
+//  Point stopPoint = new Point();
+//  startPoint.x = this.pointList.get(0).x*this.scale;
+//  startPoint.y = this.pointList.get(0).y*this.scale;
+//  stopPoint.x = this.pointList.get(1).x*this.scale;
+//  stopPoint.y = this.pointList.get(1).y*this.scale;
+//  //introduce the idea of a buffer where a user does not have to press exactly on line
+//  //TOP
+//  double margin = 20*this.scale;
+////  if(point.x == startPoint.x && point.y == startPoint.y) {
+////  	logger.info("intersect("+point+") TOP_LEFT");
+////  	//Works
+////  	selection = TOP_LEFT;
+////  } else if(point.x > (stopPoint.x-margin) && point.x<(stopPoint.x+margin) && point.y > (stopPoint.y-margin) && point.y < (stopPoint.y+margin)) {
+////  	logger.info("intersect("+point+") BOTTOM_RIGHT");
+////  	//Works
+////  	selection = BOTTOM_RIGHT;
+////  } else if(point.x > (stopPoint.x-margin) && point.x < (stopPoint.x+margin) && point.y > (startPoint.y-margin) && point.y < (startPoint.y + margin)) {
+////  	//Works
+////  	logger.info("intersect("+point+") TOP_RIGHT");
+////  	selection = TOP_RIGHT;
+////  } else if(point.x > (startPoint.x-margin) && point.x < (startPoint.x+margin) && point.y > (stopPoint.y - margin) && point.y < (stopPoint.y + margin)) {
+////  	//Works
+////  	logger.info("intersect("+point+") BOTTOM_LEFT");
+////  	selection = BOTTOM_LEFT;
+//////  } else if(point.y > (startPoint.y-margin) && point.y < (startPoint.y+margin) && point.x > startPoint.x && point.x < stopPoint.x) {
+////  } else 
+//  if(point.y >= (startPoint.y) && point.y < (startPoint.y+margin) && point.x > startPoint.x && point.x < stopPoint.x) {
+//  	//Works
+//  	logger.info("intersect("+point+") TOP");
+//  	selection = TOP;
+////  } else if(point.y > (stopPoint.y-margin) && point.y < (stopPoint.y+margin) && point.x > startPoint.x && point.x < stopPoint.x) {
+//  } else if(point.y > (stopPoint.y-margin) && point.y <= (stopPoint.y) && point.x > startPoint.x && point.x < stopPoint.x) {
+//  	//Not working
+//  	logger.info("intersect("+point+") BOTTOM");
+//  	selection = BOTTOM;
+////  } else if(point.x > (startPoint.x-margin) && point.x < (startPoint.x+margin) && point.y > startPoint.y && point.y < stopPoint.y) {
+//  } else if(point.x >= (startPoint.x) && point.x < (startPoint.x+margin) && point.y > startPoint.y && point.y < stopPoint.y) {
+//  	//Works
+//  	logger.info("intersect("+point+") LEFT");
+//  	selection = LEFT;
+////  } else if(point.x > (stopPoint.x-margin) && point.x < (stopPoint.x+margin) && point.y > startPoint.y && point.y < stopPoint.y) {
+//  } else if(point.x > (stopPoint.x-margin) && point.x <= (stopPoint.x) && point.y > startPoint.y && point.y < stopPoint.y) {
+//  	//Not working
+//  	logger.info("intersect("+point+") RIGHT");
+//  	selection = RIGHT;
+//  }
+//  return selection;
+//}
+//@JsonIgnore
+//public static final int TOP = 0;
+//@JsonIgnore
+//public static final int BOTTOM = 1;
+//@JsonIgnore
+//public static final int LEFT = 2;
+//@JsonIgnore
+//public static final int RIGHT = 3;
+//@JsonIgnore
+//public static final int TOP_LEFT = 4;
+//@JsonIgnore
+//public static final int TOP_RIGHT = 5;
+//@JsonIgnore
+//public static final int BOTTOM_LEFT = 6;
+//@JsonIgnore
+//public static final int BOTTOM_RIGHT = 7;
 //public double round(double value, int places) {
 //if (places < 0) throw new IllegalArgumentException();
 //

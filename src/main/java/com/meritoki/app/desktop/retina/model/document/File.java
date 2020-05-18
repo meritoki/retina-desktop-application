@@ -18,6 +18,7 @@ import com.meritoki.app.desktop.retina.controller.node.NodeController;
 
 /**
  * Class is used to manage reference to file in filesystem
+ * 
  * @author jorodriguez
  *
  */
@@ -66,6 +67,7 @@ public class File {
 
 	/**
 	 * Copy constructor
+	 * 
 	 * @param file
 	 */
 	public File(File file) {
@@ -84,13 +86,14 @@ public class File {
 			this.shapeList.add(new Shape(shape));
 		}
 	}
-	
+
 	public String getUUID() {
 		return this.uuid;
 	}
 
 	/**
 	 * Constructor accepts a file path and name parameters
+	 * 
 	 * @param path
 	 * @param name
 	 */
@@ -99,27 +102,27 @@ public class File {
 		this.path = path;
 		this.name = name;
 		this.extension = this.getExtension(this.name);
-		this.name = this.name.replace("."+this.extension, ""); 
+		this.name = this.name.replace("." + this.extension, "");
 //		this.setBufferedImage(NodeController.openBufferedImage(this.path, this.name+"."+this.extension));
 	}
-	
+
 	public String getExtension(String fileName) {
-		return fileName.substring(fileName.lastIndexOf(".")+1);
+		return fileName.substring(fileName.lastIndexOf(".") + 1);
 	}
-	
+
 	/**
 	 * Function returns true if files have the same uuid
+	 * 
 	 * @param file
 	 * @return flag
 	 */
 	public boolean equals(File file) {
 		boolean flag = false;
-		if(this.uuid.equals(file.uuid)) {
+		if (this.uuid.equals(file.uuid)) {
 			flag = true;
 		}
 		return flag;
 	}
-
 
 	/**
 	 * Function gets the current index selected by user.
@@ -148,36 +151,37 @@ public class File {
 
 	/**
 	 * DIMENSION 1
+	 * 
 	 * @param point
 	 * @return
 	 */
 	public Shape getShape(Point point) {
-		logger.info("getShape("+point+")");
+		logger.info("getShape(" + point + ")");
 		Shape s = null;
 		for (Shape shape : this.shapeList) {
 			if (shape.containsPoint(this.getFilePoint(point))) {
-				logger.info("getShape(" + point + ") s.uuid="+shape.uuid);
+				logger.info("getShape(" + point + ") s.uuid=" + shape.uuid);
 				s = shape;
 				break;
 			}
 		}
 		return s;
 	}
-	
+
 	public Point getFilePoint(Point point) {
 		Point p = new Point(point);
 		p.x -= this.offset * this.scale;
 		p.y -= this.margin * this.scale;
 		return p;
 	}
-	
+
 	public Point getPagePoint(Point point) {
 		Point p = new Point(point);
 		p.x += this.offset * this.scale;
 		p.y += this.margin * this.scale;
 		return p;
 	}
-	
+
 	public List<Point> getFilePointList(List<Point> pointList) {
 		List<Point> pList = this.copyPointList(pointList);
 		pList.set(0, this.getFilePoint(pList.get(0)));
@@ -208,6 +212,7 @@ public class File {
 
 	/**
 	 * DIMENSION 2
+	 * 
 	 * @return
 	 */
 	@JsonIgnore
@@ -236,11 +241,11 @@ public class File {
 	public String getName() {
 		return this.name;
 	}
-	
+
 	public String getNameAndExtension() {
-		return this.name+"."+this.extension;
+		return this.name + "." + this.extension;
 	}
-	
+
 	public String getExtension() {
 		return this.extension;
 	}
@@ -274,7 +279,6 @@ public class File {
 		}
 	}
 
-	
 	@JsonIgnore
 	public void setBufferedImage(BufferedImage bufferedImage) {
 		this.bufferedImage = bufferedImage;
@@ -327,45 +331,58 @@ public class File {
 
 	public List<Point> copyPointList(List<Point> pointList) {
 		List<Point> copyPointList = new ArrayList<>();
-		for(Point p: pointList) {
+		for (Point p : pointList) {
 			copyPointList.add(new Point(p));
 		}
 		return copyPointList;
 	}
 
 	/**
-	 * DIMENSION 3
-	 * B 
-	 * Functions adds shape to shapeList. The only place a shape's
+	 * DIMENSION 3 B Functions adds shape to shapeList. The only place a shape's
 	 * point list is modified to fit within the File
+	 * 
 	 * @param shape
 	 */
 	@JsonIgnore
 	public void addShape(Shape shape) {
-		logger.info("addShape("+shape+")");
+		logger.info("addShape(" + shape + ")");
 		shape.pointList = this.getFilePointList(shape.pointList);
 		this.shapeList.add(shape);
 	}
 	
-	public int intersectShape(Point point) {
-			int selection = -1;
-			double factor;
-			Point copyPoint = null;
-			Shape shape = this.getShape();
-			if (shape != null) {
-				copyPoint = new Point(point);
-				factor = this.offset * shape.scale;
-				copyPoint.x -= factor;
-				selection = shape.intersect(copyPoint);
-			}
-			return selection;
+	public Selection intersectShape(Point point) {
+		Selection selection = null;
+		double factor;
+		Point copyPoint = null;
+		Shape shape = this.getShape();
+		if (shape != null) {
+			copyPoint = new Point(point);
+			factor = this.offset * shape.scale;
+			copyPoint.x -= factor;
+			selection = shape.intersect(copyPoint);
 		}
+		return selection;
+	}
+
+//	public int intersectShape(Point point) {
+//		int selection = -1;
+//		double factor;
+//		Point copyPoint = null;
+//		Shape shape = this.getShape();
+//		if (shape != null) {
+//			copyPoint = new Point(point);
+//			factor = this.offset * shape.scale;
+//			copyPoint.x -= factor;
+//			selection = shape.intersect(copyPoint);
+//		}
+//		return selection;
+//	}
 
 	@JsonIgnore
 	public boolean containsShape(Shape shape) {
-		logger.info("containsShape("+shape+")");
+		logger.info("containsShape(" + shape + ")");
 		boolean flag = false;
-		if(this.containsPoint(new Point(shape.pointList.get(0)))){
+		if (this.containsPoint(new Point(shape.pointList.get(0)))) {
 			flag = true;
 		}
 		return flag;
@@ -375,9 +392,9 @@ public class File {
 	public Shape removeShape(Shape shape) {
 		return this.removeShape(shape.uuid);
 	}
+
 	/**
-	 * DIMENSION 4
-	 * Function removes Shape from shapeList using uuid.
+	 * DIMENSION 4 Function removes Shape from shapeList using uuid.
 	 * 
 	 * @param shape
 	 */
@@ -396,16 +413,17 @@ public class File {
 		}
 		return s;
 	}
-	
+
 	/**
 	 * Function returns true if point is contained within file
+	 * 
 	 * @param point
 	 * @return
 	 */
 	public boolean containsPoint(Point point) {
 		boolean flag = false;
 		if (point.x > (this.offset * this.scale) && point.x < (this.offset + this.width) * this.scale) {
-			if(point.y > (this.margin * this.scale) && point.y < (this.margin + this.height) * this.scale) {
+			if (point.y > (this.margin * this.scale) && point.y < (this.margin + this.height) * this.scale) {
 				flag = true;
 			}
 		}

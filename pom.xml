@@ -19,6 +19,16 @@
 	</parent>
 	<dependencies>
 		<dependency>
+			<groupId>com.meritoki.library</groupId>
+			<artifactId>cortex</artifactId>
+			<version>0.3.202005</version>
+		</dependency>
+		<dependency>
+<groupId>com.meritoki.module.library</groupId>
+<artifactId>module-library</artifactId>
+<version>0.3.202003</version>
+</dependency>
+		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
 

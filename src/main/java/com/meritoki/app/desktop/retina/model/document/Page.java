@@ -425,17 +425,28 @@ public class Page {
 		}
 		return s;
 	}
-
+	
 	@JsonIgnore
-	public int intersectShape(Point point) {
+	public Selection intersectShape(Point point) {
 		logger.trace("intersectShape(" + point + ")");
-		int selection = -1;
+		Selection selection = null;
 		File file = this.getFile();
 		if (file != null) {
 			selection = file.intersectShape(point);
 		}
 		return selection;
 	}
+
+//	@JsonIgnore
+//	public int intersectShape(Point point) {
+//		logger.trace("intersectShape(" + point + ")");
+//		int selection = -1;
+//		File file = this.getFile();
+//		if (file != null) {
+//			selection = file.intersectShape(point);
+//		}
+//		return selection;
+//	}
 
 	@JsonIgnore
 	@Override

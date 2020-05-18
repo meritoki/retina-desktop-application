@@ -9,6 +9,7 @@ import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Shape;
+import com.meritoki.app.desktop.retina.model.document.Type;
 
 public class AddShape extends Command {
 	
@@ -25,9 +26,9 @@ public class AddShape extends Command {
     	if(this.minimumSize(this.document.state.pressedPoint, this.document.state.releasedPoint, this.document.state.scale)) {
 			this.document.state.pressedShape = new Shape();
 			if (this.document.state.rectangle) {
-				this.document.state.pressedShape.classification = Shape.RECTANGLE;
+				this.document.state.pressedShape.type = Type.RECTANGLE;
 			} else if (this.document.state.ellipse) {
-				this.document.state.pressedShape.classification = Shape.ELLIPSE;
+				this.document.state.pressedShape.type = Type.ELLIPSE;
 			}
 			this.document.state.pressedShape.setAddScale(this.document.state.scale);
 			this.document.state.pressedShape.setScale(this.document.state.scale);

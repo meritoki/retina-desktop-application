@@ -44,7 +44,7 @@ public class State {
 	@JsonIgnore
 	public double scale = 1;
 	@JsonIgnore
-	public int selection = -1;
+	public Selection selection = null;
 	@JsonIgnore
 	public String defaultFileName = "untitled.json";
 	@JsonIgnore
