@@ -33,12 +33,13 @@ import org.apache.logging.log4j.Logger;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Data;
 import com.meritoki.app.desktop.retina.model.document.Document;
-import com.meritoki.app.desktop.retina.model.document.File;
+import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Script;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.Text;
 import com.meritoki.app.desktop.retina.model.document.Unit;
+
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 /**
@@ -92,7 +93,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 		logger.debug("initLabel()");
 		Document document = (this.model != null) ? this.model.getDocument() : null;
 		Page page = (document != null) ? document.getPage() : null;
-		File file = (page != null) ? page.getFile() : null;
+		Image file = (page != null) ? page.getFile() : null;
 		Shape shape = (file != null) ? file.getShape() : null;
 		List<Text> textList = (shape != null) ? shape.getTextList() : null;
 	}
@@ -116,7 +117,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 		logger.debug("initComboBox()");
 		Document document = (this.model != null) ? this.model.getDocument() : null;
 		Page page = (document != null) ? document.getPage() : null;
-		File file = (page != null) ? page.getFile() : null;
+		Image file = (page != null) ? page.getFile() : null;
 		Shape shape = (file != null) ? file.getShape() : null;
 		Data data = (shape != null) ? shape.data : null;
 		List<Text> textList = (shape != null) ? shape.getTextList() : null;
@@ -748,13 +749,12 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	}// GEN-LAST:event_applyUnitButtonActionPerformed
 
 	private void rectangleButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_rectangleButtonActionPerformed
-		this.model.document.state.rectangle = true;
-		this.model.document.state.ellipse = false;
+		
+		this.model.document.state.type = com.meritoki.app.desktop.retina.model.document.Type.RECTANGLE;
 	}// GEN-LAST:event_rectangleButtonActionPerformed
 
 	private void ellipseButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_ellipseButtonActionPerformed
-		this.model.document.state.rectangle = false;
-		this.model.document.state.ellipse = true;
+		this.model.document.state.type = com.meritoki.app.desktop.retina.model.document.Type.ELLIPSE;
 	}// GEN-LAST:event_ellipseButtonActionPerformed
 
 	private void setTextButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_setTextButtonActionPerformed

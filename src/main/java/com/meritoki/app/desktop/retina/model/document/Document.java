@@ -2,7 +2,6 @@ package com.meritoki.app.desktop.retina.model.document;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -14,15 +13,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
-import com.meritoki.app.desktop.retina.model.document.command.AddPage;
-import com.meritoki.app.desktop.retina.model.document.command.AddShape;
-import com.meritoki.app.desktop.retina.model.document.command.Command;
-import com.meritoki.app.desktop.retina.model.document.command.MoveShape;
-import com.meritoki.app.desktop.retina.model.document.command.Operation;
-import com.meritoki.app.desktop.retina.model.document.command.RemoveShape;
-import com.meritoki.app.desktop.retina.model.document.command.ResizeShape;
-import com.meritoki.app.desktop.retina.model.document.command.SetPage;
-import com.meritoki.app.desktop.retina.model.document.command.SetShape;
+import com.meritoki.app.desktop.retina.model.document.command.Pattern;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 
 /**
@@ -36,85 +27,23 @@ public class Document {
 	static Logger logger = LogManager.getLogger(Document.class.getName());
 	@JsonProperty
 	public String uuid = null;
+	@JsonIgnore
+	public int index = 0;
 	@JsonProperty
-	public LinkedList<Event> eventStack = new LinkedList<>();
+	public List<Page> pageList = new ArrayList<>();
 	@JsonProperty
 	public List<User> userList = new LinkedList<>();
 	@JsonProperty
-	public Event event = new Event();
+	public Pattern pattern;
 	@JsonProperty
 	public State state = new State();
-	@JsonIgnore
-	private final HashMap<String, Command> commandMap = new HashMap<>();
-	@JsonProperty
-	public List<Page> pageList = new ArrayList<>();
-	@JsonIgnore
-	public int index = 0;
-	@JsonIgnore
-	public File file = new File();
 	@JsonProperty
 	public List<Layout> layoutList = new ArrayList<>();
 
 	public Document() {
 		this.uuid = UUID.randomUUID().toString();
-		this.registerCommands();
+		this.pattern = new Pattern(this);
 	}
-	
-	public void registerCommands() {
-		Command addPage = new AddPage(this);
-		Command setPage = new SetPage(this);
-		Command addShape = new AddShape(this);
-		Command setShape = new SetShape(this);
-		Command moveShape = new MoveShape(this);
-		Command removeShape = new RemoveShape(this);
-		Command resizeShape = new ResizeShape(this);
-		this.register("addPage", addPage);
-		this.register("setPage", setPage);
-		this.register("addShape", addShape);
-		this.register("setShape", setShape);
-		this.register("moveShape", moveShape);
-		this.register("removeShape", removeShape);
-		this.register("resizeShape", resizeShape);
-	}
-
-//	@JsonIgnore
-//	public void test() {
-//		Page page = new Page();
-//		File file = new File("./data/image", "01.jpg");
-//		page.fileList.add(file);
-//		file = new File("./data/image","02.jpg");
-//		page.fileList.add(file);
-//		pageList.add(page);
-//		page = new Page();
-//		file = new File("./data/image","02.jpg");
-//		page.fileList.add(file);
-//		pageList.add(page);
-//		page = new Page();
-//		file = new File("./data/image","03.jpg");
-//		page.fileList.add(file);
-//		pageList.add(page);
-//		page = new Page();
-//		file = new File("./data/image","04.jpg");
-//		page.fileList.add(file);
-//		pageList.add(page);
-//		page = new Page();
-//		file = new File("./data/image","05.jpg");
-//		page.fileList.add(file);
-//		pageList.add(page);
-//		page = new Page();
-//		file = new File("./data/image","06.jpg");
-//		page.fileList.add(file);
-//		pageList.add(page);
-//		page = new Page();
-//		file = new File("./data/image","07.jpg");
-//		page.fileList.add(file);
-//		pageList.add(page);
-//		page = new Page();
-//		file = new File("./data/image","08.jpg");
-//		page.fileList.add(file);
-//		pageList.add(page);
-//		this.setIndex(0);
-//	}
 
 	/**
 	 * Get the index of the current Page, used by Dialogs
@@ -134,7 +63,7 @@ public class Document {
 	 */
 	@JsonIgnore
 	public Page getPage() {
-		return (this.pageList.size() > 0) ? this.pageList.get(index) : new Page();
+		return (this.pageList.size() > 0) ? this.pageList.get(this.index) : new Page();
 	}
 
 	/**
@@ -187,25 +116,6 @@ public class Document {
 			shapeList.addAll(page.getShapeList());
 		}
 		return shapeList;
-	}
-
-	@JsonIgnore
-	public void register(String commandName, Command command) {
-		commandMap.put(commandName, command);
-	}
-
-	@JsonIgnore
-	public void execute(String commandName) {
-		Command command = commandMap.get(commandName);
-		if (command == null) {
-			throw new IllegalStateException("no command registered for " + commandName);
-		}
-		command.execute();
-		Command newCommand = new Command(this, command.name);
-		newCommand.user = command.user;
-		newCommand.operationList = command.operationList;
-		this.event.undoStack.push(newCommand);
-		command.reset();
 	}
 
 	public boolean importText(List<String[]> stringArrayList) {
@@ -272,175 +182,6 @@ public class Document {
 		return flag;
 	}
 
-	public void undo() {
-		if (this.event.undoStack.size() > 0) {
-			Command command = this.event.undoStack.pop();
-			logger.info("undo() command.name=" + command.name);
-			Operation operation = null;
-			switch (command.name) {
-			case "setShape": {
-				for (int i = 0; i < command.operationList.size(); i++) {
-					operation = command.operationList.get(i);
-					if (operation.sign == 0) {
-						if (operation.object instanceof Shape) {
-							this.getPage().getFile().setShape(((Shape) operation.object).uuid);
-						}
-					}
-				}
-				break;
-			}
-			case "addShape": {
-				for (int i = 0; i < command.operationList.size(); i++) {
-					operation = command.operationList.get(i);
-					if (operation.sign == 1) {
-						if (operation.object instanceof Shape) {
-							this.getPage().removeShape((Shape) operation.object);
-						}
-					} else if (operation.sign == 0) {
-						if (operation.object instanceof Shape) {
-							this.getPage().getFile().addShape((Shape) operation.object);
-						}
-					}
-				}
-				break;
-			}
-			case "moveShape": {
-				for (int i = 0; i < command.operationList.size(); i++) {
-					operation = command.operationList.get(i);
-					if (operation.sign == 1) {
-						if (operation.object instanceof Shape) {
-							this.getPage().removeShape((Shape) operation.object);
-						}
-					} else if (operation.sign == 0) {
-						if (operation.object instanceof Shape) {
-							this.getPage().getFile().addShape((Shape) operation.object);
-						}
-					}
-				}
-				break;
-			}
-			case "resizeShape": {
-				for (int i = 0; i < command.operationList.size(); i++) {
-					operation = command.operationList.get(i);
-					if (operation.sign == 1) {
-						if (operation.object instanceof Shape) {
-							this.getPage().removeShape((Shape) operation.object);
-						}
-					} else if (operation.sign == 0) {
-						if (operation.object instanceof Shape) {
-							this.getPage().getFile().addShape((Shape) operation.object);
-						}
-					}
-				}
-				break;
-			}
-			case "removeShape": {
-				for (int i = 0; i < command.operationList.size(); i++) {
-					operation = command.operationList.get(i);
-					if (operation.sign == 1) {
-						if (operation.object instanceof Shape) {
-							this.getPage().removeShape((Shape) operation.object);
-						}
-					} else if (operation.sign == 0) {
-						if (operation.object instanceof Shape) {
-							this.getPage().getFile().addShape((Shape) operation.object);
-						}
-					}
-				}
-				break;
-			}
-			default: {
-
-			}
-			}
-			this.event.redoStack.push(command);
-		}
-	}
-
-	public void redo() {
-		if (this.event.redoStack.size() > 0) {
-			Command command = this.event.redoStack.pop();
-			Operation operation = null;
-			switch (command.name) {
-			case "setShape": {
-				for (int i = 0; i < command.operationList.size(); i++) {
-					operation = command.operationList.get(i);
-					if (operation.sign == 1) {
-						if (operation.object instanceof Shape) {
-							this.getPage().getFile().setShape(((Shape) operation.object).uuid);
-						}
-					}
-				}
-				break;
-			}
-			case "addShape": {
-				for (int i = command.operationList.size() - 1; i >= 0; i--) {
-					operation = command.operationList.get(i);
-					if (operation.sign == 1) {
-						if (operation.object instanceof Shape) {
-							this.getPage().getFile().addShape((Shape) operation.object);
-						}
-					} else if (operation.sign == 0) {
-						if (operation.object instanceof Shape) {
-							this.getPage().getFile().removeShape((Shape) operation.object);
-						}
-					}
-				}
-				break;
-			}
-			case "moveShape": {
-				for (int i = 0; i < command.operationList.size(); i++) {
-					operation = command.operationList.get(i);
-					if (operation.sign == 1) {
-						if (operation.object instanceof Shape) {
-							this.getPage().getFile().addShape((Shape) operation.object);
-						}
-					} else if (operation.sign == 0) {
-						if (operation.object instanceof Shape) {
-							this.getPage().getFile().removeShape((Shape) operation.object);
-						}
-					}
-				}
-				break;
-			}
-			case "resizeShape": {
-				for (int i = 0; i < command.operationList.size(); i++) {
-					operation = command.operationList.get(i);
-					if (operation.sign == 1) {
-						if (operation.object instanceof Shape) {
-							this.getPage().getFile().addShape((Shape) operation.object);
-						}
-					} else if (operation.sign == 0) {
-						if (operation.object instanceof Shape) {
-							this.getPage().getFile().removeShape((Shape) operation.object);
-						}
-					}
-				}
-				break;
-			}
-			case "removeShape": {
-				for (int i = 0; i < command.operationList.size(); i++) {
-					operation = command.operationList.get(i);
-					if (operation.sign == 1) {
-						if (operation.object instanceof Shape) {
-							this.getPage().getFile().addShape((Shape) operation.object);
-						}
-					} else if (operation.sign == 0) {
-						if (operation.object instanceof Shape) {
-							this.getPage().getFile().removeShape((Shape) operation.object);
-						}
-					}
-				}
-				break;
-			}
-			default: {
-
-			}
-			}
-			this.event.undoStack.push(command);
-		}
-	}
-
 	@JsonIgnore
 	@Override
 	public String toString() {
@@ -449,11 +190,50 @@ public class Document {
 		try {
 			string = ow.writeValueAsString(this);
 		} catch (IOException ex) {
-			logger.error("IOException "+ex.getMessage());
+			logger.error("IOException " + ex.getMessage());
 		}
 		return string;
 	}
 }
+
+//@JsonIgnore
+//public void test() {
+//	Page page = new Page();
+//	File file = new File("./data/image", "01.jpg");
+//	page.fileList.add(file);
+//	file = new File("./data/image","02.jpg");
+//	page.fileList.add(file);
+//	pageList.add(page);
+//	page = new Page();
+//	file = new File("./data/image","02.jpg");
+//	page.fileList.add(file);
+//	pageList.add(page);
+//	page = new Page();
+//	file = new File("./data/image","03.jpg");
+//	page.fileList.add(file);
+//	pageList.add(page);
+//	page = new Page();
+//	file = new File("./data/image","04.jpg");
+//	page.fileList.add(file);
+//	pageList.add(page);
+//	page = new Page();
+//	file = new File("./data/image","05.jpg");
+//	page.fileList.add(file);
+//	pageList.add(page);
+//	page = new Page();
+//	file = new File("./data/image","06.jpg");
+//	page.fileList.add(file);
+//	pageList.add(page);
+//	page = new Page();
+//	file = new File("./data/image","07.jpg");
+//	page.fileList.add(file);
+//	pageList.add(page);
+//	page = new Page();
+//	file = new File("./data/image","08.jpg");
+//	page.fileList.add(file);
+//	pageList.add(page);
+//	this.setIndex(0);
+//}
 //public static void main(String[] args) throws IOException{
 //    Project project = new Project();
 ////    File file = new File("~/test.json");

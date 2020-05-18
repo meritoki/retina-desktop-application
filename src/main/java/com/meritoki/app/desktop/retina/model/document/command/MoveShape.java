@@ -28,15 +28,15 @@ public class MoveShape extends Command {
 		this.operationList.push(operation);
 		this.document.state.movedPoint = this.getMovedPoint(new Point(this.document.state.releasedPoint), new Point(this.document.state.pressedPoint));
 		Shape shape = null;
-		if (this.document.state.releasedFile != null &&!this.document.state.pressedFile.equals(this.document.state.releasedFile)) {
+		if (this.document.state.releasedImage != null &&!this.document.state.pressedImage.equals(this.document.state.releasedImage)) {
 			shape = new Shape(this.document.state.pressedShape);
 			shape.pointList.get(0).x = shape.dimension.x;
 			shape.pointList.get(0).y = shape.dimension.y;
 			shape.pointList.get(1).x = shape.dimension.x + shape.dimension.w;
 			shape.pointList.get(1).y = shape.dimension.y + shape.dimension.h;
 			shape.move(this.document.state.movedPoint);
-			this.document.state.pressedFile.removeShape(shape.uuid);
-			this.document.state.releasedFile.addShape(shape);
+			this.document.state.pressedImage.removeShape(shape.uuid);
+			this.document.state.releasedImage.addShape(shape);
 		} else {
 			this.document.state.pressedShape.move(this.document.state.movedPoint);
 			shape = this.document.state.pressedShape;

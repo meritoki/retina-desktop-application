@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.meritoki.app.desktop.retina.model.document.Document;
-import com.meritoki.app.desktop.retina.model.document.File;
+import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Shape;
@@ -34,9 +34,9 @@ class ProjectTest {
 	public static void initialize() {
 		project = new Document();
 		Page page = new Page();
-		File file = new File("./data/image", "01.jpg");
+		Image file = new Image("./data/image", "01.jpg");
 		page.addFile(file);
-		file = new File("./data/image", "02.jpg");
+		file = new Image("./data/image", "02.jpg");
 		page.addFile(file);
 		Shape shape = new Shape();
 		Point pointA = new Point(0,0);
@@ -49,13 +49,13 @@ class ProjectTest {
 		pageZeroUUID = page.uuid;
 		project.addPage(page);
 		page = new Page();
-		file = new File("./data/image", "02.jpg");
-		page.fileList.add(file);
+		file = new Image("./data/image", "02.jpg");
+		page.imageList.add(file);
 		pageOneUUID = page.uuid;
 		project.addPage(page);
 		page = new Page();
-		file = new File("./data/image", "03.jpg");
-		page.fileList.add(file);
+		file = new Image("./data/image", "03.jpg");
+		page.imageList.add(file);
 		pageTwoUUID = page.uuid;
 		project.addPage(page);
 //		page = new Page();
@@ -94,8 +94,8 @@ class ProjectTest {
 	@Test
 	public void setPageFile() {
 		project.setIndex(0);
-		List<File> fileList = project.getPage().getFileList();
-		for(File file: fileList) {
+		List<Image> fileList = project.getPage().getFileList();
+		for(Image file: fileList) {
 			Point point = new Point(file.offset+(file.getWidth()/2),file.margin+(file.getHeight()/2));
 			assertEquals(project.getPage().getFile(point).getUUID(),file.getUUID());
 		}
@@ -105,7 +105,7 @@ class ProjectTest {
 	public void setPageFileShape() {
 		Point point = new Point(50,50);
 		project.setIndex(0);
-		File file = project.getPage().getFile(point);
+		Image file = project.getPage().getFile(point);
 		project.getPage().setFile(file.getUUID());
 		for(Shape s:project.getPage().getShapeList()) {
 			System.out.println(s);

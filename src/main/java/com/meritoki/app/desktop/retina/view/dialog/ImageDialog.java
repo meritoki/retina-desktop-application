@@ -97,9 +97,9 @@ public class ImageDialog extends javax.swing.JDialog implements MouseListener, K
         List<Page> pageList = (document != null)? document.getPageList():null;
         this.indexValueLabel.setText(pageIndex+"");
         if(page!=null){
-        	if(page.fileList.size() == 1) {
-	            this.nameValueLabel.setText(page.fileList.get(0).name);
-	            this.pathValueLabel.setText(page.fileList.get(0).path);
+        	if(page.imageList.size() == 1) {
+	            this.nameValueLabel.setText(page.imageList.get(0).name);
+	            this.pathValueLabel.setText(page.imageList.get(0).path);
         	} else {
         		this.nameValueLabel.setText("NA");
 	            this.pathValueLabel.setText("NA");

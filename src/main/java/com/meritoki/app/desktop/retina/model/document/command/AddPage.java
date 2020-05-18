@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 
 public class AddPage extends Command {
@@ -21,9 +22,9 @@ public class AddPage extends Command {
     	logger.info("execute()");
     	this.user = this.document.state.user;
     	Page page = null;
-    	for(File file: this.document.state.files) {
+    	for(File file: this.document.state.fileArray) {
     		page = new Page();
-			page.fileList.add(new com.meritoki.app.desktop.retina.model.document.File(file.getParent(),file.getName()));
+			page.imageList.add(new Image(file.getParent(),file.getName()));
     		this.document.addPage(page);
     	}
     }

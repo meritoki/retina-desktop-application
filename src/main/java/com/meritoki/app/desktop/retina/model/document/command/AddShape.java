@@ -5,11 +5,9 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Shape;
-import com.meritoki.app.desktop.retina.model.document.Type;
 
 public class AddShape extends Command {
 	
@@ -25,11 +23,7 @@ public class AddShape extends Command {
     	this.user = this.document.state.user;
     	if(this.minimumSize(this.document.state.pressedPoint, this.document.state.releasedPoint, this.document.state.scale)) {
 			this.document.state.pressedShape = new Shape();
-			if (this.document.state.rectangle) {
-				this.document.state.pressedShape.type = Type.RECTANGLE;
-			} else if (this.document.state.ellipse) {
-				this.document.state.pressedShape.type = Type.ELLIPSE;
-			}
+			this.document.state.pressedShape.type = this.document.state.type;
 			this.document.state.pressedShape.setAddScale(this.document.state.scale);
 			this.document.state.pressedShape.setScale(this.document.state.scale);
 			this.document.state.pressedShape.pointList.add(new Point(this.document.state.pressedPoint));

@@ -24,7 +24,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import com.meritoki.app.desktop.retina.model.document.File;
+import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 
@@ -84,7 +84,7 @@ public class ScriptController {
 		int y = Integer.parseInt(b);
 		Page pageA = pageList.get(x);
 		Page pageB = pageList.get(y);
-		for (File file : pageB.fileList) {
+		for (Image file : pageB.imageList) {
 			pageA.addFile(file);
 		}
 		pageA.setBufferedImage(null);

@@ -65,10 +65,10 @@ public class Page {
 	@JsonProperty
 	public String uuid;
 	/**
-	 * List of Files loaded by user.
+	 * List of Images loaded by user.
 	 */
 	@JsonProperty
-	public List<File> fileList = new ArrayList<File>();
+	public List<Image> imageList = new ArrayList<Image>();
 	/**
 	 * Current file index selected by user. Default is zero for a fileList of size
 	 * 1.
@@ -110,8 +110,8 @@ public class Page {
 	 */
 	public Page(Page page) {
 		this.uuid = page.uuid;
-		for (File file : page.fileList) {
-			this.fileList.add(new File(file));
+		for (Image file : page.imageList) {
+			this.imageList.add(new Image(file));
 		}
 		this.index = page.index;
 		this.bufferedImage = page.bufferedImage;
@@ -146,9 +146,9 @@ public class Page {
 	 * @return file
 	 */
 	@JsonIgnore
-	public File getFile() {
-		File file = null;
-		List<File> fileList = this.getFileList();
+	public Image getFile() {
+		Image file = null;
+		List<Image> fileList = this.getFileList();
 		if (this.index >= 0 && this.index < fileList.size()) {
 			file = fileList.get(this.index);
 		}
@@ -162,10 +162,10 @@ public class Page {
 	 * @return File
 	 */
 	@JsonIgnore
-	public File getFile(Point point) {
+	public Image getFile(Point point) {
 		logger.info("getFile(" + point + ")");
-		File f = null;
-		for (File file : this.getFileList()) {
+		Image f = null;
+		for (Image file : this.getFileList()) {
 			f = file;
 			if (f.containsPoint(point)) {
 				break;
@@ -188,7 +188,7 @@ public class Page {
 	@JsonIgnore
 	public Shape getShape(Point point) {
 		Shape s = null;
-		for (File file : this.getFileList()) {
+		for (Image file : this.getFileList()) {
 			s = file.getShape(point);
 			if (s != null) {
 				break;
@@ -204,7 +204,7 @@ public class Page {
 	 */
 	@JsonIgnore
 	public Shape getShape() {
-		File file = this.getFile();
+		Image file = this.getFile();
 		Shape shape = (file != null) ? file.getShape() : null;
 		return shape;
 	}
@@ -219,7 +219,7 @@ public class Page {
 	public List<Shape> getShapeList() {
 		List<Shape> shapeList = new ArrayList<>();
 		Dimension dimension = null;
-		for (File file : this.getFileList()) {
+		for (Image file : this.getFileList()) {
 			for (Shape shape : file.getShapeList()) {
 				shape.setScale(file.scale);
 				shape.setDimension(null);
@@ -252,9 +252,9 @@ public class Page {
 	 * @return
 	 */
 	@JsonIgnore
-	public List<File> getFileList() {
+	public List<Image> getFileList() {
 		double offset = 0;
-		for (File file : this.fileList) {
+		for (Image file : this.imageList) {
 			if (file.getBufferedImage() == null) {
 				BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getImageCache(),
 						file.uuid + "." + file.extension);
@@ -303,7 +303,7 @@ public class Page {
 			file.setScale(this.scale);
 			offset += file.getWidth();
 		}
-		return this.fileList;
+		return this.imageList;
 	}
 
 	/**
@@ -316,10 +316,10 @@ public class Page {
 	public BufferedImage getBufferedImage() {
 		if (this.bufferedImage == null) {
 			BufferedImage bufferedImage = null;
-			File file = null;
-			for (File f : this.getFileList()) {
+			Image file = null;
+			for (Image f : this.getFileList()) {
 				if (file == null) {
-					file = new File(f);
+					file = new Image(f);
 					bufferedImage = this.modFile(file);
 				} else {
 					bufferedImage = this.joinFile(file, f);
@@ -342,7 +342,7 @@ public class Page {
 	 */
 	@JsonIgnore
 	public void setIndex(int index) {
-		if (index >= 0 && index < this.fileList.size()) {
+		if (index >= 0 && index < this.imageList.size()) {
 			this.index = index;
 		}
 	}
@@ -355,7 +355,7 @@ public class Page {
 	@JsonIgnore
 	public void setScale(double scale) {
 		this.scale = scale;
-		for (File file : this.fileList) {
+		for (Image file : this.imageList) {
 			file.setScale(scale);
 		}
 	}
@@ -367,7 +367,7 @@ public class Page {
 	 */
 	@JsonIgnore
 	public void setShape(String uuid) {
-		for (File file : this.getFileList()) {
+		for (Image file : this.getFileList()) {
 			if (file.setShape(uuid)) {
 				this.setFile(file.uuid);
 				break;
@@ -378,8 +378,8 @@ public class Page {
 	@JsonIgnore
 	public void setFile(String uuid) {
 		logger.info("setFile(" + uuid + ")");
-		File file = null;
-		List<File> fileList = this.getFileList();
+		Image file = null;
+		List<Image> fileList = this.getFileList();
 		for (int i = 0; i < fileList.size(); i++) {
 			file = fileList.get(i);
 			if (file.uuid.equals(uuid)) {
@@ -397,7 +397,7 @@ public class Page {
 	@JsonIgnore
 	public void addShape(Shape shape) {
 		logger.info("addShape(" + shape + ")");
-		for (File f : this.getFileList()) {
+		for (Image f : this.getFileList()) {
 			if (f.containsShape(shape)) {
 				f.addShape(shape);
 				this.setFile(f.uuid);
@@ -408,16 +408,16 @@ public class Page {
 	}
 
 	@JsonIgnore
-	public void addFile(File file) {
+	public void addFile(Image file) {
 		logger.info("addFile(" + file + ")");
 		file.setScale(this.scale);
-		this.fileList.add(file);
+		this.imageList.add(file);
 	}
 
 	public Shape removeShape(Shape shape) {
 		logger.info("removeShape(" + shape + ")");
 		Shape s = null;
-		for (File file : this.getFileList()) {
+		for (Image file : this.getFileList()) {
 			s = file.removeShape(shape.uuid);
 			if (s != null) {
 				break;
@@ -430,7 +430,7 @@ public class Page {
 	public Selection intersectShape(Point point) {
 		logger.trace("intersectShape(" + point + ")");
 		Selection selection = null;
-		File file = this.getFile();
+		Image file = this.getFile();
 		if (file != null) {
 			selection = file.intersectShape(point);
 		}
@@ -652,7 +652,7 @@ public class Page {
 	@JsonIgnore
 	public double getFileListMinMargin() {
 		double min = 65536;
-		for (File file : this.getFileList()) {
+		for (Image file : this.getFileList()) {
 			if (file.margin < min) {
 				min = file.margin;
 			}
@@ -663,7 +663,7 @@ public class Page {
 	@JsonIgnore
 	public double getFileListMaxMargin() {
 		double max = -65536;
-		for (File file : this.getFileList()) {
+		for (Image file : this.getFileList()) {
 			if (file.margin > max) {
 				max = file.margin;
 			}
@@ -732,7 +732,7 @@ public class Page {
 	}
 
 	@JsonIgnore
-	public BufferedImage modFile(File a) { // BufferedImage img1,BufferedImage img2) {
+	public BufferedImage modFile(Image a) { // BufferedImage img1,BufferedImage img2) {
 		logger.debug("modFile(" + a + ")");
 		BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
 		if (a.bufferedImage != null) {
@@ -751,7 +751,7 @@ public class Page {
 	}
 
 	@JsonIgnore
-	public BufferedImage joinFile(File a, File b) {
+	public BufferedImage joinFile(Image a, Image b) {
 		logger.debug("joinFiles(" + a + "," + b + ")");
 		BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
 		if (a.bufferedImage != null && b.bufferedImage != null) {

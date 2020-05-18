@@ -1,5 +1,6 @@
 package com.meritoki.app.desktop.retina.model.document;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,18 +10,14 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 
 public class State {
-
 	@JsonIgnore
-	public boolean rectangle = true;
+	public Type type = Type.RECTANGLE;
 	@JsonIgnore
-	public boolean ellipse = true;
+	public Image pressedImage = null;
 	@JsonIgnore
-	public File pressedFile = null;
+	public Image releasedImage = null;
 	@JsonIgnore
-	public File releasedFile = null;
-	@JsonIgnore
-	public java.io.File[] files = null;
-
+	public File[] fileArray = null;
 	@JsonIgnore
 	public Script script = null;
 	@JsonIgnore

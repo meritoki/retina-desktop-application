@@ -15,8 +15,10 @@ import com.meritoki.app.desktop.retina.model.document.user.User;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Zooniverse;
 import com.meritoki.app.desktop.retina.model.vendor.Vendor;
+import com.meritoki.app.desktop.retina.model.vendor.microsoft.Microsoft;
 
 public class System {
+	
 	@JsonIgnore
 	public Properties properties = null;
 	@JsonProperty
@@ -28,7 +30,7 @@ public class System {
 	@JsonIgnore
 	public User user = null;
 	@JsonIgnore
-	public File file = null;
+	public File file = null;//The file that corresponds to the loaded document
 	@JsonIgnore
 	public boolean newUser = false;
 	@JsonIgnore
@@ -37,17 +39,38 @@ public class System {
 	public boolean newDocument = true;
 
 	public System() {
+		this.initDirectories();
+		this.initProviders();
+		this.initVendors();
+		this.initProperties();
+		this.initUsers();
+	}
+	
+	public void initDirectories() {
 		if(!new File(NodeController.getRetinaHome()).exists()) {
 			new File(NodeController.getRetinaHome()).mkdirs();
 		}
 		if(!new File(NodeController.getImageCache()).exists()) {
 			new File(NodeController.getImageCache()).mkdirs();
 		}
-		this.properties = NodeController.openProperties("./retina-desktop.properties");
+	}
+	
+	public void initProperties() {
+		this.properties = NodeController.openProperties("./retina.properties");
+	}
+	
+	public void initProviders() {
+		this.providerList.add(new Zooniverse());
+	}
+	
+	public void initVendors() {
+		this.vendorList.add(new Microsoft());
+	}
+	
+	public void initUsers() {
 		if(UserController.exists()) {
 			this.userList = UserController.open();
 		}
-		this.providerList.add(new Zooniverse());
 		if (this.userList.size() == 0) {
 			this.newUser = true;
 			User user = new User();
@@ -60,9 +83,5 @@ public class System {
 		} else {
 			this.loginUser = false;
 		}
-	}
-	
-	public void initProviders() {
-		this.providerList.add(new Zooniverse());
 	}
 }

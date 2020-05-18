@@ -22,9 +22,9 @@ import com.meritoki.app.desktop.retina.controller.node.NodeController;
  * @author jorodriguez
  *
  */
-public class File {
+public class Image {
 	@JsonIgnore
-	static Logger logger = LogManager.getLogger(File.class.getName());
+	static Logger logger = LogManager.getLogger(Image.class.getName());
 	@JsonProperty
 	public String uuid = null;
 	@JsonProperty
@@ -61,34 +61,30 @@ public class File {
 	/**
 	 * Default constructor
 	 */
-	public File() {
+	public Image() {
 		this.uuid = UUID.randomUUID().toString();
 	}
 
 	/**
 	 * Copy constructor
 	 * 
-	 * @param file
+	 * @param image
 	 */
-	public File(File file) {
-		this.uuid = file.uuid;
-		this.name = file.name;
-		this.path = file.path;
-		this.extension = file.extension;
-		this.bufferedImage = file.bufferedImage;
-		this.width = file.width;
-		this.height = file.height;
-		this.offset = file.offset;
-		this.margin = file.margin;
-		this.scale = file.scale;
-		this.index = file.index;
-		for (Shape shape : file.shapeList) {
+	public Image(Image image) {
+		this.uuid = image.uuid;
+		this.name = image.name;
+		this.path = image.path;
+		this.extension = image.extension;
+		this.bufferedImage = image.bufferedImage;
+		this.width = image.width;
+		this.height = image.height;
+		this.offset = image.offset;
+		this.margin = image.margin;
+		this.scale = image.scale;
+		this.index = image.index;
+		for (Shape shape : image.shapeList) {
 			this.shapeList.add(new Shape(shape));
 		}
-	}
-
-	public String getUUID() {
-		return this.uuid;
 	}
 
 	/**
@@ -97,13 +93,18 @@ public class File {
 	 * @param path
 	 * @param name
 	 */
-	public File(String path, String name) {
+	public Image(String path, String name) {
 		this.uuid = UUID.randomUUID().toString();
 		this.path = path;
 		this.name = name;
 		this.extension = this.getExtension(this.name);
 		this.name = this.name.replace("." + this.extension, "");
-//		this.setBufferedImage(NodeController.openBufferedImage(this.path, this.name+"."+this.extension));
+		// this.setBufferedImage(NodeController.openBufferedImage(this.path,
+		// this.name+"."+this.extension));
+	}
+
+	public String getUUID() {
+		return this.uuid;
 	}
 
 	public String getExtension(String fileName) {
@@ -116,7 +117,7 @@ public class File {
 	 * @param file
 	 * @return flag
 	 */
-	public boolean equals(File file) {
+	public boolean equals(Image file) {
 		boolean flag = false;
 		if (this.uuid.equals(file.uuid)) {
 			flag = true;
@@ -349,7 +350,7 @@ public class File {
 		shape.pointList = this.getFilePointList(shape.pointList);
 		this.shapeList.add(shape);
 	}
-	
+
 	public Selection intersectShape(Point point) {
 		Selection selection = null;
 		double factor;

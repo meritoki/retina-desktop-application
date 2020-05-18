@@ -31,7 +31,7 @@ import org.apache.logging.log4j.Logger;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
-import com.meritoki.app.desktop.retina.model.document.File;
+import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Shape;
@@ -100,11 +100,11 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 			if (bufferedImage != null) {
 				graphics2D.drawImage(bufferedImage, affineTransform, null);
 			}
-			List<File> fileList = document.getPage().getFileList();
-			File file = document.getPage().getFile();
+			List<Image> fileList = document.getPage().getFileList();
+			Image file = document.getPage().getFile();
 			com.meritoki.app.desktop.retina.model.document.Dimension d = null;
 			if (fileList != null) {
-				for (File f : fileList) {
+				for (Image f : fileList) {
 					d = f.getDimension();
 					if (file != null && f.uuid.equals(file.uuid)) {
 						graphics2D.setColor(Color.RED);
@@ -180,10 +180,10 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 		this.model.document.state.pressedPoint.y = e.getY();
 		logger.trace(
 				"mousePressed(e) this.model.document.state.pressedPoint=" + this.model.document.state.pressedPoint);
-		this.model.document.state.pressedFile = this.model.getDocument().getPage()
+		this.model.document.state.pressedImage = this.model.getDocument().getPage()
 				.getFile(new Point(this.model.document.state.pressedPoint));
-		if (this.model.document.state.pressedFile != null) {
-			this.model.getDocument().getPage().setFile(this.model.document.state.pressedFile.uuid);
+		if (this.model.document.state.pressedImage != null) {
+			this.model.getDocument().getPage().setFile(this.model.document.state.pressedImage.uuid);
 			this.model.document.state.pressedShape = this.model.getDocument().getPage()
 					.getShape(new Point(this.model.document.state.pressedPoint));
 		}
@@ -198,19 +198,19 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 		this.model.document.state.releasedPoint = new Point(e.getX(), e.getY());
 		if (this.model.document.state.pressedPoint.equals(this.model.document.state.releasedPoint)) {
 			if (this.model.document.state.pressedShape != null)
-				this.model.getDocument().execute("setShape");
+				this.model.getDocument().pattern.execute("setShape");
 		} else {
 			this.model.document.state.selection = this.model.getDocument().getPage()
 					.intersectShape(this.model.document.state.pressedPoint);
 			if (this.model.document.state.selection != null) {
-				this.model.getDocument().execute("resizeShape");
+				this.model.getDocument().pattern.execute("resizeShape");
 			} else {
 				if (this.model.document.state.pressedShape != null) {
-					this.model.document.state.releasedFile = this.model.getDocument().getPage()
+					this.model.document.state.releasedImage = this.model.getDocument().getPage()
 							.getFile(this.model.document.state.releasedPoint);
-					this.model.getDocument().execute("moveShape");
+					this.model.getDocument().pattern.execute("moveShape");
 				} else {
-					this.model.getDocument().execute("addShape");
+					this.model.getDocument().pattern.execute("addShape");
 				}
 			}
 		}
@@ -249,7 +249,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 			e.consume();
 			Page page = this.model.getDocument().getPage();
 			page.setBufferedImage(null);
-			File file = (page != null) ? page.getFile() : null;
+			Image file = (page != null) ? page.getFile() : null;
 			if (file != null) {
 				file.setMargin(file.margin + 10);
 				page.setBufferedImage(null);
@@ -259,7 +259,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 			e.consume();
 			Page page = this.model.getDocument().getPage();
 			page.setBufferedImage(null);
-			File file = (page != null) ? page.getFile() : null;
+			Image file = (page != null) ? page.getFile() : null;
 			if (file != null) {
 				file.setMargin(file.margin - 10);
 				page.setBufferedImage(null);
@@ -267,11 +267,11 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 			repaint();
 		} else if ((e.getKeyCode() == KeyEvent.VK_Z) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
 			e.consume();
-			this.model.getDocument().undo();
+			this.model.getDocument().pattern.undo();
 			repaint();
 		} else if ((e.getKeyCode() == KeyEvent.VK_Y) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
 			e.consume();
-			this.model.getDocument().redo();
+			this.model.getDocument().pattern.redo();
 			repaint();
 		} else if ((e.getKeyCode() == KeyEvent.VK_M) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
 			String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
@@ -288,7 +288,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 			case KeyEvent.VK_BACK_SPACE: {
 				logger.debug("KeyPressed(BACK_SPACE)");
 				this.model.document.state.pressedShape = this.model.getDocument().getPage().getShape();
-				this.model.getDocument().execute("removeShape");
+				this.model.getDocument().pattern.execute("removeShape");
 				this.repaint();
 				break;
 			}
