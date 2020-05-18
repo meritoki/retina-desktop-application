@@ -41,9 +41,9 @@ class ProjectTest {
 		Shape shape = new Shape();
 		Point pointA = new Point(0,0);
 		Point pointB = new Point(100,100);
-		shape.pointList.add(pointA);
-		shape.pointList.add(pointB);
-		shape.normalizePointList();
+		shape.dimension.addPoint(pointA);
+		shape.dimension.addPoint(pointB);
+		shape.dimension.normalize();
 		shapeZeroUUID = shape.getUUID();
 		page.addShape(shape);
 		pageZeroUUID = page.uuid;

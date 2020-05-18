@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.meritoki.app.desktop.retina.model.document.Dimension;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Shape;
@@ -30,15 +31,16 @@ public class MoveShape extends Command {
 		Shape shape = null;
 		if (this.document.cache.releasedImage != null &&!this.document.cache.pressedImage.equals(this.document.cache.releasedImage)) {
 			shape = new Shape(this.document.cache.pressedShape);
-			shape.pointList.get(0).x = shape.dimension.x;
-			shape.pointList.get(0).y = shape.dimension.y;
-			shape.pointList.get(1).x = shape.dimension.x + shape.dimension.w;
-			shape.pointList.get(1).y = shape.dimension.y + shape.dimension.h;
-			shape.move(this.document.cache.movedPoint);
+			shape.dimension = new Dimension(this.document.cache.pressedShape.dimension);
+//			shape.pointList.get(0).x = shape.dimension.x;
+//			shape.pointList.get(0).y = shape.dimension.y;
+//			shape.pointList.get(1).x = shape.dimension.x + shape.dimension.w;
+//			shape.pointList.get(1).y = shape.dimension.y + shape.dimension.h;
+			shape.dimension.movePoint(this.document.cache.movedPoint);
 			this.document.cache.pressedImage.removeShape(shape.uuid);
 			this.document.cache.releasedImage.addShape(shape);
 		} else {
-			this.document.cache.pressedShape.move(this.document.cache.movedPoint);
+			this.document.cache.pressedShape.dimension.movePoint(this.document.cache.movedPoint);
 			shape = this.document.cache.pressedShape;
 		}		
 		operation = new Operation();

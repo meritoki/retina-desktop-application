@@ -80,7 +80,6 @@ public class Page {
 	 */
 	@JsonIgnore
 	public BufferedImage bufferedImage = null;
-
 	/**
 	 * Scale of the entire page, applied to all files.
 	 */
@@ -218,14 +217,15 @@ public class Page {
 	@JsonIgnore
 	public List<Shape> getShapeList() {
 		List<Shape> shapeList = new ArrayList<>();
-		Dimension dimension = null;
-		for (Image file : this.getImageList()) {
-			for (Shape shape : file.getShapeList()) {
-				shape.setScale(file.scale);
-				shape.setDimension(null);
-				dimension = shape.getDimension();
-				dimension.x += (file.getOffset() * file.scale);
-				dimension.y += (file.getMargin() * file.scale);
+		for (Image image : this.getImageList()) {
+			for (Shape shape : image.getShapeList()) {
+				shape.dimension.setScale(image.scale);
+				shape.dimension.setOffset(image.getOffset());
+				shape.dimension.setMargin(image.getMargin());
+//				shape.setDimension(null);
+//				dimension = shape.getDimension();
+//				dimension.x += (image.getOffset() * image.scale);
+//				dimension.y += (image.getMargin() * image.scale);
 				shape.bufferedImage = this.getShapeBufferedImage(shape);
 				shapeList.add(shape);
 			}
@@ -568,14 +568,13 @@ public class Page {
 		double average = 0;
 		int count = 0;
 		double sum = 0;
-		Dimension d = null;
 		for (Shape s : shapeList) {
 			// d = //s.dimension;
-			sum += s.getCenterY();// d.y+(d.h/2);
+			sum += s.dimension.getCenterY();// d.y+(d.h/2);
 			count += 1;
 		}
 		// d = shape.dimension;s
-		sum += shape.getCenterY();
+		sum += shape.dimension.getCenterY();
 		count +=1;
 		average = sum / count;
 //		logger.info("getShapeListYAverage(" + shapeList + "," + shape+ ") average=" + average);
@@ -589,7 +588,7 @@ public class Page {
 		double a = 0;
 		double average = this.getShapeListYAverage(shapeList, shape);
 //		for (Shape s : shapeList) {
-		a = shape.getCenterY();
+		a = shape.dimension.getCenterY();
 		a = Math.abs(average - a);
 //		logger.info("isShapeListYInThreshold(" + shapeList + ", " + shape+ ") a=" + a);
 		if (a > (this.threshold*this.scale)) {
@@ -678,8 +677,8 @@ public class Page {
 		}
 		Collections.sort(shapeMatrix, new Comparator<List<Shape>>() {
 			public int compare(List<Shape> ideaVal1, List<Shape> ideaVal2) {
-				Double idea1 = ideaVal1.get(0).getCenterY();
-				Double idea2 = ideaVal2.get(0).getCenterY();
+				Double idea1 = ideaVal1.get(0).dimension.getCenterY();
+				Double idea2 = ideaVal2.get(0).dimension.getCenterY();
 				return idea1.compareTo(idea2);
 			}
 		});
@@ -690,8 +689,8 @@ public class Page {
 	public void sortRowList(List<Shape> shapeList) {
 		Collections.sort(shapeList, new Comparator<Shape>() {
 			public int compare(Shape ideaVal1, Shape ideaVal2) {
-				Double idea1 = ideaVal1.getCenterX();// pointList.get(0).x;
-				Double idea2 = ideaVal2.getCenterX();// pointList.get(0).x;
+				Double idea1 = ideaVal1.dimension.getCenterX();// pointList.get(0).x;
+				Double idea2 = ideaVal2.dimension.getCenterX();// pointList.get(0).x;
 				return idea1.compareTo(idea2);
 			}
 		});

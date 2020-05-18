@@ -87,7 +87,6 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 	 */
 	@Override
 	public void paint(Graphics graphics) {
-		logger.trace("paint(" + graphics + ")");
 		super.paint(graphics);
 		if (this.model != null) {
 			Graphics2D graphics2D = (Graphics2D) graphics.create();

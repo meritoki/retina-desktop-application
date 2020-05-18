@@ -160,7 +160,7 @@ public class Image {
 		logger.info("getShape(" + point + ")");
 		Shape s = null;
 		for (Shape shape : this.shapeList) {
-			if (shape.containsPoint(this.getFilePoint(point))) {
+			if (shape.dimension.containsPoint(this.getFilePoint(point))) {
 				logger.info("getShape(" + point + ") s.uuid=" + shape.uuid);
 				s = shape;
 				break;
@@ -195,6 +195,14 @@ public class Image {
 		pList.set(0, this.getPagePoint(pList.get(0)));
 		pList.set(1, this.getPagePoint(pList.get(1)));
 		return pList;
+	}
+
+	public List<Point> copyPointList(List<Point> pointList) {
+		List<Point> copyPointList = new ArrayList<>();
+		for (Point p : pointList) {
+			copyPointList.add(new Point(p));
+		}
+		return copyPointList;
 	}
 
 	/**
@@ -276,7 +284,7 @@ public class Image {
 		logger.debug("setScale(" + scale + ")");
 		this.scale = scale;
 		for (Shape shape : this.shapeList) {
-			shape.setScale(this.scale);
+			shape.dimension.setScale(this.scale);
 		}
 	}
 
@@ -323,19 +331,17 @@ public class Image {
 	public void setOffset(double offset) {
 		logger.debug("setOffset(" + offset + ")");
 		this.offset = offset;
+		for (Shape shape : this.shapeList) {
+			shape.dimension.setOffset(this.offset);
+		}
 	}
 
 	public void setMargin(double margin) {
 		logger.debug("setMargin(" + margin + ")");
 		this.margin = margin;
-	}
-
-	public List<Point> copyPointList(List<Point> pointList) {
-		List<Point> copyPointList = new ArrayList<>();
-		for (Point p : pointList) {
-			copyPointList.add(new Point(p));
+		for (Shape shape : this.shapeList) {
+			shape.dimension.setMargin(this.margin);
 		}
-		return copyPointList;
 	}
 
 	/**
@@ -347,7 +353,7 @@ public class Image {
 	@JsonIgnore
 	public void addShape(Shape shape) {
 		logger.info("addShape(" + shape + ")");
-		shape.pointList = this.getFilePointList(shape.pointList);
+		shape.dimension.pointList = this.getFilePointList(shape.dimension.pointList);
 		this.shapeList.add(shape);
 	}
 
@@ -358,9 +364,9 @@ public class Image {
 		Shape shape = this.getShape();
 		if (shape != null) {
 			copyPoint = new Point(point);
-			factor = this.offset * shape.scale;
+			factor = this.offset * shape.dimension.scale;
 			copyPoint.x -= factor;
-			selection = shape.intersect(copyPoint);
+			selection = shape.dimension.selectionPoint(copyPoint);
 		}
 		return selection;
 	}
@@ -383,7 +389,7 @@ public class Image {
 	public boolean containsShape(Shape shape) {
 		logger.info("containsShape(" + shape + ")");
 		boolean flag = false;
-		if (this.containsPoint(new Point(shape.pointList.get(0)))) {
+		if (this.containsPoint(new Point(shape.dimension.pointList.get(0)))) {
 			flag = true;
 		}
 		return flag;
@@ -406,7 +412,7 @@ public class Image {
 			s = this.shapeList.get(i);
 			if (s.uuid.equals(uuid)) {
 				this.shapeList.remove(i);
-				s.pointList = this.getPagePointList(s.pointList);
+				s.dimension.pointList = this.getPagePointList(s.dimension.pointList);
 				break;
 			} else {
 				s = null;
