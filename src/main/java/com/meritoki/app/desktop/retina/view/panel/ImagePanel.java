@@ -100,7 +100,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 			if (bufferedImage != null) {
 				graphics2D.drawImage(bufferedImage, affineTransform, null);
 			}
-			List<Image> fileList = document.getPage().getFileList();
+			List<Image> fileList = document.getPage().getImageList();
 			Image file = document.getPage().getFile();
 			com.meritoki.app.desktop.retina.model.document.Dimension d = null;
 			if (fileList != null) {

@@ -28,7 +28,7 @@ public class AddShape extends Command {
 			this.document.state.pressedShape.setScale(this.document.state.scale);
 			this.document.state.pressedShape.pointList.add(new Point(this.document.state.pressedPoint));
 			this.document.state.pressedShape.pointList.add(new Point(this.document.state.releasedPoint));
-			this.document.state.pressedShape.sortPointList();
+			this.document.state.pressedShape.normalizePointList();
 	    	this.document.getPage().addShape(this.document.state.pressedShape);
 			Operation operation = new Operation();
 			operation.object = new Shape(this.document.state.pressedShape);

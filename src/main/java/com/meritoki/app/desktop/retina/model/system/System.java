@@ -32,6 +32,8 @@ public class System {
 	@JsonIgnore
 	public File file = null;//The file that corresponds to the loaded document
 	@JsonIgnore
+	public String defaultFileName = "Untitled.json";
+	@JsonIgnore
 	public boolean newUser = false;
 	@JsonIgnore
 	public boolean loginUser = false;

@@ -30,6 +30,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
+import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 
 /**
@@ -44,8 +45,8 @@ public class UserClient {
 	public Properties properties = null;
 	public String token = null;
 	
-	public UserClient() {
-		this.properties = NodeController.openProperties("./retina-desktop.properties");
+	public UserClient(Model model) {
+		this.properties = model.system.properties;
 		boolean gateway = Boolean.parseBoolean((String) this.properties.get("gateway"));
 		if(gateway) {
 			this.url = this.properties.getProperty("service.web.gateway.url")+"/user";
@@ -113,7 +114,7 @@ public class UserClient {
 	}
 	
 	public static void main(String[] args) {
-		UserClient userClient = new UserClient();
+		UserClient userClient = new UserClient(new Model());
 		userClient.checkHealth();
 	}
 }

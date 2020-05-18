@@ -352,7 +352,7 @@ public final class MainFrame extends JFrame {
 
     private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
         if (this.model.system.newDocument) {
-            this.saveAsDialog = new com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog(this, false);
+            this.saveAsDialog = new com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog(this, false, this.model);
         } else {
             DocumentController.save(model.system.file, this.model.document);
         }
@@ -360,7 +360,7 @@ public final class MainFrame extends JFrame {
     }//GEN-LAST:event_saveMenuItemActionPerformed
 
     private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openMenuItemActionPerformed
-        this.openDialog = new com.meritoki.app.desktop.retina.view.dialog.OpenDialog(this, false);
+        this.openDialog = new com.meritoki.app.desktop.retina.view.dialog.OpenDialog(this, false, this.model);
     }//GEN-LAST:event_openMenuItemActionPerformed
 
     private void imageMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imageMenuItemActionPerformed
@@ -380,11 +380,12 @@ public final class MainFrame extends JFrame {
     }//GEN-LAST:event_zooniverseExportMenuItemActionPerformed
 
     private void saveAsMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsMenuItemActionPerformed
-        this.saveAsDialog = new com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog(this, false);
+        this.saveAsDialog = new com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog(this, false, this.model);
     }//GEN-LAST:event_saveAsMenuItemActionPerformed
 
     private void importImageMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importImageMenuItemActionPerformed
         this.imageImportDialog = new com.meritoki.app.desktop.retina.view.dialog.image.ImageImportDialog(this, false);
+//        this.imageImportDialog.setModel(this.model);
     }//GEN-LAST:event_importImageMenuItemActionPerformed
 
     private void loginMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginMenuItemActionPerformed

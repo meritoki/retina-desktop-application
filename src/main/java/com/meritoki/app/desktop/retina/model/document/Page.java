@@ -148,7 +148,7 @@ public class Page {
 	@JsonIgnore
 	public Image getFile() {
 		Image file = null;
-		List<Image> fileList = this.getFileList();
+		List<Image> fileList = this.getImageList();
 		if (this.index >= 0 && this.index < fileList.size()) {
 			file = fileList.get(this.index);
 		}
@@ -165,7 +165,7 @@ public class Page {
 	public Image getFile(Point point) {
 		logger.info("getFile(" + point + ")");
 		Image f = null;
-		for (Image file : this.getFileList()) {
+		for (Image file : this.getImageList()) {
 			f = file;
 			if (f.containsPoint(point)) {
 				break;
@@ -188,7 +188,7 @@ public class Page {
 	@JsonIgnore
 	public Shape getShape(Point point) {
 		Shape s = null;
-		for (Image file : this.getFileList()) {
+		for (Image file : this.getImageList()) {
 			s = file.getShape(point);
 			if (s != null) {
 				break;
@@ -219,7 +219,7 @@ public class Page {
 	public List<Shape> getShapeList() {
 		List<Shape> shapeList = new ArrayList<>();
 		Dimension dimension = null;
-		for (Image file : this.getFileList()) {
+		for (Image file : this.getImageList()) {
 			for (Shape shape : file.getShapeList()) {
 				shape.setScale(file.scale);
 				shape.setDimension(null);
@@ -252,56 +252,56 @@ public class Page {
 	 * @return
 	 */
 	@JsonIgnore
-	public List<Image> getFileList() {
+	public List<Image> getImageList() {
 		double offset = 0;
-		for (Image file : this.imageList) {
-			if (file.getBufferedImage() == null) {
+		for (Image image : this.imageList) {
+			if (image.getBufferedImage() == null) {
 				BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getImageCache(),
-						file.uuid + "." + file.extension);
+						image.uuid + "." + image.extension);
 				if (bufferedImage == null) {
-					bufferedImage = NodeController.openBufferedImage(file.getPath(), file.getNameAndExtension());
+					bufferedImage = NodeController.openBufferedImage(image.getPath(), image.getNameAndExtension());
 					if (bufferedImage != null) {
-						file.setBufferedImage(bufferedImage);
-						if (file.extension.equals("jpg") || file.extension.equals("jpeg")) {
-							NodeController.saveJpg(NodeController.getImageCache(), file.uuid + "." + file.extension,
+						image.setBufferedImage(bufferedImage);
+						if (image.extension.equals("jpg") || image.extension.equals("jpeg")) {
+							NodeController.saveJpg(NodeController.getImageCache(), image.uuid + "." + image.extension,
 									bufferedImage);
 						}
 						// TODO Add support for PNG
-						if (ClientController.fileClient.checkHealth()) {
-							ClientController.fileClient.registerFile(file.uuid);
-							if (ClientController.fileClient.checkFile(file.uuid)) {
-								ClientController.fileClient.uploadFile(
-										NodeController.getImageCache() + NodeController.getSeperator(),
-										file.uuid + "." + file.extension);
-							}
-						}
+//						if (ClientController.fileClient.checkHealth()) {
+//							ClientController.fileClient.registerFile(image.uuid);
+//							if (ClientController.fileClient.checkFile(image.uuid)) {
+//								ClientController.fileClient.uploadFile(
+//										NodeController.getImageCache() + NodeController.getSeperator(),
+//										image.uuid + "." + image.extension);
+//							}
+//						}
 					} else {
-						if (ClientController.fileClient.checkHealth()) {
-							if (ClientController.fileClient.checkFile(file.uuid)) {
-								ClientController.fileClient.downloadFile(
-										NodeController.getImageCache() + NodeController.getSeperator(),
-										file.getUUID() + "." + file.getExtension());
-								ClientController.fileClient.unmarkFile(file.uuid);
-							} else {
-								ClientController.fileClient.markFile(file.uuid);
-							}
-						}
+//						if (ClientController.fileClient.checkHealth()) {
+//							if (ClientController.fileClient.checkFile(image.uuid)) {
+//								ClientController.fileClient.downloadFile(
+//										NodeController.getImageCache() + NodeController.getSeperator(),
+//										image.getUUID() + "." + image.getExtension());
+//								ClientController.fileClient.unmarkFile(image.uuid);
+//							} else {
+//								ClientController.fileClient.markFile(image.uuid);
+//							}
+//						}
 					}
 				} else {
-					file.setBufferedImage(bufferedImage);
-					if (ClientController.fileClient.checkHealth()) {
-						ClientController.fileClient.registerFile(file.uuid);
-						if (ClientController.fileClient.checkFile(file.uuid)) {
-							ClientController.fileClient.uploadFile(
-									NodeController.getImageCache() + NodeController.getSeperator(),
-									file.uuid + "." + file.extension);
-						}
-					}
+					image.setBufferedImage(bufferedImage);
+//					if (ClientController.fileClient.checkHealth()) {
+//						ClientController.fileClient.registerFile(image.uuid);
+//						if (ClientController.fileClient.checkFile(image.uuid)) {
+//							ClientController.fileClient.uploadFile(
+//									NodeController.getImageCache() + NodeController.getSeperator(),
+//									image.uuid + "." + image.extension);
+//						}
+//					}
 				}
 			}
-			file.setOffset(offset);
-			file.setScale(this.scale);
-			offset += file.getWidth();
+			image.setOffset(offset);
+			image.setScale(this.scale);
+			offset += image.getWidth();
 		}
 		return this.imageList;
 	}
@@ -317,7 +317,7 @@ public class Page {
 		if (this.bufferedImage == null) {
 			BufferedImage bufferedImage = null;
 			Image file = null;
-			for (Image f : this.getFileList()) {
+			for (Image f : this.getImageList()) {
 				if (file == null) {
 					file = new Image(f);
 					bufferedImage = this.modFile(file);
@@ -367,7 +367,7 @@ public class Page {
 	 */
 	@JsonIgnore
 	public void setShape(String uuid) {
-		for (Image file : this.getFileList()) {
+		for (Image file : this.getImageList()) {
 			if (file.setShape(uuid)) {
 				this.setFile(file.uuid);
 				break;
@@ -379,7 +379,7 @@ public class Page {
 	public void setFile(String uuid) {
 		logger.info("setFile(" + uuid + ")");
 		Image file = null;
-		List<Image> fileList = this.getFileList();
+		List<Image> fileList = this.getImageList();
 		for (int i = 0; i < fileList.size(); i++) {
 			file = fileList.get(i);
 			if (file.uuid.equals(uuid)) {
@@ -397,7 +397,7 @@ public class Page {
 	@JsonIgnore
 	public void addShape(Shape shape) {
 		logger.info("addShape(" + shape + ")");
-		for (Image f : this.getFileList()) {
+		for (Image f : this.getImageList()) {
 			if (f.containsShape(shape)) {
 				f.addShape(shape);
 				this.setFile(f.uuid);
@@ -417,7 +417,7 @@ public class Page {
 	public Shape removeShape(Shape shape) {
 		logger.info("removeShape(" + shape + ")");
 		Shape s = null;
-		for (Image file : this.getFileList()) {
+		for (Image file : this.getImageList()) {
 			s = file.removeShape(shape.uuid);
 			if (s != null) {
 				break;
@@ -652,7 +652,7 @@ public class Page {
 	@JsonIgnore
 	public double getFileListMinMargin() {
 		double min = 65536;
-		for (Image file : this.getFileList()) {
+		for (Image file : this.getImageList()) {
 			if (file.margin < min) {
 				min = file.margin;
 			}
@@ -663,7 +663,7 @@ public class Page {
 	@JsonIgnore
 	public double getFileListMaxMargin() {
 		double max = -65536;
-		for (Image file : this.getFileList()) {
+		for (Image file : this.getImageList()) {
 			if (file.margin > max) {
 				max = file.margin;
 			}

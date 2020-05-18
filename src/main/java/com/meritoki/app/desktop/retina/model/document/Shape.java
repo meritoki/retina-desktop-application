@@ -35,6 +35,8 @@ public class Shape {
 	@JsonIgnore
     private static Logger logger = LogManager.getLogger(Shape.class.getName());
 	@JsonProperty
+	public String uuid = null;
+	@JsonProperty
 	public Type type;
     @JsonProperty
     public List<Point> pointList = new ArrayList<>(2);
@@ -42,14 +44,10 @@ public class Shape {
     public double addScale = 1;
     @JsonProperty
     public double scale = 1;
-    @JsonProperty
-    public String uuid = null;
     @JsonIgnore
     public BufferedImage bufferedImage = null;
     @JsonProperty
     public Data data = new Data();
-    @JsonIgnore
-    public boolean removed = false;
     @JsonIgnore
     public Dimension dimension = null;
     @JsonProperty
@@ -156,7 +154,7 @@ public class Shape {
     }
     
     @JsonIgnore
-    public void sortPointList() {
+    public void normalizePointList() {
     	Point pointZero = this.pointList.get(0);
     	Point pointOne = this.pointList.get(1);
     	//Case B
@@ -205,7 +203,6 @@ public class Shape {
 		Dimension dimension = this.getDimension();
 		double x = dimension.x+(dimension.w/2);
 		return x;
-//	    return (this.pointList.get(0).x + this.pointList.get(1).x)/2;
 	}
 
 	@JsonIgnore
@@ -213,7 +210,6 @@ public class Shape {
 		Dimension dimension = this.getDimension();
 		double y = dimension.y+(dimension.h/2);
 		return y;
-//	    return (this.pointList.get(0).y+this.pointList.get(1).y)/2;
 	}
 	
 	public List<Point> getPointList() {

@@ -45,6 +45,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meritoki.app.desktop.retina.controller.client.json.File;
 import com.meritoki.app.desktop.retina.controller.client.json.Network;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
+import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 
 public class VisionClient {
@@ -53,8 +54,8 @@ public class VisionClient {
 	private String url = null;
 	private Properties properties = null;
 
-	public VisionClient() {
-		this.properties = NodeController.openProperties("./retina-desktop.properties");
+	public VisionClient(Model model) {
+		this.properties = model.system.properties;
 		boolean gateway = Boolean.parseBoolean((String) this.properties.get("gateway"));
 		if (gateway) {
 			this.url = this.properties.getProperty("service.web.gateway.url") + "/vision";
@@ -271,9 +272,11 @@ public class VisionClient {
 		}
 	}
 
+	
 	public static void main(String args[]) {
-		VisionClient visionClient = new VisionClient();
-		UserClient userClient = new UserClient();
+		Model model = new Model();
+		VisionClient visionClient = new VisionClient(model);
+		UserClient userClient = new UserClient(model);
 		User user = new User();
 		user.name = "javainuse";
 		user.password = "password";

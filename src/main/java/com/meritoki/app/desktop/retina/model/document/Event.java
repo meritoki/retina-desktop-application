@@ -22,4 +22,8 @@ public class Event {
 	public LinkedList<Command> redoStack = new LinkedList<>();
 	@JsonProperty
 	public int index = 0;
+	
+	public Event() {
+		
+	}
 }

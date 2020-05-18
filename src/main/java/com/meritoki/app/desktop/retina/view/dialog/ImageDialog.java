@@ -58,10 +58,10 @@ public class ImageDialog extends javax.swing.JDialog implements MouseListener, K
     /**
      * Image dialog class.
      * @param parent
-     * @param modal
+     * @param flag
      */
-    public ImageDialog(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public ImageDialog(java.awt.Frame parent, boolean flag) {
+        super(parent, flag);
         this.setTitle("Page");
         this.main = (MainFrame)this.getParent();
         this.initComponents();

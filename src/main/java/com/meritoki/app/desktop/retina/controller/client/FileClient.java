@@ -42,6 +42,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meritoki.app.desktop.retina.controller.client.json.File;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
+import com.meritoki.app.desktop.retina.model.Model;
 
 public class FileClient {
 
@@ -49,8 +50,8 @@ public class FileClient {
 	private String url = null;
 	private Properties properties = null;
 
-	public FileClient() {
-		this.properties = NodeController.openProperties("./retina-desktop.properties");
+	public FileClient(Model model) {
+		this.properties = model.system.properties;
 		boolean gateway = Boolean.parseBoolean((String) this.properties.get("gateway"));
 		if(gateway) {
 			this.url = this.properties.getProperty("service.web.gateway.url")+"/file";
@@ -250,7 +251,7 @@ public class FileClient {
 	}
 
 	public static void main(String args[]) {
-		FileClient fileClient = new FileClient();
+		FileClient fileClient = new FileClient(new Model());
 		fileClient.checkHealth();
 		fileClient.registerFile("123");
 		fileClient.checkFile("123");

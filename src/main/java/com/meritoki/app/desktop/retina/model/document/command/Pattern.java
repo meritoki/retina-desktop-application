@@ -25,6 +25,10 @@ public class Pattern {
 	@JsonIgnore
 	private final HashMap<String, Command> commandMap = new HashMap<>();
 	
+	public Pattern() {
+		
+	}
+	
 	public Pattern(Document document) {
 		this.document = document;
 		this.register();

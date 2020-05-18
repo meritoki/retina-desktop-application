@@ -21,6 +21,10 @@ public class Command implements CommandInterface {
 	public User user;
 	@JsonProperty
     public LinkedList<Operation> operationList = new LinkedList<>();
+	
+	public Command() {
+		
+	}
 
 	public Command(Document document, String name) {
 		this.document = document;

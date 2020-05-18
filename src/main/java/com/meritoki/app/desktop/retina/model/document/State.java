@@ -43,8 +43,6 @@ public class State {
 	@JsonIgnore
 	public Selection selection = null;
 	@JsonIgnore
-	public String defaultFileName = "untitled.json";
-	@JsonIgnore
 	public String documentFileName = null;
 	@JsonIgnore
 	public String documentFilePath = null;
