@@ -27,7 +27,7 @@ import org.apache.logging.log4j.Logger;
 import com.meritoki.app.desktop.retina.controller.document.DocumentController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
-import com.meritoki.app.desktop.retina.view.dialog.ImageDialog;
+import com.meritoki.app.desktop.retina.view.dialog.PageDialog;
 import com.meritoki.app.desktop.retina.view.dialog.OpenDialog;
 import com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog;
 import com.meritoki.app.desktop.retina.view.dialog.SelectionDialog;
@@ -54,7 +54,7 @@ public final class MainFrame extends JFrame {
     public OpenDialog openDialog = null;
     public SaveAsDialog saveAsDialog = null;
     public ImageImportDialog imageImportDialog = null;
-    public ImageDialog imageDialog = new ImageDialog(this, false);
+    public PageDialog imageDialog = new PageDialog(this, false);
     public SelectionDialog selectionDialog = new SelectionDialog(this, false);
     public ZooniverseExportDialog zooniverseExportDialog = new ZooniverseExportDialog(this, false);
     public ZooniverseImportDialog zooniverseImportDialog = new ZooniverseImportDialog(this, false);

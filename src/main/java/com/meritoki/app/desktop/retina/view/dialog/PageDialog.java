@@ -38,7 +38,7 @@ import com.meritoki.app.desktop.retina.view.frame.MainFrame;
  *
  * @author osvaldo.rodriguez
  */
-public class ImageDialog extends javax.swing.JDialog implements MouseListener, KeyListener {
+public class PageDialog extends javax.swing.JDialog implements MouseListener, KeyListener {
 
     /**
 	 * Serial Version UID
@@ -47,7 +47,7 @@ public class ImageDialog extends javax.swing.JDialog implements MouseListener, K
 	/**
 	 * Logger for class.
 	 */
-	private static Logger logger = LogManager.getLogger(ImageDialog.class.getName());
+	private static Logger logger = LogManager.getLogger(PageDialog.class.getName());
 	/**
 	 * Reference to Model class.
 	 */
@@ -60,7 +60,7 @@ public class ImageDialog extends javax.swing.JDialog implements MouseListener, K
      * @param parent
      * @param flag
      */
-    public ImageDialog(java.awt.Frame parent, boolean flag) {
+    public PageDialog(java.awt.Frame parent, boolean flag) {
         super(parent, flag);
         this.setTitle("Page");
         this.main = (MainFrame)this.getParent();
@@ -460,13 +460,13 @@ public class ImageDialog extends javax.swing.JDialog implements MouseListener, K
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ImageDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PageDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ImageDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PageDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ImageDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PageDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ImageDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(PageDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -476,7 +476,7 @@ public class ImageDialog extends javax.swing.JDialog implements MouseListener, K
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                ImageDialog dialog = new ImageDialog(new javax.swing.JFrame(), true);
+                PageDialog dialog = new PageDialog(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

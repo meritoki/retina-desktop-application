@@ -15,11 +15,6 @@
  */
 package com.meritoki.app.desktop.retina.model.document;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -31,6 +26,6 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 public class Script {
 	@JsonIgnore
 	static Logger logger = LogManager.getLogger(Script.class.getName());
-//        public List<String> instructionList = new ArrayList<>();
-        public String value = "";
+	
+	public String value = "";
 }
