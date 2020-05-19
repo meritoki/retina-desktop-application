@@ -228,8 +228,8 @@ public class Image {
 		Dimension dimension = new Dimension();
 		dimension.x = this.offset * this.scale;
 		dimension.y = this.margin * this.scale;
-		dimension.w = this.width * this.scale;
-		dimension.h = this.height * this.scale;
+		dimension.width = this.width * this.scale;
+		dimension.height = this.height * this.scale;
 		return dimension;
 	}
 

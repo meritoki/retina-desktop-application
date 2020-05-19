@@ -236,8 +236,8 @@ public class Page {
 		if (this.getBufferedImage() != null) {
 			int x = (int) (shape.getDimension().x / this.scale);
 			int y = (int) (shape.getDimension().y / this.scale);
-			int w = (int) (shape.getDimension().w / this.scale);
-			int h = (int) (shape.getDimension().h / this.scale);
+			int w = (int) (shape.getDimension().width / this.scale);
+			int h = (int) (shape.getDimension().height / this.scale);
 //			bufferedImage = this.getBufferedImage().getSubimage(x, y, w, h);
 		}
 		return bufferedImage;

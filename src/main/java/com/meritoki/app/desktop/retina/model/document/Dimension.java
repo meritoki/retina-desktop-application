@@ -32,9 +32,9 @@ public class Dimension {
 	@JsonProperty
 	public double y;
 	@JsonProperty
-	public double w;
+	public double width;
 	@JsonProperty
-	public double h;
+	public double height;
 	@JsonProperty
 	public double offset;
 	@JsonProperty
@@ -54,8 +54,8 @@ public class Dimension {
 	public Dimension(Dimension dimension) {
 		this.x = dimension.x;
 		this.y = dimension.y;
-		this.w = dimension.w;
-		this.h = dimension.h;
+		this.width = dimension.width;
+		this.height = dimension.height;
 		this.scale = dimension.scale;
 		this.addScale = dimension.addScale;
 		for(Point p: dimension.pointList) {
@@ -91,12 +91,12 @@ public class Dimension {
 
 	@JsonIgnore
 	public double getCenterX() {
-		return this.x + (this.w / 2);
+		return this.x + (this.width / 2);
 	}
 
 	@JsonIgnore
 	public double getCenterY() {
-		return this.y + (this.h / 2);
+		return this.y + (this.height / 2);
 	}
 
 	@JsonIgnore
@@ -110,7 +110,7 @@ public class Dimension {
 	public Point getStopPoint() {
 		this.init();
 //		return new Point((this.x + this.w) * this.scale, (this.y + this.h) * this.scale);
-		return new Point((this.x + this.w), (this.y + this.h));
+		return new Point((this.x + this.width), (this.y + this.height));
 	}
 
 	@JsonIgnore
@@ -118,12 +118,12 @@ public class Dimension {
 		this.normalize();
 		this.x = Math.min(pointList.get(0).x, pointList.get(1).x);
 		this.y = Math.min(pointList.get(0).y, pointList.get(1).y);
-		this.w = Math.abs(pointList.get(0).x - pointList.get(1).x);
-		this.h = Math.abs(pointList.get(0).y - pointList.get(1).y);
+		this.width = Math.abs(pointList.get(0).x - pointList.get(1).x);
+		this.height = Math.abs(pointList.get(0).y - pointList.get(1).y);
 		this.x *= this.scale;
 		this.y *= this.scale;
-		this.w *= this.scale;
-		this.h *= this.scale;
+		this.width *= this.scale;
+		this.height *= this.scale;
 //		this.x -= this.offset * this.scale;
 //		this.y -= this.margin * this.scale;
 //		this.w -= this.offset * this.scale;

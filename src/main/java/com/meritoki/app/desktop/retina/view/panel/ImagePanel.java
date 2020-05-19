@@ -110,7 +110,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 					} else {
 						graphics2D.setColor(Color.YELLOW);
 					}
-					Rectangle2D.Double rectangle = new Rectangle2D.Double(d.x, d.y, d.w, d.h);
+					Rectangle2D.Double rectangle = new Rectangle2D.Double(d.x, d.y, d.width, d.height);
 					graphics2D.draw(rectangle);
 				}
 
@@ -128,12 +128,12 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 					}
 					switch (s.type) {
 					case ELLIPSE: {
-						Ellipse2D.Double ellipse = new Ellipse2D.Double(d.x, d.y, d.w, d.h);
+						Ellipse2D.Double ellipse = new Ellipse2D.Double(d.x, d.y, d.width, d.height);
 						graphics2D.draw(ellipse);
 						break;
 					}
 					case RECTANGLE: {
-						Rectangle2D.Double rectangle = new Rectangle2D.Double(d.x, d.y, d.w, d.h);
+						Rectangle2D.Double rectangle = new Rectangle2D.Double(d.x, d.y, d.width, d.height);
 						graphics2D.draw(rectangle);
 						break;
 					}
@@ -142,9 +142,9 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 						com.meritoki.app.desktop.retina.model.document.Dimension dimension = previousShape
 								.getDimension();
 //					    g.drawLine(X1, Y1, X2, Y2);
-						graphics2D.drawLine((int) (dimension.x + (dimension.w / 2)),
-								(int) (dimension.y + (dimension.h / 2)), (int) (d.x + (d.w / 2)),
-								(int) (d.y + (d.h / 2)));
+						graphics2D.drawLine((int) (dimension.x + (dimension.width / 2)),
+								(int) (dimension.y + (dimension.height / 2)), (int) (d.x + (d.width / 2)),
+								(int) (d.y + (d.height / 2)));
 					}
 					previousShape = s;
 //                                        NodeController.saveJpg("./", s.uuid+".jpg", s.bufferedImage);
