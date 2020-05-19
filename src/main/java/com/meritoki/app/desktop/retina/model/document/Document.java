@@ -43,7 +43,78 @@ public class Document {
 	public Document() {
 		this.uuid = UUID.randomUUID().toString();
 		this.pattern = new Pattern(this);
+		this.test();
 	}
+	
+	@JsonIgnore
+	public void test() {
+		Page page = new Page();
+		Image image = new Image("./data/image", "01.jpg");
+		page.imageList.add(image);
+		image = new Image("./data/image","02.jpg");
+		page.imageList.add(image);
+		pageList.add(page);
+		page = new Page();
+		image = new Image("./data/image","02.jpg");
+		page.imageList.add(image);
+		pageList.add(page);
+		page = new Page();
+		image = new Image("./data/image","03.jpg");
+		page.imageList.add(image);
+		pageList.add(page);
+		page = new Page();
+		image = new Image("./data/image","04.jpg");
+		page.imageList.add(image);
+		pageList.add(page);
+		page = new Page();
+		image = new Image("./data/image","05.jpg");
+		page.imageList.add(image);
+		pageList.add(page);
+		page = new Page();
+		image = new Image("./data/image","06.jpg");
+		page.imageList.add(image);
+		pageList.add(page);
+		page = new Page();
+		image = new Image("./data/image","07.jpg");
+		page.imageList.add(image);
+		pageList.add(page);
+		page = new Page();
+		image = new Image("./data/image","08.jpg");
+		page.imageList.add(image);
+		pageList.add(page);
+		this.setIndex(0);
+	}
+	
+	public Image getImage(Point point) {
+		Image image = null;
+		if(this.getPage() != null) {
+			image = this.getPage().getImage(point);
+		}
+		return image;
+	}
+	
+	public void setImage(String uuid) {
+		if(this.getPage() != null) {
+			this.getPage().setImage(uuid);
+		}
+	}
+	
+	public Shape getShape(Point point) {
+		Shape shape = null;
+		if(this.getPage() != null) {
+			shape = this.getPage().getShape(point);
+		}
+		return shape;
+	}
+	
+	public void addShape(Shape shape) {
+		if(this.getPage() != null) {
+			this.getPage().addShape(shape);
+		}
+	}
+	
+//	public Selection 
+	
 
 	/**
 	 * Get the index of the current Page, used by Dialogs

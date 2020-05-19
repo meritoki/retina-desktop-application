@@ -41,9 +41,9 @@ class ProjectTest {
 		Shape shape = new Shape();
 		Point pointA = new Point(0,0);
 		Point pointB = new Point(100,100);
-		shape.pointList.add(pointA);
-		shape.pointList.add(pointB);
-		shape.normalizePointList();
+		shape.dimension.addPoint(pointA);
+		shape.dimension.addPoint(pointB);
+		shape.dimension.normalize();
 		shapeZeroUUID = shape.getUUID();
 		page.addShape(shape);
 		pageZeroUUID = page.uuid;
@@ -97,7 +97,7 @@ class ProjectTest {
 		List<Image> fileList = project.getPage().getImageList();
 		for(Image file: fileList) {
 			Point point = new Point(file.offset+(file.getWidth()/2),file.margin+(file.getHeight()/2));
-			assertEquals(project.getPage().getFile(point).getUUID(),file.getUUID());
+			assertEquals(project.getPage().getImage(point).getUUID(),file.getUUID());
 		}
 	}
 	
@@ -105,13 +105,13 @@ class ProjectTest {
 	public void setPageFileShape() {
 		Point point = new Point(50,50);
 		project.setIndex(0);
-		Image file = project.getPage().getFile(point);
-		project.getPage().setFile(file.getUUID());
+		Image file = project.getPage().getImage(point);
+		project.getPage().setImage(file.getUUID());
 		for(Shape s:project.getPage().getShapeList()) {
 			System.out.println(s);
 		}
 		
-		Shape shape = project.getPage().getFile().getShape(point);
+		Shape shape = project.getPage().getImage().getShape(point);
 		System.out.println(shape);
 		assertEquals(shapeZeroUUID,shape.getUUID());
 	}
