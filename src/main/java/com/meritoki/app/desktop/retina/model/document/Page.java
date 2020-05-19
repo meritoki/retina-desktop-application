@@ -29,12 +29,11 @@ import java.util.logging.Level;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
 
-import com.meritoki.app.desktop.retina.controller.client.ClientController;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.controller.script.ScriptController;
 
@@ -145,13 +144,13 @@ public class Page {
 	 * @return file
 	 */
 	@JsonIgnore
-	public Image getFile() {
-		Image file = null;
-		List<Image> fileList = this.getImageList();
-		if (this.index >= 0 && this.index < fileList.size()) {
-			file = fileList.get(this.index);
+	public Image getImage() {
+		Image image = null;
+		List<Image> imageList = this.getImageList();
+		if (this.index >= 0 && this.index < imageList.size()) {
+			image = imageList.get(this.index);
 		}
-		return file;
+		return image;
 	}
 
 	/**
@@ -161,21 +160,20 @@ public class Page {
 	 * @return File
 	 */
 	@JsonIgnore
-	public Image getFile(Point point) {
-		logger.info("getFile(" + point + ")");
-		Image f = null;
-		for (Image file : this.getImageList()) {
-			f = file;
-			if (f.containsPoint(point)) {
+	public Image getImage(Point point) {
+		Image image = null;
+		for (Image i : this.getImageList()) {
+			image = i;
+			if (image.containsPoint(point)) {
 				break;
 			} else {
-				f = null;
+				image = null;
 			}
 		}
-		if (f != null) {
-			logger.info("getFile(" + point + ") file.uuid=" + f.uuid);
+		if (image != null) {
+			logger.info("getImage(" + point + ") image=" + image);
 		}
-		return f;
+		return image;
 	}
 
 	/**
@@ -203,7 +201,7 @@ public class Page {
 	 */
 	@JsonIgnore
 	public Shape getShape() {
-		Image file = this.getFile();
+		Image file = this.getImage();
 		Shape shape = (file != null) ? file.getShape() : null;
 		return shape;
 	}
@@ -369,15 +367,15 @@ public class Page {
 	public void setShape(String uuid) {
 		for (Image file : this.getImageList()) {
 			if (file.setShape(uuid)) {
-				this.setFile(file.uuid);
+				this.setImage(file.uuid);
 				break;
 			}
 		}
 	}
 
 	@JsonIgnore
-	public void setFile(String uuid) {
-		logger.info("setFile(" + uuid + ")");
+	public void setImage(String uuid) {
+		logger.info("setImage(" + uuid + ")");
 		Image file = null;
 		List<Image> fileList = this.getImageList();
 		for (int i = 0; i < fileList.size(); i++) {
@@ -396,11 +394,10 @@ public class Page {
 	 */
 	@JsonIgnore
 	public void addShape(Shape shape) {
-		logger.info("addShape(" + shape + ")");
-		for (Image f : this.getImageList()) {
-			if (f.containsShape(shape)) {
-				f.addShape(shape);
-				this.setFile(f.uuid);
+		for (Image image : this.getImageList()) {
+			if (image.containsShape(shape)) {
+				image.addShape(shape);
+				this.setImage(image.uuid);
 				this.setShape(shape.uuid);
 				break;
 			}
@@ -430,7 +427,7 @@ public class Page {
 	public Selection intersectShape(Point point) {
 		logger.trace("intersectShape(" + point + ")");
 		Selection selection = null;
-		Image file = this.getFile();
+		Image file = this.getImage();
 		if (file != null) {
 			selection = file.intersectShape(point);
 		}
@@ -500,7 +497,7 @@ public class Page {
 
 	@JsonIgnore
 	public List<ArrayList<Shape>> initShapeMatrix() {
-		logger.info("initShapeMatrix()");
+		logger.debug("initShapeMatrix()");
 		List<ArrayList<Shape>> shapeMatrix = new ArrayList<>();
 		List<Shape> shapeList = this.getShapeList();
 		if (shapeList != null && shapeList.size() > 0) {
@@ -542,8 +539,6 @@ public class Page {
 
 	@JsonIgnore
 	public void printMatrix(List<ArrayList<Shape>> matrix) {
-//    	logger.info("printDataMatrix(...)");
-//<<<<<<< HEAD
 		String string = null;
 		if (matrix != null && matrix.size() > 0) {
 			string = "\n";
@@ -559,7 +554,7 @@ public class Page {
 			}
 		}
 		if (string != null) {
-			logger.info(string);
+			logger.debug(string);
 		}
 	}
 

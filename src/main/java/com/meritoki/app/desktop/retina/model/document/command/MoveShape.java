@@ -32,10 +32,6 @@ public class MoveShape extends Command {
 		if (this.document.cache.releasedImage != null &&!this.document.cache.pressedImage.equals(this.document.cache.releasedImage)) {
 			shape = new Shape(this.document.cache.pressedShape);
 			shape.dimension = new Dimension(this.document.cache.pressedShape.dimension);
-//			shape.pointList.get(0).x = shape.dimension.x;
-//			shape.pointList.get(0).y = shape.dimension.y;
-//			shape.pointList.get(1).x = shape.dimension.x + shape.dimension.w;
-//			shape.pointList.get(1).y = shape.dimension.y + shape.dimension.h;
 			shape.dimension.movePoint(this.document.cache.movedPoint);
 			this.document.cache.pressedImage.removeShape(shape.uuid);
 			this.document.cache.releasedImage.addShape(shape);

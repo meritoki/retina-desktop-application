@@ -1,15 +1,23 @@
 package com.meritoki.app.desktop.retina.model.document;
 
 import java.util.List;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.annotate.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 public class Dimension {
+	
+	public static void main(String[] args) {
+		Dimension d = new Dimension();
+		System.out.println(d);
+	}
 
 	@JsonIgnore
 	private static Logger logger = LogManager.getLogger(Dimension.class.getName());
@@ -28,9 +36,9 @@ public class Dimension {
 	@JsonProperty
 	public double h;
 	@JsonProperty
-	public double offset = 0;
+	public double offset;
 	@JsonProperty
-	public double margin = 0;
+	public double margin;
 
 	
 	public Dimension() {}
@@ -93,12 +101,16 @@ public class Dimension {
 
 	@JsonIgnore
 	public Point getStartPoint() {
-		return new Point(this.x * this.scale, this.y * this.scale);
+//		return new Point(this.x * this.scale, this.y * this.scale);
+		this.init();
+		return new Point(this.x, this.y);
 	}
 
 	@JsonIgnore
 	public Point getStopPoint() {
-		return new Point((this.x + this.w) * this.scale, (this.y + this.h) * this.scale);
+		this.init();
+//		return new Point((this.x + this.w) * this.scale, (this.y + this.h) * this.scale);
+		return new Point((this.x + this.w), (this.y + this.h));
 	}
 
 	@JsonIgnore
@@ -112,6 +124,10 @@ public class Dimension {
 		this.y *= this.scale;
 		this.w *= this.scale;
 		this.h *= this.scale;
+//		this.x -= this.offset * this.scale;
+//		this.y -= this.margin * this.scale;
+//		this.w -= this.offset * this.scale;
+//		this.h -= this.margin * this.scale;
 	}
 
 	@JsonIgnore
@@ -152,7 +168,7 @@ public class Dimension {
 
 	@JsonIgnore
 	public boolean containsPoint(Point point) {
-		logger.info("containsPoint(" + point + ")");
+		
 		boolean flag = false;
 		Point startPoint = this.getStartPoint();
 		Point stopPoint = this.getStopPoint();
@@ -162,20 +178,26 @@ public class Dimension {
 					&& point.y <= stopPoint.y) {
 				flag = true;
 			}
-		} else if (stopPoint.x < startPoint.x && stopPoint.y < startPoint.y) {
-			if (stopPoint.x <= point.x && point.x <= startPoint.x && stopPoint.y <= point.y
-					&& point.y <= startPoint.y) {
-				flag = true;
-			}
+		} 
+		
+		if(flag) {
+			logger.info("containsPoint(" + point + ") dimension="+this);
 		}
+//		else if (stopPoint.x < startPoint.x && stopPoint.y < startPoint.y) {
+//			if (stopPoint.x <= point.x && point.x <= startPoint.x && stopPoint.y <= point.y
+//					&& point.y <= startPoint.y) {
+//				flag = true;
+//			}
+//		}
 		return flag;
 	}
 
 	@JsonIgnore
 	public Selection selectionPoint(Point point) {
+		logger.info("selectionPoint("+point+")");
 		Selection selection = null;
-		Point startPoint = this.getStartPoint();// new Point();
-		Point stopPoint = this.getStopPoint();// new Point();
+		Point startPoint = this.getStartPoint();
+		Point stopPoint = this.getStopPoint();
 
 		double margin = 20 * this.scale;
 		if (point.x == startPoint.x && point.y == startPoint.y) {
@@ -215,6 +237,7 @@ public class Dimension {
 
 	@JsonIgnore
 	public boolean intersectPoint(Point point) {
+		logger.info("intersectPoint("+point+")");
 		boolean flag = false;
 		if (this.selectionPoint(point) != null) {
 			flag = true;
@@ -224,6 +247,7 @@ public class Dimension {
 
 	@JsonIgnore
 	public void resizePoint(Point point, Selection selection) {
+		logger.info("resizePoint("+point+", "+selection+")");
 		switch (selection) {
 		case TOP: {
 			logger.info("resize(" + point + ", " + selection + ") TOP");
@@ -272,10 +296,24 @@ public class Dimension {
 
 	@JsonIgnore
 	public void movePoint(Point point) {
-		this.pointList.get(0).x = this.pointList.get(0).x + point.x;
-		this.pointList.get(0).y = this.pointList.get(0).y + point.y;
-		this.pointList.get(1).x = this.pointList.get(1).x + point.x;
-		this.pointList.get(1).y = this.pointList.get(1).y + point.y;
+		logger.info("movePoint("+point+")");	
+		this.pointList.get(0).x = this.pointList.get(0).x + point.x*(1/this.scale);
+		this.pointList.get(0).y = this.pointList.get(0).y + point.y*(1/this.scale);
+		this.pointList.get(1).x = this.pointList.get(1).x + point.x*(1/this.scale);
+		this.pointList.get(1).y = this.pointList.get(1).y + point.y*(1/this.scale);
+	}
+	
+	@JsonIgnore
+	@Override
+	public String toString() {
+		String string = "";
+		ObjectWriter ow = new ObjectMapper().writer();//.withDefaultPrettyPrinter();
+		try {
+			string = ow.writeValueAsString(this);
+		} catch (IOException ex) {
+			logger.error("IOException " + ex.getMessage());
+		}
+		return string;
 	}
 }
 

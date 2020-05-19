@@ -81,7 +81,7 @@ public class Pattern {
 					operation = command.operationList.get(i);
 					if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getFile().setShape(((Shape) operation.object).uuid);
+							this.document.getPage().getImage().setShape(((Shape) operation.object).uuid);
 						}
 					}
 				}
@@ -96,7 +96,7 @@ public class Pattern {
 						}
 					} else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getFile().addShape((Shape) operation.object);
+							this.document.getPage().getImage().addShape((Shape) operation.object);
 						}
 					}
 				}
@@ -111,7 +111,7 @@ public class Pattern {
 						}
 					} else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getFile().addShape((Shape) operation.object);
+							this.document.getPage().getImage().addShape((Shape) operation.object);
 						}
 					}
 				}
@@ -126,7 +126,7 @@ public class Pattern {
 						}
 					} else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getFile().addShape((Shape) operation.object);
+							this.document.getPage().getImage().addShape((Shape) operation.object);
 						}
 					}
 				}
@@ -141,7 +141,7 @@ public class Pattern {
 						}
 					} else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getFile().addShape((Shape) operation.object);
+							this.document.getPage().getImage().addShape((Shape) operation.object);
 						}
 					}
 				}
@@ -165,7 +165,7 @@ public class Pattern {
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getFile().setShape(((Shape) operation.object).uuid);
+							this.document.getPage().getImage().setShape(((Shape) operation.object).uuid);
 						}
 					}
 				}
@@ -176,11 +176,11 @@ public class Pattern {
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getFile().addShape((Shape) operation.object);
+							this.document.getPage().getImage().addShape((Shape) operation.object);
 						}
 					} else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getFile().removeShape((Shape) operation.object);
+							this.document.getPage().getImage().removeShape((Shape) operation.object);
 						}
 					}
 				}
@@ -191,11 +191,11 @@ public class Pattern {
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getFile().addShape((Shape) operation.object);
+							this.document.getPage().getImage().addShape((Shape) operation.object);
 						}
 					} else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getFile().removeShape((Shape) operation.object);
+							this.document.getPage().getImage().removeShape((Shape) operation.object);
 						}
 					}
 				}
@@ -206,11 +206,11 @@ public class Pattern {
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getFile().addShape((Shape) operation.object);
+							this.document.getPage().getImage().addShape((Shape) operation.object);
 						}
 					} else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getFile().removeShape((Shape) operation.object);
+							this.document.getPage().getImage().removeShape((Shape) operation.object);
 						}
 					}
 				}
@@ -221,11 +221,11 @@ public class Pattern {
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getFile().addShape((Shape) operation.object);
+							this.document.getPage().getImage().addShape((Shape) operation.object);
 						}
 					} else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getFile().removeShape((Shape) operation.object);
+							this.document.getPage().getImage().removeShape((Shape) operation.object);
 						}
 					}
 				}

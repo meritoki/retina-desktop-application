@@ -18,7 +18,7 @@ public class AddShape extends Command {
 		super(document, "addShape");
 	}
 
-	@Override // Command
+	@Override 
 	public void execute() {
 		logger.info("execute()");
 		this.user = this.document.cache.user;
@@ -28,7 +28,7 @@ public class AddShape extends Command {
 			this.document.cache.pressedShape.type = this.document.cache.type;
 			this.document.cache.pressedShape.dimension = new Dimension(new Point(this.document.cache.pressedPoint),
 					new Point(this.document.cache.releasedPoint), this.document.cache.scale, this.document.cache.scale);
-			this.document.getPage().addShape(this.document.cache.pressedShape);
+			this.document.addShape(this.document.cache.pressedShape);
 			Operation operation = new Operation();
 			operation.object = new Shape(this.document.cache.pressedShape);
 			operation.sign = 1;

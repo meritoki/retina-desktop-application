@@ -90,16 +90,16 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	}
 
 	public void initLabel() {
-		logger.debug("initLabel()");
+//		logger.debug("initLabel()");
 		Document document = (this.model != null) ? this.model.getDocument() : null;
 		Page page = (document != null) ? document.getPage() : null;
-		Image file = (page != null) ? page.getFile() : null;
+		Image file = (page != null) ? page.getImage() : null;
 		Shape shape = (file != null) ? file.getShape() : null;
 		List<Text> textList = (shape != null) ? shape.getTextList() : null;
 	}
 
 	public void initList() {
-		logger.debug("initList()");
+//		logger.debug("initList()");
 		Document document = (this.model != null) ? this.model.getDocument() : null;
 		Page page = (document != null) ? document.getPage() : null;
 		List<Shape> shapeList = (page != null) ? page.getShapeMatrixShapeList() : null;
@@ -114,10 +114,10 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	}
 
 	public void initComboBox() {
-		logger.debug("initComboBox()");
+//		logger.debug("initComboBox()");
 		Document document = (this.model != null) ? this.model.getDocument() : null;
 		Page page = (document != null) ? document.getPage() : null;
-		Image file = (page != null) ? page.getFile() : null;
+		Image file = (page != null) ? page.getImage() : null;
 		Shape shape = (file != null) ? file.getShape() : null;
 		Data data = (shape != null) ? shape.data : null;
 		List<Text> textList = (shape != null) ? shape.getTextList() : null;
@@ -170,7 +170,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 		if (flag) {
 			Document document = (this.model != null) ? this.model.getDocument() : null;
 			Page page = (document != null) ? document.getPage() : null;
-			Shape shape = (page != null) ? page.getFile().getShape() : null;
+			Shape shape = (page != null) ? page.getImage().getShape() : null;
 			Data data = (shape != null) ? shape.getData() : null;
 			if (data != null) {
 				this.textValueComboBox.setSelectedItem(shape.getDefaultText().value);
@@ -329,8 +329,8 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 		String uuid = (String) rectangleList.getSelectedValue();
 		Document document = (this.model != null) ? this.model.getDocument() : null;
 		Page page = (document != null) ? document.getPage() : null;
-		if (page != null && !uuid.equals(page.getFile().getShape().uuid)) {
-			document.getPage().getFile().setShape(uuid);
+		if (page != null && !uuid.equals(page.getImage().getShape().uuid)) {
+			document.getPage().getImage().setShape(uuid);
 			this.init();
 			this.getParent().repaint();
 		}
@@ -682,7 +682,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 		text.value = value;
 		Document document = (this.model != null) ? this.model.getDocument() : null;
 		Page page = (document != null) ? document.getPage() : null;
-		Shape shape = (page != null) ? page.getFile().getShape() : null;
+		Shape shape = (page != null) ? page.getImage().getShape() : null;
 		if (shape != null) {
 			shape.addText(text);
 			System.out.println(shape.getTextMap());
@@ -696,7 +696,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 		if (flag) {
 			Document document = (this.model != null) ? this.model.getDocument() : null;
 			Page page = (document != null) ? document.getPage() : null;
-			Shape shape = (page != null) ? page.getFile().getShape() : null;
+			Shape shape = (page != null) ? page.getImage().getShape() : null;
 			if (shape != null) {
 				this.textValueComboBox.setSelectedItem(shape.getDefaultText().value);
 			}
@@ -720,7 +720,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 		logger.info("applyUnitButtonActionPerformed(...)");
 		Document document = (this.model != null) ? this.model.getDocument() : null;
 		Page page = (document != null) ? document.getPage() : null;
-		Shape shape = (page != null) ? page.getFile().getShape() : null;
+		Shape shape = (page != null) ? page.getImage().getShape() : null;
 		Data data = (shape != null) ? shape.getData() : null;
 		if (data != null) {
 			String unitType = (String) this.unitTypeComboBox.getSelectedItem();

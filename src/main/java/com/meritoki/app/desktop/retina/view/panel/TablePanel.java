@@ -60,12 +60,11 @@ public class TablePanel extends javax.swing.JPanel {
 	}
 
 	public void initDataTable() {
-		logger.info("initDataTable()");
+		logger.debug("initDataTable()");
 		Parser parser = new Parser();
 		Document document = (this.model != null) ? this.model.getDocument() : null;
 		Page page = (document != null) ? document.getPage() : null;
 		if (page != null) {
-			logger.info("initDataTable() page");
 //			Object[][] objectMatrix = parser.parseData(page.getShapeMatrixShapeList());
 //			Object[] stringArray = parser.parseColumn(page.getShapeMatrixShapeList());
 			Object[] modelArray = parser.getModel(page.getShapeMatrixShapeList());
