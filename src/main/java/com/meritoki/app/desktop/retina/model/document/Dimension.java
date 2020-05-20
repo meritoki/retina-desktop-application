@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
 public class Dimension {
-	
+
 	public static void main(String[] args) {
 		Dimension d = new Dimension();
 		System.out.println(d);
@@ -24,31 +24,40 @@ public class Dimension {
 	@JsonProperty
 	public List<Point> pointList = new ArrayList<>();
 	@JsonProperty
-	public double addScale;
+	public double addScale = 1;
 	@JsonProperty
-	public double scale;
+	public double scale = 1;
 	@JsonProperty
-	public double x;
+	public double i = 0;
 	@JsonProperty
-	public double y;
+	public double j = 0;
 	@JsonProperty
-	public double width;
+	public double w = 0;
 	@JsonProperty
-	public double height;
+	public double h = 0;
 	@JsonProperty
-	public double offset;
+	public double x = 0;
 	@JsonProperty
-	public double margin;
+	public double y = 0;
+	@JsonProperty
+	public double width = 0;
+	@JsonProperty
+	public double height = 0;
+	@JsonProperty
+	public double offset = 0;
+	@JsonProperty
+	public double margin = 0;
 
-	
-	public Dimension() {}
+	public Dimension() {
+		this.scale();
+	}
 
 	public Dimension(Point a, Point b, double scale, double addScale) {
 		this.pointList.add(a);
 		this.pointList.add(b);
 		this.addScale = addScale;
 		this.scale = scale * (1 / this.addScale);
-		this.init();
+		this.scale();
 	}
 
 	public Dimension(Dimension dimension) {
@@ -58,7 +67,7 @@ public class Dimension {
 		this.height = dimension.height;
 		this.scale = dimension.scale;
 		this.addScale = dimension.addScale;
-		for(Point p: dimension.pointList) {
+		for (Point p : dimension.pointList) {
 			this.pointList.add(new Point(p));
 		}
 	}
@@ -70,8 +79,8 @@ public class Dimension {
 
 	@JsonIgnore
 	public void setScale(double scale) {
-		this.scale = scale * (1 / this.addScale);
-		this.init();
+		this.scale = (this.addScale > 0)? scale * (1 / this.addScale):scale;
+		this.scale();
 	}
 
 	@JsonIgnore
@@ -101,33 +110,38 @@ public class Dimension {
 
 	@JsonIgnore
 	public Point getStartPoint() {
-//		return new Point(this.x * this.scale, this.y * this.scale);
-		this.init();
+		this.scale();
 		return new Point(this.x, this.y);
 	}
 
 	@JsonIgnore
 	public Point getStopPoint() {
-		this.init();
-//		return new Point((this.x + this.w) * this.scale, (this.y + this.h) * this.scale);
+		this.scale();
 		return new Point((this.x + this.width), (this.y + this.height));
 	}
 
 	@JsonIgnore
-	public void init() {
-		this.normalize();
-		this.x = Math.min(pointList.get(0).x, pointList.get(1).x);
-		this.y = Math.min(pointList.get(0).y, pointList.get(1).y);
-		this.width = Math.abs(pointList.get(0).x - pointList.get(1).x);
-		this.height = Math.abs(pointList.get(0).y - pointList.get(1).y);
+	public void scale() {
+		if (this.pointList != null && this.pointList.size() == 2) {
+			this.normalize();
+			Point a = this.pointList.get(0);
+			Point b = this.pointList.get(1);
+			this.x = Math.min(a.x, b.x);
+			this.y = Math.min(a.y, b.y);
+			this.width = Math.abs(a.x - b.x);
+			this.height = Math.abs(a.y - b.y);
+		} else {
+			this.x = this.i;
+			this.y = this.j;
+			this.width = this.w;
+			this.height = this.h;
+			this.x += this.offset*1/this.scale;
+			this.y += this.margin*1/this.scale;
+		}
 		this.x *= this.scale;
 		this.y *= this.scale;
 		this.width *= this.scale;
 		this.height *= this.scale;
-//		this.x -= this.offset * this.scale;
-//		this.y -= this.margin * this.scale;
-//		this.w -= this.offset * this.scale;
-//		this.h -= this.margin * this.scale;
 	}
 
 	@JsonIgnore
@@ -168,7 +182,7 @@ public class Dimension {
 
 	@JsonIgnore
 	public boolean containsPoint(Point point) {
-		
+
 		boolean flag = false;
 		Point startPoint = this.getStartPoint();
 		Point stopPoint = this.getStopPoint();
@@ -178,10 +192,10 @@ public class Dimension {
 					&& point.y <= stopPoint.y) {
 				flag = true;
 			}
-		} 
-		
-		if(flag) {
-			logger.info("containsPoint(" + point + ") dimension="+this);
+		}
+
+		if (flag) {
+			logger.info("containsPoint(" + point + ") dimension=" + this);
 		}
 //		else if (stopPoint.x < startPoint.x && stopPoint.y < startPoint.y) {
 //			if (stopPoint.x <= point.x && point.x <= startPoint.x && stopPoint.y <= point.y
@@ -194,7 +208,7 @@ public class Dimension {
 
 	@JsonIgnore
 	public Selection selectionPoint(Point point) {
-		logger.info("selectionPoint("+point+")");
+		logger.info("selectionPoint(" + point + ")");
 		Selection selection = null;
 		Point startPoint = this.getStartPoint();
 		Point stopPoint = this.getStopPoint();
@@ -237,7 +251,7 @@ public class Dimension {
 
 	@JsonIgnore
 	public boolean intersectPoint(Point point) {
-		logger.info("intersectPoint("+point+")");
+		logger.info("intersectPoint(" + point + ")");
 		boolean flag = false;
 		if (this.selectionPoint(point) != null) {
 			flag = true;
@@ -247,7 +261,7 @@ public class Dimension {
 
 	@JsonIgnore
 	public void resizePoint(Point point, Selection selection) {
-		logger.info("resizePoint("+point+", "+selection+")");
+		logger.info("resizePoint(" + point + ", " + selection + ")");
 		switch (selection) {
 		case TOP: {
 			logger.info("resize(" + point + ", " + selection + ") TOP");
@@ -296,18 +310,18 @@ public class Dimension {
 
 	@JsonIgnore
 	public void movePoint(Point point) {
-		logger.info("movePoint("+point+")");	
-		this.pointList.get(0).x = this.pointList.get(0).x + point.x*(1/this.scale);
-		this.pointList.get(0).y = this.pointList.get(0).y + point.y*(1/this.scale);
-		this.pointList.get(1).x = this.pointList.get(1).x + point.x*(1/this.scale);
-		this.pointList.get(1).y = this.pointList.get(1).y + point.y*(1/this.scale);
+		logger.info("movePoint(" + point + ")");
+		this.pointList.get(0).x = this.pointList.get(0).x + point.x * (1 / this.scale);
+		this.pointList.get(0).y = this.pointList.get(0).y + point.y * (1 / this.scale);
+		this.pointList.get(1).x = this.pointList.get(1).x + point.x * (1 / this.scale);
+		this.pointList.get(1).y = this.pointList.get(1).y + point.y * (1 / this.scale);
 	}
-	
+
 	@JsonIgnore
 	@Override
 	public String toString() {
 		String string = "";
-		ObjectWriter ow = new ObjectMapper().writer();//.withDefaultPrettyPrinter();
+		ObjectWriter ow = new ObjectMapper().writer();// .withDefaultPrettyPrinter();
 		try {
 			string = ow.writeValueAsString(this);
 		} catch (IOException ex) {

@@ -99,13 +99,13 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 			if (bufferedImage != null) {
 				graphics2D.drawImage(bufferedImage, affineTransform, null);
 			}
-			List<Image> fileList = document.getPage().getImageList();
-			Image file = document.getPage().getImage();
+			List<Image> imageList = document.getPage().getImageList();
+			Image image = document.getImage();
 			com.meritoki.app.desktop.retina.model.document.Dimension d = null;
-			if (fileList != null) {
-				for (Image f : fileList) {
-					d = f.getDimension();
-					if (file != null && f.uuid.equals(file.uuid)) {
+			if (imageList != null) {
+				for (Image i : imageList) {
+					d = i.dimension;
+					if (image != null && i.uuid.equals(image.uuid)) {
 						graphics2D.setColor(Color.RED);
 					} else {
 						graphics2D.setColor(Color.YELLOW);
@@ -150,10 +150,10 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 //                                        NodeController.saveJpg("./", s.uuid+".jpg", s.bufferedImage);
 				}
 			}
-			graphics2D.setColor(Color.magenta);
-			for(int i =0; i < 1000; i++) {
-				graphics2D.drawLine(i*100, 0, i*100, 10000);
-			}
+//			graphics2D.setColor(Color.magenta);
+//			for(int i =0; i < 1000; i++) {
+//				graphics2D.drawLine(i*100, 0, i*100, 10000);
+//			}
 		}
 	}
 
@@ -248,7 +248,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 			page.setBufferedImage(null);
 			Image file = (page != null) ? page.getImage() : null;
 			if (file != null) {
-				file.setMargin(file.margin + 10);
+				file.setMargin(file.dimension.margin + 10);
 				page.setBufferedImage(null);
 			}
 			repaint();
@@ -258,7 +258,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 			page.setBufferedImage(null);
 			Image file = (page != null) ? page.getImage() : null;
 			if (file != null) {
-				file.setMargin(file.margin - 10);
+				file.setMargin(file.dimension.margin - 10);
 				page.setBufferedImage(null);
 			}
 			repaint();

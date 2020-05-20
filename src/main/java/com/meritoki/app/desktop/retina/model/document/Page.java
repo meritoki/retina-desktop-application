@@ -217,9 +217,9 @@ public class Page {
 		List<Shape> shapeList = new ArrayList<>();
 		for (Image image : this.getImageList()) {
 			for (Shape shape : image.getShapeList()) {
-				shape.dimension.setScale(image.scale);
-				shape.dimension.setOffset(image.getOffset());
-				shape.dimension.setMargin(image.getMargin());
+				shape.dimension.setScale(image.dimension.scale);
+				shape.dimension.setOffset(image.dimension.offset);
+				shape.dimension.setMargin(image.dimension.margin);
 //				shape.setDimension(null);
 //				dimension = shape.getDimension();
 //				dimension.x += (image.getOffset() * image.scale);
@@ -242,7 +242,7 @@ public class Page {
 		}
 		return bufferedImage;
 	}
-
+	
 	/**
 	 * DIMENSION 2 A Function is the only place where the File objects receive the
 	 * metadata necessary to correctly process shapes.
@@ -264,45 +264,79 @@ public class Page {
 							NodeController.saveJpg(NodeController.getImageCache(), image.uuid + "." + image.extension,
 									bufferedImage);
 						}
-						// TODO Add support for PNG
-//						if (ClientController.fileClient.checkHealth()) {
-//							ClientController.fileClient.registerFile(image.uuid);
-//							if (ClientController.fileClient.checkFile(image.uuid)) {
-//								ClientController.fileClient.uploadFile(
-//										NodeController.getImageCache() + NodeController.getSeperator(),
-//										image.uuid + "." + image.extension);
-//							}
-//						}
-					} else {
-//						if (ClientController.fileClient.checkHealth()) {
-//							if (ClientController.fileClient.checkFile(image.uuid)) {
-//								ClientController.fileClient.downloadFile(
-//										NodeController.getImageCache() + NodeController.getSeperator(),
-//										image.getUUID() + "." + image.getExtension());
-//								ClientController.fileClient.unmarkFile(image.uuid);
-//							} else {
-//								ClientController.fileClient.markFile(image.uuid);
-//							}
-//						}
 					}
+					
 				} else {
 					image.setBufferedImage(bufferedImage);
-//					if (ClientController.fileClient.checkHealth()) {
-//						ClientController.fileClient.registerFile(image.uuid);
-//						if (ClientController.fileClient.checkFile(image.uuid)) {
-//							ClientController.fileClient.uploadFile(
-//									NodeController.getImageCache() + NodeController.getSeperator(),
-//									image.uuid + "." + image.extension);
-//						}
-//					}
 				}
 			}
 			image.setOffset(offset);
 			image.setScale(this.scale);
-			offset += image.getWidth();
+			offset += image.dimension.width;
 		}
 		return this.imageList;
 	}
+
+//	/**
+//	 * DIMENSION 2 A Function is the only place where the File objects receive the
+//	 * metadata necessary to correctly process shapes.
+//	 *
+//	 * @return
+//	 */
+//	@JsonIgnore
+//	public List<Image> getImageList() {
+//		double offset = 0;
+//		for (Image image : this.imageList) {
+//			if (image.getBufferedImage() == null) {
+//				BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getImageCache(),
+//						image.uuid + "." + image.extension);
+//				if (bufferedImage == null) {
+//					bufferedImage = NodeController.openBufferedImage(image.getPath(), image.getNameAndExtension());
+//					if (bufferedImage != null) {
+//						image.setBufferedImage(bufferedImage);
+//						if (image.extension.equals("jpg") || image.extension.equals("jpeg")) {
+//							NodeController.saveJpg(NodeController.getImageCache(), image.uuid + "." + image.extension,
+//									bufferedImage);
+//						}
+//						// TODO Add support for PNG
+////						if (ClientController.fileClient.checkHealth()) {
+////							ClientController.fileClient.registerFile(image.uuid);
+////							if (ClientController.fileClient.checkFile(image.uuid)) {
+////								ClientController.fileClient.uploadFile(
+////										NodeController.getImageCache() + NodeController.getSeperator(),
+////										image.uuid + "." + image.extension);
+////							}
+////						}
+//					} else {
+////						if (ClientController.fileClient.checkHealth()) {
+////							if (ClientController.fileClient.checkFile(image.uuid)) {
+////								ClientController.fileClient.downloadFile(
+////										NodeController.getImageCache() + NodeController.getSeperator(),
+////										image.getUUID() + "." + image.getExtension());
+////								ClientController.fileClient.unmarkFile(image.uuid);
+////							} else {
+////								ClientController.fileClient.markFile(image.uuid);
+////							}
+////						}
+//					}
+//				} else {
+//					image.setBufferedImage(bufferedImage);
+////					if (ClientController.fileClient.checkHealth()) {
+////						ClientController.fileClient.registerFile(image.uuid);
+////						if (ClientController.fileClient.checkFile(image.uuid)) {
+////							ClientController.fileClient.uploadFile(
+////									NodeController.getImageCache() + NodeController.getSeperator(),
+////									image.uuid + "." + image.extension);
+////						}
+////					}
+//				}
+//			}
+//			image.setOffset(offset);
+//			image.setScale(this.scale);
+//			offset += image.dimension.offset;
+//		}
+//		return this.imageList;
+//	}
 
 	/**
 	 * Function returns bufferedImage with one or more File bufferedImages from the
@@ -449,16 +483,13 @@ public class Page {
 	@Override
 	public String toString() {
 		String string = "";
-		if (logger.isTraceEnabled()) {
 			ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 			try {
 				string = ow.writeValueAsString(this);
 			} catch (IOException ex) {
-				java.util.logging.Logger.getLogger(Shape.class.getName()).log(Level.SEVERE, null, ex);
+				logger.error("IOException "+ex.getMessage());
 			}
-		} else {
-			string = this.uuid;
-		}
+	
 		return string;
 	}
 
@@ -481,7 +512,7 @@ public class Page {
 
 	@JsonIgnore
 	public List<Shape> getShapeMatrixShapeList() {
-		logger.debug("getShapeMatrixShapeList()");
+//		logger.debug("getShapeMatrixShapeList()");
 		List<Shape> shapeList = null;
 		List<ArrayList<Shape>> shapeMatrix = this.getShapeMatrix();// this.initMatrix();
 		if (shapeMatrix != null) {
@@ -497,7 +528,7 @@ public class Page {
 
 	@JsonIgnore
 	public List<ArrayList<Shape>> initShapeMatrix() {
-		logger.debug("initShapeMatrix()");
+//		logger.debug("initShapeMatrix()");
 		List<ArrayList<Shape>> shapeMatrix = new ArrayList<>();
 		List<Shape> shapeList = this.getShapeList();
 		if (shapeList != null && shapeList.size() > 0) {
@@ -646,9 +677,9 @@ public class Page {
 	@JsonIgnore
 	public double getFileListMinMargin() {
 		double min = 65536;
-		for (Image file : this.getImageList()) {
-			if (file.margin < min) {
-				min = file.margin;
+		for (Image image : this.getImageList()) {
+			if (image.dimension.margin < min) {
+				min = image.dimension.margin;
 			}
 		}
 		return min;
@@ -657,9 +688,9 @@ public class Page {
 	@JsonIgnore
 	public double getFileListMaxMargin() {
 		double max = -65536;
-		for (Image file : this.getImageList()) {
-			if (file.margin > max) {
-				max = file.margin;
+		for (Image image : this.getImageList()) {
+			if (image.dimension.margin > max) {
+				max = image.dimension.margin;
 			}
 		}
 		return max;
@@ -726,19 +757,19 @@ public class Page {
 	}
 
 	@JsonIgnore
-	public BufferedImage modifyImage(Image a) { // BufferedImage img1,BufferedImage img2) {
-		logger.debug("modifyImage(" + a + ")");
+	public BufferedImage modifyImage(Image image) { // BufferedImage img1,BufferedImage img2) {
+		logger.debug("modifyImage(" + image + ")");
 		BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-		if (a.bufferedImage != null) {
-			int width = a.bufferedImage.getWidth();
-			int height = a.bufferedImage.getHeight();
+		if (image.bufferedImage != null) {
+			int width = image.bufferedImage.getWidth();
+			int height = image.bufferedImage.getHeight();
 			bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 			Graphics2D graphics2D = bufferedImage.createGraphics();
 			Color oldColor = graphics2D.getColor();
 			graphics2D.setPaint(Color.BLACK);
 			graphics2D.fillRect(0, 0, width, height);
 			graphics2D.setColor(oldColor);
-			graphics2D.drawImage(a.bufferedImage, null, 0, (int) a.margin);
+			graphics2D.drawImage(image.bufferedImage, null, 0, (int) image.dimension.margin);
 			graphics2D.dispose();
 		}
 		return bufferedImage;
@@ -750,16 +781,16 @@ public class Page {
 		BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
 		if (a.bufferedImage != null && b.bufferedImage != null) {
 			int width = a.bufferedImage.getWidth() + b.bufferedImage.getWidth();
-			int height = Math.max(a.bufferedImage.getHeight() + (int) a.margin,
-					b.bufferedImage.getHeight() + (int) b.margin);// +offset;
+			int height = Math.max(a.bufferedImage.getHeight() + (int) a.dimension.margin,
+					b.bufferedImage.getHeight() + (int) b.dimension.margin);// +offset;
 			bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 			Graphics2D graphics2D = bufferedImage.createGraphics();
 			Color oldColor = graphics2D.getColor();
 			graphics2D.setPaint(Color.BLACK);
 			graphics2D.fillRect(0, 0, width, height);
 			graphics2D.setColor(oldColor);
-			graphics2D.drawImage(a.bufferedImage, null, 0, (int) a.margin);
-			graphics2D.drawImage(b.bufferedImage, null, a.bufferedImage.getWidth(), (int) b.margin);
+			graphics2D.drawImage(a.bufferedImage, null, 0, (int) a.dimension.margin);
+			graphics2D.drawImage(b.bufferedImage, null, a.bufferedImage.getWidth(), (int) b.dimension.margin);
 			graphics2D.dispose();
 		}
 		return bufferedImage;

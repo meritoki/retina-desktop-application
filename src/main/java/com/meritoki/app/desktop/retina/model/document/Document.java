@@ -85,6 +85,14 @@ public class Document {
 		this.setIndex(0);
 	}
 	
+	public Image getImage() {
+		Image image = null;
+		if(this.getPage() != null) {
+			image = this.getPage().getImage();
+		}
+		return image;
+	}
+	
 	public Image getImage(Point point) {
 		Image image = null;
 		if(this.getPage() != null) {

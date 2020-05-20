@@ -96,7 +96,7 @@ class ProjectTest {
 		project.setIndex(0);
 		List<Image> fileList = project.getPage().getImageList();
 		for(Image file: fileList) {
-			Point point = new Point(file.offset+(file.getWidth()/2),file.margin+(file.getHeight()/2));
+			Point point = new Point(file.dimension.offset+(file.dimension.width/2),file.dimension.margin+(file.dimension.height/2));
 			assertEquals(project.getPage().getImage(point).getUUID(),file.getUUID());
 		}
 	}
