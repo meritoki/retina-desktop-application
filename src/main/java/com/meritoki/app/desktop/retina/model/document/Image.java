@@ -1,6 +1,7 @@
 package com.meritoki.app.desktop.retina.model.document;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +27,13 @@ public class Image {
 	@JsonProperty
 	public String uuid = null;
 	@JsonProperty
-	public String path = null;
-	@JsonProperty
-	public String name = null;
-	@JsonProperty
-	public String extension = null;
+	public File file = null;
+//	@JsonProperty
+//	public String path = null;
+//	@JsonProperty
+//	public String name = null;
+//	@JsonProperty
+//	public String extension = null;
 	@JsonIgnore
 	public BufferedImage bufferedImage = null;
 	@JsonIgnore
@@ -61,9 +64,7 @@ public class Image {
 	 */
 	public Image(Image image) {
 		this.uuid = image.uuid;
-		this.name = image.name;
-		this.path = image.path;
-		this.extension = image.extension;
+		this.file = image.file;
 		this.bufferedImage = image.bufferedImage;
 		this.dimension = image.dimension;
 		this.index = image.index;
@@ -78,20 +79,25 @@ public class Image {
 	 * @param path
 	 * @param name
 	 */
-	public Image(String path, String name) {
+//	public Image(String path, String name) {
+//		this.uuid = UUID.randomUUID().toString();
+//		this.path = path;
+//		this.name = name;
+//		this.extension = this.getExtension(this.name);
+//		this.name = this.name.replace("." + this.extension, "");
+//	}
+	
+	public Image(File file) {
 		this.uuid = UUID.randomUUID().toString();
-		this.path = path;
-		this.name = name;
-		this.extension = this.getExtension(this.name);
-		this.name = this.name.replace("." + this.extension, "");
+		this.file = file;
 	}
 
 	public String getUUID() {
 		return this.uuid;
 	}
 
-	public String getExtension(String fileName) {
-		return fileName.substring(fileName.lastIndexOf(".") + 1);
+	public String getExtension() {
+		return file.getName().substring(file.getName().lastIndexOf(".") + 1);
 	}
 
 	/**
@@ -152,42 +158,6 @@ public class Image {
 		return s;
 	}
 
-//	public Point getFilePoint(Point point) {
-//		Point p = new Point(point);
-//		p.x -= this.offset * this.scale;
-//		p.y -= this.margin * this.scale;
-//		return p;
-//	}
-//
-//	public Point getPagePoint(Point point) {
-//		Point p = new Point(point);
-//		p.x += this.offset * this.scale;
-//		p.y += this.margin * this.scale;
-//		return p;
-//	}
-
-//	public List<Point> getFilePointList(List<Point> pointList) {
-//		List<Point> pList = this.copyPointList(pointList);
-//		pList.set(0, this.getFilePoint(pList.get(0)));
-//		pList.set(1, this.getFilePoint(pList.get(1)));
-//		return pList;
-//	}
-//
-//	public List<Point> getPagePointList(List<Point> pointList) {
-//		List<Point> pList = this.copyPointList(pointList);
-//		pList.set(0, this.getPagePoint(pList.get(0)));
-//		pList.set(1, this.getPagePoint(pList.get(1)));
-//		return pList;
-//	}
-//
-//	public List<Point> copyPointList(List<Point> pointList) {
-//		List<Point> copyPointList = new ArrayList<>();
-//		for (Point p : pointList) {
-//			copyPointList.add(new Point(p));
-//		}
-//		return copyPointList;
-//	}
-
 	/**
 	 * Function transforms the
 	 * 
@@ -202,21 +172,21 @@ public class Image {
 		return this.bufferedImage;
 	}
 
-	public String getPath() {
-		return this.path;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public String getNameAndExtension() {
-		return this.name + "." + this.extension;
-	}
-
-	public String getExtension() {
-		return this.extension;
-	}
+//	public String getPath() {
+//		return this.path;
+//	}
+//
+//	public String getName() {
+//		return this.name;
+//	}
+//
+//	public String getNameAndExtension() {
+//		return this.name + "." + this.extension;
+//	}
+//
+//	public String getExtension() {
+//		return this.extension;
+//	}
 	
 	/**
 	 * Function sets the current index selected by user.
@@ -247,7 +217,6 @@ public class Image {
 	}
 
 	public void setOffset(double offset) {
-		logger.info("setOffset(" + offset + ")");
 		this.dimension.offset = offset;
 		for (Shape shape : this.shapeList) {
 			shape.dimension.setOffset(offset);
@@ -255,7 +224,6 @@ public class Image {
 	}
 
 	public void setMargin(double margin) {
-		logger.debug("setMargin(" + margin + ")");
 		this.dimension.margin = margin;
 		for (Shape shape : this.shapeList) {
 			shape.dimension.setMargin(margin);
@@ -291,11 +259,8 @@ public class Image {
 	 */
 	@JsonIgnore
 	public void addShape(Shape shape) {
-		
-//		shape.dimension.pointList = this.getFilePointList(shape.dimension.pointList);
 		shape.dimension.setOffset(this.dimension.offset);
 		shape.dimension.setMargin(this.dimension.margin);
-		logger.info("addShape(" + shape + ")");
 		this.shapeList.add(shape);
 	}
 
@@ -313,25 +278,9 @@ public class Image {
 		return selection;
 	}
 
-//	public int intersectShape(Point point) {
-//		int selection = -1;
-//		double factor;
-//		Point copyPoint = null;
-//		Shape shape = this.getShape();
-//		if (shape != null) {
-//			copyPoint = new Point(point);
-//			factor = this.offset * shape.scale;
-//			copyPoint.x -= factor;
-//			selection = shape.intersect(copyPoint);
-//		}
-//		return selection;
-//	}
-
 	@JsonIgnore
 	public boolean containsShape(Shape shape) {
-//		logger.info("containsShape(" + shape + ")");
 		boolean flag = false;
-//		if (this.containsPoint(new Point(shape.dimension.pointList.get(0)))) {
 		if(this.containsPoint(shape.dimension.getStartPoint())) {
 			flag = true;
 		}
@@ -355,8 +304,6 @@ public class Image {
 			s = this.shapeList.get(i);
 			if (s.uuid.equals(uuid)) {
 				this.shapeList.remove(i);
-//				@TODO
-//				s.dimension.pointList = this.getPagePointList(s.dimension.pointList);
 				break;
 			} else {
 				s = null;
@@ -372,13 +319,6 @@ public class Image {
 	 * @return
 	 */
 	public boolean containsPoint(Point point) {
-//		boolean flag = false;
-//		if (point.x > (this.offset * this.scale) && point.x < (this.offset + this.width) * this.scale) {
-//			if (point.y > (this.margin * this.scale) && point.y < (this.margin + this.height) * this.scale) {
-//				flag = true;
-//			}
-//		}
-//		return flag;
 		return this.dimension.containsPoint(point);
 	}
 

@@ -85,7 +85,7 @@ public class ScriptController {
 		Page pageA = pageList.get(x);
 		Page pageB = pageList.get(y);
 		for (Image file : pageB.imageList) {
-			pageA.addFile(file);
+			pageA.addImage(file);
 		}
 		pageA.setBufferedImage(null);
 		pageList.remove(y);

@@ -1,5 +1,6 @@
 package com.meritoki.app.desktop.retina.model.document;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -49,39 +50,39 @@ public class Document {
 	@JsonIgnore
 	public void test() {
 		Page page = new Page();
-		Image image = new Image("./data/image", "01.jpg");
+		Image image = new Image(new File("./data/image/01.jpg"));
 		page.imageList.add(image);
-		image = new Image("./data/image","02.jpg");
-		page.imageList.add(image);
-		pageList.add(page);
-		page = new Page();
-		image = new Image("./data/image","02.jpg");
+		image = new Image(new File("./data/image/02.jpg"));
 		page.imageList.add(image);
 		pageList.add(page);
-		page = new Page();
-		image = new Image("./data/image","03.jpg");
-		page.imageList.add(image);
-		pageList.add(page);
-		page = new Page();
-		image = new Image("./data/image","04.jpg");
-		page.imageList.add(image);
-		pageList.add(page);
-		page = new Page();
-		image = new Image("./data/image","05.jpg");
-		page.imageList.add(image);
-		pageList.add(page);
-		page = new Page();
-		image = new Image("./data/image","06.jpg");
-		page.imageList.add(image);
-		pageList.add(page);
-		page = new Page();
-		image = new Image("./data/image","07.jpg");
-		page.imageList.add(image);
-		pageList.add(page);
-		page = new Page();
-		image = new Image("./data/image","08.jpg");
-		page.imageList.add(image);
-		pageList.add(page);
+//		page = new Page();
+//		image = new Image("./data/image","02.jpg");
+//		page.imageList.add(image);
+//		pageList.add(page);
+//		page = new Page();
+//		image = new Image("./data/image","03.jpg");
+//		page.imageList.add(image);
+//		pageList.add(page);
+//		page = new Page();
+//		image = new Image("./data/image","04.jpg");
+//		page.imageList.add(image);
+//		pageList.add(page);
+//		page = new Page();
+//		image = new Image("./data/image","05.jpg");
+//		page.imageList.add(image);
+//		pageList.add(page);
+//		page = new Page();
+//		image = new Image("./data/image","06.jpg");
+//		page.imageList.add(image);
+//		pageList.add(page);
+//		page = new Page();
+//		image = new Image("./data/image","07.jpg");
+//		page.imageList.add(image);
+//		pageList.add(page);
+//		page = new Page();
+//		image = new Image("./data/image","08.jpg");
+//		page.imageList.add(image);
+//		pageList.add(page);
 		this.setIndex(0);
 	}
 	

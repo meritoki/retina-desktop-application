@@ -212,38 +212,29 @@ public class Dimension {
 		Selection selection = null;
 		Point startPoint = this.getStartPoint();
 		Point stopPoint = this.getStopPoint();
-
 		double margin = 20 * this.scale;
 		if (point.x == startPoint.x && point.y == startPoint.y) {
-			logger.info("intersect(" + point + ") TOP_LEFT");
 			selection = Selection.TOP_LEFT;
 		} else if (point.x > (stopPoint.x - margin) && point.x < (stopPoint.x + margin)
 				&& point.y > (stopPoint.y - margin) && point.y < (stopPoint.y + margin)) {
-			logger.info("intersect(" + point + ") BOTTOM_RIGHT");
 			selection = Selection.BOTTOM_RIGHT;
 		} else if (point.x > (stopPoint.x - margin) && point.x < (stopPoint.x + margin)
 				&& point.y > (startPoint.y - margin) && point.y < (startPoint.y + margin)) {
-			logger.info("intersect(" + point + ") TOP_RIGHT");
 			selection = Selection.TOP_RIGHT;
 		} else if (point.x > (startPoint.x - margin) && point.x < (startPoint.x + margin)
 				&& point.y > (stopPoint.y - margin) && point.y < (stopPoint.y + margin)) {
-			logger.info("intersect(" + point + ") BOTTOM_LEFT");
 			selection = Selection.BOTTOM_LEFT;
 		} else if (point.y >= (startPoint.y) && point.y < (startPoint.y + margin) && point.x > startPoint.x
 				&& point.x < stopPoint.x) {
-			logger.info("intersect(" + point + ") TOP");
 			selection = Selection.TOP;
 		} else if (point.y > (stopPoint.y - margin) && point.y <= (stopPoint.y) && point.x > startPoint.x
 				&& point.x < stopPoint.x) {
-			logger.info("intersect(" + point + ") BOTTOM");
 			selection = Selection.BOTTOM;
 		} else if (point.x >= (startPoint.x) && point.x < (startPoint.x + margin) && point.y > startPoint.y
 				&& point.y < stopPoint.y) {
-			logger.info("intersect(" + point + ") LEFT");
 			selection = Selection.LEFT;
 		} else if (point.x > (stopPoint.x - margin) && point.x <= (stopPoint.x) && point.y > startPoint.y
 				&& point.y < stopPoint.y) {
-			logger.info("intersect(" + point + ") RIGHT");
 			selection = Selection.RIGHT;
 		}
 		return selection;
@@ -264,44 +255,36 @@ public class Dimension {
 		logger.info("resizePoint(" + point + ", " + selection + ")");
 		switch (selection) {
 		case TOP: {
-			logger.info("resize(" + point + ", " + selection + ") TOP");
 			this.pointList.get(0).y = point.y;
 			break;
 		}
 		case BOTTOM: {
-			logger.info("resize(" + point + ", " + selection + ") BOTTOM");
 			this.pointList.get(1).y = point.y;
 			break;
 		}
 		case LEFT: {
-			logger.info("resize(" + point + ", " + selection + ") LEFT");
 			this.pointList.get(0).x = point.x;
 			break;
 		}
 		case RIGHT: {
-			logger.info("resize(" + point + ", " + selection + ") RIGHT");
 			this.pointList.get(1).x = point.x;
 			break;
 		}
 		case TOP_LEFT: {
-			logger.info("resize(" + point + ", " + selection + ") TOP_LEFT");
 			this.pointList.set(0, point);
 			break;
 		}
 		case TOP_RIGHT: {
-			logger.info("resize(" + point + ", " + selection + ") TOP_RIGHT");
 			this.pointList.get(0).y = point.y;
 			this.pointList.get(1).x = point.x;
 			break;
 		}
 		case BOTTOM_LEFT: {
-			logger.info("resize(" + point + ", " + selection + ") BOTTOM_LEFT");
 			this.pointList.get(0).x = point.x;
 			this.pointList.get(1).y = point.y;
 			break;
 		}
 		case BOTTOM_RIGHT: {
-			logger.info("resize(" + point + ", " + selection + ") BOTTOM_RIGHT");
 			this.pointList.set(1, point);
 			break;
 		}
@@ -330,13 +313,3 @@ public class Dimension {
 		return string;
 	}
 }
-
-//Point startPoint = new Point();
-//Point stopPoint = new Point();
-//startPoint.x = this.pointList.get(0).x * this.scale;
-//startPoint.y = this.pointList.get(0).y * this.scale;
-//stopPoint.x = this.pointList.get(1).x * this.scale;
-//stopPoint.y = this.pointList.get(1).y * this.scale;
-// introduce the idea of a buffer where a user does not have to press exactly on
-// line
-// TOP

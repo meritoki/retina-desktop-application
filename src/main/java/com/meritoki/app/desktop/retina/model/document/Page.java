@@ -82,8 +82,9 @@ public class Page {
 	/**
 	 * Scale of the entire page, applied to all files.
 	 */
-	@JsonIgnore
-	public double scale = 1;
+//	@JsonIgnore
+//	public double scale = 1;
+	public Dimension dimension = new Dimension();
 
 	@JsonProperty
 	public Script script = new Script();
@@ -113,7 +114,8 @@ public class Page {
 		}
 		this.index = page.index;
 		this.bufferedImage = page.bufferedImage;
-		this.scale = page.scale;
+//		this.scale = page.scale;
+		this.dimension = page.dimension;
 		if (page.shapeMatrix != null) {
 			List<ArrayList<Shape>> shapeMatrix = new ArrayList<>();
 			for (List<Shape> slist : page.shapeMatrix) {
@@ -234,10 +236,10 @@ public class Page {
 	public BufferedImage getShapeBufferedImage(Shape shape) {
 		BufferedImage bufferedImage = null;
 		if (this.getBufferedImage() != null) {
-			int x = (int) (shape.getDimension().x / this.scale);
-			int y = (int) (shape.getDimension().y / this.scale);
-			int w = (int) (shape.getDimension().width / this.scale);
-			int h = (int) (shape.getDimension().height / this.scale);
+			int x = (int) (shape.dimension.x);// / this.scale);
+			int y = (int) (shape.dimension.y);// / this.scale);
+			int w = (int) (shape.dimension.width);// / this.scale);
+			int h = (int) (shape.dimension.height);// / this.scale);
 //			bufferedImage = this.getBufferedImage().getSubimage(x, y, w, h);
 		}
 		return bufferedImage;
@@ -255,13 +257,13 @@ public class Page {
 		for (Image image : this.imageList) {
 			if (image.getBufferedImage() == null) {
 				BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getImageCache(),
-						image.uuid + "." + image.extension);
+						image.uuid + "." + image.getExtension());
 				if (bufferedImage == null) {
-					bufferedImage = NodeController.openBufferedImage(image.getPath(), image.getNameAndExtension());
+					bufferedImage = NodeController.openBufferedImage(image.file.getParent(), image.file.getName());
 					if (bufferedImage != null) {
 						image.setBufferedImage(bufferedImage);
-						if (image.extension.equals("jpg") || image.extension.equals("jpeg")) {
-							NodeController.saveJpg(NodeController.getImageCache(), image.uuid + "." + image.extension,
+						if (image.getExtension().equals("jpg") || image.getExtension().equals("jpeg")) {
+							NodeController.saveJpg(NodeController.getImageCache(), image.uuid + "." + image.getExtension(),
 									bufferedImage);
 						}
 					}
@@ -271,7 +273,8 @@ public class Page {
 				}
 			}
 			image.setOffset(offset);
-			image.setScale(this.scale);
+			image.setScale(this.dimension.scale);
+			this.dimension.width+=image.dimension.width;
 			offset += image.dimension.width;
 		}
 		return this.imageList;
@@ -386,9 +389,9 @@ public class Page {
 	 */
 	@JsonIgnore
 	public void setScale(double scale) {
-		this.scale = scale;
-		for (Image file : this.imageList) {
-			file.setScale(scale);
+		this.dimension.scale = scale;
+ 		for (Image image : this.imageList) {
+			image.setScale(scale);
 		}
 	}
 
@@ -431,7 +434,6 @@ public class Page {
 		for (Image image : this.getImageList()) {
 			if (image.containsShape(shape)) {
 				image.addShape(shape);
-				this.setImage(image.uuid);
 				this.setShape(shape.uuid);
 				break;
 			}
@@ -439,9 +441,9 @@ public class Page {
 	}
 
 	@JsonIgnore
-	public void addFile(Image file) {
-		logger.info("addFile(" + file + ")");
-		file.setScale(this.scale);
+	public void addImage(Image file) {
+		logger.info("addImage(" + file + ")");
+		file.setScale(this.dimension.scale);
 		this.imageList.add(file);
 	}
 
@@ -617,7 +619,7 @@ public class Page {
 		a = shape.dimension.getCenterY();
 		a = Math.abs(average - a);
 //		logger.info("isShapeListYInThreshold(" + shapeList + ", " + shape+ ") a=" + a);
-		if (a > (this.threshold*this.scale)) {
+		if (a > (this.threshold*this.dimension.scale)) {
 //			logger.info("isShapeListYInThreshold(" + shapeList + ", " + shape+ ") (" + a
 //					+ " > " + this.threshold + ")");
 			flag = false;

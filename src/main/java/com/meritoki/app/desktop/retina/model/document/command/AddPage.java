@@ -24,7 +24,7 @@ public class AddPage extends Command {
     	Page page = null;
     	for(File file: this.document.cache.fileArray) {
     		page = new Page();
-			page.imageList.add(new Image(file.getParent(),file.getName()));
+			page.imageList.add(new Image(file));
     		this.document.addPage(page);
     	}
     }

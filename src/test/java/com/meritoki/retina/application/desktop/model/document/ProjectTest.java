@@ -35,9 +35,9 @@ class ProjectTest {
 		project = new Document();
 		Page page = new Page();
 		Image file = new Image("./data/image", "01.jpg");
-		page.addFile(file);
+		page.addImage(file);
 		file = new Image("./data/image", "02.jpg");
-		page.addFile(file);
+		page.addImage(file);
 		Shape shape = new Shape();
 		Point pointA = new Point(0,0);
 		Point pointB = new Point(100,100);
