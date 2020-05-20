@@ -146,7 +146,7 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
     @Override
     public void mouseClicked(MouseEvent e) {
         if(e.getClickCount()==1){
-            String selectedItem = (String) this.pageList.getSelectedValue();
+            String selectedItem = this.pageList.getSelectedValue();
             Document document = (this.model != null) ? this.model.getDocument() : null;
             document.setPage(selectedItem);
             this.initLabel();
@@ -217,7 +217,7 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
 
     @Override
     public void keyReleased(KeyEvent e) {
-        String uuid = (String)pageList.getSelectedValue();
+        String uuid = pageList.getSelectedValue();
         Document document = (this.model != null) ? this.model.getDocument() : null;
         Page page = document.getPage();
         if(page != null && !uuid.equals(page.uuid)){
@@ -250,7 +250,7 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
         sizeValueLabel = new javax.swing.JLabel();
         setPageList = new javax.swing.JButton();
         imageListScrollPane = new javax.swing.JScrollPane();
-        pageList = new javax.swing.JList();
+        pageList = new javax.swing.JList<String>();
         imageScriptScrollPane = new javax.swing.JScrollPane();
         pageScriptTextArea = new javax.swing.JTextArea();
         executeImageScriptButton = new javax.swing.JButton();
@@ -501,7 +501,7 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
     private javax.swing.JLabel listSizeValueLabel;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JLabel nameValueLabel;
-    private javax.swing.JList pageList;
+    private javax.swing.JList<String> pageList;
     private javax.swing.JTextArea pageScriptTextArea;
     private javax.swing.JLabel pathLabel;
     private javax.swing.JLabel pathValueLabel;

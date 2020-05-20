@@ -90,7 +90,6 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 		super.paint(graphics);
 		if (this.model != null) {
 			Graphics2D graphics2D = (Graphics2D) graphics.create();
-			
 			Document document = (this.model != null) ? this.model.getDocument() : null;
 			document.getPage().setScale(this.model.document.cache.scale);
 			AffineTransform affineTransform = new AffineTransform();
@@ -115,7 +114,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 				}
 
 			}
-			List<Shape> shapeList = document.getPage().getShapeMatrixShapeList();
+			List<Shape> shapeList = document.getPage().getMatrix().getShapeList();
 			Shape shape = document.getPage().getShape();
 			Shape previousShape = null;
 			if (shapeList != null) {
@@ -141,13 +140,11 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 					if (previousShape != null) {
 						com.meritoki.app.desktop.retina.model.document.Dimension dimension = previousShape
 								.getDimension();
-//					    g.drawLine(X1, Y1, X2, Y2);
 						graphics2D.drawLine((int) (dimension.x + (dimension.width / 2)),
 								(int) (dimension.y + (dimension.height / 2)), (int) (d.x + (d.width / 2)),
 								(int) (d.y + (d.height / 2)));
 					}
 					previousShape = s;
-//                                        NodeController.saveJpg("./", s.uuid+".jpg", s.bufferedImage);
 				}
 			}
 //			graphics2D.setColor(Color.magenta);
@@ -205,7 +202,8 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 				this.model.document.pattern.execute("resizeShape");
 			} else {
 				if (this.model.document.cache.pressedShape != null) {
-					this.model.document.cache.releasedImage = this.model.document.getImage(this.model.document.cache.releasedPoint);
+					this.model.document.cache.releasedImage = this.model.document
+							.getImage(this.model.document.cache.releasedPoint);
 					this.model.getDocument().pattern.execute("moveShape");
 				} else {
 					this.model.getDocument().pattern.execute("addShape");
@@ -356,11 +354,3 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 	public void keyReleased(KeyEvent e) {
 	}
 }
-//public double round(double value, int places) {
-//if (places < 0)
-//	throw new IllegalArgumentException();
-//long factor = (long) Math.pow(10, places);
-//value = value * factor;
-//long tmp = Math.round(value);
-//return (double) tmp / factor;
-//}

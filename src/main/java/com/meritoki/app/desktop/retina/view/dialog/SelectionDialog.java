@@ -102,7 +102,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 //		logger.debug("initList()");
 		Document document = (this.model != null) ? this.model.getDocument() : null;
 		Page page = (document != null) ? document.getPage() : null;
-		List<Shape> shapeList = (page != null) ? page.getShapeMatrixShapeList() : null;
+		List<Shape> shapeList = (page != null) ? page.getShapeList() : null;
 		if (shapeList == null) {
 			shapeList = (page != null) ? page.getShapeList() : null;
 		}
@@ -779,7 +779,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 			page.script.value+=value;
 			this.scriptTextArea.setText("");
 			this.resetButton.setText("Reset");
-			this.initShapeList(page.getShapeMatrixShapeList());
+			this.initShapeList(page.getShapeList());
 		}
 	}// GEN-LAST:event_executeButtonActionPerformed
 

@@ -179,96 +179,13 @@ public class ScriptController {
 
 	public static void insert(List<Page> pageList, int index, int a, int b, int x, int y) {
 		Page page = pageList.get(index);
-		Shape data = page.initShapeMatrix().get(a).remove(b);
-		page.initShapeMatrix().get(x).add(y, data);
+		Shape data = page.getMatrix().init().get(a).remove(b);
+		page.getMatrix().init().get(x).add(y, data);
 	}
 
 //Data Matrix Sort
 
-	/**
-	 * COMMAND PAGE(S) ROW,COLUMN:ROW,COLUMN SWAP 0-n 1,2:3,4 | SWAP 0 1,2:3,4
-	 * INSERT 0-n 1,2:3,4 | INSERT 0 1,2:3,4 MERGE 0-n 1,1:1,2 | MERGE 0 1,1:1,2
-	 * COMMAND PAGE(S) RANGE:RANGE JOIN 0-n 1:1 | JOIN 0-1 1-6:2-7 | JOIN even-odd
-	 * RANGE:RANGE COMMAND PAGE(S) COL/ROW RANGE:RANGE JOIN 0-n ROW 1:1 | JOIN 0-1
-	 * ROW 1-6:2-7
-	 * 
-	 * @param value
-	 * @throws Exception
-	 */
-	public static void sortShapeMatrix(List<ArrayList<Shape>> shapeMatrix, String value) {
-		logger.info("sortShapeMatrix(shapeMatrix, " + value + ")");
-		if (shapeMatrix != null && value != null && !value.equals("null")) {
-			value = value.replace("\n", "").replace("\r", "");
-			String[] instructions = value.split(";");
-			String instruction;
-			String[] parameters;
-			String a;
-			String b;
-			for (String i : instructions) {
-				if (i != null && !i.equals("null") && !i.contentEquals("")) {
-					logger.info(i);
-					if (i.contains("SWAP")) {// 0:0 0:0;
-						instruction = i.replaceFirst("SWAP", "");
-						instruction = instruction.trim();
-						parameters = instruction.split(" ");
-						a = parameters[0].trim();
-						swapShape(shapeMatrix, a);
-					} else if (i.contains("INSERT")) {// 0:0 0:0
-						instruction = i.replaceFirst("INSERT", "");
-						instruction = instruction.trim();
-						parameters = instruction.split(" ");
-						a = parameters[0].trim();
-						insertShape(shapeMatrix, a);
-					}
-				}
-			}
-		}
-	}
-
-	public static void swapShape(List<ArrayList<Shape>> shapeMatrix, String a) {
-		logger.info("swapShape(shapeMatrix," + a + ")");
-		String[] coordinateArray = a.split(":");
-		String[] coordinateZero = coordinateArray[0].split(",");// (x,y)
-		String[] coordinateOne = coordinateArray[1].split(",");// (i,j)
-		int x = Integer.parseInt(coordinateZero[0]);
-		int y = Integer.parseInt(coordinateZero[1]);
-		int i = Integer.parseInt(coordinateOne[0]);
-		int j = Integer.parseInt(coordinateOne[1]);
-		if (x >= 0 && x < shapeMatrix.size() && i >= 0 && i < shapeMatrix.size()) {
-			if (y >= 0 && y < shapeMatrix.get(x).size() && j >= 0 && j < shapeMatrix.get(i).size()) {
-
-				if (x == i) {
-					Collections.swap(shapeMatrix.get(x), y, j);
-				} else {
-					Shape one = shapeMatrix.get(x).remove(y);
-					Shape two = shapeMatrix.get(i).remove(j);
-					if (y >= 0 && y < shapeMatrix.get(x).size()) {
-						shapeMatrix.get(x).set(y, two);
-					} else {
-						shapeMatrix.get(x).add(two);
-					}
-					if (j >= 0 && j < shapeMatrix.get(i).size()) {
-						shapeMatrix.get(i).set(j, one);
-					} else {
-						shapeMatrix.get(i).add(one);
-					}
-				}
-			}
-		}
-	}
-
-	public static void insertShape(List<ArrayList<Shape>> shapeMatrix, String a) {
-		logger.info("insertShape(shapeMatrix," + a + ")");
-		String[] indexArray = a.split(":");
-		String[] indexZero = indexArray[0].split(",");// (x,y)
-		String[] indexOne = indexArray[1].split(",");// (i,j)
-		int x = Integer.parseInt(indexZero[0]);
-		int y = Integer.parseInt(indexZero[1]);
-		int i = Integer.parseInt(indexOne[0]);
-		int j = Integer.parseInt(indexOne[1]);
-		Shape one = shapeMatrix.get(x).remove(y);
-		shapeMatrix.get(i).add(j, one);
-	}
+	
 }
 
 //

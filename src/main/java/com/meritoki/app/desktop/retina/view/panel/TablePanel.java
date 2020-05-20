@@ -67,7 +67,7 @@ public class TablePanel extends javax.swing.JPanel {
 		if (page != null) {
 //			Object[][] objectMatrix = parser.parseData(page.getShapeMatrixShapeList());
 //			Object[] stringArray = parser.parseColumn(page.getShapeMatrixShapeList());
-			Object[] modelArray = parser.getModel(page.getShapeMatrixShapeList());
+			Object[] modelArray = parser.getModel(page.getShapeList());
 			DefaultTableModel model = new javax.swing.table.DefaultTableModel((Object[][])modelArray[1], (Object[])modelArray[0]);
 			this.dataTable.setModel(model);
 //                        this.dataTable.getColumnModel().getColumn(4).setPreferredWidth(30);
@@ -79,7 +79,8 @@ public class TablePanel extends javax.swing.JPanel {
 	
 
 	@Override
-	public void paintComponent(Graphics g) {
+	public void paint(Graphics g) {
+		super.paint(g);
 		this.initDataTable();
 	}
 

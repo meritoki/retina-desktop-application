@@ -28,12 +28,6 @@ public class Image {
 	public String uuid = null;
 	@JsonProperty
 	public File file = null;
-//	@JsonProperty
-//	public String path = null;
-//	@JsonProperty
-//	public String name = null;
-//	@JsonProperty
-//	public String extension = null;
 	@JsonIgnore
 	public BufferedImage bufferedImage = null;
 	@JsonIgnore
