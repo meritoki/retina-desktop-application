@@ -32,7 +32,7 @@ public class Command implements CommandInterface {
 	}
 	
 	@Override
-	public void execute() {
+	public void execute() throws Exception {
 		
 	}
 	

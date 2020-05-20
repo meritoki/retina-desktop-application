@@ -73,7 +73,6 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 	public Dimension getPreferredSize() {
 		Dimension dimension = new Dimension(1028, 512);
 		Document document = (this.model != null) ? this.model.getDocument() : null;
-
 		Page page = (document != null) ? document.getPage() : null;
 		BufferedImage bufferedImage = (page != null) ? page.getBufferedImage() : null;
 		if (bufferedImage != null) {
@@ -194,19 +193,39 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 		this.model.document.cache.releasedPoint = new Point(e.getX(), e.getY());
 		if (this.model.document.cache.pressedPoint.equals(this.model.document.cache.releasedPoint)) {
 			if (this.model.document.cache.pressedShape != null)
-				this.model.document.pattern.execute("setShape");
+				try {
+					this.model.document.pattern.execute("setShape");
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 		} else {
 			this.model.document.cache.selection = this.model.getDocument().getPage()
 					.intersectShape(this.model.document.cache.pressedPoint);
 			if (this.model.document.cache.selection != null) {
-				this.model.document.pattern.execute("resizeShape");
+				try {
+					this.model.document.pattern.execute("resizeShape");
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			} else {
 				if (this.model.document.cache.pressedShape != null) {
 					this.model.document.cache.releasedImage = this.model.document
 							.getImage(this.model.document.cache.releasedPoint);
-					this.model.getDocument().pattern.execute("moveShape");
+					try {
+						this.model.getDocument().pattern.execute("moveShape");
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				} else {
-					this.model.getDocument().pattern.execute("addShape");
+					try {
+						this.model.getDocument().pattern.execute("addShape");
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}
 		}
@@ -283,7 +302,12 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 			case KeyEvent.VK_BACK_SPACE: {
 				logger.debug("KeyPressed(BACK_SPACE)");
 				this.model.document.cache.pressedShape = this.model.getDocument().getPage().getShape();
-				this.model.getDocument().pattern.execute("removeShape");
+				try {
+					this.model.getDocument().pattern.execute("removeShape");
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				this.repaint();
 				break;
 			}

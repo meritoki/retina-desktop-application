@@ -34,4 +34,7 @@ public class Cache {
 	public Point movedPoint = new Point();
 	@JsonIgnore
 	public double scale = 1;
+	@JsonIgnore
+	public String script;
+	
 }

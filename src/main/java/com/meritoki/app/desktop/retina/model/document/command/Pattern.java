@@ -2,6 +2,7 @@ package com.meritoki.app.desktop.retina.model.document.command;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +12,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Event;
 import com.meritoki.app.desktop.retina.model.document.Shape;
+import com.meritoki.app.desktop.retina.model.document.Page;
 
 public class Pattern {
 
@@ -42,6 +44,7 @@ public class Pattern {
 		Command moveShape = new MoveShape(this.document);
 		Command removeShape = new RemoveShape(this.document);
 		Command resizeShape = new ResizeShape(this.document);
+		Command executeScript = new ExecuteScript(this.document);
 		this.register("addPage", addPage);
 		this.register("setPage", setPage);
 		this.register("addShape", addShape);
@@ -49,6 +52,7 @@ public class Pattern {
 		this.register("moveShape", moveShape);
 		this.register("removeShape", removeShape);
 		this.register("resizeShape", resizeShape);
+		this.register("executeScript", executeScript);
 	}
 
 	@JsonIgnore
@@ -57,7 +61,7 @@ public class Pattern {
 	}
 
 	@JsonIgnore
-	public void execute(String commandName) {
+	public void execute(String commandName) throws Exception {
 		Command command = commandMap.get(commandName);
 		if (command == null) {
 			throw new IllegalStateException("no command registered for " + commandName);
@@ -147,6 +151,15 @@ public class Pattern {
 				}
 				break;
 			}
+			case "executeScript" : {
+				for(Operation o: command.operationList) {
+					if(o.sign == 1) {
+						if(o.object instanceof List) {
+							this.document.pageList = (List<Page>)o.object;
+						}
+					}
+				}
+			}
 			default: {
 
 			}
@@ -230,6 +243,15 @@ public class Pattern {
 					}
 				}
 				break;
+			}
+			case "executeScript" : {
+				for(Operation o: command.operationList) {
+					if(o.sign == 1) {
+						if(o.object instanceof List) {
+							this.document.pageList = (List<Page>)o.object;
+						}
+					}
+				}
 			}
 			default: {
 

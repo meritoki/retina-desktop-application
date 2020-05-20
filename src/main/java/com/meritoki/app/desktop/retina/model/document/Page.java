@@ -87,6 +87,7 @@ public class Page {
 
 	@JsonProperty
 	public Script script;
+
 	/**
 	 * Page class retains references to one or more files
 	 */
@@ -222,9 +223,9 @@ public class Page {
 		}
 		return bufferedImage;
 	}
-	
+
 	public Matrix getMatrix() {
-		return new Matrix(this.getShapeList(),this.script);
+		return new Matrix(this.getShapeList(), this.script);
 	}
 
 	/**
@@ -245,18 +246,18 @@ public class Page {
 					if (bufferedImage != null) {
 						image.setBufferedImage(bufferedImage);
 						if (image.getExtension().equals("jpg") || image.getExtension().equals("jpeg")) {
-							NodeController.saveJpg(NodeController.getImageCache(), image.uuid + "." + image.getExtension(),
-									bufferedImage);
+							NodeController.saveJpg(NodeController.getImageCache(),
+									image.uuid + "." + image.getExtension(), bufferedImage);
 						}
 					}
-					
+
 				} else {
 					image.setBufferedImage(bufferedImage);
 				}
 			}
 			image.setOffset(offset);
 			image.setScale(this.dimension.scale);
-			this.dimension.width+=image.dimension.width;
+			this.dimension.width += image.dimension.width;
 			offset += image.dimension.width;
 		}
 		return this.imageList;
@@ -332,16 +333,25 @@ public class Page {
 	@JsonIgnore
 	public BufferedImage getBufferedImage() {
 		if (this.bufferedImage == null) {
-			BufferedImage bufferedImage = null;
-			Image file = null;
-			for (Image f : this.getImageList()) {
-				if (file == null) {
-					file = new Image(f);
-					bufferedImage = this.modifyImage(file);
-				} else {
-					bufferedImage = this.joinImages(file, f);
-				}
-			}
+//			BufferedImage bufferedImage = null;
+			BufferedImage bufferedImage = this.joinImages(this.getImageList());
+//			Image file = null;
+//			for (Image f : this.getImageList()) {
+//				if (file == null) {
+//					file = new Image(f);
+//					bufferedImage = this.modifyImage(file);
+//				} else {
+//					bufferedImage = this.joinImages(file, f);
+//				}
+//			}
+//			List<Image> imageList = this.getImageList();
+//			for(int i = 0; i < imageList.size();i++) {
+//				Image a = imageList.get(i);
+//				if(i+1 < imageList.size()) {
+//					Image b = imageList.get(i+1);
+//					
+//				}
+//			}
 			this.bufferedImage = bufferedImage;
 		}
 		return this.bufferedImage;
@@ -372,7 +382,7 @@ public class Page {
 	@JsonIgnore
 	public void setScale(double scale) {
 		this.dimension.scale = scale;
- 		for (Image image : this.imageList) {
+		for (Image image : this.imageList) {
 			image.setScale(scale);
 		}
 	}
@@ -423,10 +433,10 @@ public class Page {
 	}
 
 	@JsonIgnore
-	public void addImage(Image file) {
-		logger.info("addImage(" + file + ")");
-		file.setScale(this.dimension.scale);
-		this.imageList.add(file);
+	public void addImage(Image image) {
+		logger.info("addImage(" + image + ")");
+		image.setScale(this.dimension.scale);
+		this.imageList.add(image);
 	}
 
 	public Shape removeShape(Shape shape) {
@@ -440,7 +450,7 @@ public class Page {
 		}
 		return s;
 	}
-	
+
 	@JsonIgnore
 	public Selection intersectShape(Point point) {
 		logger.trace("intersectShape(" + point + ")");
@@ -451,11 +461,6 @@ public class Page {
 		}
 		return selection;
 	}
-
-
-	
-
-
 
 //
 //	@JsonIgnore
@@ -480,8 +485,6 @@ public class Page {
 //		return max;
 //	}
 
-
-
 	@JsonIgnore
 	public BufferedImage modifyImage(Image image) { // BufferedImage img1,BufferedImage img2) {
 		logger.debug("modifyImage(" + image + ")");
@@ -502,40 +505,79 @@ public class Page {
 	}
 
 	@JsonIgnore
-	public BufferedImage joinImages(Image a, Image b) {
-		logger.debug("joinImages(" + a + "," + b + ")");
-		BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-		if (a.bufferedImage != null && b.bufferedImage != null) {
-			int width = a.bufferedImage.getWidth() + b.bufferedImage.getWidth();
-			int height = Math.max(a.bufferedImage.getHeight() + (int) a.dimension.margin,
-					b.bufferedImage.getHeight() + (int) b.dimension.margin);// +offset;
-			bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-			Graphics2D graphics2D = bufferedImage.createGraphics();
-			Color oldColor = graphics2D.getColor();
-			graphics2D.setPaint(Color.BLACK);
-			graphics2D.fillRect(0, 0, width, height);
-			graphics2D.setColor(oldColor);
-			graphics2D.drawImage(a.bufferedImage, null, 0, (int) a.dimension.margin);
-			graphics2D.drawImage(b.bufferedImage, null, a.bufferedImage.getWidth(), (int) b.dimension.margin);
-			graphics2D.dispose();
+	public BufferedImage joinImages(List<Image> imageList) {
+		logger.debug("joinImages(" + imageList + ")");
+		BufferedImage bufferedImage = null;
+		for (int i = 0; i < imageList.size(); i++) {
+			Image a = imageList.get(i);
+			if (bufferedImage == null) {
+				int width = a.bufferedImage.getWidth();
+				int height = (int) (a.bufferedImage.getHeight() + a.dimension.margin);
+				bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+				System.out.println(bufferedImage);
+				Graphics2D graphics2D = bufferedImage.createGraphics();
+				graphics2D.setPaint(Color.BLACK);
+				graphics2D.fillRect(0, 0, width, height);
+				graphics2D.setColor(Color.BLACK);
+				graphics2D.drawImage(a.bufferedImage, null, 0, 0);
+				graphics2D.dispose();
+			}
+			if (i + 1 < imageList.size()) {
+				Image b = imageList.get(i + 1);
+				int w = bufferedImage.getWidth();
+				int h = bufferedImage.getHeight();
+				int width = w + b.bufferedImage.getWidth();
+				int height = Math.max(h, b.bufferedImage.getHeight() + (int) b.dimension.margin);// +offset;
+				BufferedImage bI = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+				Graphics2D graphics2D = bI.createGraphics();
+				Color oldColor = graphics2D.getColor();
+				graphics2D.setPaint(Color.BLACK);
+				graphics2D.fillRect(0, 0, width, height);
+				graphics2D.setColor(oldColor);
+				graphics2D.drawImage(bufferedImage, null, 0, 0);
+				graphics2D.drawImage(b.bufferedImage, null, w, (int) b.dimension.margin);
+				graphics2D.dispose();
+				bufferedImage = bI;
+			}
 		}
 		return bufferedImage;
 	}
+
+//	@JsonIgnore
+//	public BufferedImage joinImages(Image a, Image b) {
+//		logger.debug("joinImages(" + a + "," + b + ")");
+//		BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+//		if (a.bufferedImage != null && b.bufferedImage != null) {
+//			int width = a.bufferedImage.getWidth() + b.bufferedImage.getWidth();
+//			int height = Math.max(a.bufferedImage.getHeight() + (int) a.dimension.margin,
+//					b.bufferedImage.getHeight() + (int) b.dimension.margin);// +offset;
+//			bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+//			Graphics2D graphics2D = bufferedImage.createGraphics();
+//			Color oldColor = graphics2D.getColor();
+//			graphics2D.setPaint(Color.BLACK);
+//			graphics2D.fillRect(0, 0, width, height);
+//			graphics2D.setColor(oldColor);
+//			graphics2D.drawImage(a.bufferedImage, null, 0, (int) a.dimension.margin);
+//			graphics2D.drawImage(b.bufferedImage, null, a.bufferedImage.getWidth(), (int) b.dimension.margin);
+//			graphics2D.dispose();
+//		}
+//		return bufferedImage;
+//	}
 
 	@JsonIgnore
 	@Override
 	public String toString() {
 		String string = "";
-			ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-			try {
-				string = ow.writeValueAsString(this);
-			} catch (IOException ex) {
-				logger.error("IOException "+ex.getMessage());
-			}
-	
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		try {
+			string = ow.writeValueAsString(this);
+		} catch (IOException ex) {
+			logger.error("IOException " + ex.getMessage());
+		}
+
 		return string;
 	}
-	
+
 //	public List<ArrayList<Shape>> getShapeMatrix() {
 //		List<ArrayList<Shape>> shapeMatrix = this.initShapeMatrix();
 //		if (!this.script.value.equals("")) {
@@ -702,7 +744,7 @@ public class Page {
 //		return flag;
 //	}
 }
-	
+
 //	public boolean isShapeListYInThreshold(List<Shape> shapeList, Shape shape) {
 ////		logger.info("isShapeListYInThreshold(" + shapeList + ", " + averageY + ", " + threshold + ")");
 //		boolean flag = true;
@@ -1122,7 +1164,6 @@ public class Page {
 //  }
 //  return dataMatrix;
 //}
-
 
 //@JsonIgnore
 //private void sortAscendingList(List<Shape> list) {
