@@ -2,6 +2,7 @@ package com.meritoki.app.desktop.retina.model.document.command;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,7 +34,7 @@ public class ExecuteScript extends Command {
 	 * @throws Exception
 	 */
 	public List<Operation> getOperationList(List<Page> pageList, String value) throws Exception {
-		List<Operation> operationList = new ArrayList<>();
+		LinkedList<Operation> operationList = new LinkedList<>();
 		value = value.replace("\n", "").replace("\r", "");
 		String[] instructions = value.split(";");
 		String instruction;
@@ -46,7 +47,9 @@ public class ExecuteScript extends Command {
 				parameters = instruction.split(":");
 				a = parameters[0].trim();
 				b = parameters[1].trim();
-				operationList.addAll(swapPage(pageList, a, b));
+				for(Operation o:swapPage((pageList), a, b)) {
+					operationList.push(o);;
+				}
 			} else if (i.contains("INSERT")) {
 				instruction = i.replaceFirst("INSERT", "");
 				parameters = instruction.split(":");
@@ -58,7 +61,10 @@ public class ExecuteScript extends Command {
 				parameters = instruction.split(":");
 				a = parameters[0].trim();
 				b = parameters[1].trim();
-				operationList.addAll(joinPage(pageList, a, b));
+//				operationList.addAll(joinPage(pageList, a, b));
+				for(Operation o:joinPage((pageList), a, b)) {
+					operationList.push(o);;
+				}
 			}
 		}
 		return operationList;
@@ -69,8 +75,9 @@ public class ExecuteScript extends Command {
 		// Operation Undo
 		Operation operation = new Operation();
 		operation.object = this.copyPageList(pageList);
-		operation.sign = 1;
+		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
+		operation.name = "join";
 		operationList.add(operation);
 
 		// Logic
@@ -88,8 +95,9 @@ public class ExecuteScript extends Command {
 		// Operation Redo
 		operation = new Operation();
 		operation.object = this.copyPageList(pageList);
-		operation.sign = 0;
+		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
+		operation.name = "join";
 		operationList.add(operation);
 		return operationList;
 	}
@@ -134,17 +142,18 @@ public class ExecuteScript extends Command {
 		logger.info("swap(" + a + "," + b + ")");
 		List<Operation> operationList = new ArrayList<>();
 		Operation operation = new Operation();
-
+		operation.name = "swap";
 		operation.object = this.copyPageList(pageList);
-		operation.sign = 1;
+		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		operationList.add(operation);
 
 		Collections.swap(pageList, a, b);
 
 		operation = new Operation();
+		operation.name = "swap";
 		operation.object = this.copyPageList(pageList);
-		operation.sign = 0;
+		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
 		operationList.add(operation);
 		return operationList;

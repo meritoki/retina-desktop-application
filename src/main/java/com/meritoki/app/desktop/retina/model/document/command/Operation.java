@@ -11,4 +11,6 @@ public class Operation {
     public String id;
 	@JsonProperty
     public String uuid;
+	@JsonProperty
+	public String name;
 }
