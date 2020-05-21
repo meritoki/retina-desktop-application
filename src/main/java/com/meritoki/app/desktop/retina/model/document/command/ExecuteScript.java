@@ -47,9 +47,10 @@ public class ExecuteScript extends Command {
 				parameters = instruction.split(":");
 				a = parameters[0].trim();
 				b = parameters[1].trim();
-				for(Operation o:swapPage((pageList), a, b)) {
-					operationList.push(o);;
-				}
+				operationList.addAll(swapPage(pageList, a, b));
+//				for(Operation o:swapPage((pageList), a, b)) {
+//					operationList.push(o);;
+//				}
 			} else if (i.contains("INSERT")) {
 				instruction = i.replaceFirst("INSERT", "");
 				parameters = instruction.split(":");
@@ -61,10 +62,10 @@ public class ExecuteScript extends Command {
 				parameters = instruction.split(":");
 				a = parameters[0].trim();
 				b = parameters[1].trim();
-//				operationList.addAll(joinPage(pageList, a, b));
-				for(Operation o:joinPage((pageList), a, b)) {
-					operationList.push(o);;
-				}
+				operationList.addAll(joinPage(pageList, a, b));
+//				for(Operation o:joinPage((pageList), a, b)) {
+//					operationList.push(o);;
+//				}
 			}
 		}
 		return operationList;

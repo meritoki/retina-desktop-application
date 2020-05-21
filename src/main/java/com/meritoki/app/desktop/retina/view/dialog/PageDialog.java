@@ -146,7 +146,7 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
     @Override
     public void mouseClicked(MouseEvent e) {
         if(e.getClickCount()==1){
-            String selectedItem = this.pageList.getSelectedValue();
+            String selectedItem = (String) this.pageList.getSelectedValue();
             Document document = (this.model != null) ? this.model.getDocument() : null;
             document.setPage(selectedItem);
             this.initLabel();
@@ -217,7 +217,7 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
 
     @Override
     public void keyReleased(KeyEvent e) {
-        String uuid = pageList.getSelectedValue();
+        String uuid = (String) pageList.getSelectedValue();
         Document document = (this.model != null) ? this.model.getDocument() : null;
         Page page = document.getPage();
         if(page != null && !uuid.equals(page.uuid)){
@@ -248,13 +248,11 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
         sizeLabel = new javax.swing.JLabel();
         indexValueLabel = new javax.swing.JLabel();
         sizeValueLabel = new javax.swing.JLabel();
-        setPageList = new javax.swing.JButton();
         imageListScrollPane = new javax.swing.JScrollPane();
-        pageList = new javax.swing.JList<String>();
+        pageList = new javax.swing.JList();
         imageScriptScrollPane = new javax.swing.JScrollPane();
         pageScriptTextArea = new javax.swing.JTextArea();
         executeImageScriptButton = new javax.swing.JButton();
-        resetPageScriptButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -283,13 +281,6 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
 
         sizeValueLabel.setText("null");
 
-        setPageList.setText("Set");
-        setPageList.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setPageListActionPerformed(evt);
-            }
-        });
-
         pageList.setModel(new javax.swing.AbstractListModel() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
@@ -308,13 +299,6 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
             }
         });
 
-        resetPageScriptButton.setText("Reset");
-        resetPageScriptButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                resetPageScriptButtonActionPerformed(evt);
-            }
-        });
-
         jLabel1.setText("List");
 
         jLabel2.setText("Size:");
@@ -330,7 +314,7 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(imageScriptScrollPane, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(imageScriptScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
                     .addComponent(imageListScrollPane)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
@@ -359,16 +343,10 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(listSizeValueLabel))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(resetPageScriptButton, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(executeImageScriptButton, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(setPageList, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(executeImageScriptButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -408,22 +386,12 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(imageScriptScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(executeImageScriptButton)
-                    .addComponent(resetPageScriptButton)
-                    .addComponent(setPageList))
+                .addComponent(executeImageScriptButton)
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void setPageListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setPageListActionPerformed
-        //COMMAND
-    	Document document = (this.model != null) ? this.model.getDocument() : null;
-    	document.pageList = document.cache.pageList;
-        this.pageScriptTextArea.setText("");
-    }//GEN-LAST:event_setPageListActionPerformed
 
     private void executeImageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeImageScriptButtonActionPerformed
         Document document = (this.model != null) ? this.model.getDocument() : null; 
@@ -439,11 +407,6 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
 			}
         }        
     }//GEN-LAST:event_executeImageScriptButtonActionPerformed
-
-    private void resetPageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetPageScriptButtonActionPerformed
-    	Document document = (this.model != null) ? this.model.getDocument() : null;
-    	this.initPageList(document.getPageList());
-    }//GEN-LAST:event_resetPageScriptButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -503,12 +466,10 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
     private javax.swing.JLabel listSizeValueLabel;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JLabel nameValueLabel;
-    private javax.swing.JList<String> pageList;
+    private javax.swing.JList pageList;
     private javax.swing.JTextArea pageScriptTextArea;
     private javax.swing.JLabel pathLabel;
     private javax.swing.JLabel pathValueLabel;
-    private javax.swing.JButton resetPageScriptButton;
-    private javax.swing.JButton setPageList;
     private javax.swing.JLabel sizeLabel;
     private javax.swing.JLabel sizeValueLabel;
     private javax.swing.JLabel uuidLabel;

@@ -1,5 +1,6 @@
 package com.meritoki.app.desktop.retina.model.document.command;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -152,6 +153,7 @@ public class Pattern {
 				break;
 			}
 			case "executeScript" : {
+				Collections.reverse(command.operationList);
 				for(Operation o: command.operationList) {
 					if(o.sign == 0) {
 						if(o.object instanceof List) {
@@ -245,6 +247,7 @@ public class Pattern {
 				break;
 			}
 			case "executeScript" : {
+				Collections.reverse(command.operationList);
 				for(Operation o: command.operationList) {
 					if(o.sign == 1) {
 						if(o.object instanceof List) {

@@ -147,7 +147,8 @@ public class Document {
 	 */
 	@JsonIgnore
 	public Page getPage() {
-		return (this.pageList.size() > 0) ? this.pageList.get(this.index) : new Page();
+		int size = this.pageList.size();
+		return (this.index < size && size > 0) ? this.pageList.get(this.index) : new Page();
 	}
 
 	/**
