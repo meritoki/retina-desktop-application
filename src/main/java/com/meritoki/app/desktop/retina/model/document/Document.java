@@ -56,6 +56,8 @@ public class Document {
 		page.imageList.add(image);
 		image = new Image(new File("./data/image/03.jpg"));
 		page.imageList.add(image);
+		image = new Image(new File("./data/image/04.jpg"));
+		page.imageList.add(image);
 		pageList.add(page);
 //		page = new Page();
 //		image = new Image("./data/image","02.jpg");

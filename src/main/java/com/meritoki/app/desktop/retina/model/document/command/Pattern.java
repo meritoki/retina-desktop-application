@@ -246,7 +246,7 @@ public class Pattern {
 			}
 			case "executeScript" : {
 				for(Operation o: command.operationList) {
-					if(o.sign == 1) {
+					if(o.sign == 0) {
 						if(o.object instanceof List) {
 							this.document.pageList = (List<Page>)o.object;
 						}

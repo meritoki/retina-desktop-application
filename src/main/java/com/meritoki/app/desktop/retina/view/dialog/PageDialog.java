@@ -429,28 +429,15 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
         Document document = (this.model != null) ? this.model.getDocument() : null; 
         if(document != null) {
         	document.cache.script = this.pageScriptTextArea.getText();
-        	document.cache.pageList = new ArrayList<>(document.getPageList());//BUG 201912212221 this step is stripping the fileList, which it why the shapes do not appear after a join.
+        	document.cache.pageList = document.getPageList();//BUG 201912212221 this step is stripping the fileList, which it why the shapes do not appear after a join.
         	try {
 				document.pattern.execute("executeScript");
+		        this.initPageList(document.cache.pageList);
 			} catch (Exception e) {
 				logger.error("Exception "+e.getMessage());
 				///TODO add dialog that shows error;
 			}
-        }
-        ////        this.model.variable.script.setPageList(this.model.variable.pageList);
-//        try {
-//            ScriptController.sortPageList(document.cache.pageList, value);
-//        } catch (Exception ex) {
-//            System.err.println(ex);
-//        }
-//        this.initPageList(document.cache.pageList);
-        
-        //Execute a script can have one or more commands that need to be added to 
-        //the event stack
-        
-        
-        
-        
+        }        
     }//GEN-LAST:event_executeImageScriptButtonActionPerformed
 
     private void resetPageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetPageScriptButtonActionPerformed

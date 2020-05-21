@@ -543,27 +543,6 @@ public class Page {
 		return bufferedImage;
 	}
 
-//	@JsonIgnore
-//	public BufferedImage joinImages(Image a, Image b) {
-//		logger.debug("joinImages(" + a + "," + b + ")");
-//		BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-//		if (a.bufferedImage != null && b.bufferedImage != null) {
-//			int width = a.bufferedImage.getWidth() + b.bufferedImage.getWidth();
-//			int height = Math.max(a.bufferedImage.getHeight() + (int) a.dimension.margin,
-//					b.bufferedImage.getHeight() + (int) b.dimension.margin);// +offset;
-//			bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-//			Graphics2D graphics2D = bufferedImage.createGraphics();
-//			Color oldColor = graphics2D.getColor();
-//			graphics2D.setPaint(Color.BLACK);
-//			graphics2D.fillRect(0, 0, width, height);
-//			graphics2D.setColor(oldColor);
-//			graphics2D.drawImage(a.bufferedImage, null, 0, (int) a.dimension.margin);
-//			graphics2D.drawImage(b.bufferedImage, null, a.bufferedImage.getWidth(), (int) b.dimension.margin);
-//			graphics2D.dispose();
-//		}
-//		return bufferedImage;
-//	}
-
 	@JsonIgnore
 	@Override
 	public String toString() {
@@ -577,173 +556,194 @@ public class Page {
 
 		return string;
 	}
-
-//	public List<ArrayList<Shape>> getShapeMatrix() {
-//		List<ArrayList<Shape>> shapeMatrix = this.initShapeMatrix();
-//		if (!this.script.value.equals("")) {
-//			try {
-//				ScriptController.sortShapeMatrix(shapeMatrix, this.script.value);
-//			} catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-//		return this.list;
-//	}
-//	
-//	@JsonIgnore
-//	public List<Shape> getShapeMatrixShapeList() {
-////		logger.debug("getShapeMatrixShapeList()");
-//		List<Shape> shapeList = null;
-//		List<ArrayList<Shape>> shapeMatrix = this.getShapeMatrix();// this.initMatrix();
-//		if (shapeMatrix != null) {
-//			shapeList = new LinkedList<>();
-//			for (int i = 0; i < shapeMatrix.size(); i++) {
-//				for (int j = 0; j < shapeMatrix.get(i).size(); j++) {
-//					shapeList.add(shapeMatrix.get(i).get(j));
-//				}
-//			}
-//		}
-//		return shapeList;
-//	}
-//
-//	@JsonIgnore
-//	public List<ArrayList<Shape>> initShapeMatrix() {
-////		logger.debug("initShapeMatrix()");
-//		List<ArrayList<Shape>> shapeMatrix = new ArrayList<>();
-//		List<Shape> shapeList = this.getShapeList();
-//		if (shapeList != null && shapeList.size() > 0) {
-////			logger.info("initShapeMatrix() shapeList = " + shapeList);
-//			Shape shape = null;
-//			boolean flag = true;
-//			for (int i = 0; i < shapeList.size(); i++) {
-//				// Set shape
-//				shape = shapeList.get(i);
-//				// Init new columnList, has shapes added to it
-////				logger.info("initShapeMatrix() shape=" + shape);
-//				for (List<Shape> rowList : shapeMatrix) {
-////					logger.info("initShapeMatrix() rowList=" + rowList);
-//					if (this.isShapeListYInThreshold(rowList, shape)) {
-//						rowList.add(shape);
-//						flag = false;
-//					}
-//				}
-//				if (flag) {
-//					ArrayList<Shape> rowList = new ArrayList<>();
-//					rowList.add(shape);
-//					shapeMatrix.add(rowList);
-//				} else {
-//					flag = true;
-//				}
-//				this.sortShapeMatrix(shapeMatrix);
-//			}
-//			this.printMatrix(shapeMatrix);
-//		}
-//		return shapeMatrix;
-//	}
-//
-//	@JsonIgnore
-//	public void printMatrix(List<ArrayList<Shape>> matrix) {
-//		String string = null;
-//		if (matrix != null && matrix.size() > 0) {
-//			string = "\n";
-//			for (int i = 0; i < matrix.size(); i++) {
-//				for (int j = 0; j < matrix.get(i).size(); j++) {
-//					if (matrix.get(i).get(j) != null) {
-//						string += "*";
-//					}
-//				}
-//				if (i < (matrix.size() - 1)) {
-//					string += "\n";
-//				}
-//			}
-//		}
-//		if (string != null) {
-//			logger.debug(string);
-//		}
-//	}
-//
-//	@JsonIgnore
-//	public double getShapeListYAverage(List<Shape> shapeList, Shape shape) {
-//		double average = 0;
-//		int count = 0;
-//		double sum = 0;
-//		for (Shape s : shapeList) {
-//			// d = //s.dimension;
-//			sum += s.dimension.getCenterY();// d.y+(d.h/2);
-//			count += 1;
-//		}
-//		// d = shape.dimension;s
-//		sum += shape.dimension.getCenterY();
-//		count +=1;
-//		average = sum / count;
-////		logger.info("getShapeListYAverage(" + shapeList + "," + shape+ ") average=" + average);
-//		return average;
-//	}
-//
-//	@JsonIgnore
-//	public boolean isShapeListYInThreshold(List<Shape> shapeList, Shape shape) {
-//		boolean flag = true;
-//		double a = 0;
-//		double average = this.getShapeListYAverage(shapeList, shape);
-//		a = shape.dimension.getCenterY();
-//		a = Math.abs(average - a);
-//		if (a > (this.threshold*shape.dimension.scale)) {
-//			flag = false;
-//		}
-//		
-//		return flag;
-//	}
-//	
-//	@JsonIgnore
-//	public void sortShapeMatrix(List<ArrayList<Shape>> shapeMatrix) {
-//		for (List<Shape> shapeList : shapeMatrix) {
-//			this.sortRowList(shapeList);
-//		}
-//		Collections.sort(shapeMatrix, new Comparator<List<Shape>>() {
-//			public int compare(List<Shape> ideaVal1, List<Shape> ideaVal2) {
-//				Double idea1 = ideaVal1.get(0).dimension.getCenterY();
-//				Double idea2 = ideaVal2.get(0).dimension.getCenterY();
-//				return idea1.compareTo(idea2);
-//			}
-//		});
-//	}
-//
-//
-//	@JsonIgnore
-//	public void sortRowList(List<Shape> shapeList) {
-//		Collections.sort(shapeList, new Comparator<Shape>() {
-//			public int compare(Shape ideaVal1, Shape ideaVal2) {
-//				Double idea1 = ideaVal1.dimension.getCenterX();// pointList.get(0).x;
-//				Double idea2 = ideaVal2.dimension.getCenterX();// pointList.get(0).x;
-//				return idea1.compareTo(idea2);
-//			}
-//		});
-//	}
-//
-//	@JsonIgnore
-//	public boolean columnListContains(List<Shape> shapeList, Shape shape) {
-//		boolean flag = false;
-//		for (Shape s : shapeList) {
-//			if (s.uuid.equals(shape.uuid)) {
-//				flag = true;
-//			}
-//		}
-//		return flag;
-//	}
-//
-//	@JsonIgnore
-//	public boolean rowListContains(List<List<Shape>> shapeList, Shape shape) {
-//		boolean flag = false;
-//		for (List<Shape> s : shapeList) {
-//			flag = this.columnListContains(s, shape);
-//			if (flag) {
-//				break;
-//			}
-//		}
-//		return flag;
-//	}
 }
+
+//public List<ArrayList<Shape>> getShapeMatrix() {
+//List<ArrayList<Shape>> shapeMatrix = this.initShapeMatrix();
+//if (!this.script.value.equals("")) {
+//	try {
+//		ScriptController.sortShapeMatrix(shapeMatrix, this.script.value);
+//	} catch (Exception e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
+//}
+//return this.list;
+//}
+//
+//@JsonIgnore
+//public List<Shape> getShapeMatrixShapeList() {
+////logger.debug("getShapeMatrixShapeList()");
+//List<Shape> shapeList = null;
+//List<ArrayList<Shape>> shapeMatrix = this.getShapeMatrix();// this.initMatrix();
+//if (shapeMatrix != null) {
+//	shapeList = new LinkedList<>();
+//	for (int i = 0; i < shapeMatrix.size(); i++) {
+//		for (int j = 0; j < shapeMatrix.get(i).size(); j++) {
+//			shapeList.add(shapeMatrix.get(i).get(j));
+//		}
+//	}
+//}
+//return shapeList;
+//}
+//
+//@JsonIgnore
+//public List<ArrayList<Shape>> initShapeMatrix() {
+////logger.debug("initShapeMatrix()");
+//List<ArrayList<Shape>> shapeMatrix = new ArrayList<>();
+//List<Shape> shapeList = this.getShapeList();
+//if (shapeList != null && shapeList.size() > 0) {
+////	logger.info("initShapeMatrix() shapeList = " + shapeList);
+//	Shape shape = null;
+//	boolean flag = true;
+//	for (int i = 0; i < shapeList.size(); i++) {
+//		// Set shape
+//		shape = shapeList.get(i);
+//		// Init new columnList, has shapes added to it
+////		logger.info("initShapeMatrix() shape=" + shape);
+//		for (List<Shape> rowList : shapeMatrix) {
+////			logger.info("initShapeMatrix() rowList=" + rowList);
+//			if (this.isShapeListYInThreshold(rowList, shape)) {
+//				rowList.add(shape);
+//				flag = false;
+//			}
+//		}
+//		if (flag) {
+//			ArrayList<Shape> rowList = new ArrayList<>();
+//			rowList.add(shape);
+//			shapeMatrix.add(rowList);
+//		} else {
+//			flag = true;
+//		}
+//		this.sortShapeMatrix(shapeMatrix);
+//	}
+//	this.printMatrix(shapeMatrix);
+//}
+//return shapeMatrix;
+//}
+//
+//@JsonIgnore
+//public void printMatrix(List<ArrayList<Shape>> matrix) {
+//String string = null;
+//if (matrix != null && matrix.size() > 0) {
+//	string = "\n";
+//	for (int i = 0; i < matrix.size(); i++) {
+//		for (int j = 0; j < matrix.get(i).size(); j++) {
+//			if (matrix.get(i).get(j) != null) {
+//				string += "*";
+//			}
+//		}
+//		if (i < (matrix.size() - 1)) {
+//			string += "\n";
+//		}
+//	}
+//}
+//if (string != null) {
+//	logger.debug(string);
+//}
+//}
+//
+//@JsonIgnore
+//public double getShapeListYAverage(List<Shape> shapeList, Shape shape) {
+//double average = 0;
+//int count = 0;
+//double sum = 0;
+//for (Shape s : shapeList) {
+//	// d = //s.dimension;
+//	sum += s.dimension.getCenterY();// d.y+(d.h/2);
+//	count += 1;
+//}
+//// d = shape.dimension;s
+//sum += shape.dimension.getCenterY();
+//count +=1;
+//average = sum / count;
+////logger.info("getShapeListYAverage(" + shapeList + "," + shape+ ") average=" + average);
+//return average;
+//}
+//
+//@JsonIgnore
+//public boolean isShapeListYInThreshold(List<Shape> shapeList, Shape shape) {
+//boolean flag = true;
+//double a = 0;
+//double average = this.getShapeListYAverage(shapeList, shape);
+//a = shape.dimension.getCenterY();
+//a = Math.abs(average - a);
+//if (a > (this.threshold*shape.dimension.scale)) {
+//	flag = false;
+//}
+//
+//return flag;
+//}
+//
+//@JsonIgnore
+//public void sortShapeMatrix(List<ArrayList<Shape>> shapeMatrix) {
+//for (List<Shape> shapeList : shapeMatrix) {
+//	this.sortRowList(shapeList);
+//}
+//Collections.sort(shapeMatrix, new Comparator<List<Shape>>() {
+//	public int compare(List<Shape> ideaVal1, List<Shape> ideaVal2) {
+//		Double idea1 = ideaVal1.get(0).dimension.getCenterY();
+//		Double idea2 = ideaVal2.get(0).dimension.getCenterY();
+//		return idea1.compareTo(idea2);
+//	}
+//});
+//}
+//
+//
+//@JsonIgnore
+//public void sortRowList(List<Shape> shapeList) {
+//Collections.sort(shapeList, new Comparator<Shape>() {
+//	public int compare(Shape ideaVal1, Shape ideaVal2) {
+//		Double idea1 = ideaVal1.dimension.getCenterX();// pointList.get(0).x;
+//		Double idea2 = ideaVal2.dimension.getCenterX();// pointList.get(0).x;
+//		return idea1.compareTo(idea2);
+//	}
+//});
+//}
+//
+//@JsonIgnore
+//public boolean columnListContains(List<Shape> shapeList, Shape shape) {
+//boolean flag = false;
+//for (Shape s : shapeList) {
+//	if (s.uuid.equals(shape.uuid)) {
+//		flag = true;
+//	}
+//}
+//return flag;
+//}
+//
+//@JsonIgnore
+//public boolean rowListContains(List<List<Shape>> shapeList, Shape shape) {
+//boolean flag = false;
+//for (List<Shape> s : shapeList) {
+//	flag = this.columnListContains(s, shape);
+//	if (flag) {
+//		break;
+//	}
+//}
+//return flag;
+//}
+
+//@JsonIgnore
+//public BufferedImage joinImages(Image a, Image b) {
+//	logger.debug("joinImages(" + a + "," + b + ")");
+//	BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+//	if (a.bufferedImage != null && b.bufferedImage != null) {
+//		int width = a.bufferedImage.getWidth() + b.bufferedImage.getWidth();
+//		int height = Math.max(a.bufferedImage.getHeight() + (int) a.dimension.margin,
+//				b.bufferedImage.getHeight() + (int) b.dimension.margin);// +offset;
+//		bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+//		Graphics2D graphics2D = bufferedImage.createGraphics();
+//		Color oldColor = graphics2D.getColor();
+//		graphics2D.setPaint(Color.BLACK);
+//		graphics2D.fillRect(0, 0, width, height);
+//		graphics2D.setColor(oldColor);
+//		graphics2D.drawImage(a.bufferedImage, null, 0, (int) a.dimension.margin);
+//		graphics2D.drawImage(b.bufferedImage, null, a.bufferedImage.getWidth(), (int) b.dimension.margin);
+//		graphics2D.dispose();
+//	}
+//	return bufferedImage;
+//}
 
 //	public boolean isShapeListYInThreshold(List<Shape> shapeList, Shape shape) {
 ////		logger.info("isShapeListYInThreshold(" + shapeList + ", " + averageY + ", " + threshold + ")");

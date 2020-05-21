@@ -282,10 +282,12 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 		} else if ((e.getKeyCode() == KeyEvent.VK_Z) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
 			e.consume();
 			this.model.getDocument().pattern.undo();
+			this.main.imageDialog.init();
 			repaint();
 		} else if ((e.getKeyCode() == KeyEvent.VK_Y) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
 			e.consume();
 			this.model.getDocument().pattern.redo();
+			this.main.imageDialog.init();
 			repaint();
 		} else if ((e.getKeyCode() == KeyEvent.VK_M) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
 			String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());

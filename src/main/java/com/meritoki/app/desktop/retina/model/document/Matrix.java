@@ -280,4 +280,11 @@ public class Matrix {
 		Shape one = shapeMatrix.get(x).remove(y);
 		shapeMatrix.get(i).add(j, one);
 	}
+	
+	//
+//	public  void insert(List<Page> pageList, int index, int a, int b, int x, int y) {
+//		Page page = pageList.get(index);
+//		Shape data = page.getMatrix().init().get(a).remove(b);
+//		page.getMatrix().init().get(x).add(y, data);
+//	}
 }
