@@ -93,7 +93,7 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 		if (this.model != null) {
 			Document document = (this.model != null) ? this.model.getDocument() : null;
 			Page page = (document != null) ? document.getPage() : null;
-			List<ArrayList<Shape>> dataMatrix = (page != null) ? page.getMatrix().init() : null;
+			List<ArrayList<Shape>> dataMatrix = (page != null) ? page.getMatrix().getRowList() : null;
 			int width = 0;
 			int height = 0;
 			int heightIndex = 0;

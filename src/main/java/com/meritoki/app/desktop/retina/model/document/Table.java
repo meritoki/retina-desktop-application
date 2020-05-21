@@ -16,101 +16,61 @@ public class Table {
 	public boolean spaceFlag = false;
 	public boolean energyFlag = false;
 	public Shape previousShape = null;
-	public List<Shape> shapeList;
+	public Matrix matrix;
 	
-	public Table(List<Shape> shapeList) {
-		this.shapeList = shapeList;
+	public Table(Matrix matrix) {
+		this.matrix = matrix;
 	}
 	
 	public Object[] getObjectArray() {
 		Object[] objectArray = new Object[2];
-		Object[] titleArray = new Object[0];
-		Object[][] dataMatrix = new Object[0][0];
-		if (shapeList != null) {
-			// Variables
-			Row row = new Row();
-			Data data = null;
-			String buffer = null;
-			// first build the title, then build the dataArray
-			for (Shape shape : shapeList) {
-				data = shape.data;
-				switch (data.unit.type) {
-				case "time": {
-					if(buffer != null && !buffer.equals("time")) {
-						row.objectList.add(buffer);
+		Object[] columnArray = new Object[0];
+		Object[][] dataMatrix = null;
+		if (matrix != null) {
+			List<ArrayList<Shape>> rowList = matrix.getRowList();
+			List<Shape> shapeList;
+			Shape shape;
+			Data data;
+			String value = null;
+			dataMatrix = new Object[rowList.size()][matrix.getShapeListMax()];
+			for(int i = 0; i < rowList.size(); i++) {
+				shapeList = rowList.get(i);
+				if(i == 0) {
+					columnArray = new Object[shapeList.size()];
+					for(int j = 0; j < shapeList.size(); j++) {
+						shape = shapeList.get(j);
+						data = shape.data;
+						switch (data.unit.type) {
+						case "time": {
+							value = "time";
+							break;
+						}
+						case "space": {
+							value = "space";
+							break;
+						}
+						case "energy": {
+							if(data.unit.value != null && data.unit.value.equals("label")) {
+								value = data.text.value;
+							} else {
+								value = data.unit.value;
+							}
+							break;
+						}
+						}
+						columnArray[j] = value;
 					}
-					buffer = "time";
-					break;
-				}
-				case "space": {
-					if(buffer != null && !buffer.equals("space")) {
-						row.objectList.add(buffer);
-					}
-					buffer = "space";
-					break;
-				}
-				case "energy": {
-					String value = null;
-					if(data.unit.value != null && data.unit.value.equals("label")) {
+				} else {
+					for(int j = 0; j < shapeList.size(); j++) {
+						shape = shapeList.get(j);
+						data = shape.data;
 						value = data.text.value;
-					} else {
-						value = data.unit.value;
+						dataMatrix[i][j] = value;
 					}
-					if(buffer != null && !buffer.equals(value)) {
-						row.objectList.add(buffer);
-					}
-					buffer = value;
-					break;
-				}
 				}
 			}
-			titleArray = row.getObjectArray();
-			buffer = null;
-//			row = new Row();
-//			for (Shape shape : shapeList) {
-//				data = shape.data;
-//				switch (data.unit.type) {
-//				case "time": {
-//					if(buffer != null && !buffer.equals("time")) {
-////						row.objectList.add(buffer);
-//						switch(buffer) {
-//						case "space": {
-//							
-//							break;
-//						}
-//						}
-//					}
-//					this.time.input(shape);
-//					break;
-//				}
-//				case "space": {
-//					if(buffer != null && !buffer.equals("space")) {
-////						row.objectList.add(buffer);
-//						switch(buffer) {
-//						case "time": {
-////							row.objectList
-//							break;
-//						}
-//						}
-//					}
-//					this.space.input(shape);
-//					break;
-//				}
-//				case "energy": {
-//					if(buffer != null && !buffer.equals("space")) {
-////						row.objectList.add(buffer);
-//					}
-//					this.energy.input(shape);
-//					break;
-//				}
-//				}
-//			}
-//			objectArray[0] = new Object[] { "Id", "Name", "Hourly Rate", "Part Time" };
-//			objectArray[1] = new Object[][] { { 1, "John", 40.0, false }, { 2, "Rambo", 70.0, false },
-//				{ 3, "Zorro", 60.0, true }, };
-			objectArray[0] = titleArray;
-			objectArray[1] = new Object[][] { { 1, "John", 40.0, false }, { 2, "Rambo", 70.0, false },
-				{ 3, "Zorro", 60.0, true }, };
+			objectArray[0] = columnArray;
+			objectArray[1] = dataMatrix;
 		}
 		return objectArray;
 	}
@@ -190,5 +150,8 @@ public class Table {
 				{ 3, "Zorro", 60.0, true }, };
 		return array;
 	}
-
 }
+
+//objectArray[0] = new Object[] { "Id", "Name", "Hourly Rate", "Part Time" };
+//objectArray[1] = new Object[][] { { 1, "John", 40.0, false }, { 2, "Rambo", 70.0, false },
+//	{ 3, "Zorro", 60.0, true }, };

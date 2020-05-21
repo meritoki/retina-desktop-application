@@ -34,7 +34,7 @@ public class Matrix {
 	}
 
 	@JsonIgnore
-	public List<ArrayList<Shape>> init() {
+	public List<ArrayList<Shape>> getRowList() {
 		List<Shape> shapeList = this.shapeList;
 		List<ArrayList<Shape>> list = new ArrayList<>();
 		if (shapeList != null && shapeList.size() > 0) {
@@ -68,11 +68,23 @@ public class Matrix {
 		}
 		return list;
 	}
+	
+	public int getShapeListMax() {
+		int max = 0;
+		int size = 0;
+		for(List<Shape> shapeList: this.getRowList()) {
+			size = shapeList.size();
+			if(size > max) {
+				max = size;
+			}
+		}
+		return max;
+	}
 
 	@JsonIgnore
 	public List<Shape> getShapeList() {
 		List<Shape> shapeList = null;
-		List<ArrayList<Shape>> shapeMatrix = this.init();
+		List<ArrayList<Shape>> shapeMatrix = this.getRowList();
 		if (shapeMatrix != null) {
 			shapeList = new LinkedList<>();
 			for (int i = 0; i < shapeMatrix.size(); i++) {

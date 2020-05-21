@@ -224,7 +224,7 @@ public class Page {
 	}
 	
 	public Table getTable() {
-		return new Table(this.getShapeList());
+		return new Table(this.getMatrix());
 	}
 
 	/**
