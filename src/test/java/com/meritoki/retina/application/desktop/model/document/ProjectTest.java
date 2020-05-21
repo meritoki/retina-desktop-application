@@ -3,6 +3,7 @@ package com.meritoki.retina.application.desktop.model.document;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.io.File;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -34,9 +35,9 @@ class ProjectTest {
 	public static void initialize() {
 		project = new Document();
 		Page page = new Page();
-		Image file = new Image("./data/image", "01.jpg");
+		Image file = new Image(new File("./data/image/01.jpg"));
 		page.addImage(file);
-		file = new Image("./data/image", "02.jpg");
+		file = new Image(new File("./data/image/02.jpg"));
 		page.addImage(file);
 		Shape shape = new Shape();
 		Point pointA = new Point(0,0);
@@ -49,12 +50,12 @@ class ProjectTest {
 		pageZeroUUID = page.uuid;
 		project.addPage(page);
 		page = new Page();
-		file = new Image("./data/image", "02.jpg");
+		file = new Image(new File("./data/image/02.jpg"));
 		page.imageList.add(file);
 		pageOneUUID = page.uuid;
 		project.addPage(page);
 		page = new Page();
-		file = new Image("./data/image", "03.jpg");
+		file = new Image(new File("./data/image/03.jpg"));
 		page.imageList.add(file);
 		pageTwoUUID = page.uuid;
 		project.addPage(page);
