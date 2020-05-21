@@ -17,6 +17,8 @@ public class Cache {
 	@JsonIgnore
 	public File[] fileArray = null;
 	@JsonIgnore
+	public Page pressedPage = null;
+	@JsonIgnore
 	public Image pressedImage = null;
 	@JsonIgnore
 	public Image releasedImage = null;

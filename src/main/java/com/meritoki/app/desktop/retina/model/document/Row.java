@@ -1,4 +1,4 @@
-package com.meritoki.app.desktop.retina.controller.parser;
+package com.meritoki.app.desktop.retina.model.document;
 
 import java.util.ArrayList;
 import java.util.List;

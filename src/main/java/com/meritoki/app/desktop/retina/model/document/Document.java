@@ -266,6 +266,21 @@ public class Document {
 		}
 		return flag;
 	}
+	
+	@JsonIgnore
+	public Page removePage(String uuid) {
+		Page s = null;
+		for (int i = 0; i < this.pageList.size(); i++) {
+			s = this.pageList.get(i);
+			if (s.uuid.equals(uuid)) {
+				this.pageList.remove(i);
+				break;
+			} else {
+				s = null;
+			}
+		}
+		return s;
+	}
 
 	@JsonIgnore
 	@Override

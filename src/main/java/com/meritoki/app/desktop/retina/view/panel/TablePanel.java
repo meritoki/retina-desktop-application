@@ -22,10 +22,10 @@ import javax.swing.table.DefaultTableModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.controller.parser.Parser;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Page;
+import com.meritoki.app.desktop.retina.model.document.Table;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 /**
@@ -61,22 +61,15 @@ public class TablePanel extends javax.swing.JPanel {
 
 	public void initDataTable() {
 		logger.debug("initDataTable()");
-		Parser parser = new Parser();
 		Document document = (this.model != null) ? this.model.getDocument() : null;
 		Page page = (document != null) ? document.getPage() : null;
+		Table table = page.getTable();
 		if (page != null) {
-//			Object[][] objectMatrix = parser.parseData(page.getShapeMatrixShapeList());
-//			Object[] stringArray = parser.parseColumn(page.getShapeMatrixShapeList());
-			Object[] modelArray = parser.getModel(page.getShapeList());
-			DefaultTableModel model = new javax.swing.table.DefaultTableModel((Object[][])modelArray[1], (Object[])modelArray[0]);
+			Object[] objectArray = table.getObjectArray();
+			DefaultTableModel model = new javax.swing.table.DefaultTableModel((Object[][])objectArray[1], (Object[])objectArray[0]);
 			this.dataTable.setModel(model);
-//                        this.dataTable.getColumnModel().getColumn(4).setPreferredWidth(30);
-//                        this.dataTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-//                        this.dataTable = new JTable(objectMatrix,stringArray);
-//			this.repaint();
 		}
-	}
-	
+	}	
 
 	@Override
 	public void paint(Graphics g) {
@@ -133,3 +126,22 @@ public class TablePanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
+//
+//public void initDataTable() {
+//	logger.debug("initDataTable()");
+//	Document document = (this.model != null) ? this.model.getDocument() : null;
+//	Page page = (document != null) ? document.getPage() : null;
+//	Table table = page.getTable();
+//	if (page != null) {
+//		
+////		Object[][] objectMatrix = parser.parseData(page.getShapeMatrixShapeList());
+////		Object[] stringArray = parser.parseColumn(page.getShapeMatrixShapeList());
+//		Object[] objectArray = table.getObjectArray();
+//		DefaultTableModel model = new javax.swing.table.DefaultTableModel((Object[][])objectArray[1], (Object[])objectArray[0]);
+//		this.dataTable.setModel(model);
+////                    this.dataTable.getColumnModel().getColumn(4).setPreferredWidth(30);
+////                    this.dataTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+////                    this.dataTable = new JTable(objectMatrix,stringArray);
+////		this.repaint();
+//	}
+//}

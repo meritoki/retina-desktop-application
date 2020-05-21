@@ -1,7 +1,4 @@
-package com.meritoki.app.desktop.retina.controller.parser;
-
-import com.meritoki.app.desktop.retina.model.document.Data;
-import com.meritoki.app.desktop.retina.model.document.Shape;
+package com.meritoki.app.desktop.retina.model.document;
 
 public class Space {
 

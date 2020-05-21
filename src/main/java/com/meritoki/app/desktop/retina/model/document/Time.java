@@ -1,10 +1,7 @@
-package com.meritoki.app.desktop.retina.controller.parser;
+package com.meritoki.app.desktop.retina.model.document;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-
-import com.meritoki.app.desktop.retina.model.document.Data;
-import com.meritoki.app.desktop.retina.model.document.Shape;
 
 public class Time {
 

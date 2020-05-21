@@ -1,4 +1,4 @@
-package com.meritoki.app.desktop.retina.controller.client.json;
+package com.meritoki.app.desktop.retina.controller.client;
 
 public class File {
 	public String uuid;

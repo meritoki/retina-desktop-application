@@ -64,19 +64,20 @@ public class UserController extends Controller {
 
 	public boolean loginUser(String userName, String password) {
 		boolean flag = false;
-//		if(ClientController.userClient.checkHealth()) {
-//			User user = new User(userName, password);
-//			flag = ClientController.userClient.login(user);
-//		} else {
-//			for (User u : model.system.userList) {
-//				if (u.name.equals(userName)) {
-//					if (SecurityController.verifyHash(password, u.hash)) {
-//						flag = true;
-//						this.model.system.user = u;
-//					}
-//				}
-//			}
-//		}
+		ClientController clientController = new ClientController(this.model);
+		if(clientController.userClient.checkHealth()) {
+			User user = new User(userName, password);
+			flag = clientController.userClient.login(user);
+		} else {
+			for (User u : model.system.userList) {
+				if (u.name.equals(userName)) {
+					if (SecurityController.verifyHash(password, u.hash)) {
+						flag = true;
+						this.model.system.user = u;
+					}
+				}
+			}
+		}
 		return flag;
 	}
 

@@ -46,6 +46,7 @@ public class Pattern {
 		Command removeShape = new RemoveShape(this.document);
 		Command resizeShape = new ResizeShape(this.document);
 		Command executeScript = new ExecuteScript(this.document);
+		Command removePage = new RemovePage(this.document);
 		this.register("addPage", addPage);
 		this.register("setPage", setPage);
 		this.register("addShape", addShape);
@@ -54,6 +55,7 @@ public class Pattern {
 		this.register("removeShape", removeShape);
 		this.register("resizeShape", resizeShape);
 		this.register("executeScript", executeScript);
+		this.register("removePage", removePage);
 	}
 
 	@JsonIgnore
@@ -158,6 +160,15 @@ public class Pattern {
 					if(o.sign == 0) {
 						if(o.object instanceof List) {
 							this.document.pageList = (List<Page>)o.object;
+						}
+					}
+				}
+			}
+			case "removePage": {
+				for(Operation o: command.operationList) {
+					if(o.sign == 0) {
+						if(o.object instanceof List) {
+							this.document.addPage((Page) o.object);
 						}
 					}
 				}

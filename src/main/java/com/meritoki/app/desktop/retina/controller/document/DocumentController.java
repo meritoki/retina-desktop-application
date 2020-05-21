@@ -12,8 +12,6 @@ import com.meritoki.app.desktop.retina.model.document.Document;
 public class DocumentController {
 
 	private static Logger logger = LogManager.getLogger(DocumentController.class.getName());
-	public static String filePath = "./";
-	public static String fileName = "untitled.json";
 	
 	@JsonIgnore
 	public static void save(String filePath, String fileName, Object object) {

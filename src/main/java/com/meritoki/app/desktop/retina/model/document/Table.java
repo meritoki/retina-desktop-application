@@ -1,37 +1,14 @@
-/*
- * Copyright 2019 osvaldo.rodriguez.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.meritoki.app.desktop.retina.controller.parser;
+package com.meritoki.app.desktop.retina.model.document;
 
 import java.util.ArrayList;
-
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.model.document.Data;
-import com.meritoki.app.desktop.retina.model.document.Shape;
-
-/**
- *
- * @author osvaldo.rodriguez
- */
-public class Parser {
-
-	private static Logger logger = LogManager.getLogger(Parser.class.getName());
+public class Table {
+	private static Logger logger = LogManager.getLogger(Table.class.getName());
+	
 	public Time time = new Time();
 	public Space space = new Space();
 	public Energy energy = new Energy();
@@ -39,8 +16,13 @@ public class Parser {
 	public boolean spaceFlag = false;
 	public boolean energyFlag = false;
 	public Shape previousShape = null;
-
-	public Object[] getModel(List<Shape> shapeList) {
+	public List<Shape> shapeList;
+	
+	public Table(List<Shape> shapeList) {
+		this.shapeList = shapeList;
+	}
+	
+	public Object[] getObjectArray() {
 		Object[] objectArray = new Object[2];
 		Object[] titleArray = new Object[0];
 		Object[][] dataMatrix = new Object[0][0];
@@ -208,4 +190,5 @@ public class Parser {
 				{ 3, "Zorro", 60.0, true }, };
 		return array;
 	}
+
 }

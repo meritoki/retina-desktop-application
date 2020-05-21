@@ -1,5 +1,31 @@
 package com.meritoki.app.desktop.retina.model.document.command;
 
-public class RemovePage {
+import java.util.UUID;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Page;
+
+public class RemovePage extends Command {
+
+	private static Logger logger = LogManager.getLogger(RemovePage.class.getName());
+	
+	public RemovePage(Document document) {
+		super(document, "removePage");
+	}
+	
+	@Override
+	public void execute() {
+    	logger.info("execute()");
+    	this.user = this.document.cache.user;
+		this.document.removePage(this.document.cache.pressedPage.uuid);
+		Operation operation = new Operation();
+		operation.object = new Page(this.document.cache.pressedPage);
+		operation.sign = 0;
+		operation.id = UUID.randomUUID().toString();
+		operation.uuid = this.document.cache.pressedPage.uuid;
+		this.operationList.push(operation);
+	}
 }

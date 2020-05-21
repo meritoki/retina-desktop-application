@@ -20,12 +20,8 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,7 +31,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
-import com.meritoki.app.desktop.retina.controller.script.ScriptController;
 
 /**
  * The Page class is used to hold a list of shapes. The list of shapes can be
@@ -226,6 +221,10 @@ public class Page {
 
 	public Matrix getMatrix() {
 		return new Matrix(this.getShapeList(), this.script);
+	}
+	
+	public Table getTable() {
+		return new Table(this.getShapeList());
 	}
 
 	/**
@@ -514,7 +513,6 @@ public class Page {
 				int width = a.bufferedImage.getWidth();
 				int height = (int) (a.bufferedImage.getHeight() + a.dimension.margin);
 				bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-				System.out.println(bufferedImage);
 				Graphics2D graphics2D = bufferedImage.createGraphics();
 				graphics2D.setPaint(Color.BLACK);
 				graphics2D.fillRect(0, 0, width, height);
