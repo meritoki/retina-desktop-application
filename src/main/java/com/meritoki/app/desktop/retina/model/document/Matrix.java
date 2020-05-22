@@ -1,5 +1,8 @@
 package com.meritoki.app.desktop.retina.model.document;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,6 +27,14 @@ public class Matrix {
 
 	@JsonProperty
 	public Script script = new Script();
+	
+//	@JsonProperty 
+//	public Dimension dimension = new Dimension(2048,1024);
+	
+	public double scale = 1;
+	
+	public int width = 2048;
+	public int height = 1024;
 
 	@JsonIgnore
 	public List<Shape> shapeList;
@@ -31,6 +42,13 @@ public class Matrix {
 	public Matrix(List<Shape> shapeList, Script script) {
 		this.shapeList = shapeList;
 		this.script = script;
+	}
+	
+	@JsonIgnore
+	public void setScale(double scale) {
+		this.scale = scale;
+		this.width = (int) (2048 * this.scale);
+		this.height = (int)(1024 * this.scale);
 	}
 
 	@JsonIgnore
@@ -68,13 +86,13 @@ public class Matrix {
 		}
 		return list;
 	}
-	
+
 	public int getShapeListMax() {
 		int max = 0;
 		int size = 0;
-		for(List<Shape> shapeList: this.getRowList()) {
+		for (List<Shape> shapeList : this.getRowList()) {
 			size = shapeList.size();
-			if(size > max) {
+			if (size > max) {
 				max = size;
 			}
 		}
@@ -207,7 +225,7 @@ public class Matrix {
 
 		return string;
 	}
-	
+
 	/**
 	 * COMMAND PAGE(S) ROW,COLUMN:ROW,COLUMN SWAP 0-n 1,2:3,4 | SWAP 0 1,2:3,4
 	 * INSERT 0-n 1,2:3,4 | INSERT 0 1,2:3,4 MERGE 0-n 1,1:1,2 | MERGE 0 1,1:1,2
@@ -293,6 +311,112 @@ public class Matrix {
 		shapeMatrix.get(i).add(j, one);
 	}
 	
+	public void paint(Graphics graphics) {
+		graphics.setColor(Color.black);
+		List<ArrayList<Shape>> rowList = this.getRowList();
+		List<Shape> shapeList;
+		int width = (int)(this.width * this.scale * 0.10);
+		int height = (int)(this.height *this.scale * 0.10);
+		int widthIndex = 0;
+		int heightIndex = 0;
+		graphics.setFont(new Font("default", Font.BOLD, (int) (8*this.scale)));
+		Data data;
+		for (int i = 0; i < rowList.size(); i++) {
+			shapeList = rowList.get(i);
+			heightIndex = (int)(i*height);
+			for(int j = 0; j < shapeList.size(); j++) {
+				graphics.setColor(Color.BLACK);
+				widthIndex = (int) (j*width);
+				graphics.drawRect(widthIndex, heightIndex, width, height);
+				data = shapeList.get(j).data;
+				if (data != null) {
+					Text text = data.text;
+					String unitType = data.unit.type;
+					switch (unitType) {
+					case Unit.DATA: {
+						graphics.setColor(Color.BLACK);
+						graphics.drawString("D", widthIndex + (width / 2), heightIndex + (height / 2));
+						break;
+					}
+					case Unit.TIME: {
+						graphics.drawString("T", widthIndex + (width / 2), heightIndex + (height / 2));
+						break;
+					}
+					case Unit.SPACE: {
+						graphics.drawString("S", widthIndex + (width / 2), heightIndex + (height / 2));
+						break;
+					}
+					case Unit.ENERGY: {
+						graphics.drawString("E", widthIndex + (width / 2), heightIndex + (height / 2));
+						break;
+					}
+					}
+				}
+			}
+		}
+//		heightIndex = 0;
+//		widthIndex = 0;
+//		for (int i = 0; i < maxColumn; i++) {
+//			widthIndex += boxWidth;
+//			graphics.drawString("" + i, widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
+//		}
+	}
+
+//	public void paint(Graphics graphics) {
+//		graphics.setColor(Color.black);
+//		List<ArrayList<Shape>> rowList = this.getRowList();
+//		int heightIndex = 0;
+//		int widthIndex = 0;
+//		int maxColumn = this.getShapeListMax();
+//		int boxWidth = 64;
+//		int boxHeight = 32;
+//		Data data;
+//		for (int i = 0; i < rowList.size(); i++) {
+//			widthIndex = 0;
+//			heightIndex += boxHeight;
+//			graphics.setColor(Color.BLACK);
+//			graphics.drawString("" + i, widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
+//			for (int j = 0; j < rowList.get(i).size(); j++) {
+//				widthIndex += boxWidth;
+//				graphics.setColor(Color.BLACK);
+//				graphics.drawRect(widthIndex, heightIndex, boxWidth, boxHeight);
+//
+//				data = rowList.get(i).get(j).data;
+//				if (data != null) {
+//					Text text = data.text;
+//					String unitType = data.unit.type;
+//					switch (unitType) {
+//					case Unit.DATA: {
+//						graphics.setColor(Color.BLACK);
+//						graphics.drawString("D", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
+//						break;
+//					}
+//					case Unit.TIME: {
+//						graphics.drawString("T", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
+//						break;
+//					}
+//					case Unit.SPACE: {
+//						graphics.drawString("S", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
+//						break;
+//					}
+//					case Unit.ENERGY: {
+//
+//						graphics.drawString("E", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
+//
+//						break;
+//					}
+//					}
+//				}
+//			}
+//		}
+////		heightIndex = 0;
+////		widthIndex = 0;
+//		for (int i = 0; i < maxColumn; i++) {
+//			widthIndex += boxWidth;
+//			graphics.drawString("" + i, widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
+//		}
+//	}
+
 	//
 //	public  void insert(List<Page> pageList, int index, int a, int b, int x, int y) {
 //		Page page = pageList.get(index);

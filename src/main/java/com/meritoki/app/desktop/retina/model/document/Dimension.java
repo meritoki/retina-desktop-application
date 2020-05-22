@@ -51,6 +51,11 @@ public class Dimension {
 	public Dimension() {
 		this.scale();
 	}
+	
+	public Dimension(int width, int height) {
+		this.width = width;
+		this.height = height;
+	}
 
 	public Dimension(Point a, Point b, double scale, double addScale) {
 		this.pointList.add(a);

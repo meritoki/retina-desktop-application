@@ -37,6 +37,7 @@ import org.apache.logging.log4j.Logger;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Data;
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Matrix;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.Text;
@@ -58,8 +59,11 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 	 */
 	public MatrixPanel() {
 		super();
-		this.setOpaque(true);
+//		this.setOpaque(true);
 		this.setBackground(Color.white);
+		this.addMouseListener(this);
+		this.addMouseWheelListener(this);
+		this.addKeyListener(this);
 
 	}
 
@@ -76,138 +80,83 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 
 	@Override
 	public Dimension getPreferredSize() {
+		
 		Dimension dimension = new Dimension(1028, 512);
 		Document document = (this.model != null) ? this.model.getDocument() : null;
 		Page page = (document != null) ? document.getPage() : null;
-		BufferedImage bufferedImage = (page != null) ? page.getBufferedImage() : null;
-		if (bufferedImage != null) {
-			dimension.setSize(bufferedImage.getWidth(), bufferedImage.getHeight());
+		Matrix matrix = (page != null) ? page.getMatrix():null;
+		if(matrix != null) {
+			matrix.setScale(this.model.document.cache.scale);
+			System.out.println("getPreferredSize() width="+matrix.width+" height="+matrix.height );
+			dimension.setSize(matrix.width, matrix.height);
 		}
 		return dimension;
 	}
 
 	@Override
-	public void paint(Graphics g) {
-		super.paint(g);
-		Graphics2D g2 = (Graphics2D) g;
+	public void paint(Graphics graphics) {
+		super.paint(graphics);
+		graphics.setColor(Color.white);
+//		graphics.translate((int) (this.getWidth() / 2.0), (int) (this.getHeight() / 2.0));
+		graphics.fillRect(0, 0, this.getWidth(), this.getHeight());
 		if (this.model != null) {
 			Document document = (this.model != null) ? this.model.getDocument() : null;
 			Page page = (document != null) ? document.getPage() : null;
-			List<ArrayList<Shape>> dataMatrix = (page != null) ? page.getMatrix().getRowList() : null;
-			int width = 0;
-			int height = 0;
-			int heightIndex = 0;
-			int widthIndex = 0;
-			int maxColumn = 0;
-			if (dataMatrix != null) {
-				int w = getWidth();
-				int h = getHeight();
-				int boxWidth = (int) (w * 0.05);
-				int boxHeight = (int) (h * 0.05);
-				height = dataMatrix.size() * boxHeight;
-				Data data;
-				for (int i = 0; i < dataMatrix.size(); i++) {
-					if (dataMatrix.get(i).size() > maxColumn) {
-						maxColumn = dataMatrix.get(i).size();
-					}
-					widthIndex = 0;
-					heightIndex += boxHeight;
-					g2.setColor(Color.BLACK);
-					g2.drawString("" + i, widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-					for (int j = 0; j < dataMatrix.get(i).size(); j++) {
-						widthIndex += boxWidth;
-						g2.setColor(Color.BLACK);
-						g2.drawRect(widthIndex, heightIndex, boxWidth, boxHeight);
-
-						data = dataMatrix.get(i).get(j).data;
-						if (data != null) {
-							Text text = data.text;
-							String unitType = data.unit.type;
-							switch (unitType) {
-							case Unit.DATA: {
-								g2.setColor(Color.BLACK);
-								g2.drawString("D", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-								break;
-							}
-							case Unit.TIME: {
-								g2.drawString("T", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-								break;
-							}
-							case Unit.SPACE: {
-								g2.drawString("S", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-								break;
-							}
-							case Unit.ENERGY: {
-								
-								g2.drawString("E", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-						
-								break;
-							}
-							}
-						}
-					}
-				}
-				heightIndex = 0;
-				widthIndex = 0;
-				for (int i = 0; i < maxColumn; i++) {
-					widthIndex += boxWidth;
-					g2.drawString("" + i, widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-				}
-			}
+			Matrix matrix = page.getMatrix();
+			matrix.setScale(this.model.document.cache.scale);
+			matrix.paint(graphics);
 		}
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
-																		// Tools | Templates.
+		this.requestFocus();
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
-																		// Tools | Templates.
+		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
-																		// Tools | Templates.
+		
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
-																		// Tools | Templates.
+		
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
-																		// Tools | Templates.
+		
 	}
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
-																		// Tools | Templates.
+		double delta = 0.05f * e.getPreciseWheelRotation();
+		this.model.document.cache.scale += delta;
+		if (this.model.document.cache.scale >= 0 && this.model.document.cache.scale <= 2) {
+			logger.info("mouseWheelMoved(...) scale = " + this.model.document.cache.scale);
+			this.model.getDocument().getPage().getMatrix().setScale(this.model.document.cache.scale);
+			revalidate();
+			repaint();
+		}
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
-																		// Tools | Templates.
+		
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
-																		// Tools | Templates.
+				// Tools | Templates.
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
-																		// Tools | Templates.
+	
 	}
 }

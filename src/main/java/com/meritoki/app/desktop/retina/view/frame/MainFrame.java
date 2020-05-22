@@ -105,8 +105,8 @@ public final class MainFrame extends JFrame {
         this.imagePanel.requestFocusInWindow();
         this.imageDialog.init();
         this.selectionDialog.init();
-        this.imageDialog.setVisible(true);
-        this.selectionDialog.setVisible(true);
+//        this.imageDialog.setVisible(true);
+//        this.selectionDialog.setVisible(true);
     }
 
     /**
