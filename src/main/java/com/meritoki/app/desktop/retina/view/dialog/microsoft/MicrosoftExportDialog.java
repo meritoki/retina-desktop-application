@@ -74,7 +74,7 @@ public class MicrosoftExportDialog extends javax.swing.JDialog {
             //create Paragraph
             XWPFParagraph paragraph = document.createParagraph();
             XWPFRun run = paragraph.createRun();
-            run.setText("VK Number (Parameter): " + line + " here you type your text...\n");
+            run.setText(line);
             document.write(out);
            
             //Close document
@@ -161,8 +161,8 @@ public class MicrosoftExportDialog extends javax.swing.JDialog {
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
         String type = (String)this.typeComboBox.getSelectedItem();
         System.out.println(type);
-        String page = this.pageTextField.getSelectedText();
-        String name = this.nameTextField.getSelectedText();
+        String page = this.pageTextField.getText();
+        String name = this.nameTextField.getText();
         if(type.equals("Word")) {
             try {
                 Archive archive = this.model.document.getPage().getArchive();
