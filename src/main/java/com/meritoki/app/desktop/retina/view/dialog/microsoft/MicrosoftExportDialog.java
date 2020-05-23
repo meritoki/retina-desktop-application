@@ -16,6 +16,7 @@
 package com.meritoki.app.desktop.retina.view.dialog.microsoft;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,12 +27,17 @@ import javax.swing.JOptionPane;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Archive;
+import com.meritoki.app.desktop.retina.model.document.Page;
 
 /**
  *
@@ -90,6 +96,39 @@ public class MicrosoftExportDialog extends javax.swing.JDialog {
 			out.close();
 			System.out.println(fileName + ".docx" + " written successfully");
 		}
+	}
+
+	public void createExcel(String fileName, List<Page> pageList) {
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		XSSFSheet sheet;
+		System.out.println("Creating excel");
+		for (Page page : pageList) {
+			sheet = workbook.createSheet(page.uuid);
+			Object[][] datatypes = page.getTable().getExcelObjectArray();
+			int rowNum = 0;
+			for (Object[] datatype : datatypes) {
+				Row row = sheet.createRow(rowNum++);
+				int colNum = 0;
+				for (Object field : datatype) {
+					Cell cell = row.createCell(colNum++);
+					if (field instanceof String) {
+						cell.setCellValue((String) field);
+					} else if (field instanceof Integer) {
+						cell.setCellValue((Integer) field);
+					}
+				}
+			}
+		}
+		try {
+			FileOutputStream outputStream = new FileOutputStream(fileName + ".xlsx");
+			workbook.write(outputStream);
+			workbook.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("Done");
 	}
 
 	public List<Integer> parsePages(String value) throws Exception {
@@ -206,20 +245,55 @@ public class MicrosoftExportDialog extends javax.swing.JDialog {
 
 	private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_exportButtonActionPerformed
 		String type = (String) this.typeComboBox.getSelectedItem();
-		System.out.println(type);
+		type = type.toLowerCase();
 		String page = this.pageTextField.getText();
+		List<Integer> pageList = null;
 		try {
-			List<Integer> pageList = this.parsePages(page);
+			pageList = this.parsePages(page);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		String name = this.nameTextField.getText();
-		if (type.equals("Word")) {
-			try {
-				Archive archive = this.model.document.getPage().getArchive();
-				this.createWord(name, archive.stringList);
-			} catch (IOException ex) {
-				logger.error("IOException " + ex.getMessage());
+
+		if (pageList != null) {
+			if (type.equals("word")) {
+				List<String> stringList = new ArrayList<String>();
+				Archive archive;
+				if (pageList.contains(-1)) {
+					for (Page p : this.model.document.getPageList()) {
+						archive = p.getArchive();
+						stringList.addAll(archive.stringList);
+					}
+				} else {
+					for (Integer i : pageList) {
+						if (this.model.document.setIndex(i)) {
+							Page p = this.model.document.getPage();
+							if (p != null) {
+								archive = p.getArchive();
+								stringList.addAll(archive.stringList);
+							}
+						}
+					}
+				}
+				try {
+					this.createWord(name, stringList);
+				} catch (IOException ex) {
+					logger.error("IOException " + ex.getMessage());
+				}
+			} else if (type.equals("excel")) {
+				System.out.println("excel");
+				List<Page> pList = new ArrayList<>();
+				if (pageList.contains(-1)) {
+					pList = this.model.document.getPageList();
+				} else {
+					for (Integer i : pageList) {
+						if (this.model.document.setIndex(i)) {
+							Page p = this.model.document.getPage();
+							pList.add(p);
+						}
+					}
+				}
+				this.createExcel(name, pList);
 			}
 		}
 	}// GEN-LAST:event_exportButtonActionPerformed

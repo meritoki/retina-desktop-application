@@ -201,16 +201,23 @@ public class AudioExportDialog extends javax.swing.JDialog {
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
-		List<String> stringList = new ArrayList<String>();
+		
 		if (pageList != null) {
+			List<String> stringList = new ArrayList<String>();
 			Archive archive;
-			Page p;
-			for (Integer i : pageList) {
-				if (this.model.document.setIndex(i)) {
-					p = this.model.document.getPage();
-					if (p != null) {
-						archive = p.getArchive();
-						stringList.addAll(archive.stringList);
+			if(pageList.contains(-1)) {
+				for(Page p:this.model.document.getPageList()) {
+					archive = p.getArchive();
+					stringList.addAll(archive.stringList);
+				}
+			} else {
+				for (Integer i : pageList) {
+					if (this.model.document.setIndex(i)) {
+						Page p = this.model.document.getPage();
+						if (p != null) {
+							archive = p.getArchive();
+							stringList.addAll(archive.stringList);
+						}
 					}
 				}
 			}

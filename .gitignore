@@ -2,3 +2,5 @@ target/
 error
 output
 logs/
+*.xlsx
+*.docx

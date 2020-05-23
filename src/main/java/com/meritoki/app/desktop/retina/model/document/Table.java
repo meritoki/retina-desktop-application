@@ -28,6 +28,30 @@ public class Table {
 		Object[] objectArray = this.getObjectArray();
 		return new javax.swing.table.DefaultTableModel((Object[][])objectArray[1], (Object[])objectArray[0]);
 	}
+	
+	public Object[][] getExcelObjectArray() {
+		Object[][] dataMatrix = null;
+		if (matrix != null) {
+			List<ArrayList<Shape>> rowList = matrix.getTableRowList();
+			List<Shape> shapeList;
+			Shape shape;
+			Data data;
+			String value;
+			if (rowList.size() > 0) {
+				dataMatrix = new Object[rowList.size()][matrix.getShapeListMax()];
+				for (int i = 0; i < rowList.size(); i++) {
+					shapeList = rowList.get(i);
+					for (int j = 0; j < shapeList.size(); j++) {
+						shape = shapeList.get(j);
+						data = shape.data;
+						value = data.text.value;
+						dataMatrix[i][j] = value;
+					}
+				}
+			}
+		}
+		return dataMatrix;
+	}
 
 	public Object[] getObjectArray() {
 		Object[] objectArray = new Object[2];
