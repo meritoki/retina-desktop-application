@@ -25,6 +25,8 @@ import com.meritoki.app.desktop.retina.model.document.Archive;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Table;
+import com.sun.speech.freetts.Voice;
+import com.sun.speech.freetts.VoiceManager;
 
 /**
  *
@@ -63,6 +65,22 @@ public class ArchivePanel extends javax.swing.JPanel {
 				this.archiveTextArea.append("\n");
 			}
 		}
+		
+		 Voice voice;//Creating object of Voice class
+         voice = VoiceManager.getInstance().getVoice("kevin");//Getting voice
+         if (voice != null) {
+             voice.allocate();//Allocating Voice
+         }
+         try {
+             voice.setRate(190);//Setting the rate of the voice
+             voice.setPitch(150);//Setting the Pitch of the voice
+             voice.setVolume(3);//Setting the volume of the voice 
+             voice.speak(this.archiveTextArea.getText());//Calling speak() method
+
+
+         } catch (Exception e1) {
+             e1.printStackTrace();
+         }
     }
 
     /**

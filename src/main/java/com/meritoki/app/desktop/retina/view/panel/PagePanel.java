@@ -202,7 +202,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 		if (ke.isControlDown()) {
 			switch (ke.getKeyCode()) {
 			case KeyEvent.VK_EQUALS: {
-				logger.info("keyPressed(e) KeyEvent.VK_EQUALS");
+				logger.debug("keyPressed(e) KeyEvent.VK_EQUALS");
 				double scale = this.model.document.cache.scale;
 				scale = scale * 1.5;
 				this.model.document.cache.scale = scale;
@@ -211,7 +211,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				break;
 			}
 			case KeyEvent.VK_PLUS: {
-				logger.info("keyPressed(e) KeyEvent.VK_PLUS");
+				logger.debug("keyPressed(e) KeyEvent.VK_PLUS");
 				double scale = this.model.document.cache.scale;
 				scale = scale * 1.5;
 				this.model.document.cache.scale = scale;
@@ -220,7 +220,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				break;
 			}
 			case KeyEvent.VK_MINUS: {
-				logger.info("keyPressed(e) KeyEvent.VK_MINUS");
+				logger.debug("keyPressed(e) KeyEvent.VK_MINUS");
 				double scale = this.model.document.cache.scale;
 				scale = scale / 1.5;
 				this.model.document.cache.scale = scale;
@@ -229,7 +229,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				break;
 			}
 			case KeyEvent.VK_DOWN:{
-				logger.info("keyPressed(e) KeyEvent.DOWN");
+				logger.debug("keyPressed(e) KeyEvent.DOWN");
 				Page page = this.model.getDocument().getPage();
 				page.setBufferedImage(null);
 				Image image = (page != null) ? page.getImage() : null;
@@ -241,7 +241,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				break;
 			}
 			case KeyEvent.VK_UP:{
-				logger.info("keyPressed(e) KeyEvent.VK_UP");
+				logger.debug("keyPressed(e) KeyEvent.VK_UP");
 				Page page = this.model.getDocument().getPage();
 				page.setBufferedImage(null);
 				Image image = (page != null) ? page.getImage() : null;
@@ -253,11 +253,13 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				break;
 			}
 			case KeyEvent.VK_Z:{
+				logger.debug("keyPressed(e) KeyEvent.VK_Z");
 				this.model.getDocument().pattern.undo();
 				this.main.imageDialog.init();
 				break;
 			}
 			case KeyEvent.VK_Y:{
+				logger.debug("keyPressed(e) KeyEvent.VK_Y");
 				this.model.getDocument().pattern.redo();
 				this.main.imageDialog.init();
 				repaint();

@@ -248,7 +248,7 @@ public class Page {
 				BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getImageCache(),
 						image.uuid + "." + image.getExtension());
 				if (bufferedImage == null) {
-					bufferedImage = NodeController.openBufferedImage(image.file.getParent(), image.file.getName());
+					bufferedImage = NodeController.openBufferedImage(image.file);
 					if (bufferedImage != null) {
 						image.setBufferedImage(bufferedImage);
 						if (image.getExtension().equals("jpg") || image.getExtension().equals("jpeg")) {

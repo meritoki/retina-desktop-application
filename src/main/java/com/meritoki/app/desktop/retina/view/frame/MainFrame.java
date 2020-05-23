@@ -31,7 +31,9 @@ import com.meritoki.app.desktop.retina.view.dialog.PageDialog;
 import com.meritoki.app.desktop.retina.view.dialog.OpenDialog;
 import com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog;
 import com.meritoki.app.desktop.retina.view.dialog.SelectionDialog;
+import com.meritoki.app.desktop.retina.view.dialog.audio.AudioExportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.image.ImageImportDialog;
+import com.meritoki.app.desktop.retina.view.dialog.microsoft.MicrosoftExportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.user.UserLoginDialog;
 import com.meritoki.app.desktop.retina.view.dialog.user.UserRegisterDialog;
 import com.meritoki.app.desktop.retina.view.dialog.zooniverse.ZooniverseExportDialog;
@@ -58,6 +60,8 @@ public final class MainFrame extends JFrame {
     public SelectionDialog selectionDialog = new SelectionDialog(this, false);
     public ZooniverseExportDialog zooniverseExportDialog = new ZooniverseExportDialog(this, false);
     public ZooniverseImportDialog zooniverseImportDialog = new ZooniverseImportDialog(this, false);
+//    public MicrosoftExportDialog microsoftExportDialog = new MicrosoftExportDialog(this, false);
+//    public AudioExportDialog audioExportDialog = new AudioExportDialog(this, false);
 
     public MainFrame(Model model) {
         this.initComponents();
@@ -86,6 +90,8 @@ public final class MainFrame extends JFrame {
         this.selectionDialog.setModel(this.model);
         this.zooniverseExportDialog.setModel(this.model);
         this.zooniverseImportDialog.setModel(this.model);
+//        this.microsoftExportDialog.setModel(this.model);
+//        this.audioExportDialog.setModel(this.model);
         this.registerDialog.setModel(this.model);
         this.registerDialog.setLoginDialog(this.loginDialog);
         this.loginDialog.setModel(this.model);
@@ -141,6 +147,7 @@ public final class MainFrame extends JFrame {
         exportMenu = new javax.swing.JMenu();
         zooniverseExportMenuItem = new javax.swing.JMenuItem();
         microsoftExportMenuItem = new javax.swing.JMenuItem();
+        audioMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         undoMenuItem = new javax.swing.JMenuItem();
         redoMenuItem = new javax.swing.JMenuItem();
@@ -263,7 +270,20 @@ public final class MainFrame extends JFrame {
         exportMenu.add(zooniverseExportMenuItem);
 
         microsoftExportMenuItem.setText("Microsoft");
+        microsoftExportMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                microsoftExportMenuItemActionPerformed(evt);
+            }
+        });
         exportMenu.add(microsoftExportMenuItem);
+
+        audioMenuItem.setText("Audio");
+        audioMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                audioMenuItemActionPerformed(evt);
+            }
+        });
+        exportMenu.add(audioMenuItem);
 
         fileMenu.add(exportMenu);
 
@@ -396,6 +416,14 @@ public final class MainFrame extends JFrame {
         this.zooniverseImportDialog.setVisible(true);
     }//GEN-LAST:event_zooniverseImportMenuItemActionPerformed
 
+    private void microsoftExportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_microsoftExportMenuItemActionPerformed
+//       this.microsoftExportDialog.setVisible(true);
+    }//GEN-LAST:event_microsoftExportMenuItemActionPerformed
+
+    private void audioMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_audioMenuItemActionPerformed
+//       this.audioExportDialog.setVisible(true);
+    }//GEN-LAST:event_audioMenuItemActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -437,6 +465,7 @@ public final class MainFrame extends JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.meritoki.app.desktop.retina.view.panel.ArchivePanel archivePanel;
+    private javax.swing.JMenuItem audioMenuItem;
     private javax.swing.JMenu dialogMenu;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu exportMenu;
