@@ -82,6 +82,11 @@ public class Dimension {
 		this.scale = (this.addScale > 0)? scale/this.addScale: scale;
 		this.scale();
 	}
+	
+	public void setAddScale(double addScale) {
+		logger.info("setAddScale("+addScale+")");
+		this.addScale = addScale;
+	}
 
 	@JsonIgnore
 	public void setPointList(List<Point> pointList) {
@@ -129,6 +134,7 @@ public class Dimension {
 			Point b = this.pointList.get(1);
 			this.x = Math.min(a.x, b.x);
 			this.y = Math.min(a.y, b.y);
+			this.y += margin*this.addScale;
 			this.width = Math.abs(a.x - b.x);
 			this.height = Math.abs(a.y - b.y);
 		} else {

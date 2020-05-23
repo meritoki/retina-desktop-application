@@ -520,7 +520,8 @@ public class Page {
 				graphics2D.fillRect(0, 0, width, height);
 				graphics2D.setColor(oldColor);
 				graphics2D.drawImage(bufferedImage, null, 0, 0);
-				graphics2D.drawImage(b.bufferedImage, null, w, (int) b.dimension.margin);
+//				graphics2D.drawImage(b.bufferedImage, null, w, (int) b.dimension.margin);
+				graphics2D.drawImage(b.bufferedImage, null, w, (int) (b.dimension.margin));
 				graphics2D.dispose();
 				bufferedImage = bI;
 			}

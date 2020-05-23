@@ -236,7 +236,8 @@ public class Image {
 	@JsonIgnore
 	public void addShape(Shape shape) {
 		shape.dimension.setOffset(this.dimension.offset);
-		shape.dimension.setMargin(this.dimension.margin);
+		shape.dimension.setMargin(0);
+		shape.dimension.setAddScale(this.dimension.scale);
 		this.shapeList.add(shape);
 	}
 
