@@ -80,14 +80,12 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 
 	@Override
 	public Dimension getPreferredSize() {
-		
 		Dimension dimension = new Dimension(1028, 512);
 		Document document = (this.model != null) ? this.model.getDocument() : null;
 		Page page = (document != null) ? document.getPage() : null;
 		Matrix matrix = (page != null) ? page.getMatrix():null;
 		if(matrix != null) {
 			matrix.setScale(this.model.document.cache.scale);
-			System.out.println("getPreferredSize() width="+matrix.width+" height="+matrix.height );
 			dimension.setSize(matrix.width, matrix.height);
 		}
 		return dimension;

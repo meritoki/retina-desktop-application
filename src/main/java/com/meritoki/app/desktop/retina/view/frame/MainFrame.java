@@ -121,7 +121,7 @@ public final class MainFrame extends JFrame {
         table1 = new com.meritoki.app.desktop.retina.view.panel.TablePanel();
         imagePageTabbedPane = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
-        imagePanel = new com.meritoki.app.desktop.retina.view.panel.ImagePanel();
+        imagePanel = new com.meritoki.app.desktop.retina.view.panel.PagePanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         matrixPanel = new com.meritoki.app.desktop.retina.view.panel.MatrixPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -451,7 +451,7 @@ public final class MainFrame extends JFrame {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuItem imageMenuItem;
     private javax.swing.JTabbedPane imagePageTabbedPane;
-    private com.meritoki.app.desktop.retina.view.panel.ImagePanel imagePanel;
+    private com.meritoki.app.desktop.retina.view.panel.PagePanel imagePanel;
     private javax.swing.JMenuItem importImageMenuItem;
     private javax.swing.JMenu importMenu;
     private javax.swing.JScrollPane jScrollPane1;

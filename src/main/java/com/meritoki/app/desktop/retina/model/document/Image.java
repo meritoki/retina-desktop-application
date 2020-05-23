@@ -196,7 +196,6 @@ public class Image {
 	}
 
 	public void setScale(double scale) {
-		logger.debug("setScale(" + scale + ")");
 		this.dimension.setScale(scale);
 		for (Shape shape : this.shapeList) {
 			shape.dimension.setScale(scale);

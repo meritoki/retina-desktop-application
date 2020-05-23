@@ -17,6 +17,9 @@ package com.meritoki.app.desktop.retina.model.document;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -334,23 +337,8 @@ public class Page {
 		if (this.bufferedImage == null) {
 //			BufferedImage bufferedImage = null;
 			BufferedImage bufferedImage = this.joinImages(this.getImageList());
-//			Image file = null;
-//			for (Image f : this.getImageList()) {
-//				if (file == null) {
-//					file = new Image(f);
-//					bufferedImage = this.modifyImage(file);
-//				} else {
-//					bufferedImage = this.joinImages(file, f);
-//				}
-//			}
-//			List<Image> imageList = this.getImageList();
-//			for(int i = 0; i < imageList.size();i++) {
-//				Image a = imageList.get(i);
-//				if(i+1 < imageList.size()) {
-//					Image b = imageList.get(i+1);
-//					
-//				}
-//			}
+			this.dimension.w = bufferedImage.getWidth();
+			this.dimension.h = bufferedImage.getHeight();
 			this.bufferedImage = bufferedImage;
 		}
 		return this.bufferedImage;
@@ -484,24 +472,24 @@ public class Page {
 //		return max;
 //	}
 
-	@JsonIgnore
-	public BufferedImage modifyImage(Image image) { // BufferedImage img1,BufferedImage img2) {
-		logger.debug("modifyImage(" + image + ")");
-		BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-		if (image.bufferedImage != null) {
-			int width = image.bufferedImage.getWidth();
-			int height = image.bufferedImage.getHeight();
-			bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-			Graphics2D graphics2D = bufferedImage.createGraphics();
-			Color oldColor = graphics2D.getColor();
-			graphics2D.setPaint(Color.BLACK);
-			graphics2D.fillRect(0, 0, width, height);
-			graphics2D.setColor(oldColor);
-			graphics2D.drawImage(image.bufferedImage, null, 0, (int) image.dimension.margin);
-			graphics2D.dispose();
-		}
-		return bufferedImage;
-	}
+//	@JsonIgnore
+//	public BufferedImage modifyImage(Image image) { // BufferedImage img1,BufferedImage img2) {
+//		logger.debug("modifyImage(" + image + ")");
+//		BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+//		if (image.bufferedImage != null) {
+//			int width = image.bufferedImage.getWidth();
+//			int height = image.bufferedImage.getHeight();
+//			bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+//			Graphics2D graphics2D = bufferedImage.createGraphics();
+//			Color oldColor = graphics2D.getColor();
+//			graphics2D.setPaint(Color.BLACK);
+//			graphics2D.fillRect(0, 0, width, height);
+//			graphics2D.setColor(oldColor);
+//			graphics2D.drawImage(image.bufferedImage, null, 0, (int) image.dimension.margin);
+//			graphics2D.dispose();
+//		}
+//		return bufferedImage;
+//	}
 
 	@JsonIgnore
 	public BufferedImage joinImages(List<Image> imageList) {
@@ -517,7 +505,7 @@ public class Page {
 				graphics2D.setPaint(Color.BLACK);
 				graphics2D.fillRect(0, 0, width, height);
 				graphics2D.setColor(Color.BLACK);
-				graphics2D.drawImage(a.bufferedImage, null, 0, 0);
+				graphics2D.drawImage(a.bufferedImage, null, 0, (int)(a.dimension.margin));
 				graphics2D.dispose();
 			}
 			if (i + 1 < imageList.size()) {
@@ -541,6 +529,70 @@ public class Page {
 		return bufferedImage;
 	}
 
+	public void paint(Graphics2D graphics2D) {
+		AffineTransform affineTransform = new AffineTransform();
+		affineTransform.scale(this.dimension.scale, this.dimension.scale);
+		BufferedImage bufferedImage = this.getBufferedImage();
+		if (bufferedImage != null) {
+			graphics2D.drawImage(bufferedImage, affineTransform, null);
+		}
+
+		List<Image> imageList = this.getImageList();
+		Image image = this.getImage();
+		Dimension d = null;
+		if (imageList != null) {
+			for (Image i : imageList) {
+				d = i.dimension;
+				if (image != null && i.uuid.equals(image.uuid)) {
+					graphics2D.setColor(Color.RED);
+				} else {
+					graphics2D.setColor(Color.YELLOW);
+				}
+				Rectangle2D.Double rectangle = new Rectangle2D.Double(d.x, d.y, d.width, d.height);
+				graphics2D.draw(rectangle);
+			}
+
+		}
+		List<Shape> shapeList = this.getMatrix().getShapeList();
+		Shape shape = this.getShape();
+		Shape previousShape = null;
+		if (shapeList != null) {
+			for (Shape s : shapeList) {
+				d = s.getDimension();
+				if (shape != null && s.uuid.equals(shape.uuid)) {
+					graphics2D.setColor(Color.RED);
+				} else {
+					graphics2D.setColor(Color.BLUE);
+				}
+				switch (s.type) {
+				case ELLIPSE: {
+					Ellipse2D.Double ellipse = new Ellipse2D.Double(d.x, d.y, d.width, d.height);
+					graphics2D.draw(ellipse);
+					break;
+				}
+				case RECTANGLE: {
+					Rectangle2D.Double rectangle = new Rectangle2D.Double(d.x, d.y, d.width, d.height);
+					graphics2D.draw(rectangle);
+					break;
+				}
+				}
+				if (previousShape != null) {
+					com.meritoki.app.desktop.retina.model.document.Dimension dimension = previousShape
+							.getDimension();
+					graphics2D.drawLine((int) (dimension.x + (dimension.width / 2)),
+							(int) (dimension.y + (dimension.height / 2)), (int) (d.x + (d.width / 2)),
+							(int) (d.y + (d.height / 2)));
+				}
+				previousShape = s;
+			}
+		}
+		this.dimension.scale();
+		graphics2D.setColor(Color.BLUE);
+		Rectangle2D.Double frame = new Rectangle2D.Double(0, 0, this.dimension.width, this.dimension.height);
+		graphics2D.draw(frame);
+
+	}
+	
 	@JsonIgnore
 	@Override
 	public String toString() {

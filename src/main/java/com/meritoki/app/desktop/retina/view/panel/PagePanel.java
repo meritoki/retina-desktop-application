@@ -44,14 +44,14 @@ import com.meritoki.app.desktop.retina.view.frame.MainFrame;
  * @author jorodriguez
  *
  */
-public class ImagePanel extends JPanel implements MouseListener, MouseWheelListener, KeyListener {
+public class PagePanel extends JPanel implements MouseListener, MouseWheelListener, KeyListener {
 
 	private static final long serialVersionUID = 3989576625299550361L;
-	private static Logger logger = LogManager.getLogger(ImagePanel.class.getName());
+	private static Logger logger = LogManager.getLogger(PagePanel.class.getName());
 	private MainFrame main = null;
 	private Model model = null;
 
-	public ImagePanel() {
+	public PagePanel() {
 		super();
 		this.setBackground(Color.black);
 		this.addMouseListener(this);
@@ -71,12 +71,12 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 
 	@Override
 	public Dimension getPreferredSize() {
+		System.out.println("getPreferredSize()");
 		Dimension dimension = new Dimension(1028, 512);
 		Document document = (this.model != null) ? this.model.getDocument() : null;
 		Page page = (document != null) ? document.getPage() : null;
-		BufferedImage bufferedImage = (page != null) ? page.getBufferedImage() : null;
-		if (bufferedImage != null) {
-			dimension.setSize(bufferedImage.getWidth(), bufferedImage.getHeight());
+		if(page != null) {
+			dimension.setSize(page.dimension.width, page.dimension.height);
 		}
 		return dimension;
 	}
@@ -90,66 +90,9 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 		if (this.model != null) {
 			Graphics2D graphics2D = (Graphics2D) graphics.create();
 			Document document = (this.model != null) ? this.model.getDocument() : null;
-			document.getPage().setScale(this.model.document.cache.scale);
-			AffineTransform affineTransform = new AffineTransform();
-			affineTransform.scale(this.model.document.cache.scale, this.model.document.cache.scale);
-			BufferedImage bufferedImage = document.getPage().getBufferedImage();
-			if (bufferedImage != null) {
-				graphics2D.drawImage(bufferedImage, affineTransform, null);
-			}
-			List<Image> imageList = document.getPage().getImageList();
-			Image image = document.getImage();
-			com.meritoki.app.desktop.retina.model.document.Dimension d = null;
-			if (imageList != null) {
-				for (Image i : imageList) {
-					d = i.dimension;
-					if (image != null && i.uuid.equals(image.uuid)) {
-						graphics2D.setColor(Color.RED);
-					} else {
-						graphics2D.setColor(Color.YELLOW);
-					}
-					Rectangle2D.Double rectangle = new Rectangle2D.Double(d.x, d.y, d.width, d.height);
-					graphics2D.draw(rectangle);
-				}
-
-			}
-			List<Shape> shapeList = document.getPage().getMatrix().getShapeList();
-			Shape shape = document.getPage().getShape();
-			Shape previousShape = null;
-			if (shapeList != null) {
-				for (Shape s : shapeList) {
-					d = s.getDimension();
-					if (shape != null && s.uuid.equals(shape.uuid)) {
-						graphics2D.setColor(Color.RED);
-					} else {
-						graphics2D.setColor(Color.BLUE);
-					}
-					switch (s.type) {
-					case ELLIPSE: {
-						Ellipse2D.Double ellipse = new Ellipse2D.Double(d.x, d.y, d.width, d.height);
-						graphics2D.draw(ellipse);
-						break;
-					}
-					case RECTANGLE: {
-						Rectangle2D.Double rectangle = new Rectangle2D.Double(d.x, d.y, d.width, d.height);
-						graphics2D.draw(rectangle);
-						break;
-					}
-					}
-					if (previousShape != null) {
-						com.meritoki.app.desktop.retina.model.document.Dimension dimension = previousShape
-								.getDimension();
-						graphics2D.drawLine((int) (dimension.x + (dimension.width / 2)),
-								(int) (dimension.y + (dimension.height / 2)), (int) (d.x + (d.width / 2)),
-								(int) (d.y + (d.height / 2)));
-					}
-					previousShape = s;
-				}
-			}
-//			graphics2D.setColor(Color.magenta);
-//			for(int i =0; i < 1000; i++) {
-//				graphics2D.drawLine(i*100, 0, i*100, 10000);
-//			}
+			Page page = document.getPage();
+			page.setScale(this.model.document.cache.scale);
+			page.paint(graphics2D);
 		}
 	}
 
@@ -188,16 +131,15 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 	 * Here a mouse is released, telling us where an Add, Move, Resize, and Remove
 	 */
 	@Override
-	public void mouseReleased(MouseEvent e) {
+	public void mouseReleased(MouseEvent me) {
 //		e.consume();
-		this.model.document.cache.releasedPoint = new Point(e.getX(), e.getY());
+		this.model.document.cache.releasedPoint = new Point(me.getX(), me.getY());
 		if (this.model.document.cache.pressedPoint.equals(this.model.document.cache.releasedPoint)) {
 			if (this.model.document.cache.pressedShape != null)
 				try {
 					this.model.document.pattern.execute("setShape");
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				} catch (Exception e) {
+					logger.info("Exception "+e.getMessage());
 				}
 		} else {
 			this.model.document.cache.selection = this.model.getDocument().getPage()
@@ -235,6 +177,7 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		this.requestFocus();
 	}
 
 	@Override
@@ -247,62 +190,103 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		double delta = 0.05f * e.getPreciseWheelRotation();
-		this.model.document.cache.scale += delta;
-		if (this.model.document.cache.scale >= 0 && this.model.document.cache.scale <= 2) {
-			logger.trace("mouseWheelMoved(...) scale = " + this.model.document.cache.scale);
-			this.model.getDocument().getPage().setScale(this.model.document.cache.scale);
-			revalidate();
-			repaint();
-		}
+//		double delta = 0.05f * e.getPreciseWheelRotation();
+//		this.model.document.cache.scale += delta;
+//		if (this.model.document.cache.scale >= 0 && this.model.document.cache.scale <= 2) {
+//			logger.trace("mouseWheelMoved(...) scale = " + this.model.document.cache.scale);
+//			this.model.getDocument().getPage().setScale(this.model.document.cache.scale);
+//			revalidate();
+//			repaint();
+//		}
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e) {
-		if ((e.getKeyCode() == KeyEvent.VK_DOWN) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
-			e.consume();
-			Page page = this.model.getDocument().getPage();
-			page.setBufferedImage(null);
-			Image file = (page != null) ? page.getImage() : null;
-			if (file != null) {
-				file.setMargin(file.dimension.margin + 10);
-				page.setBufferedImage(null);
+	public void keyPressed(KeyEvent ke) {
+		logger.info("keyPressed("+ke+")");
+		ke.consume();
+		if (ke.isControlDown()) {
+			switch (ke.getKeyCode()) {
+			case KeyEvent.VK_EQUALS: {
+				logger.info("keyPressed(e) KeyEvent.VK_EQUALS");
+				double scale = this.model.document.cache.scale;
+				scale = scale * 1.5;
+				this.model.document.cache.scale = scale;
+				this.repaint();
+				this.revalidate();
+				break;
 			}
-			repaint();
-		} else if ((e.getKeyCode() == KeyEvent.VK_UP) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
-			e.consume();
-			Page page = this.model.getDocument().getPage();
-			page.setBufferedImage(null);
-			Image file = (page != null) ? page.getImage() : null;
-			if (file != null) {
-				file.setMargin(file.dimension.margin - 10);
-				page.setBufferedImage(null);
+			case KeyEvent.VK_PLUS: {
+				logger.info("keyPressed(e) KeyEvent.VK_PLUS");
+				double scale = this.model.document.cache.scale;
+				scale = scale * 1.5;
+				this.model.document.cache.scale = scale;
+				this.repaint();
+				this.revalidate();
+				break;
 			}
-			repaint();
-		} else if ((e.getKeyCode() == KeyEvent.VK_Z) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
-			e.consume();
-			this.model.getDocument().pattern.undo();
-			this.main.imageDialog.init();
-			repaint();
-		} else if ((e.getKeyCode() == KeyEvent.VK_Y) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
-			e.consume();
-			this.model.getDocument().pattern.redo();
-			this.main.imageDialog.init();
-			repaint();
-		} else if ((e.getKeyCode() == KeyEvent.VK_M) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
-			String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-			List<Shape> shapeList = this.model.getDocument().getPage().getShapeList();
-			this.generateManifest(timeStamp, shapeList);
-		} else if ((e.getKeyCode() == KeyEvent.VK_T) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
-			List<String[]> stringArrayList = NodeController.openCsv("import.csv");
-			this.model.getDocument().importText(stringArrayList);
+			case KeyEvent.VK_MINUS: {
+				logger.info("keyPressed(e) KeyEvent.VK_MINUS");
+				double scale = this.model.document.cache.scale;
+				scale = scale / 1.5;
+				this.model.document.cache.scale = scale;
+				this.repaint();
+				this.revalidate();
+				break;
+			}
+			case KeyEvent.VK_DOWN:{
+				logger.info("keyPressed(e) KeyEvent.DOWN");
+				Page page = this.model.getDocument().getPage();
+				page.setBufferedImage(null);
+				Image image = (page != null) ? page.getImage() : null;
+				if (image != null) {
+					image.setMargin(image.dimension.margin + 10);
+					page.setBufferedImage(null);
+				}
+				repaint();
+				break;
+			}
+			case KeyEvent.VK_UP:{
+				logger.info("keyPressed(e) KeyEvent.VK_UP");
+				Page page = this.model.getDocument().getPage();
+				page.setBufferedImage(null);
+				Image image = (page != null) ? page.getImage() : null;
+				if (image != null) {
+					image.setMargin(image.dimension.margin - 10);
+					page.setBufferedImage(null);
+				}
+				repaint();
+				break;
+			}
+			case KeyEvent.VK_Z:{
+				this.model.getDocument().pattern.undo();
+				this.main.imageDialog.init();
+				break;
+			}
+			case KeyEvent.VK_Y:{
+				this.model.getDocument().pattern.redo();
+				this.main.imageDialog.init();
+				repaint();
+				break;
+				
+			}
+			case KeyEvent.VK_M:{
+				String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+				List<Shape> shapeList = this.model.getDocument().getPage().getShapeList();
+				this.generateManifest(timeStamp, shapeList);
+				break;
+			}
+			case KeyEvent.VK_T:{
+				List<String[]> stringArrayList = NodeController.openCsv("import.csv");
+				this.model.getDocument().importText(stringArrayList);
+				break;
+			}
+			}
 		} else {
-			e.consume();
-			int keyCode = e.getKeyCode();
+			ke.consume();
+			int keyCode = ke.getKeyCode();
 			int index = this.model.getDocument().getIndex();
 			switch (keyCode) {
 			case KeyEvent.VK_BACK_SPACE: {
-				logger.debug("KeyPressed(BACK_SPACE)");
 				this.model.document.cache.pressedShape = this.model.getDocument().getPage().getShape();
 				try {
 					this.model.getDocument().pattern.execute("removeShape");
@@ -380,3 +364,116 @@ public class ImagePanel extends JPanel implements MouseListener, MouseWheelListe
 	public void keyReleased(KeyEvent e) {
 	}
 }
+//@Override
+//public void keyPressed(KeyEvent e) {
+////	if (e.isControlDown()) {
+////		switch (e.getKeyChar()) {
+////		case '+': {
+////			double scale = this.model.terra.projection.scale;
+////			scale = scale * this.factor;
+////			this.model.terra.projection.scale = scale;
+////			this.repaint();
+////			break;
+////		}
+////		case '-': {
+////			double scale = this.model.terra.projection.scale;
+////			scale = scale / this.factor;
+////			this.model.terra.projection.scale = scale;
+////			this.repaint();
+////			break;
+////		}
+////		}
+////	}
+//	if ((e.getKeyCode() == KeyEvent.VK_DOWN) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+//		e.consume();
+//		Page page = this.model.getDocument().getPage();
+//		page.setBufferedImage(null);
+//		Image file = (page != null) ? page.getImage() : null;
+//		if (file != null) {
+//			file.setMargin(file.dimension.margin + 10);
+//			page.setBufferedImage(null);
+//		}
+//		repaint();
+//	} else if ((e.getKeyCode() == KeyEvent.VK_UP) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+//		e.consume();
+//		Page page = this.model.getDocument().getPage();
+//		page.setBufferedImage(null);
+//		Image file = (page != null) ? page.getImage() : null;
+//		if (file != null) {
+//			file.setMargin(file.dimension.margin - 10);
+//			page.setBufferedImage(null);
+//		}
+//		repaint();
+//	} else if ((e.getKeyCode() == KeyEvent.VK_Z) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+//		e.consume();
+//		this.model.getDocument().pattern.undo();
+//		this.main.imageDialog.init();
+//		repaint();
+//	} else if ((e.getKeyCode() == KeyEvent.VK_Y) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+//		e.consume();
+//		this.model.getDocument().pattern.redo();
+//		this.main.imageDialog.init();
+//		repaint();
+//	} else if ((e.getKeyCode() == KeyEvent.VK_M) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+//		String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+//		List<Shape> shapeList = this.model.getDocument().getPage().getShapeList();
+//		this.generateManifest(timeStamp, shapeList);
+//	} else if ((e.getKeyCode() == KeyEvent.VK_T) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+//		List<String[]> stringArrayList = NodeController.openCsv("import.csv");
+//		this.model.getDocument().importText(stringArrayList);
+//	} else {
+//		e.consume();
+//		int keyCode = e.getKeyCode();
+//		int index = this.model.getDocument().getIndex();
+//		switch (keyCode) {
+//		case KeyEvent.VK_BACK_SPACE: {
+//			logger.debug("KeyPressed(BACK_SPACE)");
+//			this.model.document.cache.pressedShape = this.model.getDocument().getPage().getShape();
+//			try {
+//				this.model.getDocument().pattern.execute("removeShape");
+//			} catch (Exception e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+//			this.repaint();
+//			break;
+//		}
+//		case KeyEvent.VK_LEFT: {
+//			logger.debug("keyPressed(LEFT)");
+//			this.model.getDocument().setIndex(--index);
+//			this.main.imageDialog.init();
+//			this.main.selectionDialog.init();
+////			this.main.matrixDialog.init();
+//			this.repaint();
+//			break;
+//		}
+//		case KeyEvent.VK_RIGHT: {
+//			logger.debug("keyPressed(RIGHT)");
+//			this.model.getDocument().setIndex(++index);
+//			this.main.imageDialog.init();
+//			this.main.selectionDialog.init();
+////			this.main.matrixDialog.init();
+//			this.repaint();
+//			break;
+//		}
+//		case KeyEvent.VK_UP: {
+//			logger.debug("keyPressed(UP)");
+//			this.model.getDocument().setIndex(--index);
+//			this.main.imageDialog.init();
+//			this.main.selectionDialog.init();
+////			this.main.matrixDialog.init();
+//			this.repaint();
+//			break;
+//		}
+//		case KeyEvent.VK_DOWN: {
+//			logger.debug("keyPressed(DOWN)");
+//			this.model.getDocument().setIndex(++index);
+//			this.main.imageDialog.init();
+//			this.main.selectionDialog.init();
+////			this.main.matrixDialog.init();
+//			this.repaint();
+//			break;
+//		}
+//		}
+//	}
+//}

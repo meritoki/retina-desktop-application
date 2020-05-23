@@ -3,6 +3,8 @@ package com.meritoki.app.desktop.retina.model.document;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.table.DefaultTableModel;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,6 +22,11 @@ public class Table {
 
 	public Table(Matrix matrix) {
 		this.matrix = matrix;
+	}
+	
+	public DefaultTableModel getDefaultTableMode() {
+		Object[] objectArray = this.getObjectArray();
+		return new javax.swing.table.DefaultTableModel((Object[][])objectArray[1], (Object[])objectArray[0]);
 	}
 
 	public Object[] getObjectArray() {

@@ -141,7 +141,7 @@ public class Dimension {
 			this.width = this.w;
 			this.height = this.h;
 			this.x += this.offset*1/this.scale;
-			this.y += this.margin*1/this.scale;
+			this.y += this.margin;
 		}
 		this.x *= this.scale;
 		this.y *= this.scale;

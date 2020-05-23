@@ -63,11 +63,9 @@ public class TablePanel extends javax.swing.JPanel {
 		logger.debug("initDataTable()");
 		Document document = (this.model != null) ? this.model.getDocument() : null;
 		Page page = (document != null) ? document.getPage() : null;
-		Table table = page.getTable();
-		if (page != null) {
-			Object[] objectArray = table.getObjectArray();
-			DefaultTableModel model = new javax.swing.table.DefaultTableModel((Object[][])objectArray[1], (Object[])objectArray[0]);
-			this.dataTable.setModel(model);
+		Table table = (page != null)? page.getTable(): null;
+		if (table != null) {
+			this.dataTable.setModel(table.getDefaultTableMode());
 		}
 	}	
 
