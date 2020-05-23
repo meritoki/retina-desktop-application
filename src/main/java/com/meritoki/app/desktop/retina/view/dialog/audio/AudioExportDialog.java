@@ -167,11 +167,11 @@ public class AudioExportDialog extends javax.swing.JDialog {
 
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
     	String name = this.nameTextField.getText();
-//        Archive archive = this.model.document.getPage().getArchive();
-        List<String> stringList = new ArrayList<String>();
-        stringList.add("Hello World");
-        stringList.add("This is a test of the audio file save");
-        this.foo(name, stringList);
+        Archive archive = this.model.document.getPage().getArchive();
+//        List<String> stringList = new ArrayList<String>();
+//        stringList.add("Hello World");
+//        stringList.add("This is a test of the audio file save");
+        this.foo(name, archive.stringList);
     }//GEN-LAST:event_exportButtonActionPerformed
 
     /**

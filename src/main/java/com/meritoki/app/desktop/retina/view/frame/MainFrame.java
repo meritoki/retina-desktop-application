@@ -60,8 +60,8 @@ public final class MainFrame extends JFrame {
     public SelectionDialog selectionDialog = new SelectionDialog(this, false);
     public ZooniverseExportDialog zooniverseExportDialog = new ZooniverseExportDialog(this, false);
     public ZooniverseImportDialog zooniverseImportDialog = new ZooniverseImportDialog(this, false);
-//    public MicrosoftExportDialog microsoftExportDialog = new MicrosoftExportDialog(this, false);
-//    public AudioExportDialog audioExportDialog = new AudioExportDialog(this, false);
+    public MicrosoftExportDialog microsoftExportDialog = new MicrosoftExportDialog(this, false);
+    public AudioExportDialog audioExportDialog = new AudioExportDialog(this, false);
 
     public MainFrame(Model model) {
         this.initComponents();
@@ -90,8 +90,8 @@ public final class MainFrame extends JFrame {
         this.selectionDialog.setModel(this.model);
         this.zooniverseExportDialog.setModel(this.model);
         this.zooniverseImportDialog.setModel(this.model);
-//        this.microsoftExportDialog.setModel(this.model);
-//        this.audioExportDialog.setModel(this.model);
+        this.microsoftExportDialog.setModel(this.model);
+        this.audioExportDialog.setModel(this.model);
         this.registerDialog.setModel(this.model);
         this.registerDialog.setLoginDialog(this.loginDialog);
         this.loginDialog.setModel(this.model);
@@ -417,11 +417,11 @@ public final class MainFrame extends JFrame {
     }//GEN-LAST:event_zooniverseImportMenuItemActionPerformed
 
     private void microsoftExportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_microsoftExportMenuItemActionPerformed
-//       this.microsoftExportDialog.setVisible(true);
+       this.microsoftExportDialog.setVisible(true);
     }//GEN-LAST:event_microsoftExportMenuItemActionPerformed
 
     private void audioMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_audioMenuItemActionPerformed
-//       this.audioExportDialog.setVisible(true);
+       this.audioExportDialog.setVisible(true);
     }//GEN-LAST:event_audioMenuItemActionPerformed
 
     /**
