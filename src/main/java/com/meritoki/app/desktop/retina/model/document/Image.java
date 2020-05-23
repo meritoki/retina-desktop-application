@@ -28,28 +28,20 @@ public class Image {
 	public String uuid = null;
 	@JsonProperty
 	public File file = null;
+	@JsonProperty
+	public List<Shape> shapeList = new ArrayList<>();
+	@JsonProperty
+	public Dimension dimension = new Dimension();
 	@JsonIgnore
 	public BufferedImage bufferedImage = null;
 	@JsonIgnore
-	public Dimension dimension = new Dimension();
-	/**
-	 * Current index of the shapeList.
-	 */
-	@JsonIgnore
 	public int index = 0;
-	/**
-	 * List of Shapes drawn by user.
-	 */
-	@JsonProperty
-	public List<Shape> shapeList = new ArrayList<>();
-
 	/**
 	 * Default constructor
 	 */
 	public Image() {
 		this.uuid = UUID.randomUUID().toString();
 	}
-
 	/**
 	 * Copy constructor
 	 * 
@@ -65,20 +57,6 @@ public class Image {
 			this.shapeList.add(new Shape(shape));
 		}
 	}
-
-	/**
-	 * Constructor accepts a file path and name parameters
-	 * 
-	 * @param path
-	 * @param name
-	 */
-//	public Image(String path, String name) {
-//		this.uuid = UUID.randomUUID().toString();
-//		this.path = path;
-//		this.name = name;
-//		this.extension = this.getExtension(this.name);
-//		this.name = this.name.replace("." + this.extension, "");
-//	}
 	
 	public Image(File file) {
 		this.uuid = UUID.randomUUID().toString();
@@ -199,10 +177,15 @@ public class Image {
 		}
 	}
 
+	/** 
+	 * Function necessary for a shape to move at all with the margin shift
+	 * @param margin
+	 */
 	public void setMargin(double margin) {
+		logger.info("setMargin("+margin+")");
 		this.dimension.margin = margin;
 		for (Shape shape : this.shapeList) {
-			shape.dimension.setMargin(margin);
+			shape.setMargin(margin);
 		}
 	}
 
@@ -235,8 +218,11 @@ public class Image {
 	 */
 	@JsonIgnore
 	public void addShape(Shape shape) {
-		shape.dimension.setOffset(this.dimension.offset);
-		shape.dimension.setMargin(0);
+		logger.info("addShape("+shape+")");
+		shape.dimension.m = this.dimension.margin;
+		shape.dimension.o = this.dimension.offset;
+//		shape.dimension.setOffset(this.dimension.offset);
+//		shape.dimension.setMargin(this.dimension.margin);
 		shape.dimension.setAddScale(this.dimension.scale);
 		this.shapeList.add(shape);
 	}
@@ -303,7 +289,7 @@ public class Image {
 	@Override
 	public String toString() {
 		String string = "";
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		ObjectWriter ow = new ObjectMapper().writer();
 		try {
 			string = ow.writeValueAsString(this);
 		} catch (IOException e) {
@@ -313,58 +299,3 @@ public class Image {
 		return string;
 	}
 }
-//@JsonIgnore
-//public BufferedImage getShapeImage(Shape shape) {
-//  BufferedImage bufferedImage = null;
-//  if (this.getBufferedImage() != null) {
-////      bufferedImage = this.getBufferedImage().getSubimage(shape.getX(), shape.getX(), (shape.getI() - shape.getX()),
-////              (shape.getJ() - shape.getY()));
-//  }
-//  return bufferedImage;
-//}
-
-//@JsonIgnore
-//public List<BufferedImage> getShapeListImageList(
-//      List<Shape> rList) {
-//  List<BufferedImage> imageList = new ArrayList<>();
-//  for (Shape r : rList) {
-//      imageList.add(this.getShapeImage(r));
-//  }
-//  return imageList;
-//}
-
-//	@JsonIgnore
-//	public void addShape(Shape shape) {
-//		shape.pointList.get(0).x -= (this.offset * this.scale);
-//		shape.pointList.get(1).x -= (this.offset * this.scale);
-//		shape.pointList.get(0).y -= (this.margin * this.scale);
-//		shape.pointList.get(1).y -= (this.margin * this.scale);
-//		this.shapeList.add(shape);
-//	}
-//@JsonIgnore
-//public Shape removeShape(String uuid) {
-//	Shape s = null;
-//	for (int i = 0; i < this.shapeList.size(); i++) {
-//		s = this.shapeList.get(i);
-//		if (s.uuid.equals(uuid)) {
-//			this.shapeList.remove(i);
-//			s.pointList = this.getGlobalPointList(this.copyPointList(s.pointList));
-//			//convert to global coordinates
-////			s.pointList.get(0).x += this.offset * this.scale;
-////			s.pointList.get(1).x += this.offset * this.scale;
-//			break;
-//		} else {
-//			s = null;
-//		}
-//	}
-//	return s;
-//}
-
-//@JsonIgnore
-//public void addShape(Shape shape) {
-//	shape.pointList.get(0).x -= (this.offset * this.scale);
-//	shape.pointList.get(1).x -= (this.offset * this.scale);
-//	shape.pointList.get(0).y -= (this.margin * this.scale);
-//	shape.pointList.get(1).y -= (this.margin * this.scale);
-//	this.shapeList.add(shape);
-//}

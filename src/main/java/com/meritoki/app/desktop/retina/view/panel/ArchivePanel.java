@@ -15,34 +15,54 @@
  */
 package com.meritoki.app.desktop.retina.view.panel;
 
+import java.awt.Graphics;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.document.Archive;
+import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Page;
+import com.meritoki.app.desktop.retina.model.document.Table;
 
 /**
  *
  * @author osvaldo.rodriguez
  */
-public class DocumentPanel extends javax.swing.JPanel {
+public class ArchivePanel extends javax.swing.JPanel {
 
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = -4686022365967082684L;
-	private static Logger logger = LogManager.getLogger(DocumentPanel.class.getName());
+	private static Logger logger = LogManager.getLogger(ArchivePanel.class.getName());
     private Model model = null;
 
     /**
      * Creates new form Document
      */
-    public DocumentPanel() {
+    public ArchivePanel() {
         initComponents();
     }
 
     public void setModel(Model model) {
         logger.debug("setModel(" + model + ")");
         this.model = model;
+    }
+    
+    public void paint(Graphics graphics) {
+    	super.paint(graphics);
+		Document document = (this.model != null) ? this.model.getDocument() : null;
+		Page page = (document != null) ? document.getPage() : null;
+		Archive archive = (page != null)? page.getArchive(): null;
+		if(archive != null) {
+			this.archiveTextArea.setText(null);
+			for(String string: archive.stringList) {
+				this.archiveTextArea.append(string);
+				this.archiveTextArea.append("\n");
+			}
+		}
     }
 
     /**
@@ -54,19 +74,28 @@ public class DocumentPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        archiveTextArea = new javax.swing.JTextArea();
+
+        archiveTextArea.setColumns(20);
+        archiveTextArea.setRows(5);
+        jScrollPane1.setViewportView(archiveTextArea);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 881, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea archiveTextArea;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

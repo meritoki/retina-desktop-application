@@ -37,7 +37,7 @@ public class Shape {
 	@JsonProperty
 	public String uuid;
 	@JsonProperty
-	public Type type;
+	public ShapeType type;
 	@JsonProperty
 	public Dimension dimension = new Dimension();
 	@JsonIgnore
@@ -65,6 +65,11 @@ public class Shape {
 	
 	public void setScale(double scale) {
 		this.dimension.setScale(scale);
+	}
+	
+	public void setMargin(double margin) {
+		logger.info("setMargin("+margin+")");
+		this.dimension.setMargin(margin);
 	}
 
 	@JsonProperty

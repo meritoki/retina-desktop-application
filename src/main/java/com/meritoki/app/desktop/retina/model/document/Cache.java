@@ -13,7 +13,7 @@ public class Cache {
 	@JsonIgnore
 	public Selection selection = null;
 	@JsonIgnore
-	public Type type = Type.RECTANGLE;
+	public ShapeType type = ShapeType.RECTANGLE;
 	@JsonIgnore
 	public File[] fileArray = null;
 	@JsonIgnore

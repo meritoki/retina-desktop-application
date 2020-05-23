@@ -77,10 +77,10 @@ public final class MainFrame extends JFrame {
         logger.debug("setModel(" + model + ")");
         this.model = model;
         //Panel
-        this.imagePanel.setModel(this.model);
+        this.pagePanel.setModel(this.model);
         this.matrixPanel.setModel(this.model);
         this.tablePanel.setModel(this.model);
-        this.documentPanel.setModel(this.model);
+        this.archivePanel.setModel(this.model);
         //Dialog
         this.imageDialog.setModel(this.model);
         this.selectionDialog.setModel(this.model);
@@ -100,9 +100,9 @@ public final class MainFrame extends JFrame {
     public void init() {
         logger.debug("init()");
         this.setTitle("Retina Desktop Application");
-        this.imagePanel.setMain(this);
-        this.imagePanel.setFocusable(true);
-        this.imagePanel.requestFocusInWindow();
+        this.pagePanel.setMain(this);
+        this.pagePanel.setFocusable(true);
+        this.pagePanel.requestFocusInWindow();
         this.imageDialog.init();
         this.selectionDialog.init();
 //        this.imageDialog.setVisible(true);
@@ -121,12 +121,13 @@ public final class MainFrame extends JFrame {
         table1 = new com.meritoki.app.desktop.retina.view.panel.TablePanel();
         imagePageTabbedPane = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
-        imagePanel = new com.meritoki.app.desktop.retina.view.panel.PagePanel();
+        pagePanel = new com.meritoki.app.desktop.retina.view.panel.PagePanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         matrixPanel = new com.meritoki.app.desktop.retina.view.panel.MatrixPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tablePanel = new com.meritoki.app.desktop.retina.view.panel.TablePanel();
-        documentPanel = new com.meritoki.app.desktop.retina.view.panel.DocumentPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        archivePanel = new com.meritoki.app.desktop.retina.view.panel.ArchivePanel();
         mainMenuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         loginMenuItem = new javax.swing.JMenuItem();
@@ -151,30 +152,30 @@ public final class MainFrame extends JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        javax.swing.GroupLayout imagePanelLayout = new javax.swing.GroupLayout(imagePanel);
-        imagePanel.setLayout(imagePanelLayout);
-        imagePanelLayout.setHorizontalGroup(
-            imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout pagePanelLayout = new javax.swing.GroupLayout(pagePanel);
+        pagePanel.setLayout(pagePanelLayout);
+        pagePanelLayout.setHorizontalGroup(
+            pagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 1028, Short.MAX_VALUE)
         );
-        imagePanelLayout.setVerticalGroup(
-            imagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 632, Short.MAX_VALUE)
+        pagePanelLayout.setVerticalGroup(
+            pagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 562, Short.MAX_VALUE)
         );
 
-        jScrollPane1.setViewportView(imagePanel);
+        jScrollPane1.setViewportView(pagePanel);
 
-        imagePageTabbedPane.addTab("Image", jScrollPane1);
+        imagePageTabbedPane.addTab("Page", jScrollPane1);
 
         javax.swing.GroupLayout matrixPanelLayout = new javax.swing.GroupLayout(matrixPanel);
         matrixPanel.setLayout(matrixPanelLayout);
         matrixPanelLayout.setHorizontalGroup(
             matrixPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1030, Short.MAX_VALUE)
+            .addGap(0, 1028, Short.MAX_VALUE)
         );
         matrixPanelLayout.setVerticalGroup(
             matrixPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 514, Short.MAX_VALUE)
+            .addGap(0, 562, Short.MAX_VALUE)
         );
 
         jScrollPane2.setViewportView(matrixPanel);
@@ -185,18 +186,9 @@ public final class MainFrame extends JFrame {
 
         imagePageTabbedPane.addTab("Table", jScrollPane3);
 
-        javax.swing.GroupLayout documentPanelLayout = new javax.swing.GroupLayout(documentPanel);
-        documentPanel.setLayout(documentPanelLayout);
-        documentPanelLayout.setHorizontalGroup(
-            documentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1030, Short.MAX_VALUE)
-        );
-        documentPanelLayout.setVerticalGroup(
-            documentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 514, Short.MAX_VALUE)
-        );
+        jScrollPane4.setViewportView(archivePanel);
 
-        imagePageTabbedPane.addTab("Document", documentPanel);
+        imagePageTabbedPane.addTab("Archive", jScrollPane4);
 
         fileMenu.setText("File");
 
@@ -444,19 +436,19 @@ public final class MainFrame extends JFrame {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.meritoki.app.desktop.retina.view.panel.ArchivePanel archivePanel;
     private javax.swing.JMenu dialogMenu;
-    private com.meritoki.app.desktop.retina.view.panel.DocumentPanel documentPanel;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu exportMenu;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuItem imageMenuItem;
     private javax.swing.JTabbedPane imagePageTabbedPane;
-    private com.meritoki.app.desktop.retina.view.panel.PagePanel imagePanel;
     private javax.swing.JMenuItem importImageMenuItem;
     private javax.swing.JMenu importMenu;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JMenuItem loginMenuItem;
     private javax.swing.JMenuBar mainMenuBar;
     private com.meritoki.app.desktop.retina.view.panel.MatrixPanel matrixPanel;
@@ -464,6 +456,7 @@ public final class MainFrame extends JFrame {
     private javax.swing.JMenuItem newMenuItem;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem pageMenuItem;
+    private com.meritoki.app.desktop.retina.view.panel.PagePanel pagePanel;
     private javax.swing.JMenuItem rectangleMenuItem;
     private javax.swing.JMenuItem redoMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem;

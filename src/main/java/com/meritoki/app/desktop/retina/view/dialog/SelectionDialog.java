@@ -39,7 +39,7 @@ import com.meritoki.app.desktop.retina.model.document.Script;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.Text;
 import com.meritoki.app.desktop.retina.model.document.Unit;
-
+import com.meritoki.app.desktop.retina.model.document.UnitType;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 /**
@@ -127,24 +127,29 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 		unitTypeList.add("time");
 		unitTypeList.add("space");
 		unitTypeList.add("energy");
+		unitTypeList.add("language");
 		this.initUnitTypeComboBox(unitTypeList);
 		if (data != null) {
 			this.unitTypeComboBox.setSelectedItem(data.unit.type);
 			switch (data.unit.type) {
-			case "data": {
+			case DATA: {
 				this.initUnitValueComboBox(this.model.system.emptyList);
 				break;
 			}
-			case "time": {
+			case TIME: {
 				this.initUnitValueComboBox(this.model.system.timeList);
 				break;
 			}
-			case "space": {
+			case SPACE: {
 				this.initUnitValueComboBox(this.model.system.spaceList);
 				break;
 			}
-			case "energy": {
+			case ENERGY: {
 				this.initUnitValueComboBox(this.model.system.energyList);
+				break;
+			}
+			case LANGUAGE: {
+				this.initUnitValueComboBox(this.model.system.languageList);
 				break;
 			}
 			}
@@ -207,6 +212,9 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 					initUnitValueComboBox(model.system.energyList);
 					break;
 				}
+				case 4: {
+					initUnitValueComboBox(model.system.languageList);
+				}
 				}
 			}
 		});
@@ -224,7 +232,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	}
 
 	public void initShapeList(List<Shape> shapeList) {
-		DefaultListModel defaultListModel = new DefaultListModel();
+		DefaultListModel<String> defaultListModel = new DefaultListModel<String>();
 		if (shapeList != null && shapeList.size() > 0) {
 			logger.debug("initShapeList(" + shapeList + ")");
 			for (int i = 0; i < shapeList.size(); i++) {
@@ -247,7 +255,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 		if (e.getClickCount() == 1) {
 			Page page = this.model.getDocument().getPage();
 			if (page != null) {
-				String selectedItem = (String) this.rectangleList.getSelectedValue();
+				String selectedItem = this.rectangleList.getSelectedValue();
 				logger.info("mouseClicked(e) selectedItem=" + selectedItem);
 				Document document = (this.model != null) ? this.model.getDocument() : null;
 				document.getPage().setShape(selectedItem);
@@ -326,7 +334,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	 */
 	@Override
 	public void keyReleased(KeyEvent e) {
-		String uuid = (String) rectangleList.getSelectedValue();
+		String uuid = rectangleList.getSelectedValue();
 		Document document = (this.model != null) ? this.model.getDocument() : null;
 		Page page = (document != null) ? document.getPage() : null;
 		if (page != null && !uuid.equals(page.getImage().getShape().uuid)) {
@@ -362,7 +370,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
         unitValueComboBox = new javax.swing.JComboBox();
         unitRectangleSeparator = new javax.swing.JSeparator();
         rectangleScrollPane = new javax.swing.JScrollPane();
-        rectangleList = new javax.swing.JList();
+        rectangleList = new javax.swing.JList<String>();
         deleteRectangleButton = new javax.swing.JButton();
         applyUnitButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -726,20 +734,23 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 			String unitType = (String) this.unitTypeComboBox.getSelectedItem();
 			switch (unitType) {
 			case "data": {
-				data.unit.type = Unit.DATA;
+				data.unit.type = UnitType.DATA;
 				break;
 			}
 			case "time": {
-				data.unit.type = Unit.TIME;
+				data.unit.type = UnitType.TIME;
 				break;
 			}
 			case "space": {
-				data.unit.type = Unit.SPACE;
+				data.unit.type = UnitType.SPACE;
 				break;
 			}
 			case "energy": {
-				data.unit.type = Unit.ENERGY;
+				data.unit.type = UnitType.ENERGY;
 				break;
+			}
+			case "language": {
+				data.unit.type = UnitType.LANGUAGE;
 			}
 			}
 			data.unit.value = (String) this.unitValueComboBox.getSelectedItem();
@@ -750,11 +761,11 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 
 	private void rectangleButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_rectangleButtonActionPerformed
 		
-		this.model.document.cache.type = com.meritoki.app.desktop.retina.model.document.Type.RECTANGLE;
+		this.model.document.cache.type = com.meritoki.app.desktop.retina.model.document.ShapeType.RECTANGLE;
 	}// GEN-LAST:event_rectangleButtonActionPerformed
 
 	private void ellipseButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_ellipseButtonActionPerformed
-		this.model.document.cache.type = com.meritoki.app.desktop.retina.model.document.Type.ELLIPSE;
+		this.model.document.cache.type = com.meritoki.app.desktop.retina.model.document.ShapeType.ELLIPSE;
 	}// GEN-LAST:event_ellipseButtonActionPerformed
 
 	private void setTextButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_setTextButtonActionPerformed
@@ -886,7 +897,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
     private javax.swing.JComboBox<String> parserComboBox;
     private javax.swing.JLabel parserLabel;
     private javax.swing.JButton rectangleButton;
-    private javax.swing.JList rectangleList;
+    private javax.swing.JList<String> rectangleList;
     private javax.swing.JScrollPane rectangleScrollPane;
     private javax.swing.JButton resetButton;
     private javax.swing.JLabel scriptLabel;

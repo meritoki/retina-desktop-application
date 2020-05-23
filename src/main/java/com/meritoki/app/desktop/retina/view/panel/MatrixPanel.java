@@ -87,7 +87,6 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 	public void paint(Graphics graphics) {
 		super.paint(graphics);
 		graphics.setColor(Color.white);
-//		graphics.translate((int) (this.getWidth() / 2.0), (int) (this.getHeight() / 2.0));
 		graphics.fillRect(0, 0, this.getWidth(), this.getHeight());
 		if (this.model != null) {
 			Document document = (this.model != null) ? this.model.getDocument() : null;
@@ -125,14 +124,7 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		double delta = 0.05f * e.getPreciseWheelRotation();
-		this.model.document.cache.scale += delta;
-		if (this.model.document.cache.scale >= 0 && this.model.document.cache.scale <= 2) {
-			logger.info("mouseWheelMoved(...) scale = " + this.model.document.cache.scale);
-			this.model.getDocument().getPage().getMatrix().setScale(this.model.document.cache.scale);
-			revalidate();
-			repaint();
-		}
+
 	}
 
 	@Override
@@ -142,11 +134,42 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-				// Tools | Templates.
+
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
-	
+	public void keyReleased(KeyEvent ke) {
+		ke.consume();
+		if (ke.isControlDown()) {
+			switch (ke.getKeyCode()) {
+			case KeyEvent.VK_EQUALS: {
+				logger.info("keyPressed(e) KeyEvent.VK_EQUALS");
+				double scale = this.model.document.cache.scale;
+				scale = scale * 1.5;
+				this.model.document.cache.scale = scale;
+				this.repaint();
+				this.revalidate();
+				break;
+			}
+			case KeyEvent.VK_PLUS: {
+				logger.info("keyPressed(e) KeyEvent.VK_PLUS");
+				double scale = this.model.document.cache.scale;
+				scale = scale * 1.5;
+				this.model.document.cache.scale = scale;
+				this.repaint();
+				this.revalidate();
+				break;
+			}
+			case KeyEvent.VK_MINUS: {
+				logger.info("keyPressed(e) KeyEvent.VK_MINUS");
+				double scale = this.model.document.cache.scale;
+				scale = scale / 1.5;
+				this.model.document.cache.scale = scale;
+				this.repaint();
+				this.revalidate();
+				break;
+			}
+			}
+		}
 	}
 }

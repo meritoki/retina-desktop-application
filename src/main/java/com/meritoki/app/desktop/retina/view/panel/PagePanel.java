@@ -71,7 +71,6 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 
 	@Override
 	public Dimension getPreferredSize() {
-		System.out.println("getPreferredSize()");
 		Dimension dimension = new Dimension(1028, 512);
 		Document document = (this.model != null) ? this.model.getDocument() : null;
 		Page page = (document != null) ? document.getPage() : null;
@@ -81,9 +80,6 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 		return dimension;
 	}
 
-	/**
-	 * Need to refactor this method so that it is much more simple
-	 */
 	@Override
 	public void paint(Graphics graphics) {
 		super.paint(graphics);
@@ -202,7 +198,6 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 
 	@Override
 	public void keyPressed(KeyEvent ke) {
-		logger.info("keyPressed("+ke+")");
 		ke.consume();
 		if (ke.isControlDown()) {
 			switch (ke.getKeyCode()) {

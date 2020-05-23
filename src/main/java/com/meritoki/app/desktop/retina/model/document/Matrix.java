@@ -27,9 +27,9 @@ public class Matrix {
 
 	@JsonProperty
 	public Script script = new Script();
-	
+
 //	@JsonProperty 
-	public Dimension dimension = new Dimension(2048,1024);
+	public Dimension dimension = new Dimension(2048, 1024);
 
 	@JsonIgnore
 	public List<Shape> shapeList;
@@ -38,14 +38,14 @@ public class Matrix {
 		this.shapeList = shapeList;
 		this.script = script;
 	}
-	
+
 	@JsonIgnore
 	public void setScale(double scale) {
 		this.dimension.setScale(scale);
 	}
 
 	@JsonIgnore
-	public List<ArrayList<Shape>> getRowList() {
+	public List<ArrayList<Shape>> getPageRowList() {
 		List<Shape> shapeList = this.shapeList;
 		List<ArrayList<Shape>> list = new ArrayList<>();
 		if (shapeList != null && shapeList.size() > 0) {
@@ -53,6 +53,7 @@ public class Matrix {
 			boolean flag = true;
 			for (int i = 0; i < shapeList.size(); i++) {
 				shape = shapeList.get(i);
+
 				for (List<Shape> rowList : list) {
 					if (this.isShapeListYInThreshold(rowList, shape)) {
 						rowList.add(shape);
@@ -67,6 +68,83 @@ public class Matrix {
 					flag = true;
 				}
 				this.sortShapeMatrix(list);
+
+			}
+			this.print(list);
+		}
+		if (this.script != null && !this.script.value.equals("")) {
+			try {
+				this.sortShapeMatrix(list, this.script.value);
+			} catch (Exception e) {
+				logger.error("Exception " + e.getMessage());
+			}
+		}
+		return list;
+	}
+
+	@JsonIgnore
+	public List<ArrayList<Shape>> getTableRowList() {
+		List<Shape> shapeList = this.shapeList;
+		List<ArrayList<Shape>> list = new ArrayList<>();
+		if (shapeList != null && shapeList.size() > 0) {
+			Shape shape = null;
+			boolean flag = true;
+			for (int i = 0; i < shapeList.size(); i++) {
+				shape = shapeList.get(i);
+				if (shape.data.unit.type != UnitType.LANGUAGE) {
+					for (List<Shape> rowList : list) {
+						if (this.isShapeListYInThreshold(rowList, shape)) {
+							rowList.add(shape);
+							flag = false;
+						}
+					}
+					if (flag) {
+						ArrayList<Shape> rowList = new ArrayList<>();
+						rowList.add(shape);
+						list.add(rowList);
+					} else {
+						flag = true;
+					}
+					this.sortShapeMatrix(list);
+				}
+			}
+			this.print(list);
+		}
+		if (this.script != null && !this.script.value.equals("")) {
+			try {
+				this.sortShapeMatrix(list, this.script.value);
+			} catch (Exception e) {
+				logger.error("Exception " + e.getMessage());
+			}
+		}
+		return list;
+	}
+
+	@JsonIgnore
+	public List<ArrayList<Shape>> getArchiveRowList() {
+		List<Shape> shapeList = this.shapeList;
+		List<ArrayList<Shape>> list = new ArrayList<>();
+		if (shapeList != null && shapeList.size() > 0) {
+			Shape shape = null;
+			boolean flag = true;
+			for (int i = 0; i < shapeList.size(); i++) {
+				shape = shapeList.get(i);
+				if (shape.data.unit.type == UnitType.LANGUAGE) {
+					for (List<Shape> rowList : list) {
+						if (this.isShapeListYInThreshold(rowList, shape)) {
+							rowList.add(shape);
+							flag = false;
+						}
+					}
+					if (flag) {
+						ArrayList<Shape> rowList = new ArrayList<>();
+						rowList.add(shape);
+						list.add(rowList);
+					} else {
+						flag = true;
+					}
+					this.sortShapeMatrix(list);
+				}
 			}
 			this.print(list);
 		}
@@ -83,7 +161,7 @@ public class Matrix {
 	public int getShapeListMax() {
 		int max = 0;
 		int size = 0;
-		for (List<Shape> shapeList : this.getRowList()) {
+		for (List<Shape> shapeList : this.getTableRowList()) {
 			size = shapeList.size();
 			if (size > max) {
 				max = size;
@@ -95,7 +173,7 @@ public class Matrix {
 	@JsonIgnore
 	public List<Shape> getShapeList() {
 		List<Shape> shapeList = null;
-		List<ArrayList<Shape>> shapeMatrix = this.getRowList();
+		List<ArrayList<Shape>> shapeMatrix = this.getPageRowList();
 		if (shapeMatrix != null) {
 			shapeList = new LinkedList<>();
 			for (int i = 0; i < shapeMatrix.size(); i++) {
@@ -303,43 +381,42 @@ public class Matrix {
 		Shape one = shapeMatrix.get(x).remove(y);
 		shapeMatrix.get(i).add(j, one);
 	}
-	
+
 	public void paint(Graphics graphics) {
 		graphics.setColor(Color.black);
-		List<ArrayList<Shape>> rowList = this.getRowList();
+		List<ArrayList<Shape>> rowList = this.getTableRowList();
 		List<Shape> shapeList;
-		int width = (int)(this.dimension.width * 0.10);
-		int height = (int)(this.dimension.height * 0.10);
+		int width = (int) (this.dimension.width * 0.10);
+		int height = (int) (this.dimension.height * 0.10);
 		int widthIndex = 0;
 		int heightIndex = 0;
-		graphics.setFont(new Font("default", Font.BOLD, (int) (8*this.dimension.scale)));
+		graphics.setFont(new Font("default", Font.BOLD, (int) (8 * this.dimension.scale)));
 		Data data;
 		for (int i = 0; i < rowList.size(); i++) {
 			shapeList = rowList.get(i);
-			heightIndex = (int)(i*height);
-			for(int j = 0; j < shapeList.size(); j++) {
+			heightIndex = (int) (i * height);
+			for (int j = 0; j < shapeList.size(); j++) {
 				graphics.setColor(Color.BLACK);
-				widthIndex = (int) (j*width);
+				widthIndex = (int) (j * width);
 				graphics.drawRect(widthIndex, heightIndex, width, height);
 				data = shapeList.get(j).data;
 				if (data != null) {
 					Text text = data.text;
-					String unitType = data.unit.type;
-					switch (unitType) {
-					case Unit.DATA: {
+					switch (data.unit.type) {
+					case DATA: {
 						graphics.setColor(Color.BLACK);
 						graphics.drawString("D", widthIndex + (width / 2), heightIndex + (height / 2));
 						break;
 					}
-					case Unit.TIME: {
+					case TIME: {
 						graphics.drawString("T", widthIndex + (width / 2), heightIndex + (height / 2));
 						break;
 					}
-					case Unit.SPACE: {
+					case SPACE: {
 						graphics.drawString("S", widthIndex + (width / 2), heightIndex + (height / 2));
 						break;
 					}
-					case Unit.ENERGY: {
+					case ENERGY: {
 						graphics.drawString("E", widthIndex + (width / 2), heightIndex + (height / 2));
 						break;
 					}

@@ -34,7 +34,7 @@ public class Table {
 		Object[] columnArray = new Object[0];
 		Object[][] dataMatrix = null;
 		if (matrix != null) {
-			List<ArrayList<Shape>> rowList = matrix.getRowList();
+			List<ArrayList<Shape>> rowList = matrix.getTableRowList();
 			List<Shape> shapeList;
 			Shape shape;
 			Data data;
@@ -47,15 +47,15 @@ public class Table {
 					data = shape.data;
 					value = null;
 					switch (data.unit.type) {
-					case "time": {
+					case TIME: {
 						value = "time";
 						break;
 					}
-					case "space": {
+					case SPACE: {
 						value = "space";
 						break;
 					}
-					case "energy": {
+					case ENERGY: {
 						if (data.unit.value != null && data.unit.value.equals("label")) {
 							value = data.text.value;
 						} else {
@@ -83,7 +83,3 @@ public class Table {
 		return objectArray;
 	}
 }
-
-//objectArray[0] = new Object[] { "Id", "Name", "Hourly Rate", "Part Time" };
-//objectArray[1] = new Object[][] { { 1, "John", 40.0, false }, { 2, "Rambo", 70.0, false },
-//	{ 3, "Zorro", 60.0, true }, };

@@ -26,7 +26,9 @@ public class System {
 	@JsonIgnore
 	public List<String> spaceList = Arrays.asList("latitude", "longitude", "locale", "location");
 	@JsonIgnore
-	public List<String> energyList = Arrays.asList("label", "letter", "word", "sentance", "temperature", "pressure");
+	public List<String> energyList = Arrays.asList("label", "temperature", "pressure");
+	@JsonIgnore
+	public List<String> languageList = Arrays.asList("letter", "word", "sentance", "paragraph");
 	@JsonIgnore
 	public Properties properties = null;
 	@JsonProperty

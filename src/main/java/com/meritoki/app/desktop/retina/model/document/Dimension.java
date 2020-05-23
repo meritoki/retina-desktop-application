@@ -40,6 +40,10 @@ public class Dimension {
 	@JsonProperty
 	public double y = 0;
 	@JsonProperty
+	public double m = 0;
+	@JsonProperty
+	public double o = 0;
+	@JsonProperty
 	public double width = 0;
 	@JsonProperty
 	public double height = 0;
@@ -100,7 +104,6 @@ public class Dimension {
 
 	@JsonIgnore
 	public void setMargin(double margin) {
-		logger.info("setMargin("+margin+")");
 		this.margin = margin;
 	}
 
@@ -134,7 +137,7 @@ public class Dimension {
 			Point b = this.pointList.get(1);
 			this.x = Math.min(a.x, b.x);
 			this.y = Math.min(a.y, b.y);
-			this.y += margin*this.addScale;
+			this.y += (this.margin)*this.addScale;
 			this.width = Math.abs(a.x - b.x);
 			this.height = Math.abs(a.y - b.y);
 		} else {

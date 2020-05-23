@@ -20,15 +20,10 @@ package com.meritoki.app.desktop.retina.model.document;
  * @author osvaldo.rodriguez
  */
 public class Unit {
-    public static final String DATA = "data";
-    public static final String TIME = "time";
-    public static final String SPACE = "space";
-    public static final String ENERGY = "energy";
-    public String type = DATA;
+    public UnitType type = UnitType.DATA;
     public String value;
     
     public Unit() {
-    	
     }
     
     public Unit(Unit unit) {

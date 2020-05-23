@@ -1,6 +1,6 @@
 package com.meritoki.app.desktop.retina.model.document;
 
-public enum Type {
+public enum ShapeType {
 	RECTANGLE,
 	ELLIPSE
 }
