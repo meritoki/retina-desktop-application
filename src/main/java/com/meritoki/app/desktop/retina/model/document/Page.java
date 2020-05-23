@@ -335,11 +335,9 @@ public class Page {
 	@JsonIgnore
 	public BufferedImage getBufferedImage() {
 		if (this.bufferedImage == null) {
-//			BufferedImage bufferedImage = null;
-			BufferedImage bufferedImage = this.joinImages(this.getImageList());
-			this.dimension.w = bufferedImage.getWidth();
-			this.dimension.h = bufferedImage.getHeight();
-			this.bufferedImage = bufferedImage;
+			this.bufferedImage = this.joinImages(this.getImageList());
+			this.dimension.w = this.bufferedImage.getWidth();
+			this.dimension.h = this.bufferedImage.getHeight();
 		}
 		return this.bufferedImage;
 	}
@@ -514,6 +512,7 @@ public class Page {
 				int h = bufferedImage.getHeight();
 				int width = w + b.bufferedImage.getWidth();
 				int height = Math.max(h, b.bufferedImage.getHeight() + (int) b.dimension.margin);// +offset;
+//				int height = b.bufferedImage.getHeight() + (int) b.dimension.margin;// +offset;
 				BufferedImage bI = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 				Graphics2D graphics2D = bI.createGraphics();
 				Color oldColor = graphics2D.getColor();
@@ -543,6 +542,7 @@ public class Page {
 		if (imageList != null) {
 			for (Image i : imageList) {
 				d = i.dimension;
+				d.scale();
 				if (image != null && i.uuid.equals(image.uuid)) {
 					graphics2D.setColor(Color.RED);
 				} else {
@@ -558,7 +558,8 @@ public class Page {
 		Shape previousShape = null;
 		if (shapeList != null) {
 			for (Shape s : shapeList) {
-				d = s.getDimension();
+				d = s.dimension;
+				d.scale();
 				if (shape != null && s.uuid.equals(shape.uuid)) {
 					graphics2D.setColor(Color.RED);
 				} else {
@@ -577,8 +578,7 @@ public class Page {
 				}
 				}
 				if (previousShape != null) {
-					com.meritoki.app.desktop.retina.model.document.Dimension dimension = previousShape
-							.getDimension();
+					Dimension dimension = previousShape.dimension;
 					graphics2D.drawLine((int) (dimension.x + (dimension.width / 2)),
 							(int) (dimension.y + (dimension.height / 2)), (int) (d.x + (d.width / 2)),
 							(int) (d.y + (d.height / 2)));

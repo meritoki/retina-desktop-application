@@ -53,15 +53,15 @@ public class Dimension {
 	}
 	
 	public Dimension(int width, int height) {
-		this.width = width;
-		this.height = height;
+		this.w = width;
+		this.h = height;
 	}
 
 	public Dimension(Point a, Point b, double scale, double addScale) {
 		this.pointList.add(a);
 		this.pointList.add(b);
 		this.addScale = addScale;
-		this.scale = scale * (1 / this.addScale);
+		this.scale = scale/this.addScale;
 		this.scale();
 	}
 
@@ -78,13 +78,8 @@ public class Dimension {
 	}
 
 	@JsonIgnore
-	public void setAddScale(double addScale) {
-		this.addScale = addScale;
-	}
-
-	@JsonIgnore
 	public void setScale(double scale) {
-		this.scale = (this.addScale > 0)? scale * (1 / this.addScale):scale;
+		this.scale = (this.addScale > 0)? scale/this.addScale: scale;
 		this.scale();
 	}
 
@@ -100,6 +95,7 @@ public class Dimension {
 
 	@JsonIgnore
 	public void setMargin(double margin) {
+		logger.info("setMargin("+margin+")");
 		this.margin = margin;
 	}
 

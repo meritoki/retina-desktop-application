@@ -29,12 +29,7 @@ public class Matrix {
 	public Script script = new Script();
 	
 //	@JsonProperty 
-//	public Dimension dimension = new Dimension(2048,1024);
-	
-	public double scale = 1;
-	
-	public int width = 2048;
-	public int height = 1024;
+	public Dimension dimension = new Dimension(2048,1024);
 
 	@JsonIgnore
 	public List<Shape> shapeList;
@@ -46,9 +41,7 @@ public class Matrix {
 	
 	@JsonIgnore
 	public void setScale(double scale) {
-		this.scale = scale;
-		this.width = (int) (2048 * this.scale);
-		this.height = (int)(1024 * this.scale);
+		this.dimension.setScale(scale);
 	}
 
 	@JsonIgnore
@@ -315,11 +308,11 @@ public class Matrix {
 		graphics.setColor(Color.black);
 		List<ArrayList<Shape>> rowList = this.getRowList();
 		List<Shape> shapeList;
-		int width = (int)(this.width * this.scale * 0.10);
-		int height = (int)(this.height *this.scale * 0.10);
+		int width = (int)(this.dimension.width * 0.10);
+		int height = (int)(this.dimension.height * 0.10);
 		int widthIndex = 0;
 		int heightIndex = 0;
-		graphics.setFont(new Font("default", Font.BOLD, (int) (8*this.scale)));
+		graphics.setFont(new Font("default", Font.BOLD, (int) (8*this.dimension.scale)));
 		Data data;
 		for (int i = 0; i < rowList.size(); i++) {
 			shapeList = rowList.get(i);

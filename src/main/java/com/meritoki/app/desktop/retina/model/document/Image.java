@@ -32,7 +32,6 @@ public class Image {
 	public BufferedImage bufferedImage = null;
 	@JsonIgnore
 	public Dimension dimension = new Dimension();
-	
 	/**
 	 * Current index of the shapeList.
 	 */
@@ -165,22 +164,6 @@ public class Image {
 	public BufferedImage getBufferedImage() {
 		return this.bufferedImage;
 	}
-
-//	public String getPath() {
-//		return this.path;
-//	}
-//
-//	public String getName() {
-//		return this.name;
-//	}
-//
-//	public String getNameAndExtension() {
-//		return this.name + "." + this.extension;
-//	}
-//
-//	public String getExtension() {
-//		return this.extension;
-//	}
 	
 	/**
 	 * Function sets the current index selected by user.
@@ -198,7 +181,7 @@ public class Image {
 	public void setScale(double scale) {
 		this.dimension.setScale(scale);
 		for (Shape shape : this.shapeList) {
-			shape.dimension.setScale(scale);
+			shape.setScale(scale);
 		}
 	}
 

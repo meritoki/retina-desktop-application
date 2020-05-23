@@ -18,16 +18,12 @@ package com.meritoki.app.desktop.retina.view.panel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -39,10 +35,6 @@ import com.meritoki.app.desktop.retina.model.document.Data;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Matrix;
 import com.meritoki.app.desktop.retina.model.document.Page;
-import com.meritoki.app.desktop.retina.model.document.Shape;
-import com.meritoki.app.desktop.retina.model.document.Text;
-import com.meritoki.app.desktop.retina.model.document.Unit;
-import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 /**
  *
@@ -86,7 +78,7 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 		Matrix matrix = (page != null) ? page.getMatrix():null;
 		if(matrix != null) {
 			matrix.setScale(this.model.document.cache.scale);
-			dimension.setSize(matrix.width, matrix.height);
+			dimension.setSize(matrix.dimension.width, matrix.dimension.height);
 		}
 		return dimension;
 	}

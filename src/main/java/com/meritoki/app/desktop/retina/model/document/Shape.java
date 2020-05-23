@@ -59,22 +59,17 @@ public class Shape {
 	public Shape(Shape shape) {
 		this.uuid = shape.uuid;
 		this.type = shape.type;
-		this.dimension = new Dimension(shape.getDimension());
+		this.dimension = new Dimension(shape.dimension);
 		this.data = new Data(shape.data);
+	}
+	
+	public void setScale(double scale) {
+		this.dimension.setScale(scale);
 	}
 
 	@JsonProperty
 	public String getUUID() {
 		return this.uuid;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@JsonIgnore
-	public Dimension getDimension() {
-		return dimension;
 	}
 
 	@JsonProperty
