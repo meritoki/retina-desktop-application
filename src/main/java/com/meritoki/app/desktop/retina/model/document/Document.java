@@ -162,11 +162,14 @@ public class Document {
 	}
 
 	@JsonIgnore
-	public void setIndex(int index) {
+	public boolean setIndex(int index) {
 		logger.debug("setIndex(" + index + ")");
+		boolean flag = false;
 		if (index >= 0 && index < this.pageList.size()) {
 			this.index = index;
+			flag = true;
 		}
+		return flag;
 	}
 
 	@JsonIgnore
