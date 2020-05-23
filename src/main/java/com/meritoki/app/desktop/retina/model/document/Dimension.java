@@ -137,6 +137,7 @@ public class Dimension {
 			Point b = this.pointList.get(1);
 			this.x = Math.min(a.x, b.x);
 			this.y = Math.min(a.y, b.y);
+			this.x += (this.offset * this.addScale);
 			this.y += (this.margin)*this.addScale;
 			this.width = Math.abs(a.x - b.x);
 			this.height = Math.abs(a.y - b.y);

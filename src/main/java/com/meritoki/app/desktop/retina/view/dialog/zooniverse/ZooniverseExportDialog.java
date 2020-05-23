@@ -139,6 +139,48 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
     public String getSubjectSetPath() {
         return NodeController.getRetinaHome() + NodeController.getSeperator() + "provider" + NodeController.getSeperator() + "zooniverse" + NodeController.getSeperator() + "subject-set" + NodeController.getSeperator();
     }
+    
+	public List<Integer> parsePages(String value) throws Exception {
+		List<Integer> pageList = new ArrayList<>();
+		value = value.toLowerCase();
+		value.trim();
+		if (value.contains("all")) {
+			if (value.equals("all")) {
+				pageList.add(-1);
+			} else {
+				throw new Exception("Invalid page(s)");
+			}
+		} else {
+			String[] commaArray = value.split(",");
+			for (String c : commaArray) {
+				c.trim();
+				if (c.contains("-")) {
+					String[] dashArray = c.split("-");
+					try {
+						int a = Integer.parseInt(dashArray[0].trim());
+						int b = Integer.parseInt(dashArray[1].trim());
+						if (a < b) {
+							for (int i = a; i <= b; i++) {
+								pageList.add(i);
+							}
+						}
+					} catch (Exception e) {
+						throw new Exception("Not integer page(s)");
+					}
+				} else {
+					try {
+						int a = Integer.parseInt(c);
+						pageList.add(a);
+					} catch (Exception e) {
+						throw new Exception("Not integer page(s)");
+					}
+				}
+			}
+		}
+		logger.info("parsePages(" + value + ") pageList=" + pageList);
+		return pageList;
+	}
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -182,6 +224,9 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
         subjectSetNameTextField = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         uploadButton = new javax.swing.JButton();
+        pageTextField = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        randomCheckBox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -261,35 +306,14 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
             }
         });
 
+        jLabel12.setText("Page(s):");
+
+        randomCheckBox.setText("Random");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(51, 51, 51)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(userNameTextField)
-                            .addComponent(passwordTextField)
-                            .addComponent(setCredential, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(54, 54, 54)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel4))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(updateProjectWorkflowButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(projectWorkflowComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(projectComboBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -337,13 +361,41 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
                                 .addComponent(jLabel8)
                                 .addGap(155, 155, 155))))))
             .addGroup(layout.createSequentialGroup()
-                .addGap(72, 72, 72)
-                .addComponent(jLabel11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(uploadButton, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
-                    .addComponent(subjectSetNameTextField))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(51, 51, 51)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(userNameTextField)
+                            .addComponent(passwordTextField)
+                            .addComponent(setCredential, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(54, 54, 54)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel4))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(updateProjectWorkflowButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(projectWorkflowComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(projectComboBox, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(72, 72, 72)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel12))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(pageTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(subjectSetNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(randomCheckBox)
+                            .addComponent(uploadButton, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -406,9 +458,15 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(subjectSetNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(pageTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel12))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(randomCheckBox)
+                .addGap(18, 18, 18)
                 .addComponent(uploadButton)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -492,20 +550,30 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
         String subjectSetTitle = this.subjectSetNameTextField.getText();
         String projectName = (String) this.projectComboBox.getSelectedItem();
         String workflowTitle = (String) this.projectWorkflowComboBox.getSelectedItem();
-        SubjectSet subjectSet = new SubjectSet();
-        List<Shape> shapeList = this.model.getDocument().getShapeList();
-        subjectSet.title = subjectSetTitle;
-        if (zooniverse != null) {
-            this.showLoad();
-            zooniverse.generateManifest(this.getSubjectSetPath() + timeStamp, shapeList);
-            Project project = zooniverse.getProject(projectName);
-            if (project != null) {
-                Workflow workflow = project.getWorkflow(workflowTitle);
-                zooniverse.createSubjectSet(project.getId(), subjectSet);
-                zooniverse.uploadSubjectSet(subjectSet, this.getSubjectSetPath() + timeStamp, "manifest.csv");
-                zooniverse.workflowUploadSubjectSet(workflow, subjectSet);
-            }
-            this.hideLoad();
+        String page = this.pageTextField.getText();
+        List<Integer> pageList = null;
+        try {
+			pageList = this.parsePages(page);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		}
+        
+        if(pageList != null) {
+	        SubjectSet subjectSet = new SubjectSet();
+	        List<Shape> shapeList = this.model.getDocument().getShapeList();
+	        subjectSet.title = subjectSetTitle;
+	        if (zooniverse != null) {
+	            this.showLoad();
+	            zooniverse.generateManifest(this.getSubjectSetPath() + timeStamp, shapeList);
+	            Project project = zooniverse.getProject(projectName);
+	            if (project != null) {
+	                Workflow workflow = project.getWorkflow(workflowTitle);
+	                zooniverse.createSubjectSet(project.getId(), subjectSet);
+	                zooniverse.uploadSubjectSet(subjectSet, this.getSubjectSetPath() + timeStamp, "manifest.csv");
+	                zooniverse.workflowUploadSubjectSet(workflow, subjectSet);
+	            }
+	            this.hideLoad();
+	        }
         }
     }//GEN-LAST:event_uploadButtonActionPerformed
 
@@ -558,6 +626,7 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -573,12 +642,14 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator6;
     private javax.swing.JSeparator jSeparator7;
+    private javax.swing.JTextField pageTextField;
     private javax.swing.JTextField passwordTextField;
     private javax.swing.JComboBox projectComboBox;
     private javax.swing.JTextField projectDescriptionTextField;
     private javax.swing.JTextField projectSearchTextField;
     private javax.swing.JTextField projectTitleTextField;
     private javax.swing.JComboBox projectWorkflowComboBox;
+    private javax.swing.JCheckBox randomCheckBox;
     private javax.swing.JComboBox searchProjectComboBox;
     private javax.swing.JButton setCredential;
     private javax.swing.JTextField subjectSetNameTextField;

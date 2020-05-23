@@ -163,6 +163,7 @@ public class Pattern {
 						}
 					}
 				}
+				break;
 			}
 			case "removePage": {
 				for(Operation o: command.operationList) {
@@ -172,6 +173,7 @@ public class Pattern {
 						}
 					}
 				}
+				break;
 			}
 			default: {
 
@@ -266,6 +268,7 @@ public class Pattern {
 						}
 					} 
 				}
+				break;
 			}
 			default: {
 

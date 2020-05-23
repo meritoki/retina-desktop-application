@@ -48,9 +48,6 @@ public class ExecuteScript extends Command {
 				a = parameters[0].trim();
 				b = parameters[1].trim();
 				operationList.addAll(swapPage(pageList, a, b));
-//				for(Operation o:swapPage((pageList), a, b)) {
-//					operationList.push(o);;
-//				}
 			} else if (i.contains("INSERT")) {
 				instruction = i.replaceFirst("INSERT", "");
 				parameters = instruction.split(":");
@@ -63,43 +60,12 @@ public class ExecuteScript extends Command {
 				a = parameters[0].trim();
 				b = parameters[1].trim();
 				operationList.addAll(joinPage(pageList, a, b));
-//				for(Operation o:joinPage((pageList), a, b)) {
-//					operationList.push(o);;
-//				}
+			} else if(i.contains("SPLIT")) {
+				instruction = i.replaceFirst("SPLIT", "");
+				a = instruction.trim();
+				operationList.addAll(splitPage(pageList,a));
 			}
 		}
-		return operationList;
-	}
-
-	public List<Operation> joinPage(List<Page> pageList, String a, String b) {
-		List<Operation> operationList = new ArrayList<>();
-		// Operation Undo
-		Operation operation = new Operation();
-		operation.object = this.copyPageList(pageList);
-		operation.sign = 0;
-		operation.id = UUID.randomUUID().toString();
-		operation.name = "join";
-		operationList.add(operation);
-
-		// Logic
-		int x = Integer.parseInt(a);
-		int y = Integer.parseInt(b);
-		Page pageA = pageList.get(x);
-		Page pageB = pageList.get(y);
-		for (Image image : pageB.imageList) {
-			pageA.addImage(image);
-		}
-		pageA.setBufferedImage(null);
-		pageList.remove(y);
-		// End Logic
-
-		// Operation Redo
-		operation = new Operation();
-		operation.object = this.copyPageList(pageList);
-		operation.sign = 1;
-		operation.id = UUID.randomUUID().toString();
-		operation.name = "join";
-		operationList.add(operation);
 		return operationList;
 	}
 
@@ -235,6 +201,68 @@ public class ExecuteScript extends Command {
 		operation.object = pageList;
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
+		operationList.add(operation);
+		return operationList;
+	}
+
+	public List<Operation> joinPage(List<Page> pageList, String a, String b) {
+		List<Operation> operationList = new ArrayList<>();
+		// Operation Undo
+		Operation operation = new Operation();
+		operation.object = this.copyPageList(pageList);
+		operation.sign = 0;
+		operation.id = UUID.randomUUID().toString();
+		operation.name = "join";
+		operationList.add(operation);
+	
+		// Logic
+		int x = Integer.parseInt(a);
+		int y = Integer.parseInt(b);
+		Page pageA = pageList.get(x);
+		Page pageB = pageList.get(y);
+		for (Image image : pageB.imageList) {
+			pageA.addImage(image);
+		}
+		pageA.setBufferedImage(null);
+		pageList.remove(y);
+		// End Logic
+	
+		// Operation Redo
+		operation = new Operation();
+		operation.object = this.copyPageList(pageList);
+		operation.sign = 1;
+		operation.id = UUID.randomUUID().toString();
+		operation.name = "join";
+		operationList.add(operation);
+		return operationList;
+	}
+	
+	public List<Operation> splitPage(List<Page> pageList, String a) {
+		Operation operation = new Operation();
+		operation.object = this.copyPageList(pageList);
+		operation.sign = 0;
+		operation.id = UUID.randomUUID().toString();
+		operation.name = "join";
+		operationList.add(operation);
+	
+		// Logic
+		int x = Integer.parseInt(a);
+//		int y = Integer.parseInt(b);
+		Page page = pageList.get(x);
+		List<Image> imageList = page.getImageList();
+		Collections.reverse(imageList);;
+		pageList.remove(x);
+		for(Image image: imageList) {
+			pageList.add(x, new Page(image));
+		}
+		// End Logic
+	
+		// Operation Redo
+		operation = new Operation();
+		operation.object = this.copyPageList(pageList);
+		operation.sign = 1;
+		operation.id = UUID.randomUUID().toString();
+		operation.name = "join";
 		operationList.add(operation);
 		return operationList;
 	}

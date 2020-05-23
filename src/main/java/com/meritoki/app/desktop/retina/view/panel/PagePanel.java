@@ -167,7 +167,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				}
 			}
 		}
-		this.main.selectionDialog.init();
+		this.main.init();
 		this.repaint();
 	}
 
@@ -255,13 +255,14 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 			case KeyEvent.VK_Z:{
 				logger.debug("keyPressed(e) KeyEvent.VK_Z");
 				this.model.getDocument().pattern.undo();
-				this.main.imageDialog.init();
+				this.main.init();
+				this.repaint();
 				break;
 			}
 			case KeyEvent.VK_Y:{
 				logger.debug("keyPressed(e) KeyEvent.VK_Y");
 				this.model.getDocument().pattern.redo();
-				this.main.imageDialog.init();
+				this.main.init();
 				repaint();
 				break;
 				
@@ -297,36 +298,28 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 			case KeyEvent.VK_LEFT: {
 				logger.debug("keyPressed(LEFT)");
 				this.model.getDocument().setIndex(--index);
-				this.main.imageDialog.init();
-				this.main.selectionDialog.init();
-//				this.main.matrixDialog.init();
+				this.main.init();
 				this.repaint();
 				break;
 			}
 			case KeyEvent.VK_RIGHT: {
 				logger.debug("keyPressed(RIGHT)");
 				this.model.getDocument().setIndex(++index);
-				this.main.imageDialog.init();
-				this.main.selectionDialog.init();
-//				this.main.matrixDialog.init();
+				this.main.init();
 				this.repaint();
 				break;
 			}
 			case KeyEvent.VK_UP: {
 				logger.debug("keyPressed(UP)");
 				this.model.getDocument().setIndex(--index);
-				this.main.imageDialog.init();
-				this.main.selectionDialog.init();
-//				this.main.matrixDialog.init();
+				this.main.init();
 				this.repaint();
 				break;
 			}
 			case KeyEvent.VK_DOWN: {
 				logger.debug("keyPressed(DOWN)");
 				this.model.getDocument().setIndex(++index);
-				this.main.imageDialog.init();
-				this.main.selectionDialog.init();
-//				this.main.matrixDialog.init();
+				this.main.init();
 				this.repaint();
 				break;
 			}
@@ -361,116 +354,3 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 	public void keyReleased(KeyEvent e) {
 	}
 }
-//@Override
-//public void keyPressed(KeyEvent e) {
-////	if (e.isControlDown()) {
-////		switch (e.getKeyChar()) {
-////		case '+': {
-////			double scale = this.model.terra.projection.scale;
-////			scale = scale * this.factor;
-////			this.model.terra.projection.scale = scale;
-////			this.repaint();
-////			break;
-////		}
-////		case '-': {
-////			double scale = this.model.terra.projection.scale;
-////			scale = scale / this.factor;
-////			this.model.terra.projection.scale = scale;
-////			this.repaint();
-////			break;
-////		}
-////		}
-////	}
-//	if ((e.getKeyCode() == KeyEvent.VK_DOWN) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
-//		e.consume();
-//		Page page = this.model.getDocument().getPage();
-//		page.setBufferedImage(null);
-//		Image file = (page != null) ? page.getImage() : null;
-//		if (file != null) {
-//			file.setMargin(file.dimension.margin + 10);
-//			page.setBufferedImage(null);
-//		}
-//		repaint();
-//	} else if ((e.getKeyCode() == KeyEvent.VK_UP) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
-//		e.consume();
-//		Page page = this.model.getDocument().getPage();
-//		page.setBufferedImage(null);
-//		Image file = (page != null) ? page.getImage() : null;
-//		if (file != null) {
-//			file.setMargin(file.dimension.margin - 10);
-//			page.setBufferedImage(null);
-//		}
-//		repaint();
-//	} else if ((e.getKeyCode() == KeyEvent.VK_Z) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
-//		e.consume();
-//		this.model.getDocument().pattern.undo();
-//		this.main.imageDialog.init();
-//		repaint();
-//	} else if ((e.getKeyCode() == KeyEvent.VK_Y) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
-//		e.consume();
-//		this.model.getDocument().pattern.redo();
-//		this.main.imageDialog.init();
-//		repaint();
-//	} else if ((e.getKeyCode() == KeyEvent.VK_M) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
-//		String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-//		List<Shape> shapeList = this.model.getDocument().getPage().getShapeList();
-//		this.generateManifest(timeStamp, shapeList);
-//	} else if ((e.getKeyCode() == KeyEvent.VK_T) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
-//		List<String[]> stringArrayList = NodeController.openCsv("import.csv");
-//		this.model.getDocument().importText(stringArrayList);
-//	} else {
-//		e.consume();
-//		int keyCode = e.getKeyCode();
-//		int index = this.model.getDocument().getIndex();
-//		switch (keyCode) {
-//		case KeyEvent.VK_BACK_SPACE: {
-//			logger.debug("KeyPressed(BACK_SPACE)");
-//			this.model.document.cache.pressedShape = this.model.getDocument().getPage().getShape();
-//			try {
-//				this.model.getDocument().pattern.execute("removeShape");
-//			} catch (Exception e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
-//			this.repaint();
-//			break;
-//		}
-//		case KeyEvent.VK_LEFT: {
-//			logger.debug("keyPressed(LEFT)");
-//			this.model.getDocument().setIndex(--index);
-//			this.main.imageDialog.init();
-//			this.main.selectionDialog.init();
-////			this.main.matrixDialog.init();
-//			this.repaint();
-//			break;
-//		}
-//		case KeyEvent.VK_RIGHT: {
-//			logger.debug("keyPressed(RIGHT)");
-//			this.model.getDocument().setIndex(++index);
-//			this.main.imageDialog.init();
-//			this.main.selectionDialog.init();
-////			this.main.matrixDialog.init();
-//			this.repaint();
-//			break;
-//		}
-//		case KeyEvent.VK_UP: {
-//			logger.debug("keyPressed(UP)");
-//			this.model.getDocument().setIndex(--index);
-//			this.main.imageDialog.init();
-//			this.main.selectionDialog.init();
-////			this.main.matrixDialog.init();
-//			this.repaint();
-//			break;
-//		}
-//		case KeyEvent.VK_DOWN: {
-//			logger.debug("keyPressed(DOWN)");
-//			this.model.getDocument().setIndex(++index);
-//			this.main.imageDialog.init();
-//			this.main.selectionDialog.init();
-////			this.main.matrixDialog.init();
-//			this.repaint();
-//			break;
-//		}
-//		}
-//	}
-//}

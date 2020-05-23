@@ -92,6 +92,12 @@ public class Page {
 	public Page() {
 		this.uuid = UUID.randomUUID().toString();
 	}
+	
+	public Page(Image image) {
+		this.uuid = UUID.randomUUID().toString();
+		this.addImage(image);
+		this.index = 0;
+	}
 
 	/**
 	 * Copy constructor INCOMPLETE AND CAUSING A BUG
@@ -426,6 +432,9 @@ public class Page {
 		logger.info("addImage(" + image + ")");
 		image.setScale(this.dimension.scale);
 		this.imageList.add(image);
+		for(Shape s: image.shapeList) {
+			s.dimension.setOffset(image.dimension.offset);
+		}
 	}
 
 	public Shape removeShape(Shape shape) {

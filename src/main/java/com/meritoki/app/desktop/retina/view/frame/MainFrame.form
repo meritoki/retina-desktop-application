@@ -142,26 +142,26 @@
               <SubComponents>
                 <MenuItem class="javax.swing.JMenuItem" name="pageMenuItem">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Matrix"/>
+                    <Property name="text" type="java.lang.String" value="Page"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pageMenuItemActionPerformed"/>
                   </Events>
                 </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="imageMenuItem">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Image"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="imageMenuItemActionPerformed"/>
-                  </Events>
-                </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="rectangleMenuItem">
+                <MenuItem class="javax.swing.JMenuItem" name="selectionMenuItem">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Selection"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rectangleMenuItemActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectionMenuItemActionPerformed"/>
+                  </Events>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="commandMenuItem">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Command"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="commandMenuItemActionPerformed"/>
                   </Events>
                 </MenuItem>
               </SubComponents>

@@ -175,13 +175,15 @@ public class Document {
 	@JsonIgnore
 	public void setPage(String uuid) {
 		logger.info("setPage(" + uuid + ")");
-		Page page = null;
-		for (int i = 0; i < this.pageList.size(); i++) {
-			page = this.pageList.get(i);
-			if (page.uuid.equals(uuid)) {
-				this.setIndex(i);
-				;
-				break;
+		if (uuid != null) {
+			Page page = null;
+			for (int i = 0; i < this.pageList.size(); i++) {
+				page = this.pageList.get(i);
+				if (page.uuid.equals(uuid)) {
+					this.setIndex(i);
+					;
+					break;
+				}
 			}
 		}
 	}
