@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 jorodriguez.
+ * Copyright 2020 jorodriguez.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,74 +13,92 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meritoki.app.desktop.retina.view.dialog.microsoft;
+package com.meritoki.app.desktop.retina.view.dialog.audio;
 
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Archive;
-import java.io.File;
-import java.io.FileOutputStream;
+import com.sun.speech.freetts.FreeTTS;
+import com.sun.speech.freetts.Voice;
+import com.sun.speech.freetts.VoiceManager;
+import com.sun.speech.freetts.audio.AudioPlayer;
+import com.sun.speech.freetts.audio.SingleFileAudioPlayer;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.DefaultComboBoxModel;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
+
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFileFormat.Type;
 
 /**
  *
  * @author jorodriguez
  */
-public class MicrosoftExportDialog extends javax.swing.JDialog {
+public class AudioExportDialog extends javax.swing.JDialog {
 
     public Model model;
-    
     /**
-     * Creates new form Export
+     * Creates new form AudioExportDialog
      */
-    public MicrosoftExportDialog(java.awt.Frame parent, boolean modal) {
+    public AudioExportDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        this.init();
     }
     
     public void setModel(Model model) {
         this.model = model;
     }
     
-    public void init(){
-        this.initComboBox();
-    }
-    
-    public void initComboBox() {
-        this.initTypeComboBox();
-    }
-    
-    public void initTypeComboBox() {
-        String[] array = {"Word", "Excel"};
-        this.typeComboBox.setModel(new DefaultComboBoxModel(array));
-    }
-    
-        //Create Word
-    public void createWord(String fileName, List<String> lines) throws IOException {
-        for (String line : lines) {
-            //Blank Document
-            XWPFDocument document = new XWPFDocument();
-            //Write the Document in file system
-            FileOutputStream out = new FileOutputStream(
-                    new File(fileName + ".docx"));
- 
-            //create Paragraph
-            XWPFParagraph paragraph = document.createParagraph();
-            XWPFRun run = paragraph.createRun();
-            run.setText("VK Number (Parameter): " + line + " here you type your text...\n");
-            document.write(out);
-           
-            //Close document
-            out.close();
-            System.out.println(fileName + ".docx" + " written successfully");
-        }
+    public void foo(String fileName, List<String> stringList) {
+        FreeTTS freetts;
+       AudioPlayer audioPlayer = null;
+            String voiceName = "kevin16";
+
+            System.out.println();
+            System.out.println("Using voice: " + voiceName);
+
+            /* The VoiceManager manages all the voices for FreeTTS.
+             */
+            VoiceManager voiceManager = VoiceManager.getInstance();
+            Voice voice = voiceManager.getVoice(voiceName);
+
+            if (voice == null) {
+                System.err.println(
+                    "Cannot find a voice named "
+                    + voiceName + ".  Please specify a different voice.");
+                System.exit(1);
+            }
+
+            /* Allocates the resources for the voice.
+             */
+            voice.allocate();
+
+            /* Synthesize speech.
+             */
+//create a audioplayer to dump the output file
+           audioPlayer = new SingleFileAudioPlayer(fileName,AudioFileFormat.Type.WAVE);
+    //attach the audioplayer 
+           voice.setAudioPlayer(audioPlayer);
+
+
+           for(String string: stringList) {
+        	   voice.speak(string);
+           }
+//            voice.speak("Thank you for giving me a voice. "
+//                             + "I'm so glad to say hello to this world.");
+
+
+
+            /* Clean up and leave.
+             */
+            voice.deallocate();
+//don't forget to close the audioplayer otherwise file will not be saved
+            try {
+				audioPlayer.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     }
 
     /**
@@ -92,19 +110,17 @@ public class MicrosoftExportDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        typeComboBox = new javax.swing.JComboBox<>();
-        jLabel1 = new javax.swing.JLabel();
         pageTextField = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
         nameTextField = new javax.swing.JTextField();
-        exportButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        exportButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        typeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jLabel1.setText("Page(s):");
 
-        jLabel1.setText("Type:");
+        jLabel2.setText("Name:");
 
         exportButton.setText("Export");
         exportButton.addActionListener(new java.awt.event.ActionListener() {
@@ -113,26 +129,21 @@ public class MicrosoftExportDialog extends javax.swing.JDialog {
             }
         });
 
-        jLabel2.setText("Page(s):");
-
-        jLabel3.setText("Name:");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(29, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(exportButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pageTextField)
-                    .addComponent(typeComboBox, 0, 298, Short.MAX_VALUE)
-                    .addComponent(nameTextField, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(exportButton, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(nameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
+                        .addComponent(pageTextField)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -140,16 +151,12 @@ public class MicrosoftExportDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(typeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pageTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(pageTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(exportButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -159,18 +166,12 @@ public class MicrosoftExportDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void exportButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportButtonActionPerformed
-        String type = (String)this.typeComboBox.getSelectedItem();
-        System.out.println(type);
-        String page = this.pageTextField.getSelectedText();
-        String name = this.nameTextField.getSelectedText();
-        if(type.equals("Word")) {
-            try {
-                Archive archive = this.model.document.getPage().getArchive();
-                this.createWord(name, archive.stringList);
-            } catch (IOException ex) {
-                Logger.getLogger(MicrosoftExportDialog.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+    	String name = this.nameTextField.getText();
+        Archive archive = this.model.document.getPage().getArchive();
+//        List<String> stringList = new ArrayList<String>();
+//        stringList.add("Hello World");
+//        stringList.add("This is a test of the audio file save");
+        this.foo(name, archive.stringList);
     }//GEN-LAST:event_exportButtonActionPerformed
 
     /**
@@ -190,21 +191,20 @@ public class MicrosoftExportDialog extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MicrosoftExportDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AudioExportDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MicrosoftExportDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AudioExportDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MicrosoftExportDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AudioExportDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MicrosoftExportDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AudioExportDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                MicrosoftExportDialog dialog = new MicrosoftExportDialog(new javax.swing.JFrame(), true);
+                AudioExportDialog dialog = new AudioExportDialog(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -220,9 +220,7 @@ public class MicrosoftExportDialog extends javax.swing.JDialog {
     private javax.swing.JButton exportButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JTextField pageTextField;
-    private javax.swing.JComboBox<String> typeComboBox;
     // End of variables declaration//GEN-END:variables
 }
