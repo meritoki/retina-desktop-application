@@ -51,13 +51,13 @@ public class Document {
 	public void test() {
 		Page page = new Page();
 		Image image = new Image(new File("./data/image/01.jpg"));
-		page.imageList.add(image);
+		page.addImage(image);
 		image = new Image(new File("./data/image/02.jpg"));
-		page.imageList.add(image);
+		page.addImage(image);
 		image = new Image(new File("./data/image/03.jpg"));
-		page.imageList.add(image);
+		page.addImage(image);
 		image = new Image(new File("./data/image/04.jpg"));
-		page.imageList.add(image);
+		page.addImage(image);
 		pageList.add(page);
 //		page = new Page();
 //		image = new Image("./data/image","02.jpg");

@@ -18,79 +18,105 @@ public class Position {
 		Position d = new Position();
 		System.out.println(d);
 	}
-
 	@JsonIgnore
 	private static Logger logger = LogManager.getLogger(Position.class.getName());
-	@JsonProperty
-	public List<Point> pointList = new ArrayList<>();
+//	@JsonProperty
+//	public List<Point> pointList = new ArrayList<>();
 	@JsonProperty
 	public double addScale = 1;
 	@JsonProperty
 	public double scale = 1;
 	@JsonProperty
-	public Point relative = new Point();
+	public Point point = new Point();
+	@JsonProperty 
+	public Point absolutePoint = new Point();
 	@JsonProperty
-	public double w = 0;
-	@JsonProperty
-	public double h = 0;
-	@JsonProperty
-	public double x = 0;
-	@JsonProperty
-	public double y = 0;
+	public Point relativePoint = new Point();
 	@JsonProperty
 	public Dimension dimension = new Dimension();
-//	@JsonProperty
-//	public double width = 0;
-//	@JsonProperty
-//	public double height = 0;
+	@JsonProperty
+	public Dimension absoluteDimension = new Dimension();
 	@JsonProperty
 	public double offset = 0;
 	@JsonProperty
 	public double margin = 0;
 
 	public Position() {
-		this.scale();
+//		this.scale();
 	}
 	
-	public Position(int width, int height) {
-		this.w = width;
-		this.h = height;
+	public Position(int x, int y, int width, int height) {
+		this.absolutePoint.x = x;
+		this.absolutePoint.y = y;
+		this.absoluteDimension.width = width;
+		this.absoluteDimension.height = height;
 	}
 
-	public Position(Point a, Point b, double scale, double addScale) {
-		this.pointList.add(a);
-		this.pointList.add(b);
+	public Position(Point a, Point b, double addScale, double offset, double margin) {
+		List<Point> pointList = new ArrayList<>();
+		pointList.add(a);
+		pointList.add(b);
+		this.normalize(pointList);
 		this.addScale = addScale;
-		this.scale = scale/this.addScale;
-		this.scale();
+		this.offset = offset;
+		this.margin = margin;
+		this.absolutePoint = pointList.get(0);
+		Point endPoint = pointList.get(1);
+		this.absoluteDimension.width = Math.abs(endPoint.x - this.absolutePoint.x);
+		this.absoluteDimension.height = Math.abs(endPoint.y - this.absolutePoint.y);
+		this.relativePoint = this.getRelativePoint();
 	}
-
+	
 	public Position(Position position) {
-		this.x = position.x;
-		this.y = position.y;
-		this.dimension.width = position.dimension.width;
-		this.dimension.height = position.dimension.height;
+		this.absolutePoint.x = position.absolutePoint.x;
+		this.absolutePoint.y = position.absolutePoint.y;
+		this.absoluteDimension.width = position.absoluteDimension.width;
+		this.absoluteDimension.height = position.absoluteDimension.height;
 		this.scale = position.scale;
 		this.addScale = position.addScale;
-		for (Point p : position.pointList) {
-			this.pointList.add(new Point(p));
+//		for (Point p : position.pointList) {
+//			this.pointList.add(new Point(p));
+//		}
+	}
+
+	@JsonIgnore
+	public void normalize(List<Point> pointList) {
+		Point pointZero = pointList.get(0);
+		Point pointOne = pointList.get(1);
+		// Case B
+		if (pointZero.x > pointOne.x && pointZero.y < pointOne.y) {
+			// logger.info("sortPointList() Case B");
+			pointList.set(0, new Point(pointOne.x, pointZero.y));
+			pointList.set(1, new Point(pointZero.x, pointOne.y));
+			// Case C
+		} else if (pointZero.x < pointOne.x && pointZero.y > pointOne.y) {
+			// logger.info("sortPointList() Case C");
+			pointList.set(0, new Point(pointZero.x, pointOne.y));
+			pointList.set(1, new Point(pointOne.x, pointZero.y));
+			// Case D
+		} else if (pointZero.x > pointOne.x && pointZero.y > pointOne.y) {
+			// logger.info("sortPointList() Case D");
+			pointList.set(0, pointOne);
+			pointList.set(1, pointZero);
 		}
+	}
+
+	public Point getRelativePoint() {
+		Point point = new Point();
+		point.x = this.absolutePoint.x - offset;
+		point.y = this.absolutePoint.y - margin;
+		return point;
 	}
 
 	@JsonIgnore
 	public void setScale(double scale) {
 		this.scale = (this.addScale > 0)? scale/this.addScale: scale;
-		this.scale();
+//		this.scale();
 	}
 	
 	public void setAddScale(double addScale) {
 		logger.info("setAddScale("+addScale+")");
 		this.addScale = addScale;
-	}
-
-	@JsonIgnore
-	public void setPointList(List<Point> pointList) {
-		this.pointList = pointList;
 	}
 
 	@JsonIgnore
@@ -105,87 +131,77 @@ public class Position {
 
 	@JsonIgnore
 	public double getCenterX() {
-		return this.x + (this.dimension.width / 2);
+		return this.absolutePoint.x + (this.dimension.width / 2);
 	}
 
 	@JsonIgnore
 	public double getCenterY() {
-		return this.y + (this.dimension.height / 2);
+		return this.absolutePoint.y + (this.dimension.height / 2);
 	}
 
 	@JsonIgnore
 	public Point getStartPoint() {
-		this.scale();
-		return new Point(this.x, this.y);
+//		this.scale();
+//		return new Point(this.x, this.y);
+		return new Point();
 	}
 
 	@JsonIgnore
 	public Point getStopPoint() {
-		this.scale();
-		return new Point((this.x + this.dimension.width), (this.y + this.dimension.height));
+//		this.scale();
+//		return new Point((this.x + this.dimension.width), (this.y + this.dimension.height));
+		return new Point();
 	}
-
-	@JsonIgnore
+	
 	public void scale() {
-		if (this.pointList != null && this.pointList.size() == 2) {
-			this.normalize();
-			Point a = this.pointList.get(0);
-			Point b = this.pointList.get(1);
-			this.x = Math.min(a.x, b.x);
-			this.y = Math.min(a.y, b.y);
-			this.x += (this.offset * this.addScale);
-			this.y += (this.margin)*this.addScale;
-			this.dimension.width = Math.abs(a.x - b.x);
-			this.dimension.height = Math.abs(a.y - b.y);
-		} else {
-			this.x = 0;
-			this.y = 0;
-			this.dimension.width = this.w;
-			this.dimension.height = this.h;
-			this.x += this.offset*1/this.scale;
-			this.y += this.margin;
-		}
-		this.x *= this.scale;
-		this.y *= this.scale;
+		this.point.x = this.absolutePoint.x;
+		this.point.y = this.absolutePoint.y;
+		this.dimension.width = this.absoluteDimension.width;
+		this.dimension.height = this.absoluteDimension.height;
+		this.point.x *= this.scale;
+		this.point.y *= this.scale;
 		this.dimension.width *= this.scale;
 		this.dimension.height *= this.scale;
 	}
 
-	@JsonIgnore
-	public boolean isValid() {
-		boolean flag = true;
-		if (this.pointList.get(0).x == this.pointList.get(1).x && this.pointList.get(0).y == this.pointList.get(1).y) {
-			flag = false;
-		}
-		return flag;
-	}
+//	@JsonIgnore
+//	public void scale() {
+//		if (this.pointList != null && this.pointList.size() == 2) {
+//			Point a = this.pointList.get(0);
+//			Point b = this.pointList.get(1);
+//			this.x = Math.min(a.x, b.x);
+//			this.y = Math.min(a.y, b.y);
+//			this.x += (this.offset * this.addScale);
+//			this.y += (this.margin)*this.addScale;
+//			this.dimension.width = Math.abs(a.x - b.x);
+//			this.dimension.height = Math.abs(a.y - b.y);
+//		} else {
+//			this.x = 0;
+//			this.y = 0;
+//			this.dimension.width = this.absoluteDimension.width;
+//			this.dimension.height = this.absoluteDimension.height;
+//			this.x += this.offset*1/this.scale;
+//			this.y += this.margin;
+//		}
+//		this.x *= this.scale;
+//		this.y *= this.scale;
+//		this.dimension.width *= this.scale;
+//		this.dimension.height *= this.scale;
+//	}
 
-	@JsonIgnore
-	public void normalize() {
-		Point pointZero = this.pointList.get(0);
-		Point pointOne = this.pointList.get(1);
-		// Case B
-		if (pointZero.x > pointOne.x && pointZero.y < pointOne.y) {
-			// logger.info("sortPointList() Case B");
-			this.pointList.set(0, new Point(pointOne.x, pointZero.y));
-			this.pointList.set(1, new Point(pointZero.x, pointOne.y));
-			// Case C
-		} else if (pointZero.x < pointOne.x && pointZero.y > pointOne.y) {
-			// logger.info("sortPointList() Case C");
-			this.pointList.set(0, new Point(pointZero.x, pointOne.y));
-			this.pointList.set(1, new Point(pointOne.x, pointZero.y));
-			// Case D
-		} else if (pointZero.x > pointOne.x && pointZero.y > pointOne.y) {
-			// logger.info("sortPointList() Case D");
-			this.pointList.set(0, pointOne);
-			this.pointList.set(1, pointZero);
-		}
-	}
+//	@JsonIgnore
+//	public boolean isValid() {
+//		boolean flag = true;
+//		if (this.pointList.get(0).x == this.pointList.get(1).x && this.pointList.get(0).y == this.pointList.get(1).y) {
+//			flag = false;
+//		}
+//		return flag;
+//	}
 
-	@JsonIgnore
-	public void addPoint(Point point) {
-		this.pointList.add(point);
-	}
+//	@JsonIgnore
+//	public void addPoint(Point point) {
+//		this.pointList.add(point);
+//	}
 
 	@JsonIgnore
 	public boolean containsPoint(Point point) {
@@ -257,55 +273,55 @@ public class Position {
 		return flag;
 	}
 
-	@JsonIgnore
-	public void resizePoint(Point point, Selection selection) {
-		logger.info("resizePoint(" + point + ", " + selection + ")");
-		switch (selection) {
-		case TOP: {
-			this.pointList.get(0).y = point.y;
-			break;
-		}
-		case BOTTOM: {
-			this.pointList.get(1).y = point.y;
-			break;
-		}
-		case LEFT: {
-			this.pointList.get(0).x = point.x;
-			break;
-		}
-		case RIGHT: {
-			this.pointList.get(1).x = point.x;
-			break;
-		}
-		case TOP_LEFT: {
-			this.pointList.set(0, point);
-			break;
-		}
-		case TOP_RIGHT: {
-			this.pointList.get(0).y = point.y;
-			this.pointList.get(1).x = point.x;
-			break;
-		}
-		case BOTTOM_LEFT: {
-			this.pointList.get(0).x = point.x;
-			this.pointList.get(1).y = point.y;
-			break;
-		}
-		case BOTTOM_RIGHT: {
-			this.pointList.set(1, point);
-			break;
-		}
-		}
-	}
+//	@JsonIgnore
+//	public void resizePoint(Point point, Selection selection) {
+//		logger.info("resizePoint(" + point + ", " + selection + ")");
+//		switch (selection) {
+//		case TOP: {
+//			this.pointList.get(0).y = point.y;
+//			break;
+//		}
+//		case BOTTOM: {
+//			this.pointList.get(1).y = point.y;
+//			break;
+//		}
+//		case LEFT: {
+//			this.pointList.get(0).x = point.x;
+//			break;
+//		}
+//		case RIGHT: {
+//			this.pointList.get(1).x = point.x;
+//			break;
+//		}
+//		case TOP_LEFT: {
+//			this.pointList.set(0, point);
+//			break;
+//		}
+//		case TOP_RIGHT: {
+//			this.pointList.get(0).y = point.y;
+//			this.pointList.get(1).x = point.x;
+//			break;
+//		}
+//		case BOTTOM_LEFT: {
+//			this.pointList.get(0).x = point.x;
+//			this.pointList.get(1).y = point.y;
+//			break;
+//		}
+//		case BOTTOM_RIGHT: {
+//			this.pointList.set(1, point);
+//			break;
+//		}
+//		}
+//	}
 
-	@JsonIgnore
-	public void movePoint(Point point) {
-		logger.info("movePoint(" + point + ")");
-		this.pointList.get(0).x = this.pointList.get(0).x + point.x * (1 / this.scale);
-		this.pointList.get(0).y = this.pointList.get(0).y + point.y * (1 / this.scale);
-		this.pointList.get(1).x = this.pointList.get(1).x + point.x * (1 / this.scale);
-		this.pointList.get(1).y = this.pointList.get(1).y + point.y * (1 / this.scale);
-	}
+//	@JsonIgnore
+//	public void movePoint(Point point) {
+//		logger.info("movePoint(" + point + ")");
+//		this.pointList.get(0).x = this.pointList.get(0).x + point.x * (1 / this.scale);
+//		this.pointList.get(0).y = this.pointList.get(0).y + point.y * (1 / this.scale);
+//		this.pointList.get(1).x = this.pointList.get(1).x + point.x * (1 / this.scale);
+//		this.pointList.get(1).y = this.pointList.get(1).y + point.y * (1 / this.scale);
+//	}
 
 	@JsonIgnore
 	@Override

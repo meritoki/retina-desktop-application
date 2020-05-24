@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.meritoki.app.desktop.retina.controller.node.NodeController;
 
 /**
  * Class is used to manage reference to file in filesystem
@@ -36,12 +37,14 @@ public class Image {
 	public BufferedImage bufferedImage = null;
 	@JsonIgnore
 	public int index = 0;
+
 	/**
 	 * Default constructor
 	 */
 	public Image() {
 		this.uuid = UUID.randomUUID().toString();
 	}
+
 	/**
 	 * Copy constructor
 	 * 
@@ -57,10 +60,27 @@ public class Image {
 			this.shapeList.add(new Shape(shape));
 		}
 	}
-	
+
 	public Image(File file) {
 		this.uuid = UUID.randomUUID().toString();
 		this.file = file;
+		BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getImageCache(),
+				this.uuid + "." + this.getExtension());
+		if (bufferedImage == null) {
+			bufferedImage = NodeController.openBufferedImage(this.file);
+			if (bufferedImage != null) {
+				this.setBufferedImage(bufferedImage);
+				if (this.getExtension().equals("jpg") || this.getExtension().equals("jpeg")) {
+					NodeController.saveJpg(NodeController.getImageCache(), this.uuid + "." + this.getExtension(),
+							bufferedImage);
+				}
+			}
+
+		} else {
+			this.setBufferedImage(bufferedImage);
+		}
+		this.position.absoluteDimension.width = this.getBufferedImage().getWidth();
+		this.position.absoluteDimension.height = this.getBufferedImage().getHeight();
 	}
 
 	public String getUUID() {
@@ -142,7 +162,7 @@ public class Image {
 	public BufferedImage getBufferedImage() {
 		return this.bufferedImage;
 	}
-	
+
 	/**
 	 * Function sets the current index selected by user.
 	 * 
@@ -166,8 +186,8 @@ public class Image {
 	@JsonIgnore
 	public void setBufferedImage(BufferedImage bufferedImage) {
 		this.bufferedImage = bufferedImage;
-		this.position.w = this.bufferedImage.getWidth();
-		this.position.h = this.bufferedImage.getHeight();
+		this.position.absoluteDimension.width = this.bufferedImage.getWidth();
+		this.position.absoluteDimension.height = this.bufferedImage.getHeight();
 	}
 
 	public void setOffset(double offset) {
@@ -177,12 +197,13 @@ public class Image {
 		}
 	}
 
-	/** 
+	/**
 	 * Function necessary for a shape to move at all with the margin shift
+	 * 
 	 * @param margin
 	 */
 	public void setMargin(double margin) {
-		logger.info("setMargin("+margin+")");
+		logger.info("setMargin(" + margin + ")");
 		this.position.margin = margin;
 		for (Shape shape : this.shapeList) {
 			shape.setMargin(margin);
@@ -218,10 +239,7 @@ public class Image {
 	 */
 	@JsonIgnore
 	public void addShape(Shape shape) {
-		logger.info("addShape("+shape+")");
-		shape.position.setOffset(this.position.offset);
-		shape.position.setMargin(this.position.margin);
-		shape.position.setAddScale(this.position.scale);
+		logger.info("addShape(" + shape + ")");
 		this.shapeList.add(shape);
 	}
 
@@ -242,7 +260,7 @@ public class Image {
 	@JsonIgnore
 	public boolean containsShape(Shape shape) {
 		boolean flag = false;
-		if(this.containsPoint(shape.position.getStartPoint())) {
+		if (this.containsPoint(shape.position.getStartPoint())) {
 			flag = true;
 		}
 		return flag;

@@ -18,7 +18,7 @@ public class AddShape extends Command {
 		super(document, "addShape");
 	}
 
-	@Override 
+	@Override
 	public void execute() {
 		logger.info("execute()");
 		this.user = this.document.cache.user;
@@ -27,7 +27,8 @@ public class AddShape extends Command {
 			this.document.cache.pressedShape = new Shape();
 			this.document.cache.pressedShape.type = this.document.cache.type;
 			this.document.cache.pressedShape.position = new Position(new Point(this.document.cache.pressedPoint),
-					new Point(this.document.cache.releasedPoint), this.document.cache.scale, this.document.cache.scale);
+					new Point(this.document.cache.releasedPoint), this.document.cache.scale,
+					this.document.cache.pressedImage.position.offset, this.document.cache.pressedImage.position.margin);
 			this.document.addShape(this.document.cache.pressedShape);
 			Operation operation = new Operation();
 			operation.object = new Shape(this.document.cache.pressedShape);
