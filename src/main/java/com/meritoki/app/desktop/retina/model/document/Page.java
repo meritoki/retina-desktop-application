@@ -81,7 +81,7 @@ public class Page {
 	 * Scale of the entire page, applied to all files.
 	 */
 	@JsonProperty
-	public Dimension dimension = new Dimension();
+	public Position position = new Position();
 
 	@JsonProperty
 	public Script script;
@@ -110,7 +110,7 @@ public class Page {
 			this.imageList.add(new Image(file));
 		}
 		this.index = page.index;
-		this.dimension = page.dimension;
+		this.position = page.position;
 	}
 
 	/**
@@ -219,10 +219,10 @@ public class Page {
 	public BufferedImage getShapeBufferedImage(Shape shape) {
 		BufferedImage bufferedImage = null;
 		if (this.getBufferedImage() != null) {
-			int x = (int) (shape.dimension.x);// / this.scale);
-			int y = (int) (shape.dimension.y);// / this.scale);
-			int w = (int) (shape.dimension.width);// / this.scale);
-			int h = (int) (shape.dimension.height);// / this.scale);
+			int x = (int) (shape.position.x);// / this.scale);
+			int y = (int) (shape.position.y);// / this.scale);
+			int w = (int) (shape.position.dimension.width);// / this.scale);
+			int h = (int) (shape.position.dimension.height);// / this.scale);
 //			bufferedImage = this.getBufferedImage().getSubimage(x, y, w, h);
 		}
 		return bufferedImage;
@@ -268,9 +268,9 @@ public class Page {
 				}
 			}
 			image.setOffset(offset);
-			image.setScale(this.dimension.scale);
-			this.dimension.width += image.dimension.width;
-			offset += image.dimension.width;
+			image.setScale(this.position.scale);
+			this.position.dimension.width += image.position.dimension.width;
+			offset += image.position.dimension.width;
 		}
 		return this.imageList;
 	}
@@ -346,8 +346,8 @@ public class Page {
 	public BufferedImage getBufferedImage() {
 		if (this.bufferedImage == null) {
 			this.bufferedImage = this.joinImages(this.getImageList());
-			this.dimension.w = this.bufferedImage.getWidth();
-			this.dimension.h = this.bufferedImage.getHeight();
+			this.position.w = this.bufferedImage.getWidth();
+			this.position.h = this.bufferedImage.getHeight();
 		}
 		return this.bufferedImage;
 	}
@@ -376,7 +376,7 @@ public class Page {
 	 */
 	@JsonIgnore
 	public void setScale(double scale) {
-		this.dimension.scale = scale;
+		this.position.scale = scale;
 		for (Image image : this.imageList) {
 			image.setScale(scale);
 		}
@@ -430,10 +430,10 @@ public class Page {
 	@JsonIgnore
 	public void addImage(Image image) {
 		logger.info("addImage(" + image + ")");
-		image.setScale(this.dimension.scale);
+		image.setScale(this.position.scale);
 		this.imageList.add(image);
 		for(Shape s: image.shapeList) {
-			s.dimension.setOffset(image.dimension.offset);
+			s.position.setOffset(image.position.offset);
 		}
 	}
 
@@ -510,13 +510,13 @@ public class Page {
 			Image a = imageList.get(i);
 			if (bufferedImage == null) {
 				int width = a.bufferedImage.getWidth();
-				int height = (int) (a.bufferedImage.getHeight() + a.dimension.margin);
+				int height = (int) (a.bufferedImage.getHeight() + a.position.margin);
 				bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 				Graphics2D graphics2D = bufferedImage.createGraphics();
 				graphics2D.setPaint(Color.BLACK);
 				graphics2D.fillRect(0, 0, width, height);
 				graphics2D.setColor(Color.BLACK);
-				graphics2D.drawImage(a.bufferedImage, null, 0, (int)(a.dimension.margin));
+				graphics2D.drawImage(a.bufferedImage, null, 0, (int)(a.position.margin));
 				graphics2D.dispose();
 			}
 			if (i + 1 < imageList.size()) {
@@ -524,7 +524,7 @@ public class Page {
 				int w = bufferedImage.getWidth();
 				int h = bufferedImage.getHeight();
 				int width = w + b.bufferedImage.getWidth();
-				int height = Math.max(h, b.bufferedImage.getHeight() + (int) b.dimension.margin);// +offset;
+				int height = Math.max(h, b.bufferedImage.getHeight() + (int) b.position.margin);// +offset;
 //				int height = b.bufferedImage.getHeight() + (int) b.dimension.margin;// +offset;
 				BufferedImage bI = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 				Graphics2D graphics2D = bI.createGraphics();
@@ -534,7 +534,7 @@ public class Page {
 				graphics2D.setColor(oldColor);
 				graphics2D.drawImage(bufferedImage, null, 0, 0);
 //				graphics2D.drawImage(b.bufferedImage, null, w, (int) b.dimension.margin);
-				graphics2D.drawImage(b.bufferedImage, null, w, (int) (b.dimension.margin));
+				graphics2D.drawImage(b.bufferedImage, null, w, (int) (b.position.margin));
 				graphics2D.dispose();
 				bufferedImage = bI;
 			}
@@ -544,7 +544,7 @@ public class Page {
 
 	public void paint(Graphics2D graphics2D) {
 		AffineTransform affineTransform = new AffineTransform();
-		affineTransform.scale(this.dimension.scale, this.dimension.scale);
+		affineTransform.scale(this.position.scale, this.position.scale);
 		BufferedImage bufferedImage = this.getBufferedImage();
 		if (bufferedImage != null) {
 			graphics2D.drawImage(bufferedImage, affineTransform, null);
@@ -552,17 +552,17 @@ public class Page {
 
 		List<Image> imageList = this.getImageList();
 		Image image = this.getImage();
-		Dimension d = null;
+		Position p = null;
 		if (imageList != null) {
 			for (Image i : imageList) {
-				d = i.dimension;
-				d.scale();
+				p = i.position;
+				p.scale();
 				if (image != null && i.uuid.equals(image.uuid)) {
 					graphics2D.setColor(Color.RED);
 				} else {
 					graphics2D.setColor(Color.YELLOW);
 				}
-				Rectangle2D.Double rectangle = new Rectangle2D.Double(d.x, d.y, d.width, d.height);
+				Rectangle2D.Double rectangle = new Rectangle2D.Double(p.x, p.y, p.dimension.width, p.dimension.height);
 				graphics2D.draw(rectangle);
 			}
 
@@ -572,8 +572,8 @@ public class Page {
 		Shape previousShape = null;
 		if (shapeList != null) {
 			for (Shape s : shapeList) {
-				d = s.dimension;
-				d.scale();
+				p = s.position;
+				p.scale();
 				if (shape != null && s.uuid.equals(shape.uuid)) {
 					graphics2D.setColor(Color.RED);
 				} else {
@@ -581,28 +581,28 @@ public class Page {
 				}
 				switch (s.type) {
 				case ELLIPSE: {
-					Ellipse2D.Double ellipse = new Ellipse2D.Double(d.x, d.y, d.width, d.height);
+					Ellipse2D.Double ellipse = new Ellipse2D.Double(p.x, p.y, p.dimension.width, p.dimension.height);
 					graphics2D.draw(ellipse);
 					break;
 				}
 				case RECTANGLE: {
-					Rectangle2D.Double rectangle = new Rectangle2D.Double(d.x, d.y, d.width, d.height);
+					Rectangle2D.Double rectangle = new Rectangle2D.Double(p.x, p.y, p.dimension.width, p.dimension.height);
 					graphics2D.draw(rectangle);
 					break;
 				}
 				}
 				if (previousShape != null) {
-					Dimension dimension = previousShape.dimension;
-					graphics2D.drawLine((int) (dimension.x + (dimension.width / 2)),
-							(int) (dimension.y + (dimension.height / 2)), (int) (d.x + (d.width / 2)),
-							(int) (d.y + (d.height / 2)));
+					Position position = previousShape.position;
+					graphics2D.drawLine((int) (position.x + (position.dimension.width / 2)),
+							(int) (position.y + (position.dimension.height / 2)), (int) (p.x + (p.dimension.width / 2)),
+							(int) (p.y + (p.dimension.height / 2)));
 				}
 				previousShape = s;
 			}
 		}
-		this.dimension.scale();
+		this.position.scale();
 		graphics2D.setColor(Color.BLUE);
-		Rectangle2D.Double frame = new Rectangle2D.Double(0, 0, this.dimension.width, this.dimension.height);
+		Rectangle2D.Double frame = new Rectangle2D.Double(0, 0, this.position.dimension.width, this.position.dimension.height);
 		graphics2D.draw(frame);
 
 	}

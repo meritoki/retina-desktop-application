@@ -27,8 +27,8 @@ import org.apache.logging.log4j.Logger;
 import com.meritoki.app.desktop.retina.controller.document.DocumentController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
-import com.meritoki.app.desktop.retina.view.dialog.CommandDialog;
 import com.meritoki.app.desktop.retina.view.dialog.PageDialog;
+import com.meritoki.app.desktop.retina.view.dialog.CommandDialog;
 import com.meritoki.app.desktop.retina.view.dialog.OpenDialog;
 import com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog;
 import com.meritoki.app.desktop.retina.view.dialog.SelectionDialog;
@@ -100,6 +100,7 @@ public final class MainFrame extends JFrame {
         this.loginDialog.setModel(this.model);
         this.loginDialog.setRegisterDialog(this.registerDialog);
         if (this.model.system.newUser) {
+        	System.out.println("New User");
             this.registerDialog.setVisible(true);
         } else if (this.model.system.loginUser) {
             this.loginDialog.setVisible(true);

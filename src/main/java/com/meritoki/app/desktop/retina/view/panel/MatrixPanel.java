@@ -78,7 +78,7 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 		Matrix matrix = (page != null) ? page.getMatrix():null;
 		if(matrix != null) {
 			matrix.setScale(this.model.document.cache.scale);
-			dimension.setSize(matrix.dimension.width, matrix.dimension.height);
+			dimension.setSize(matrix.position.dimension.width, matrix.position.dimension.height);
 		}
 		return dimension;
 	}

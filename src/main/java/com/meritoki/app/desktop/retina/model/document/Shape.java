@@ -39,7 +39,7 @@ public class Shape {
 	@JsonProperty
 	public ShapeType type;
 	@JsonProperty
-	public Dimension dimension = new Dimension();
+	public Position position = new Position();
 	@JsonIgnore
 	public BufferedImage bufferedImage;
 	@JsonProperty
@@ -59,17 +59,17 @@ public class Shape {
 	public Shape(Shape shape) {
 		this.uuid = shape.uuid;
 		this.type = shape.type;
-		this.dimension = new Dimension(shape.dimension);
+		this.position = new Position(shape.position);
 		this.data = new Data(shape.data);
 	}
 	
 	public void setScale(double scale) {
-		this.dimension.setScale(scale);
+		this.position.setScale(scale);
 	}
 	
 	public void setMargin(double margin) {
 		logger.info("setMargin("+margin+")");
-		this.dimension.setMargin(margin);
+		this.position.setMargin(margin);
 	}
 
 	@JsonProperty

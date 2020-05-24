@@ -42,9 +42,9 @@ class ProjectTest {
 		Shape shape = new Shape();
 		Point pointA = new Point(0,0);
 		Point pointB = new Point(100,100);
-		shape.dimension.addPoint(pointA);
-		shape.dimension.addPoint(pointB);
-		shape.dimension.normalize();
+		shape.position.addPoint(pointA);
+		shape.position.addPoint(pointB);
+		shape.position.normalize();
 		shapeZeroUUID = shape.getUUID();
 		page.addShape(shape);
 		pageZeroUUID = page.uuid;
@@ -97,7 +97,7 @@ class ProjectTest {
 		project.setIndex(0);
 		List<Image> fileList = project.getPage().getImageList();
 		for(Image file: fileList) {
-			Point point = new Point(file.dimension.offset+(file.dimension.width/2),file.dimension.margin+(file.dimension.height/2));
+			Point point = new Point(file.position.offset+(file.position.width/2),file.position.margin+(file.position.height/2));
 			assertEquals(project.getPage().getImage(point).getUUID(),file.getUUID());
 		}
 	}

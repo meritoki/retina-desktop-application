@@ -75,7 +75,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 		Document document = (this.model != null) ? this.model.getDocument() : null;
 		Page page = (document != null) ? document.getPage() : null;
 		if(page != null) {
-			dimension.setSize(page.dimension.width, page.dimension.height);
+			dimension.setSize(page.position.dimension.width, page.position.dimension.height);
 		}
 		return dimension;
 	}
@@ -234,7 +234,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				page.setBufferedImage(null);
 				Image image = (page != null) ? page.getImage() : null;
 				if (image != null) {
-					image.setMargin(image.dimension.margin + 10);
+					image.setMargin(image.position.margin + 10);
 					page.setBufferedImage(null);
 				}
 				repaint();
@@ -246,7 +246,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				page.setBufferedImage(null);
 				Image image = (page != null) ? page.getImage() : null;
 				if (image != null) {
-					image.setMargin(image.dimension.margin - 10);
+					image.setMargin(image.position.margin - 10);
 					page.setBufferedImage(null);
 				}
 				repaint();

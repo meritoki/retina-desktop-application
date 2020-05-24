@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.model.document.Dimension;
+import com.meritoki.app.desktop.retina.model.document.Position;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Shape;
@@ -26,7 +26,7 @@ public class AddShape extends Command {
 				this.document.cache.scale)) {
 			this.document.cache.pressedShape = new Shape();
 			this.document.cache.pressedShape.type = this.document.cache.type;
-			this.document.cache.pressedShape.dimension = new Dimension(new Point(this.document.cache.pressedPoint),
+			this.document.cache.pressedShape.position = new Position(new Point(this.document.cache.pressedPoint),
 					new Point(this.document.cache.releasedPoint), this.document.cache.scale, this.document.cache.scale);
 			this.document.addShape(this.document.cache.pressedShape);
 			Operation operation = new Operation();

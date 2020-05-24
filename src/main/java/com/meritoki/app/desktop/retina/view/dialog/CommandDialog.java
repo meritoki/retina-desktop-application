@@ -19,6 +19,8 @@ import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.command.Command;
+import com.meritoki.app.desktop.retina.model.document.user.User;
+
 import java.util.List;
 import javax.swing.DefaultListModel;
 import org.apache.logging.log4j.LogManager;
@@ -56,28 +58,29 @@ public class CommandDialog extends javax.swing.JDialog {
         Document document = (this.model != null) ? this.model.getDocument() : null;
         int pageIndex = (document != null) ? document.getIndex() : 0;
         List<Command> undoCommandList = (document != null) ? document.pattern.event.undoStack : null;
-        this.initUndoCommandList(undoCommandList);
+        User user = (document != null) ? document.pattern.event.user : null;
+        this.initUndoCommandList(undoCommandList, user);
         List<Command> redoCommandList = (document != null) ? document.pattern.event.redoStack : null;
-        this.initRedoCommandList(redoCommandList);
+        this.initRedoCommandList(redoCommandList, user);
     }
 
-    public void initUndoCommandList(List<Command> pageList) {
+    public void initUndoCommandList(List<Command> pageList, User user) {
 //        logger.debug("initPageList(...)");
         DefaultListModel<String> defaultListModel = new DefaultListModel<>();
         if (pageList != null) {
             for (int i = 0; i < pageList.size(); i++) {
-                defaultListModel.addElement(pageList.get(i).name);
+                defaultListModel.addElement(pageList.get(i).name+" "+((user != null)?user.name:null));
             }
         }
         this.undoCommandList.setModel(defaultListModel);
     }
 
-    public void initRedoCommandList(List<Command> pageList) {
+    public void initRedoCommandList(List<Command> pageList, User user) {
 //        logger.debug("initPageList(...)");
         DefaultListModel<String> defaultListModel = new DefaultListModel<>();
         if (pageList != null) {
             for (int i = 0; i < pageList.size(); i++) {
-                defaultListModel.addElement(pageList.get(i).name);
+                defaultListModel.addElement(pageList.get(i).name+" "+((user != null)?user.name:null));
             }
         }
         this.redoCommandList.setModel(defaultListModel);

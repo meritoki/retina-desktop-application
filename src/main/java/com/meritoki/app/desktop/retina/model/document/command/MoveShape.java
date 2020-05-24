@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.model.document.Dimension;
+import com.meritoki.app.desktop.retina.model.document.Position;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Shape;
@@ -31,12 +31,12 @@ public class MoveShape extends Command {
 		Shape shape = null;
 		if (this.document.cache.releasedImage != null &&!this.document.cache.pressedImage.equals(this.document.cache.releasedImage)) {
 			shape = new Shape(this.document.cache.pressedShape);
-			shape.dimension = new Dimension(this.document.cache.pressedShape.dimension);
-			shape.dimension.movePoint(this.document.cache.movedPoint);
+			shape.position = new Position(this.document.cache.pressedShape.position);
+			shape.position.movePoint(this.document.cache.movedPoint);
 			this.document.cache.pressedImage.removeShape(shape.uuid);
 			this.document.cache.releasedImage.addShape(shape);
 		} else {
-			this.document.cache.pressedShape.dimension.movePoint(this.document.cache.movedPoint);
+			this.document.cache.pressedShape.position.movePoint(this.document.cache.movedPoint);
 			shape = this.document.cache.pressedShape;
 		}		
 		operation = new Operation();

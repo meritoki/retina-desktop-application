@@ -29,7 +29,7 @@ public class Matrix {
 	public Script script = new Script();
 
 //	@JsonProperty 
-	public Dimension dimension = new Dimension(2048, 1024);
+	public Position position = new Position(2048, 1024);
 
 	@JsonIgnore
 	public List<Shape> shapeList;
@@ -41,7 +41,7 @@ public class Matrix {
 
 	@JsonIgnore
 	public void setScale(double scale) {
-		this.dimension.setScale(scale);
+		this.position.setScale(scale);
 	}
 
 	@JsonIgnore
@@ -212,10 +212,10 @@ public class Matrix {
 		int count = 0;
 		double sum = 0;
 		for (Shape s : shapeList) {
-			sum += s.dimension.getCenterY();
+			sum += s.position.getCenterY();
 			count += 1;
 		}
-		sum += shape.dimension.getCenterY();
+		sum += shape.position.getCenterY();
 		count += 1;
 		average = sum / count;
 		return average;
@@ -226,9 +226,9 @@ public class Matrix {
 		boolean flag = true;
 		double a = 0;
 		double average = this.getShapeListYAverage(shapeList, shape);
-		a = shape.dimension.getCenterY();
+		a = shape.position.getCenterY();
 		a = Math.abs(average - a);
-		if (a > (THRESHOLD * shape.dimension.scale)) {
+		if (a > (THRESHOLD * shape.position.scale)) {
 			flag = false;
 		}
 
@@ -242,8 +242,8 @@ public class Matrix {
 		}
 		Collections.sort(list, new Comparator<List<Shape>>() {
 			public int compare(List<Shape> ideaVal1, List<Shape> ideaVal2) {
-				Double idea1 = ideaVal1.get(0).dimension.getCenterY();
-				Double idea2 = ideaVal2.get(0).dimension.getCenterY();
+				Double idea1 = ideaVal1.get(0).position.getCenterY();
+				Double idea2 = ideaVal2.get(0).position.getCenterY();
 				return idea1.compareTo(idea2);
 			}
 		});
@@ -253,8 +253,8 @@ public class Matrix {
 	public void sortRowList(List<Shape> shapeList) {
 		Collections.sort(shapeList, new Comparator<Shape>() {
 			public int compare(Shape ideaVal1, Shape ideaVal2) {
-				Double idea1 = ideaVal1.dimension.getCenterX();// pointList.get(0).x;
-				Double idea2 = ideaVal2.dimension.getCenterX();// pointList.get(0).x;
+				Double idea1 = ideaVal1.position.getCenterX();// pointList.get(0).x;
+				Double idea2 = ideaVal2.position.getCenterX();// pointList.get(0).x;
 				return idea1.compareTo(idea2);
 			}
 		});
@@ -386,11 +386,11 @@ public class Matrix {
 		graphics.setColor(Color.black);
 		List<ArrayList<Shape>> rowList = this.getTableRowList();
 		List<Shape> shapeList;
-		int width = (int) (this.dimension.width * 0.10);
-		int height = (int) (this.dimension.height * 0.10);
+		int width = (int) (this.position.dimension.width * 0.10);
+		int height = (int) (this.position.dimension.height * 0.10);
 		int widthIndex = 0;
 		int heightIndex = 0;
-		graphics.setFont(new Font("default", Font.BOLD, (int) (8 * this.dimension.scale)));
+		graphics.setFont(new Font("default", Font.BOLD, (int) (8 * this.position.scale)));
 		Data data;
 		for (int i = 0; i < rowList.size(); i++) {
 			shapeList = rowList.get(i);
