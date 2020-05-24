@@ -50,6 +50,7 @@ public class Position {
 	}
 
 	public Position(Point a, Point b, double addScale, double offset, double margin) {
+		logger.info("Position("+a+", "+b+", "+addScale+", "+offset+", "+margin+")");
 		List<Point> pointList = new ArrayList<>();
 		pointList.add(a);
 		pointList.add(b);
@@ -102,7 +103,7 @@ public class Position {
 	public Point getRelativePoint() {
 		Point point = new Point();
 		point.x = this.absolutePoint.x - offset;
-		point.y = this.absolutePoint.y - margin;
+		point.y = this.absolutePoint.y - margin*this.addScale;
 		return point;
 	}
 
@@ -149,11 +150,12 @@ public class Position {
 	
 	public void scale() {
 		if(this.relativePoint != null) {
-			this.absolutePoint.x = this.relativePoint.x+this.offset;
-			this.absolutePoint.y = this.relativePoint.y+this.margin*this.addScale;
+			this.point.x = this.relativePoint.x+this.offset;
+			this.point.y = this.relativePoint.y+this.margin*this.addScale;
+		} else {
+			this.point.x = this.absolutePoint.x;
+			this.point.y = this.absolutePoint.y+this.margin;
 		}
-		this.point.x = this.absolutePoint.x;
-		this.point.y = this.absolutePoint.y;
 		this.dimension.width = this.absoluteDimension.width;
 		this.dimension.height = this.absoluteDimension.height;
 		this.point.x *= this.scale;
