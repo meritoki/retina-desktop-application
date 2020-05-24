@@ -29,7 +29,7 @@ public class Matrix {
 	public Script script = new Script();
 
 //	@JsonProperty 
-	public Position position = new Position(2048, 1024);
+	public Position position = new Position(0,0,2048, 1024);
 
 	@JsonIgnore
 	public List<Shape> shapeList;

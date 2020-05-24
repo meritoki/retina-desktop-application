@@ -219,8 +219,8 @@ public class Page {
 	public BufferedImage getShapeBufferedImage(Shape shape) {
 		BufferedImage bufferedImage = null;
 		if (this.getBufferedImage() != null) {
-			int x = (int) (shape.position.x);// / this.scale);
-			int y = (int) (shape.position.y);// / this.scale);
+			int x = (int) (shape.position.point.x);// / this.scale);
+			int y = (int) (shape.position.point.y);// / this.scale);
 			int w = (int) (shape.position.dimension.width);// / this.scale);
 			int h = (int) (shape.position.dimension.height);// / this.scale);
 //			bufferedImage = this.getBufferedImage().getSubimage(x, y, w, h);
@@ -240,38 +240,10 @@ public class Page {
 		return new Archive(this.getMatrix());
 	}
 
-	/**
-	 * DIMENSION 2 A Function is the only place where the File objects receive the
-	 * metadata necessary to correctly process shapes.
-	 *
-	 * @return
-	 */
-	@JsonIgnore
-	public List<Image> getImageList() {
-		double offset = 0;
-		for (Image image : this.imageList) {
-			if (image.getBufferedImage() == null) {
-				BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getImageCache(),
-						image.uuid + "." + image.getExtension());
-				if (bufferedImage == null) {
-					bufferedImage = NodeController.openBufferedImage(image.file);
-					if (bufferedImage != null) {
-						image.setBufferedImage(bufferedImage);
-						if (image.getExtension().equals("jpg") || image.getExtension().equals("jpeg")) {
-							NodeController.saveJpg(NodeController.getImageCache(),
-									image.uuid + "." + image.getExtension(), bufferedImage);
-						}
-					}
 
-				} else {
-					image.setBufferedImage(bufferedImage);
-				}
-			}
-			image.setOffset(offset);
-			image.setScale(this.position.scale);
-			this.position.dimension.width += image.position.dimension.width;
-			offset += image.position.dimension.width;
-		}
+
+	
+	public List<Image> getImageList() {
 		return this.imageList;
 	}
 
@@ -346,8 +318,8 @@ public class Page {
 	public BufferedImage getBufferedImage() {
 		if (this.bufferedImage == null) {
 			this.bufferedImage = this.joinImages(this.getImageList());
-			this.position.w = this.bufferedImage.getWidth();
-			this.position.h = this.bufferedImage.getHeight();
+			this.position.absoluteDimension.width = this.bufferedImage.getWidth();
+			this.position.absoluteDimension.height = this.bufferedImage.getHeight();
 		}
 		return this.bufferedImage;
 	}
@@ -400,11 +372,11 @@ public class Page {
 	@JsonIgnore
 	public void setImage(String uuid) {
 		logger.info("setImage(" + uuid + ")");
-		Image file = null;
-		List<Image> fileList = this.getImageList();
-		for (int i = 0; i < fileList.size(); i++) {
-			file = fileList.get(i);
-			if (file.uuid.equals(uuid)) {
+		Image image = null;
+		List<Image> imageList = this.getImageList();
+		for (int i = 0; i < imageList.size(); i++) {
+			image = imageList.get(i);
+			if (image.uuid.equals(uuid)) {
 				this.setIndex(i);
 				break;
 			}
@@ -430,10 +402,14 @@ public class Page {
 	@JsonIgnore
 	public void addImage(Image image) {
 		logger.info("addImage(" + image + ")");
-		image.setScale(this.position.scale);
 		this.imageList.add(image);
-		for(Shape s: image.shapeList) {
-			s.position.setOffset(image.position.offset);
+		image.setScale(this.position.scale);
+		image.position.offset = this.position.absoluteDimension.width;
+		image.position.absolutePoint.x = this.position.absoluteDimension.width;
+		image.position.absolutePoint.y = 0;
+		this.position.absoluteDimension.width += image.position.absoluteDimension.width;
+		for(Shape shape: image.shapeList) {
+			shape.position.setOffset(image.position.offset);
 		}
 	}
 
@@ -459,48 +435,6 @@ public class Page {
 		}
 		return selection;
 	}
-
-//
-//	@JsonIgnore
-//	public double getFileListMinMargin() {
-//		double min = 65536;
-//		for (Image image : this.getImageList()) {
-//			if (image.dimension.margin < min) {
-//				min = image.dimension.margin;
-//			}
-//		}
-//		return min;
-//	}
-//
-//	@JsonIgnore
-//	public double getFileListMaxMargin() {
-//		double max = -65536;
-//		for (Image image : this.getImageList()) {
-//			if (image.dimension.margin > max) {
-//				max = image.dimension.margin;
-//			}
-//		}
-//		return max;
-//	}
-
-//	@JsonIgnore
-//	public BufferedImage modifyImage(Image image) { // BufferedImage img1,BufferedImage img2) {
-//		logger.debug("modifyImage(" + image + ")");
-//		BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-//		if (image.bufferedImage != null) {
-//			int width = image.bufferedImage.getWidth();
-//			int height = image.bufferedImage.getHeight();
-//			bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-//			Graphics2D graphics2D = bufferedImage.createGraphics();
-//			Color oldColor = graphics2D.getColor();
-//			graphics2D.setPaint(Color.BLACK);
-//			graphics2D.fillRect(0, 0, width, height);
-//			graphics2D.setColor(oldColor);
-//			graphics2D.drawImage(image.bufferedImage, null, 0, (int) image.dimension.margin);
-//			graphics2D.dispose();
-//		}
-//		return bufferedImage;
-//	}
 
 	@JsonIgnore
 	public BufferedImage joinImages(List<Image> imageList) {
@@ -562,7 +496,7 @@ public class Page {
 				} else {
 					graphics2D.setColor(Color.YELLOW);
 				}
-				Rectangle2D.Double rectangle = new Rectangle2D.Double(p.x, p.y, p.dimension.width, p.dimension.height);
+				Rectangle2D.Double rectangle = new Rectangle2D.Double(p.point.x, p.point.y, p.dimension.width, p.dimension.height);
 				graphics2D.draw(rectangle);
 			}
 
@@ -581,21 +515,21 @@ public class Page {
 				}
 				switch (s.type) {
 				case ELLIPSE: {
-					Ellipse2D.Double ellipse = new Ellipse2D.Double(p.x, p.y, p.dimension.width, p.dimension.height);
+					Ellipse2D.Double ellipse = new Ellipse2D.Double(p.point.x, p.point.y, p.dimension.width, p.dimension.height);
 					graphics2D.draw(ellipse);
 					break;
 				}
 				case RECTANGLE: {
-					Rectangle2D.Double rectangle = new Rectangle2D.Double(p.x, p.y, p.dimension.width, p.dimension.height);
+					Rectangle2D.Double rectangle = new Rectangle2D.Double(p.point.x, p.point.y, p.dimension.width, p.dimension.height);
 					graphics2D.draw(rectangle);
 					break;
 				}
 				}
 				if (previousShape != null) {
 					Position position = previousShape.position;
-					graphics2D.drawLine((int) (position.x + (position.dimension.width / 2)),
-							(int) (position.y + (position.dimension.height / 2)), (int) (p.x + (p.dimension.width / 2)),
-							(int) (p.y + (p.dimension.height / 2)));
+					graphics2D.drawLine((int) (position.point.x + (position.dimension.width / 2)),
+							(int) (position.point.y + (position.dimension.height / 2)), (int) (p.point.x + (p.dimension.width / 2)),
+							(int) (p.point.y + (p.dimension.height / 2)));
 				}
 				previousShape = s;
 			}
@@ -621,3 +555,38 @@ public class Page {
 		return string;
 	}
 }
+
+/**
+ * DIMENSION 2 A Function is the only place where the File objects receive the
+ * metadata necessary to correctly process shapes.
+ *
+ * @return
+ */
+//@JsonIgnore
+//public List<Image> getImageList() {
+//	double offset = 0;
+//	for (Image image : this.imageList) {
+//		if (image.getBufferedImage() == null) {
+//			BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getImageCache(),
+//					image.uuid + "." + image.getExtension());
+//			if (bufferedImage == null) {
+//				bufferedImage = NodeController.openBufferedImage(image.file);
+//				if (bufferedImage != null) {
+//					image.setBufferedImage(bufferedImage);
+//					if (image.getExtension().equals("jpg") || image.getExtension().equals("jpeg")) {
+//						NodeController.saveJpg(NodeController.getImageCache(),
+//								image.uuid + "." + image.getExtension(), bufferedImage);
+//					}
+//				}
+//
+//			} else {
+//				image.setBufferedImage(bufferedImage);
+//			}
+//		}
+//		image.setOffset(offset);
+//		image.setScale(this.position.scale);
+//		this.position.dimension.width += image.position.dimension.width;
+//		offset += image.position.dimension.width;
+//	}
+//	return this.imageList;
+//}
