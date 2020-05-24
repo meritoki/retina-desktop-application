@@ -164,54 +164,18 @@ public class Position {
 		this.dimension.height *= this.scale;
 	}
 
-//	@JsonIgnore
-//	public void scale() {
-//		if (this.pointList != null && this.pointList.size() == 2) {
-//			Point a = this.pointList.get(0);
-//			Point b = this.pointList.get(1);
-//			this.x = Math.min(a.x, b.x);
-//			this.y = Math.min(a.y, b.y);
-//			this.x += (this.offset * this.addScale);
-//			this.y += (this.margin)*this.addScale;
-//			this.dimension.width = Math.abs(a.x - b.x);
-//			this.dimension.height = Math.abs(a.y - b.y);
-//		} else {
-//			this.x = 0;
-//			this.y = 0;
-//			this.dimension.width = this.absoluteDimension.width;
-//			this.dimension.height = this.absoluteDimension.height;
-//			this.x += this.offset*1/this.scale;
-//			this.y += this.margin;
-//		}
-//		this.x *= this.scale;
-//		this.y *= this.scale;
-//		this.dimension.width *= this.scale;
-//		this.dimension.height *= this.scale;
-//	}
 
 	@JsonIgnore
 	public boolean containsPoint(Point point) {
-
 		boolean flag = false;
 		Point startPoint = this.getStartPoint();
 		Point stopPoint = this.getStopPoint();
-
 		if (startPoint.x < stopPoint.x && startPoint.y < stopPoint.y) {
 			if (startPoint.x <= point.x && point.x <= stopPoint.x && startPoint.y <= point.y
 					&& point.y <= stopPoint.y) {
 				flag = true;
 			}
 		}
-
-		if (flag) {
-			logger.info("containsPoint(" + point + ") dimension=" + this);
-		}
-//		else if (stopPoint.x < startPoint.x && stopPoint.y < startPoint.y) {
-//			if (stopPoint.x <= point.x && point.x <= startPoint.x && stopPoint.y <= point.y
-//					&& point.y <= startPoint.y) {
-//				flag = true;
-//			}
-//		}
 		return flag;
 	}
 
@@ -259,55 +223,64 @@ public class Position {
 		return flag;
 	}
 
-//	@JsonIgnore
-//	public void resizePoint(Point point, Selection selection) {
-//		logger.info("resizePoint(" + point + ", " + selection + ")");
-//		switch (selection) {
-//		case TOP: {
-//			this.pointList.get(0).y = point.y;
-//			break;
-//		}
-//		case BOTTOM: {
-//			this.pointList.get(1).y = point.y;
-//			break;
-//		}
-//		case LEFT: {
-//			this.pointList.get(0).x = point.x;
-//			break;
-//		}
-//		case RIGHT: {
-//			this.pointList.get(1).x = point.x;
-//			break;
-//		}
-//		case TOP_LEFT: {
-//			this.pointList.set(0, point);
-//			break;
-//		}
-//		case TOP_RIGHT: {
-//			this.pointList.get(0).y = point.y;
-//			this.pointList.get(1).x = point.x;
-//			break;
-//		}
-//		case BOTTOM_LEFT: {
-//			this.pointList.get(0).x = point.x;
-//			this.pointList.get(1).y = point.y;
-//			break;
-//		}
-//		case BOTTOM_RIGHT: {
-//			this.pointList.set(1, point);
-//			break;
-//		}
-//		}
-//	}
+	@JsonIgnore
+	public void resizePoint(Point point, Selection selection) {
+		logger.info("resizePoint(" + point + ", " + selection + ")");
+		Point startPoint = this.getStartPoint();
+		Point stopPoint = this.getStopPoint();
+		switch (selection) {
+		case TOP: {
+			startPoint.y = point.y;
+			break;
+		}
+		case BOTTOM: {
+			stopPoint.y = point.y;
+			break;
+		}
+		case LEFT: {
+			startPoint.x = point.x;
+			break;
+		}
+		case RIGHT: {
+			stopPoint.x = point.x;
+			break;
+		}
+		case TOP_LEFT: {
+			startPoint.x = point.x;
+			startPoint.y = point.y;
+			break;
+		}
+		case TOP_RIGHT: {
+			startPoint.y = point.y;
+			stopPoint.x = point.x;
+			break;
+		}
+		case BOTTOM_LEFT: {
+			startPoint.x = point.x;
+			stopPoint.y = point.y;
+			break;
+		}
+		case BOTTOM_RIGHT: {
+			stopPoint.x = point.x;
+			stopPoint.y = point.y;
+			break;
+		}
+		}
+	}
 
-//	@JsonIgnore
-//	public void movePoint(Point point) {
-//		logger.info("movePoint(" + point + ")");
-//		this.pointList.get(0).x = this.pointList.get(0).x + point.x * (1 / this.scale);
-//		this.pointList.get(0).y = this.pointList.get(0).y + point.y * (1 / this.scale);
-//		this.pointList.get(1).x = this.pointList.get(1).x + point.x * (1 / this.scale);
-//		this.pointList.get(1).y = this.pointList.get(1).y + point.y * (1 / this.scale);
-//	}
+	
+	@JsonIgnore
+	public void movePoint(Point point) {
+		logger.info("movePoint(" + point + ")");
+		Point origin = null;
+		if(this.relativePoint != null) {
+			origin = this.relativePoint;
+		} else {
+			origin = this.absolutePoint;
+		}
+		origin.x += point.x/scale;
+		origin.y += point.y/scale;
+	}
 
 	@JsonIgnore
 	@Override
@@ -322,3 +295,41 @@ public class Position {
 		return string;
 	}
 }
+
+//@JsonIgnore
+//public void movePoint(Point point) {
+//	logger.info("movePoint(" + point + ")");
+//	Point source = null;
+//	if(this.relativePoint != null) {
+//		source = this.relativePoint;
+//	}
+//	this.pointList.get(0).x = this.pointList.get(0).x + point.x * (1 / this.scale);
+//	this.pointList.get(0).y = this.pointList.get(0).y + point.y * (1 / this.scale);
+//	this.pointList.get(1).x = this.pointList.get(1).x + point.x * (1 / this.scale);
+//	this.pointList.get(1).y = this.pointList.get(1).y + point.y * (1 / this.scale);
+//}
+
+//@JsonIgnore
+//public void scale() {
+//	if (this.pointList != null && this.pointList.size() == 2) {
+//		Point a = this.pointList.get(0);
+//		Point b = this.pointList.get(1);
+//		this.x = Math.min(a.x, b.x);
+//		this.y = Math.min(a.y, b.y);
+//		this.x += (this.offset * this.addScale);
+//		this.y += (this.margin)*this.addScale;
+//		this.dimension.width = Math.abs(a.x - b.x);
+//		this.dimension.height = Math.abs(a.y - b.y);
+//	} else {
+//		this.x = 0;
+//		this.y = 0;
+//		this.dimension.width = this.absoluteDimension.width;
+//		this.dimension.height = this.absoluteDimension.height;
+//		this.x += this.offset*1/this.scale;
+//		this.y += this.margin;
+//	}
+//	this.x *= this.scale;
+//	this.y *= this.scale;
+//	this.dimension.width *= this.scale;
+//	this.dimension.height *= this.scale;
+//}

@@ -24,6 +24,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
@@ -33,7 +34,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.meritoki.app.desktop.retina.controller.node.NodeController;
 
 /**
  * The Page class is used to hold a list of shapes. The list of shapes can be
@@ -247,67 +247,6 @@ public class Page {
 		return this.imageList;
 	}
 
-//	/**
-//	 * DIMENSION 2 A Function is the only place where the File objects receive the
-//	 * metadata necessary to correctly process shapes.
-//	 *
-//	 * @return
-//	 */
-//	@JsonIgnore
-//	public List<Image> getImageList() {
-//		double offset = 0;
-//		for (Image image : this.imageList) {
-//			if (image.getBufferedImage() == null) {
-//				BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getImageCache(),
-//						image.uuid + "." + image.extension);
-//				if (bufferedImage == null) {
-//					bufferedImage = NodeController.openBufferedImage(image.getPath(), image.getNameAndExtension());
-//					if (bufferedImage != null) {
-//						image.setBufferedImage(bufferedImage);
-//						if (image.extension.equals("jpg") || image.extension.equals("jpeg")) {
-//							NodeController.saveJpg(NodeController.getImageCache(), image.uuid + "." + image.extension,
-//									bufferedImage);
-//						}
-//						// TODO Add support for PNG
-////						if (ClientController.fileClient.checkHealth()) {
-////							ClientController.fileClient.registerFile(image.uuid);
-////							if (ClientController.fileClient.checkFile(image.uuid)) {
-////								ClientController.fileClient.uploadFile(
-////										NodeController.getImageCache() + NodeController.getSeperator(),
-////										image.uuid + "." + image.extension);
-////							}
-////						}
-//					} else {
-////						if (ClientController.fileClient.checkHealth()) {
-////							if (ClientController.fileClient.checkFile(image.uuid)) {
-////								ClientController.fileClient.downloadFile(
-////										NodeController.getImageCache() + NodeController.getSeperator(),
-////										image.getUUID() + "." + image.getExtension());
-////								ClientController.fileClient.unmarkFile(image.uuid);
-////							} else {
-////								ClientController.fileClient.markFile(image.uuid);
-////							}
-////						}
-//					}
-//				} else {
-//					image.setBufferedImage(bufferedImage);
-////					if (ClientController.fileClient.checkHealth()) {
-////						ClientController.fileClient.registerFile(image.uuid);
-////						if (ClientController.fileClient.checkFile(image.uuid)) {
-////							ClientController.fileClient.uploadFile(
-////									NodeController.getImageCache() + NodeController.getSeperator(),
-////									image.uuid + "." + image.extension);
-////						}
-////					}
-//				}
-//			}
-//			image.setOffset(offset);
-//			image.setScale(this.scale);
-//			offset += image.dimension.offset;
-//		}
-//		return this.imageList;
-//	}
-
 	/**
 	 * Function returns bufferedImage with one or more File bufferedImages from the
 	 * fileList
@@ -412,12 +351,24 @@ public class Page {
 			shape.position.setOffset(image.position.offset);
 		}
 	}
+	
+	@JsonIgnore
+	public void removeImage(String uuid) {
+		ListIterator<Image> imageListIterator = this.imageList.listIterator();
+		while(imageListIterator.hasNext()){
+			Image image = imageListIterator.next();
+		    if(image.uuid.equals(uuid)){
+		    	this.position.absoluteDimension.width -= image.position.absoluteDimension.width;
+		        imageListIterator.remove();
+		    }
+		}
+	}
 
 	public Shape removeShape(Shape shape) {
 		logger.info("removeShape(" + shape + ")");
 		Shape s = null;
-		for (Image file : this.getImageList()) {
-			s = file.removeShape(shape.uuid);
+		for (Image image : this.getImageList()) {
+			s = image.removeShape(shape.uuid);
 			if (s != null) {
 				break;
 			}
@@ -587,6 +538,68 @@ public class Page {
 //		image.setScale(this.position.scale);
 //		this.position.dimension.width += image.position.dimension.width;
 //		offset += image.position.dimension.width;
+//	}
+//	return this.imageList;
+//}
+
+
+///**
+//* DIMENSION 2 A Function is the only place where the File objects receive the
+//* metadata necessary to correctly process shapes.
+//*
+//* @return
+//*/
+//@JsonIgnore
+//public List<Image> getImageList() {
+//	double offset = 0;
+//	for (Image image : this.imageList) {
+//		if (image.getBufferedImage() == null) {
+//			BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getImageCache(),
+//					image.uuid + "." + image.extension);
+//			if (bufferedImage == null) {
+//				bufferedImage = NodeController.openBufferedImage(image.getPath(), image.getNameAndExtension());
+//				if (bufferedImage != null) {
+//					image.setBufferedImage(bufferedImage);
+//					if (image.extension.equals("jpg") || image.extension.equals("jpeg")) {
+//						NodeController.saveJpg(NodeController.getImageCache(), image.uuid + "." + image.extension,
+//								bufferedImage);
+//					}
+//					// TODO Add support for PNG
+////					if (ClientController.fileClient.checkHealth()) {
+////						ClientController.fileClient.registerFile(image.uuid);
+////						if (ClientController.fileClient.checkFile(image.uuid)) {
+////							ClientController.fileClient.uploadFile(
+////									NodeController.getImageCache() + NodeController.getSeperator(),
+////									image.uuid + "." + image.extension);
+////						}
+////					}
+//				} else {
+////					if (ClientController.fileClient.checkHealth()) {
+////						if (ClientController.fileClient.checkFile(image.uuid)) {
+////							ClientController.fileClient.downloadFile(
+////									NodeController.getImageCache() + NodeController.getSeperator(),
+////									image.getUUID() + "." + image.getExtension());
+////							ClientController.fileClient.unmarkFile(image.uuid);
+////						} else {
+////							ClientController.fileClient.markFile(image.uuid);
+////						}
+////					}
+//				}
+//			} else {
+//				image.setBufferedImage(bufferedImage);
+////				if (ClientController.fileClient.checkHealth()) {
+////					ClientController.fileClient.registerFile(image.uuid);
+////					if (ClientController.fileClient.checkFile(image.uuid)) {
+////						ClientController.fileClient.uploadFile(
+////								NodeController.getImageCache() + NodeController.getSeperator(),
+////								image.uuid + "." + image.extension);
+////					}
+////				}
+//			}
+//		}
+//		image.setOffset(offset);
+//		image.setScale(this.scale);
+//		offset += image.dimension.offset;
 //	}
 //	return this.imageList;
 //}

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
@@ -250,15 +251,13 @@ public class Image {
 	 */
 	public Selection intersectShape(Point point) {
 		Selection selection = null;
-//		double factor;
-//		Point copyPoint = null;
-//		Shape shape = this.getShape();
-//		if (shape != null) {
-//			copyPoint = new Point(point);
+		double factor;
+		Shape shape = this.getShape();
+		if (shape != null) {
 //			factor = this.position.offset * this.position.scale;
-//			copyPoint.x -= factor;
-//			selection = shape.position.selectionPoint(copyPoint);
-//		}
+//			point.x -= factor;
+			selection = shape.position.selectionPoint(point);
+		}
 		return selection;
 	}
 
@@ -275,25 +274,18 @@ public class Image {
 	public Shape removeShape(Shape shape) {
 		return this.removeShape(shape.uuid);
 	}
-
-	/**
-	 * DIMENSION 4 Function removes Shape from shapeList using uuid.
-	 * 
-	 * @param shape
-	 */
+	
 	@JsonIgnore
 	public Shape removeShape(String uuid) {
-		Shape s = null;
-		for (int i = 0; i < this.shapeList.size(); i++) {
-			s = this.shapeList.get(i);
-			if (s.uuid.equals(uuid)) {
-				this.shapeList.remove(i);
-				break;
-			} else {
-				s = null;
-			}
+		ListIterator<Shape> shapeListIterator = this.shapeList.listIterator();
+		while(shapeListIterator.hasNext()){
+			Shape shape = shapeListIterator.next();
+		    if(shape.uuid.equals(uuid)){
+		        shapeListIterator.remove();
+		        return shape;
+		    }
 		}
-		return s;
+		return null;
 	}
 
 	/**
@@ -310,7 +302,7 @@ public class Image {
 	@Override
 	public String toString() {
 		String string = "";
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		ObjectWriter ow = new ObjectMapper().writer();
 		try {
 			string = ow.writeValueAsString(this);
 		} catch (IOException e) {
@@ -320,3 +312,23 @@ public class Image {
 		return string;
 	}
 }
+
+/**
+ * DIMENSION 4 Function removes Shape from shapeList using uuid.
+ * 
+ * @param shape
+ */
+//@JsonIgnore
+//public Shape removeShape(String uuid) {
+//	Shape s = null;
+//	for (int i = 0; i < this.shapeList.size(); i++) {
+//		s = this.shapeList.get(i);
+//		if (s.uuid.equals(uuid)) {
+//			this.shapeList.remove(i);
+//			break;
+//		} else {
+//			s = null;
+//		}
+//	}
+//	return s;
+//}

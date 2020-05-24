@@ -32,11 +32,11 @@ public class MoveShape extends Command {
 		if (this.document.cache.releasedImage != null &&!this.document.cache.pressedImage.equals(this.document.cache.releasedImage)) {
 			shape = new Shape(this.document.cache.pressedShape);
 			shape.position = new Position(this.document.cache.pressedShape.position);
-//			shape.position.movePoint(this.document.cache.movedPoint);
+			shape.position.movePoint(this.document.cache.movedPoint);
 			this.document.cache.pressedImage.removeShape(shape.uuid);
 			this.document.cache.releasedImage.addShape(shape);
 		} else {
-//			this.document.cache.pressedShape.position.movePoint(this.document.cache.movedPoint);
+			this.document.cache.pressedShape.position.movePoint(this.document.cache.movedPoint);
 			shape = this.document.cache.pressedShape;
 		}		
 		operation = new Operation();

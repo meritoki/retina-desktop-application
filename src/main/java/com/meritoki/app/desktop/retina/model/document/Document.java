@@ -59,13 +59,9 @@ public class Document {
 		image = new Image(new File("./data/image/04.jpg"));
 		page.addImage(image);
 		pageList.add(page);
-//		page = new Page();
-//		image = new Image("./data/image","02.jpg");
-//		page.imageList.add(image);
-//		pageList.add(page);
 		page = new Page();
 		image = new Image(new File("./data/image/03.jpg"));
-		page.imageList.add(image);
+		page.addImage(image);
 		pageList.add(page);
 //		page = new Page();
 //		image = new Image("./data/image","04.jpg");
