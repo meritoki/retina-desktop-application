@@ -20,8 +20,6 @@ public class Position {
 	}
 	@JsonIgnore
 	private static Logger logger = LogManager.getLogger(Position.class.getName());
-//	@JsonProperty
-//	public List<Point> pointList = new ArrayList<>();
 	@JsonProperty
 	public double addScale = 1;
 	@JsonProperty
@@ -31,7 +29,7 @@ public class Position {
 	@JsonProperty 
 	public Point absolutePoint = new Point();
 	@JsonProperty
-	public Point relativePoint = new Point();
+	public Point relativePoint = null;
 	@JsonProperty
 	public Dimension dimension = new Dimension();
 	@JsonProperty
@@ -42,7 +40,6 @@ public class Position {
 	public double margin = 0;
 
 	public Position() {
-//		this.scale();
 	}
 	
 	public Position(int x, int y, int width, int height) {
@@ -61,10 +58,12 @@ public class Position {
 		this.offset = offset;
 		this.margin = margin;
 		this.absolutePoint = pointList.get(0);
+		this.point = this.absolutePoint;
 		Point endPoint = pointList.get(1);
 		this.absoluteDimension.width = Math.abs(endPoint.x - this.absolutePoint.x);
 		this.absoluteDimension.height = Math.abs(endPoint.y - this.absolutePoint.y);
 		this.relativePoint = this.getRelativePoint();
+		
 	}
 	
 	public Position(Position position) {
@@ -74,9 +73,8 @@ public class Position {
 		this.absoluteDimension.height = position.absoluteDimension.height;
 		this.scale = position.scale;
 		this.addScale = position.addScale;
-//		for (Point p : position.pointList) {
-//			this.pointList.add(new Point(p));
-//		}
+		this.margin = position.margin;
+		this.offset = position.offset;
 	}
 
 	@JsonIgnore
@@ -111,7 +109,7 @@ public class Position {
 	@JsonIgnore
 	public void setScale(double scale) {
 		this.scale = (this.addScale > 0)? scale/this.addScale: scale;
-//		this.scale();
+		this.scale();
 	}
 	
 	public void setAddScale(double addScale) {
@@ -141,19 +139,19 @@ public class Position {
 
 	@JsonIgnore
 	public Point getStartPoint() {
-//		this.scale();
-//		return new Point(this.x, this.y);
-		return new Point();
+		return this.point;
 	}
 
 	@JsonIgnore
 	public Point getStopPoint() {
-//		this.scale();
-//		return new Point((this.x + this.dimension.width), (this.y + this.dimension.height));
-		return new Point();
+		return new Point((this.point.x + this.dimension.width), (this.point.y + this.dimension.height));
 	}
 	
 	public void scale() {
+		if(this.relativePoint != null) {
+			this.absolutePoint.x = this.relativePoint.x+this.offset;
+			this.absolutePoint.y = this.relativePoint.y+this.margin*this.addScale;
+		}
 		this.point.x = this.absolutePoint.x;
 		this.point.y = this.absolutePoint.y;
 		this.dimension.width = this.absoluteDimension.width;
@@ -187,20 +185,6 @@ public class Position {
 //		this.y *= this.scale;
 //		this.dimension.width *= this.scale;
 //		this.dimension.height *= this.scale;
-//	}
-
-//	@JsonIgnore
-//	public boolean isValid() {
-//		boolean flag = true;
-//		if (this.pointList.get(0).x == this.pointList.get(1).x && this.pointList.get(0).y == this.pointList.get(1).y) {
-//			flag = false;
-//		}
-//		return flag;
-//	}
-
-//	@JsonIgnore
-//	public void addPoint(Point point) {
-//		this.pointList.add(point);
 //	}
 
 	@JsonIgnore

@@ -372,11 +372,11 @@ public class Page {
 	@JsonIgnore
 	public void setImage(String uuid) {
 		logger.info("setImage(" + uuid + ")");
-		Image file = null;
+		Image image = null;
 		List<Image> imageList = this.getImageList();
 		for (int i = 0; i < imageList.size(); i++) {
-			file = imageList.get(i);
-			if (file.uuid.equals(uuid)) {
+			image = imageList.get(i);
+			if (image.uuid.equals(uuid)) {
 				this.setIndex(i);
 				break;
 			}
@@ -435,48 +435,6 @@ public class Page {
 		}
 		return selection;
 	}
-
-//
-//	@JsonIgnore
-//	public double getFileListMinMargin() {
-//		double min = 65536;
-//		for (Image image : this.getImageList()) {
-//			if (image.dimension.margin < min) {
-//				min = image.dimension.margin;
-//			}
-//		}
-//		return min;
-//	}
-//
-//	@JsonIgnore
-//	public double getFileListMaxMargin() {
-//		double max = -65536;
-//		for (Image image : this.getImageList()) {
-//			if (image.dimension.margin > max) {
-//				max = image.dimension.margin;
-//			}
-//		}
-//		return max;
-//	}
-
-//	@JsonIgnore
-//	public BufferedImage modifyImage(Image image) { // BufferedImage img1,BufferedImage img2) {
-//		logger.debug("modifyImage(" + image + ")");
-//		BufferedImage bufferedImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-//		if (image.bufferedImage != null) {
-//			int width = image.bufferedImage.getWidth();
-//			int height = image.bufferedImage.getHeight();
-//			bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-//			Graphics2D graphics2D = bufferedImage.createGraphics();
-//			Color oldColor = graphics2D.getColor();
-//			graphics2D.setPaint(Color.BLACK);
-//			graphics2D.fillRect(0, 0, width, height);
-//			graphics2D.setColor(oldColor);
-//			graphics2D.drawImage(image.bufferedImage, null, 0, (int) image.dimension.margin);
-//			graphics2D.dispose();
-//		}
-//		return bufferedImage;
-//	}
 
 	@JsonIgnore
 	public BufferedImage joinImages(List<Image> imageList) {

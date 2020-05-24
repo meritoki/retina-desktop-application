@@ -243,17 +243,22 @@ public class Image {
 		this.shapeList.add(shape);
 	}
 
+	/**
+	 * Need To Refactor
+	 * @param point
+	 * @return
+	 */
 	public Selection intersectShape(Point point) {
 		Selection selection = null;
-		double factor;
-		Point copyPoint = null;
-		Shape shape = this.getShape();
-		if (shape != null) {
-			copyPoint = new Point(point);
-			factor = this.position.offset * this.position.scale;
-			copyPoint.x -= factor;
-			selection = shape.position.selectionPoint(copyPoint);
-		}
+//		double factor;
+//		Point copyPoint = null;
+//		Shape shape = this.getShape();
+//		if (shape != null) {
+//			copyPoint = new Point(point);
+//			factor = this.position.offset * this.position.scale;
+//			copyPoint.x -= factor;
+//			selection = shape.position.selectionPoint(copyPoint);
+//		}
 		return selection;
 	}
 
@@ -305,7 +310,7 @@ public class Image {
 	@Override
 	public String toString() {
 		String string = "";
-		ObjectWriter ow = new ObjectMapper().writer();
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		try {
 			string = ow.writeValueAsString(this);
 		} catch (IOException e) {
