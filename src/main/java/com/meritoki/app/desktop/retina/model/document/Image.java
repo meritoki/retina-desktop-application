@@ -138,16 +138,13 @@ public class Image {
 	 * @return
 	 */
 	public Shape getShape(Point point) {
-		Shape s = null;
 		for (Shape shape : this.shapeList) {
 			if (shape.position.containsPoint((point))) {
-//			if (shape.dimension.containsPoint(this.getFilePoint(point))) {
-				logger.info("getShape(" + point + ") shape" + shape);
-				s = shape;
-				break;
+				logger.info("getShape(" + point + ") shape=" + shape);
+				return shape;
 			}
 		}
-		return s;
+		return null;
 	}
 
 	/**
@@ -171,7 +168,6 @@ public class Image {
 	 */
 	@JsonIgnore
 	public void setIndex(int index) {
-		logger.debug("setIndex(" + index + ")");
 		if (index >= 0 && index < this.shapeList.size()) {
 			this.index = index;
 		}
@@ -251,11 +247,8 @@ public class Image {
 	 */
 	public Selection intersectShape(Point point) {
 		Selection selection = null;
-		double factor;
 		Shape shape = this.getShape();
 		if (shape != null) {
-//			factor = this.position.offset * this.position.scale;
-//			point.x -= factor;
 			selection = shape.position.selectionPoint(point);
 		}
 		return selection;
@@ -263,11 +256,7 @@ public class Image {
 
 	@JsonIgnore
 	public boolean containsShape(Shape shape) {
-		boolean flag = false;
-		if (this.containsPoint(shape.position.getStartPoint())) {
-			flag = true;
-		}
-		return flag;
+		return this.containsPoint(shape.position.getStartPoint());
 	}
 
 	@JsonIgnore

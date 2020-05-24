@@ -409,8 +409,7 @@ public class Page {
 				int w = bufferedImage.getWidth();
 				int h = bufferedImage.getHeight();
 				int width = w + b.bufferedImage.getWidth();
-				int height = Math.max(h, b.bufferedImage.getHeight() + (int) b.position.margin);// +offset;
-//				int height = b.bufferedImage.getHeight() + (int) b.dimension.margin;// +offset;
+				int height = Math.max(h, b.bufferedImage.getHeight() + (int) b.position.margin);
 				BufferedImage bI = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 				Graphics2D graphics2D = bI.createGraphics();
 				Color oldColor = graphics2D.getColor();
@@ -418,7 +417,6 @@ public class Page {
 				graphics2D.fillRect(0, 0, width, height);
 				graphics2D.setColor(oldColor);
 				graphics2D.drawImage(bufferedImage, null, 0, 0);
-//				graphics2D.drawImage(b.bufferedImage, null, w, (int) b.dimension.margin);
 				graphics2D.drawImage(b.bufferedImage, null, w, (int) (b.position.margin));
 				graphics2D.dispose();
 				bufferedImage = bI;
@@ -434,7 +432,6 @@ public class Page {
 		if (bufferedImage != null) {
 			graphics2D.drawImage(bufferedImage, affineTransform, null);
 		}
-
 		List<Image> imageList = this.getImageList();
 		Image image = this.getImage();
 		Position p = null;
@@ -489,7 +486,6 @@ public class Page {
 		graphics2D.setColor(Color.BLUE);
 		Rectangle2D.Double frame = new Rectangle2D.Double(0, 0, this.position.dimension.width, this.position.dimension.height);
 		graphics2D.draw(frame);
-
 	}
 	
 	@JsonIgnore
