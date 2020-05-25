@@ -61,9 +61,9 @@ public class Position {
 		this.margin = margin;
 		this.absolutePoint = pointList.get(0);
 		this.point = this.absolutePoint;
-		Point endPoint = pointList.get(1);
-		this.absoluteDimension.width = Math.abs(endPoint.x - this.absolutePoint.x);
-		this.absoluteDimension.height = Math.abs(endPoint.y - this.absolutePoint.y);
+		Point stopPoint = pointList.get(1);
+		this.absoluteDimension.width = Math.abs(stopPoint.x - this.absolutePoint.x);
+		this.absoluteDimension.height = Math.abs(stopPoint.y - this.absolutePoint.y);
 		this.relativePoint = this.getRelativePoint();
 
 	}
@@ -280,12 +280,6 @@ public class Position {
 			break;
 		}
 		}
-//		if(this.relativePoint != null) {
-//			this.relativePoint.x = startPoint.x;
-//			this.relativePoint.y = startPoint.y;
-//			this.absoluteDimension.width = stopPoint.x - this.relativePoint.x;
-//			this.absoluteDimension.height = stopPoint.y - this.relativePoint.y;
-//		}
 		this.absolutePoint.x = startPoint.x;
 		this.absolutePoint.y = startPoint.y;
 		this.absoluteDimension.width = stopPoint.x - this.absolutePoint.x;

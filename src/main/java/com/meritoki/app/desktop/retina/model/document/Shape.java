@@ -60,7 +60,11 @@ public class Shape {
 		this.uuid = shape.uuid;
 		this.type = shape.type;
 		this.position = new Position(shape.position);
+		this.bufferedImage = shape.bufferedImage;
 		this.data = new Data(shape.data);
+		for(Text text: shape.textList) {
+			this.textList.add(new Text(text));
+		}
 	}
 	
 	public void setScale(double scale) {
@@ -70,11 +74,6 @@ public class Shape {
 	public void setMargin(double margin) {
 		logger.info("setMargin("+margin+")");
 		this.position.setMargin(margin);
-	}
-
-	@JsonProperty
-	public String getUUID() {
-		return this.uuid;
 	}
 
 	@JsonProperty
@@ -157,33 +156,3 @@ public class Shape {
 		return string;
 	}
 }
-
-
-//@JsonIgnore
-//public void setAddScale(double addScale) {
-//	this.addScale = addScale;
-//}
-//
-//@JsonIgnore
-//public void setScale(double scale) {
-//	this.scale = scale * (1 / this.addScale);
-//}
-
-//public void setPointList(List<Point> pointList) {
-//	this.pointList = pointList;
-//}
-
-
-
-//@JsonIgnore
-//public void move(Point point) {
-//	logger.info("move(" + point + ")");
-////	logger.info("move(" + point + ") this.pointList=" + this.pointList);
-//	this.getDimension().move(point);
-////	this.pointList.get(0).x = this.pointList.get(0).x + point.x;
-////	this.pointList.get(0).y = this.pointList.get(0).y + point.y;
-////	this.pointList.get(1).x = this.pointList.get(1).x + point.x;
-////	this.pointList.get(1).y = this.pointList.get(1).y + point.y;
-////	logger.info("move(" + point + ") this.pointList=" + this.pointList);
-//}
-
