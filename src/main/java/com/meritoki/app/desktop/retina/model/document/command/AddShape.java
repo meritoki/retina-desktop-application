@@ -19,11 +19,11 @@ public class AddShape extends Command {
 	}
 
 	@Override
-	public void execute() {
+	public void execute() throws Exception {
 		logger.info("execute()");
 		this.user = this.document.cache.user;
-		if (this.minimumSize(this.document.cache.pressedPoint, this.document.cache.releasedPoint,
-				this.document.cache.scale)) {
+//		if (this.minimumSize(this.document.cache.pressedPoint, this.document.cache.releasedPoint,
+//				this.document.cache.scale)) {
 			this.document.cache.pressedShape = new Shape();
 			this.document.cache.pressedShape.type = this.document.cache.type;
 			this.document.cache.pressedShape.position = new Position(new Point(this.document.cache.pressedPoint),
@@ -36,9 +36,9 @@ public class AddShape extends Command {
 			operation.id = UUID.randomUUID().toString();
 			operation.uuid = this.document.cache.pressedShape.uuid;
 			this.operationList.push(operation);
-		} else {
-			logger.error("execute() shape size");
-		}
+//		} else {
+//			throw new Exception("Shape too small");
+//		}
 	}
 
 	public boolean minimumSize(Point a, Point b, double scale) {

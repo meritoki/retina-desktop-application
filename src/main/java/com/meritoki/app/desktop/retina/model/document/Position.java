@@ -64,6 +64,7 @@ public class Position {
 		Point stopPoint = pointList.get(1);
 		this.absoluteDimension.width = Math.abs(stopPoint.x - this.absolutePoint.x);
 		this.absoluteDimension.height = Math.abs(stopPoint.y - this.absolutePoint.y);
+		this.dimension = this.absoluteDimension;
 		this.relativePoint = this.getRelativePoint();
 
 	}

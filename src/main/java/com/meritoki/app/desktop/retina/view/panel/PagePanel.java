@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.apache.logging.log4j.LogManager;
@@ -158,9 +159,8 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				} else {
 					try {
 						this.model.getDocument().pattern.execute("addShape");
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+					} catch (Exception e) {
+						JOptionPane.showMessageDialog(main, e.getMessage(), "Query Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}

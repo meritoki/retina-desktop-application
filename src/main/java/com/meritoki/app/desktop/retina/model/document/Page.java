@@ -247,10 +247,13 @@ public class Page {
 	 * @param index
 	 */
 	@JsonIgnore
-	public void setIndex(int index) {
+	public boolean setIndex(int index) {
+		boolean flag = false;
 		if (index >= 0 && index < this.imageList.size()) {
 			this.index = index;
+			flag = true;
 		}
+		return flag;
 	}
 
 	@JsonIgnore

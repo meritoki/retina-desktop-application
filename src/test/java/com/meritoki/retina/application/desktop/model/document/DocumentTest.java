@@ -36,6 +36,8 @@ class DocumentTest {
 	static double imageOneHeight = 0;
 	
 	static String shapeZeroUUID = null;
+	
+	static int dimension = 4;
 
 	@BeforeAll
 	public static void initialize() {
@@ -185,6 +187,394 @@ class DocumentTest {
 			point.y += image.position.dimension.height/2;
 			assertNotNull(document.getImage(point));
 			assertEquals(document.getImage(point).uuid, image.uuid);
+		}
+	}
+	
+	@Test
+	@Order(5)
+	public void addShapes() {
+		assertEquals(document.setIndex(0), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		document.cache.pressedImage = document.getImage();
+		System.out.println("======="+document.getImage());
+		int x = (int)(document.cache.pressedImage.position.absoluteDimension.width/2 - dimension/2);
+		int y = (int)(document.cache.pressedImage.position.absoluteDimension.height/2 - dimension/2);
+		int width = dimension;
+		int height = dimension;
+		document.cache.pressedPoint = new Point(x,y);
+		document.cache.releasedPoint = new Point(x+width, y+height);
+    	try {
+			document.pattern.execute("addShape");
+		} catch (Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+		assertEquals(document.setIndex(1), true);
+		document.cache.pressedImage = document.getImage();
+		x = (int)(document.cache.pressedImage.position.absoluteDimension.width/2 - dimension/2);
+		y = (int)(document.cache.pressedImage.position.absoluteDimension.height/2 - dimension/2);
+		width = dimension;
+		height = dimension;
+		document.cache.pressedPoint = new Point(x,y);
+		document.cache.releasedPoint = new Point(x+width, y+height);
+    	try {
+			document.pattern.execute("addShape");
+		} catch (Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+    	
+		assertEquals(document.setIndex(2), true);
+		document.cache.pressedImage = document.getImage();
+		x = (int)(document.cache.pressedImage.position.absoluteDimension.width/2 - dimension/2);
+		y = (int)(document.cache.pressedImage.position.absoluteDimension.height/2 - dimension/2);
+		width = dimension;
+		height = dimension;
+		document.cache.pressedPoint = new Point(x,y);
+		document.cache.releasedPoint = new Point(x+width, y+height);
+    	try {
+			document.pattern.execute("addShape");
+		} catch (Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+    	
+		assertEquals(document.setIndex(3), true);
+		document.cache.pressedImage = document.getImage();
+		x = (int)(document.cache.pressedImage.position.absoluteDimension.width/2 - dimension/2);
+		y = (int)(document.cache.pressedImage.position.absoluteDimension.height/2 - dimension/2);
+		width = dimension;
+		height = dimension;
+		document.cache.pressedPoint = new Point(x,y);
+		document.cache.releasedPoint = new Point(x+width, y+height);
+    	try {
+			document.pattern.execute("addShape");
+		} catch (Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+	}
+	
+	@Test
+	@Order(6)
+	public void getShapes() {
+		assertEquals(document.setIndex(0), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		int x = (int)(document.getPage().getImage().position.absoluteDimension.width/2);
+		int y = (int)(document.getPage().getImage().position.absoluteDimension.height/2);
+		assertNotNull(document.getPage().getImage().getShape(new Point(x,y)));
+		
+		assertEquals(document.setIndex(1), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		x = (int)(document.getPage().getImage().position.absoluteDimension.width/2);
+		y = (int)(document.getPage().getImage().position.absoluteDimension.height/2);
+		assertNotNull(document.getPage().getImage().getShape(new Point(x,y)));
+		
+		assertEquals(document.setIndex(2), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		x = (int)(document.getPage().getImage().position.absoluteDimension.width/2);
+		y = (int)(document.getPage().getImage().position.absoluteDimension.height/2);
+		assertNotNull(document.getPage().getImage().getShape(new Point(x,y)));
+		
+		assertEquals(document.setIndex(3), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		x = (int)(document.getPage().getImage().position.absoluteDimension.width/2);
+		y = (int)(document.getPage().getImage().position.absoluteDimension.height/2);
+		assertNotNull(document.getPage().getImage().getShape(new Point(x,y)));
+	}
+	
+	@Test
+	@Order(7)
+	public void joinWithShapes() {
+		document.cache.script = "JOIN 0:1;";
+    	document.cache.pageList = document.getPageList();
+    	try {
+			document.pattern.execute("executeScript");
+		} catch (Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+		assertEquals(document.setIndex(0), true);
+		assertNotNull(document.getPage());
+		assertEquals(document.getPage().getImageList().size(),2);
+		for(Image image: document.getPage().imageList) {
+			Point point = new Point(image.position.point);
+			point.x += image.position.dimension.width/2;
+			point.y += image.position.dimension.height/2;
+			assertNotNull(document.getImage(point));
+			assertEquals(document.getImage(point).uuid, image.uuid);
+		}
+		
+		document.cache.script = "JOIN 0:1;";
+    	document.cache.pageList = document.getPageList();
+    	try {
+			document.pattern.execute("executeScript");
+		} catch (Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+		assertEquals(document.setIndex(0), true);
+		assertNotNull(document.getPage());
+		assertEquals(document.getPage().getImageList().size(),3);
+		for(Image image: document.getPage().imageList) {
+			Point point = new Point(image.position.point);
+			point.x += image.position.dimension.width/2;
+			point.y += image.position.dimension.height/2;
+			assertNotNull(document.getImage(point));
+			assertEquals(document.getImage(point).uuid, image.uuid);
+		}
+		
+		document.cache.script = "JOIN 0:1;";
+    	document.cache.pageList = document.getPageList();
+    	try {
+			document.pattern.execute("executeScript");
+		} catch (Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+		assertEquals(document.setIndex(0), true);
+		assertNotNull(document.getPage());
+		assertEquals(document.getPage().getImageList().size(),4);
+		for(Image image: document.getPage().imageList) {
+			Point point = new Point(image.position.point);
+			point.x += image.position.dimension.width/2;
+			point.y += image.position.dimension.height/2;
+			assertNotNull(document.getImage(point));
+			assertEquals(document.getImage(point).uuid, image.uuid);
+		}
+	}
+	
+	@Test
+	@Order(7)
+	public void getJoinShapes() {
+		assertEquals(document.setIndex(0), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.absoluteDimension.width/2);
+			int y = (int)(image.position.absoluteDimension.height/2);
+			assertNotNull(image.getShape(new Point(x,y)));
+		}
+	}
+	
+	@Test
+	@Order(7)
+	public void splitWithShapes() {
+		document.cache.script = "SPLIT 0;";
+    	document.cache.pageList = document.getPageList();
+    	try {
+			document.pattern.execute("executeScript");
+		} catch (Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+    	assertEquals(document.getPageList().size(), 4);
+		assertEquals(document.setIndex(0), true);
+		assertNotNull(document.getPage());
+		for(Image image: document.getPage().imageList) {
+			Point point = new Point(image.position.point);
+			point.x += image.position.dimension.width/2;
+			point.y += image.position.dimension.height/2;
+			assertNotNull(document.getImage(point));
+			assertEquals(document.getImage(point).uuid, image.uuid);
+		}
+		assertEquals(document.setIndex(1), true);
+		assertNotNull(document.getPage());
+		for(Image image: document.getPage().imageList) {
+			Point point = new Point(image.position.absolutePoint);
+			point.x += image.position.dimension.width/2;
+			point.y += image.position.dimension.height/2;
+			assertNotNull(document.getImage(point));
+			assertEquals(document.getImage(point).uuid, image.uuid);
+		}
+		assertEquals(document.setIndex(2), true);
+		assertNotNull(document.getPage());
+		for(Image image: document.getPage().imageList) {
+			Point point = new Point(image.position.absolutePoint);
+			point.x += image.position.dimension.width/2;
+			point.y += image.position.dimension.height/2;
+			assertNotNull(document.getImage(point));
+			assertEquals(document.getImage(point).uuid, image.uuid);
+		}
+		assertEquals(document.setIndex(3), true);
+		assertNotNull(document.getPage());
+		for(Image image: document.getPage().imageList) {
+			Point point = new Point(image.position.absolutePoint);
+			point.x += image.position.dimension.width/2;
+			point.y += image.position.dimension.height/2;
+			assertNotNull(document.getImage(point));
+			assertEquals(document.getImage(point).uuid, image.uuid);
+		}
+		
+		assertEquals(document.setIndex(0), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.absoluteDimension.width/2);
+			int y = (int)(image.position.absoluteDimension.height/2);
+			assertNotNull(image.getShape(new Point(x,y)));
+		}
+		
+		assertEquals(document.setIndex(1), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.absoluteDimension.width/2);
+			int y = (int)(image.position.absoluteDimension.height/2);
+			assertNotNull(image.getShape(new Point(x,y)));
+		}
+		
+		assertEquals(document.setIndex(2), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.absoluteDimension.width/2);
+			int y = (int)(image.position.absoluteDimension.height/2);
+			assertNotNull(image.getShape(new Point(x,y)));
+		}
+		
+		assertEquals(document.setIndex(3), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.absoluteDimension.width/2);
+			int y = (int)(image.position.absoluteDimension.height/2);
+			assertNotNull(image.getShape(new Point(x,y)));
+		}
+	}
+	
+	@Test
+	@Order(8)
+	public void joinWithShapesAgain() {
+		document.cache.script = "JOIN 0:1;";
+    	document.cache.pageList = document.getPageList();
+    	try {
+			document.pattern.execute("executeScript");
+		} catch (Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+		assertEquals(document.setIndex(0), true);
+		assertNotNull(document.getPage());
+		assertEquals(document.getPage().getImageList().size(),2);
+		for(Image image: document.getPage().imageList) {
+			Point point = new Point(image.position.point);
+			point.x += image.position.dimension.width/2;
+			point.y += image.position.dimension.height/2;
+			assertNotNull(document.getImage(point));
+			assertEquals(document.getImage(point).uuid, image.uuid);
+		}
+		
+		document.cache.script = "JOIN 0:1;";
+    	document.cache.pageList = document.getPageList();
+    	try {
+			document.pattern.execute("executeScript");
+		} catch (Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+		assertEquals(document.setIndex(0), true);
+		assertNotNull(document.getPage());
+		assertEquals(document.getPage().getImageList().size(),3);
+		for(Image image: document.getPage().imageList) {
+			Point point = new Point(image.position.point);
+			point.x += image.position.dimension.width/2;
+			point.y += image.position.dimension.height/2;
+			assertNotNull(document.getImage(point));
+			assertEquals(document.getImage(point).uuid, image.uuid);
+		}
+		
+		document.cache.script = "JOIN 0:1;";
+    	document.cache.pageList = document.getPageList();
+    	try {
+			document.pattern.execute("executeScript");
+		} catch (Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+		assertEquals(document.setIndex(0), true);
+		assertNotNull(document.getPage());
+		assertEquals(document.getPage().getImageList().size(),4);
+		for(Image image: document.getPage().imageList) {
+			Point point = new Point(image.position.point);
+			point.x += image.position.dimension.width/2;
+			point.y += image.position.dimension.height/2;
+			assertNotNull(document.getImage(point));
+			assertEquals(document.getImage(point).uuid, image.uuid);
+		}
+	}
+	
+	@Test
+	@Order(9)
+	public void splitWithShapesAgain() {
+		document.cache.script = "SPLIT 0;";
+    	document.cache.pageList = document.getPageList();
+    	try {
+			document.pattern.execute("executeScript");
+		} catch (Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+    	assertEquals(document.getPageList().size(), 4);
+		assertEquals(document.setIndex(0), true);
+		assertNotNull(document.getPage());
+		for(Image image: document.getPage().imageList) {
+			Point point = new Point(image.position.point);
+			point.x += image.position.dimension.width/2;
+			point.y += image.position.dimension.height/2;
+			assertNotNull(document.getImage(point));
+			assertEquals(document.getImage(point).uuid, image.uuid);
+		}
+		assertEquals(document.setIndex(1), true);
+		assertNotNull(document.getPage());
+		for(Image image: document.getPage().imageList) {
+			Point point = new Point(image.position.absolutePoint);
+			point.x += image.position.dimension.width/2;
+			point.y += image.position.dimension.height/2;
+			assertNotNull(document.getImage(point));
+			assertEquals(document.getImage(point).uuid, image.uuid);
+		}
+		assertEquals(document.setIndex(2), true);
+		assertNotNull(document.getPage());
+		for(Image image: document.getPage().imageList) {
+			Point point = new Point(image.position.absolutePoint);
+			point.x += image.position.dimension.width/2;
+			point.y += image.position.dimension.height/2;
+			assertNotNull(document.getImage(point));
+			assertEquals(document.getImage(point).uuid, image.uuid);
+		}
+		assertEquals(document.setIndex(3), true);
+		assertNotNull(document.getPage());
+		for(Image image: document.getPage().imageList) {
+			Point point = new Point(image.position.absolutePoint);
+			point.x += image.position.dimension.width/2;
+			point.y += image.position.dimension.height/2;
+			assertNotNull(document.getImage(point));
+			assertEquals(document.getImage(point).uuid, image.uuid);
+		}
+		
+		assertEquals(document.setIndex(0), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.absoluteDimension.width/2);
+			int y = (int)(image.position.absoluteDimension.height/2);
+			assertNotNull(image.getShape(new Point(x,y)));
+		}
+		
+		assertEquals(document.setIndex(1), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.absoluteDimension.width/2);
+			int y = (int)(image.position.absoluteDimension.height/2);
+			assertNotNull(image.getShape(new Point(x,y)));
+		}
+		
+		assertEquals(document.setIndex(2), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.absoluteDimension.width/2);
+			int y = (int)(image.position.absoluteDimension.height/2);
+			assertNotNull(image.getShape(new Point(x,y)));
+		}
+		
+		assertEquals(document.setIndex(3), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.absoluteDimension.width/2);
+			int y = (int)(image.position.absoluteDimension.height/2);
+			assertNotNull(image.getShape(new Point(x,y)));
 		}
 	}
 }

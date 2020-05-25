@@ -246,6 +246,8 @@ public class ExecuteScript extends Command {
 		Collections.reverse(imageList);;
 		pageList.remove(x);
 		for(Image image: imageList) {
+			image.setOffset(0);
+			image.setMargin(0);
 			pageList.add(x, new Page(image));
 		}
 		// End Logic
