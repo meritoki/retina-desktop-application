@@ -15,10 +15,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -86,9 +82,11 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 		if (this.model != null) {
 			Graphics2D graphics2D = (Graphics2D) graphics.create();
 			Document document = (this.model != null) ? this.model.getDocument() : null;
-			Page page = document.getPage();
-			page.setScale(this.model.document.cache.scale);
-			page.paint(graphics2D);
+			Page page = (document != null)? document.getPage(): null;
+			if(page != null) {
+				page.setScale(this.model.document.cache.scale);
+				page.paint(graphics2D);
+			}
 		}
 	}
 

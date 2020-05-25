@@ -19,6 +19,15 @@ public class Dimension {
 	@JsonProperty
 	public double height;
 	
+	public Dimension() {
+		
+	}
+	
+	public Dimension(double width, double height) {
+		this.width = width;
+		this.height = height;
+	}
+	
 	@JsonIgnore
 	@Override
 	public String toString() {

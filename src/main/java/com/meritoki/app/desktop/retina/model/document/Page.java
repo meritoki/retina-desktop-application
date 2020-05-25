@@ -106,11 +106,11 @@ public class Page {
 	 */
 	public Page(Page page) {
 		this.uuid = page.uuid;
-		for (Image file : page.imageList) {
-			this.imageList.add(new Image(file));
+		for (Image image : page.imageList) {
+			this.imageList.add(new Image(image));
 		}
 		this.index = page.index;
-		this.position = page.position;
+		this.position = new Position(page.position);
 	}
 
 	/**
@@ -130,12 +130,8 @@ public class Page {
 	 */
 	@JsonIgnore
 	public Image getImage() {
-		Image image = null;
-		List<Image> imageList = this.getImageList();
-		if (this.index >= 0 && this.index < imageList.size()) {
-			image = imageList.get(this.index);
-		}
-		return image;
+		int size = this.imageList.size();
+		return (this.index < size && size > 0) ? this.imageList.get(this.index) : null;
 	}
 
 	/**
@@ -146,19 +142,17 @@ public class Page {
 	 */
 	@JsonIgnore
 	public Image getImage(Point point) {
-		Image image = null;
-		for (Image i : this.getImageList()) {
-			image = i;
+		for (Image image : this.imageList) {
 			if (image.containsPoint(point)) {
-				break;
-			} else {
-				image = null;
+				logger.info("getImage(" + point + ") image=" + image);
+				return image;
 			}
 		}
-		if (image != null) {
-			logger.info("getImage(" + point + ") image=" + image);
-		}
-		return image;
+		return null;
+	}
+
+	public List<Image> getImageList() {
+		return this.imageList;
 	}
 
 	/**
@@ -170,8 +164,8 @@ public class Page {
 	@JsonIgnore
 	public Shape getShape(Point point) {
 		Shape s = null;
-		for (Image file : this.getImageList()) {
-			s = file.getShape(point);
+		for (Image image : this.getImageList()) {
+			s = image.getShape(point);
 			if (s != null) {
 				break;
 			}
@@ -186,29 +180,16 @@ public class Page {
 	 */
 	@JsonIgnore
 	public Shape getShape() {
-		Image file = this.getImage();
-		Shape shape = (file != null) ? file.getShape() : null;
+		Image image = this.getImage();
+		Shape shape = (image != null) ? image.getShape() : null;
 		return shape;
 	}
 
-	/**
-	 * DIMENSION 1 C Converts the dimension of Shape back to the global coordinates.
-	 * This method converts the shape back to the coordinates of the page.
-	 *
-	 * @return
-	 */
 	@JsonIgnore
 	public List<Shape> getShapeList() {
 		List<Shape> shapeList = new ArrayList<>();
 		for (Image image : this.getImageList()) {
 			for (Shape shape : image.getShapeList()) {
-//				shape.dimension.setScale(image.dimension.scale);
-//				shape.dimension.setOffset(image.dimension.offset);
-//				shape.dimension.setMargin(image.dimension.margin);
-//				shape.setDimension(null);
-//				dimension = shape.getDimension();
-//				dimension.x += (image.getOffset() * image.scale);
-//				dimension.y += (image.getMargin() * image.scale);
 				shape.bufferedImage = this.getShapeBufferedImage(shape);
 				shapeList.add(shape);
 			}
@@ -219,11 +200,7 @@ public class Page {
 	public BufferedImage getShapeBufferedImage(Shape shape) {
 		BufferedImage bufferedImage = null;
 		if (this.getBufferedImage() != null) {
-			int x = (int) (shape.position.point.x);// / this.scale);
-			int y = (int) (shape.position.point.y);// / this.scale);
-			int w = (int) (shape.position.dimension.width);// / this.scale);
-			int h = (int) (shape.position.dimension.height);// / this.scale);
-//			bufferedImage = this.getBufferedImage().getSubimage(x, y, w, h);
+//			bufferedImage = this.getBufferedImage().getSubimage((int)shape.position.point.x, (int)shape.position.point.y, (int)shape.position.dimension.width, (int)shape.position.dimension.height);
 		}
 		return bufferedImage;
 	}
@@ -243,10 +220,6 @@ public class Page {
 
 
 	
-	public List<Image> getImageList() {
-		return this.imageList;
-	}
-
 	/**
 	 * Function returns bufferedImage with one or more File bufferedImages from the
 	 * fileList
@@ -280,6 +253,20 @@ public class Page {
 		}
 	}
 
+	@JsonIgnore
+	public void setImage(String uuid) {
+		logger.info("setImage(" + uuid + ")");
+		Image image = null;
+		List<Image> imageList = this.getImageList();
+		for (int i = 0; i < imageList.size(); i++) {
+			image = imageList.get(i);
+			if (image.uuid.equals(uuid)) {
+				this.setIndex(i);
+				break;
+			}
+		}
+	}
+
 	/**
 	 * Function sets scale for page and all files in fileList
 	 *
@@ -309,16 +296,17 @@ public class Page {
 	}
 
 	@JsonIgnore
-	public void setImage(String uuid) {
-		logger.info("setImage(" + uuid + ")");
-		Image image = null;
-		List<Image> imageList = this.getImageList();
-		for (int i = 0; i < imageList.size(); i++) {
-			image = imageList.get(i);
-			if (image.uuid.equals(uuid)) {
-				this.setIndex(i);
-				break;
-			}
+	public void addImage(Image image) {
+		logger.info("addImage(" + image + ")");
+		this.imageList.add(image);
+		image.setScale(this.position.scale);
+		image.position.setOffset(this.position.absoluteDimension.width);
+		image.position.setAbsolutePoint(new Point(this.position.absoluteDimension.width, 0));
+		image.position.scale();
+		this.position.addAbsolutionDimension(image.position.absoluteDimension.width,0);
+		this.position.scale();
+		for(Shape shape: image.shapeList) {
+			shape.position.setOffset(image.position.offset);
 		}
 	}
 
@@ -339,31 +327,26 @@ public class Page {
 	}
 
 	@JsonIgnore
-	public void addImage(Image image) {
-		logger.info("addImage(" + image + ")");
-		this.imageList.add(image);
-		image.setScale(this.position.scale);
-		image.position.offset = this.position.absoluteDimension.width;
-		image.position.absolutePoint.x = this.position.absoluteDimension.width;
-		image.position.absolutePoint.y = 0;
-		this.position.absoluteDimension.width += image.position.absoluteDimension.width;
-		for(Shape shape: image.shapeList) {
-			shape.position.setOffset(image.position.offset);
-		}
-	}
-	
-	@JsonIgnore
-	public void removeImage(String uuid) {
+	public Image removeImage(String uuid) {
 		ListIterator<Image> imageListIterator = this.imageList.listIterator();
 		while(imageListIterator.hasNext()){
 			Image image = imageListIterator.next();
 		    if(image.uuid.equals(uuid)){
+		    	imageListIterator.remove();
 		    	this.position.absoluteDimension.width -= image.position.absoluteDimension.width;
-		        imageListIterator.remove();
+		        image.setOffset(0);
+		        image.setMargin(0);
+		        return image;
 		    }
 		}
+		return null;
 	}
 
+	/**
+	 * Need to refactor
+	 * @param shape
+	 * @return
+	 */
 	public Shape removeShape(Shape shape) {
 		logger.info("removeShape(" + shape + ")");
 		Shape s = null;
@@ -498,7 +481,25 @@ public class Page {
 		} catch (IOException ex) {
 			logger.error("IOException " + ex.getMessage());
 		}
-
 		return string;
 	}
 }
+//
+//@JsonIgnore
+//public List<Shape> getShapeList() {
+//	List<Shape> shapeList = new ArrayList<>();
+//	for (Image image : this.getImageList()) {
+//		for (Shape shape : image.getShapeList()) {
+////			shape.dimension.setScale(image.dimension.scale);
+////			shape.dimension.setOffset(image.dimension.offset);
+////			shape.dimension.setMargin(image.dimension.margin);
+////			shape.setDimension(null);
+////			dimension = shape.getDimension();
+////			dimension.x += (image.getOffset() * image.scale);
+////			dimension.y += (image.getMargin() * image.scale);
+//			shape.bufferedImage = this.getShapeBufferedImage(shape);
+//			shapeList.add(shape);
+//		}
+//	}
+//	return shapeList;
+//}

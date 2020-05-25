@@ -106,6 +106,19 @@ public class Position {
 		point.y = this.absolutePoint.y - margin*this.addScale;
 		return point;
 	}
+	
+	public void setAbsolutePoint(Point point) {
+		this.absolutePoint = point;
+	}
+	
+	public void setAbsoluteDimension(Dimension dimension) {
+		this.absoluteDimension = dimension;
+	}
+	
+	public void addAbsolutionDimension(double width, double height) {
+		this.absoluteDimension.width += width;
+		this.absoluteDimension.height += height;
+	}
 
 	@JsonIgnore
 	public void setScale(double scale) {
@@ -186,18 +199,17 @@ public class Position {
 		Point startPoint = this.getStartPoint();
 		Point stopPoint = this.getStopPoint();
 		double margin = 20 * this.scale;
-		if (point.x == startPoint.x && point.y == startPoint.y) {
+		if (point.x > (startPoint.x - margin) && point.x < (startPoint.x + margin) && point.y > (startPoint.y - margin) && point.y < (startPoint.y + margin)) {
 			selection = Selection.TOP_LEFT;
-		} else if (point.x > (stopPoint.x - margin) && point.x < (stopPoint.x + margin)
-				&& point.y > (stopPoint.y - margin) && point.y < (stopPoint.y + margin)) {
-			selection = Selection.BOTTOM_RIGHT;
-		} else if (point.x > (stopPoint.x - margin) && point.x < (stopPoint.x + margin)
-				&& point.y > (startPoint.y - margin) && point.y < (startPoint.y + margin)) {
+		} else if (point.x > (stopPoint.x - margin) && point.x < (stopPoint.x + margin) && point.y > (startPoint.y - margin) && point.y < (startPoint.y + margin)) {
 			selection = Selection.TOP_RIGHT;
-		} else if (point.x > (startPoint.x - margin) && point.x < (startPoint.x + margin)
-				&& point.y > (stopPoint.y - margin) && point.y < (stopPoint.y + margin)) {
+		} else if (point.x > (startPoint.x - margin) && point.x < (startPoint.x + margin) && point.y > (stopPoint.y - margin) && point.y < (stopPoint.y + margin)) {
 			selection = Selection.BOTTOM_LEFT;
-		} else if (point.y >= (startPoint.y) && point.y < (startPoint.y + margin) && point.x > startPoint.x
+			
+		} else if (point.x > (stopPoint.x - margin) && point.x < (stopPoint.x + margin) && point.y > (stopPoint.y - margin) && point.y < (stopPoint.y + margin)) {
+			
+			selection = Selection.BOTTOM_RIGHT;
+		}  else if (point.y >= (startPoint.y) && point.y < (startPoint.y + margin) && point.x > startPoint.x
 				&& point.x < stopPoint.x) {
 			selection = Selection.TOP;
 		} else if (point.y > (stopPoint.y - margin) && point.y <= (stopPoint.y) && point.x > startPoint.x

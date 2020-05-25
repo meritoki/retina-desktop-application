@@ -44,46 +44,53 @@ public class Document {
 	public Document() {
 		this.uuid = UUID.randomUUID().toString();
 		this.pattern = new Pattern(this);
-//		this.test();
+		this.test();
 	}
 	
 	@JsonIgnore
 	public void test() {
 		Page page = new Page();
-		Image image = new Image(new File("./data/image/01.jpg"));
-		page.addImage(image);
-		image = new Image(new File("./data/image/02.jpg"));
-		page.addImage(image);
-		image = new Image(new File("./data/image/03.jpg"));
-		page.addImage(image);
-		image = new Image(new File("./data/image/04.jpg"));
-		page.addImage(image);
-		pageList.add(page);
-		page = new Page();
-		image = new Image(new File("./data/image/03.jpg"));
-		page.addImage(image);
-		pageList.add(page);
-//		page = new Page();
-//		image = new Image("./data/image","04.jpg");
-//		page.imageList.add(image);
+		page.addImage(new Image(new File("./data/image/01.jpg")));
+		page.addImage(new Image(new File("./data/image/02.jpg")));
+		this.addPage(page);
+		this.addPage(page);
+		page = new Page(new Image(new File("./data/image/03.jpg")));
+		this.addPage(page);
+//		Page page = new Page();
+//		Image image = new Image(new File("./data/image/01.jpg"));
+//		page.addImage(image);
+//		image = new Image(new File("./data/image/02.jpg"));
+//		page.addImage(image);
+//		image = new Image(new File("./data/image/03.jpg"));
+//		page.addImage(image);
+//		image = new Image(new File("./data/image/04.jpg"));
+//		page.addImage(image);
 //		pageList.add(page);
 //		page = new Page();
-//		image = new Image("./data/image","05.jpg");
-//		page.imageList.add(image);
+//		image = new Image(new File("./data/image/03.jpg"));
+//		page.addImage(image);
 //		pageList.add(page);
-//		page = new Page();
-//		image = new Image("./data/image","06.jpg");
-//		page.imageList.add(image);
-//		pageList.add(page);
-//		page = new Page();
-//		image = new Image("./data/image","07.jpg");
-//		page.imageList.add(image);
-//		pageList.add(page);
-//		page = new Page();
-//		image = new Image("./data/image","08.jpg");
-//		page.imageList.add(image);
-//		pageList.add(page);
-		this.setIndex(0);
+////		page = new Page();
+////		image = new Image("./data/image","04.jpg");
+////		page.imageList.add(image);
+////		pageList.add(page);
+////		page = new Page();
+////		image = new Image("./data/image","05.jpg");
+////		page.imageList.add(image);
+////		pageList.add(page);
+////		page = new Page();
+////		image = new Image("./data/image","06.jpg");
+////		page.imageList.add(image);
+////		pageList.add(page);
+////		page = new Page();
+////		image = new Image("./data/image","07.jpg");
+////		page.imageList.add(image);
+////		pageList.add(page);
+////		page = new Page();
+////		image = new Image("./data/image","08.jpg");
+////		page.imageList.add(image);
+////		pageList.add(page);
+//		this.setIndex(0);
 	}
 	
 	public Image getImage() {

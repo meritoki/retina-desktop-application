@@ -34,7 +34,8 @@ class DocumentTest {
 		document = new Document();
 		Page page = new Page();
 		page.addImage(new Image(new File("./data/image/01.jpg")));
-//		page.addImage(new Image(new File("./data/image/02.jpg")));
+		page.addImage(new Image(new File("./data/image/02.jpg")));
+		page.addImage(new Image(new File("./data/image/03.jpg")));
 		pageZeroUUID = page.uuid;
 		document.addPage(page);
 		page = new Page(new Image(new File("./data/image/02.jpg")));
@@ -61,9 +62,7 @@ class DocumentTest {
 		assertEquals(document.setIndex(0), true);
 		assertNotNull(document.getPage());
 		for(Image image: document.getPage().imageList) {
-			Point point = new Point(image.position.absolutePoint);
-			System.out.println(point);
-			System.out.println(image.position.absoluteDimension);
+			Point point = new Point(image.position.point);
 			point.x += image.position.dimension.width/2;
 			point.y += image.position.dimension.height/2;
 			assertNotNull(document.getImage(point));
@@ -73,14 +72,11 @@ class DocumentTest {
 		assertNotNull(document.getPage());
 		for(Image image: document.getPage().imageList) {
 			Point point = new Point(image.position.absolutePoint);
-			System.out.println(point);
-			System.out.println(image.position.absoluteDimension);
 			point.x += image.position.dimension.width/2;
 			point.y += image.position.dimension.height/2;
 			assertNotNull(document.getImage(point));
 			assertEquals(document.getImage(point).uuid, image.uuid);
 		}
-		
 		assertEquals(document.setIndex(2), true);
 		assertNotNull(document.getPage());
 		for(Image image: document.getPage().imageList) {
