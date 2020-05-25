@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
@@ -52,7 +53,6 @@ public class Document {
 		Page page = new Page();
 		page.addImage(new Image(new File("./data/image/01.jpg")));
 		page.addImage(new Image(new File("./data/image/02.jpg")));
-		this.addPage(page);
 		this.addPage(page);
 		page = new Page(new Image(new File("./data/image/03.jpg")));
 		this.addPage(page);
@@ -274,20 +274,18 @@ public class Document {
 		}
 		return flag;
 	}
-	
+
 	@JsonIgnore
 	public Page removePage(String uuid) {
-		Page s = null;
-		for (int i = 0; i < this.pageList.size(); i++) {
-			s = this.pageList.get(i);
-			if (s.uuid.equals(uuid)) {
-				this.pageList.remove(i);
-				break;
-			} else {
-				s = null;
-			}
+		ListIterator<Page> pageListIterator = this.pageList.listIterator();
+		while(pageListIterator.hasNext()){
+			Page page = pageListIterator.next();
+		    if(page.uuid.equals(uuid)){
+		    	pageListIterator.remove();
+		        return page;
+		    }
 		}
-		return s;
+		return null;
 	}
 
 	@JsonIgnore
@@ -303,6 +301,21 @@ public class Document {
 		return string;
 	}
 }
+
+//@JsonIgnore
+//public Page removePage(String uuid) {
+//	Page s = null;
+//	for (int i = 0; i < this.pageList.size(); i++) {
+//		s = this.pageList.get(i);
+//		if (s.uuid.equals(uuid)) {
+//			this.pageList.remove(i);
+//			break;
+//		} else {
+//			s = null;
+//		}
+//	}
+//	return s;
+//}
 
 //@JsonIgnore
 //public void test() {

@@ -325,6 +325,10 @@ public class Page {
 			}
 		}
 	}
+	
+	public Image removeImage(Image image) {
+		return this.removeImage(image.uuid);
+	}
 
 	@JsonIgnore
 	public Image removeImage(String uuid) {

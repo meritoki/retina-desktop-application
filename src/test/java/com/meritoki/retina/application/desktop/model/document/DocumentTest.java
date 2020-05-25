@@ -5,16 +5,24 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.File;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class DocumentTest {
-
+	@JsonIgnore
+	static Logger logger = LogManager.getLogger(DocumentTest.class.getName());
 	static Document document = null;
 	static String pageZeroUUID = null;
 	static String pageOneUUID = null;
@@ -33,20 +41,22 @@ class DocumentTest {
 	public static void initialize() {
 		document = new Document();
 		Page page = new Page();
-		page.addImage(new Image(new File("./data/image/01.jpg")));
-		page.addImage(new Image(new File("./data/image/02.jpg")));
-		page.addImage(new Image(new File("./data/image/03.jpg")));
+		page = new Page(new Image(new File("./data/image/01.jpg")));
 		pageZeroUUID = page.uuid;
 		document.addPage(page);
-		page = new Page(new Image(new File("./data/image/02.jpg")));
+		page = new Page();
+		page.addImage(new Image(new File("./data/image/02.jpg")));
 		pageOneUUID = page.uuid;
 		document.addPage(page);
-		page = new Page(new Image(new File("./data/image/03.jpg")));
+		page = new Page();
+		page.addImage(new Image(new File("./data/image/01.jpg")));
+		page.addImage(new Image(new File("./data/image/02.jpg")));
 		pageTwoUUID = page.uuid;
 		document.addPage(page);
 	}
 
 	@Test
+	@Order(1)
 	public void setIndex() {
 		assertNotNull(document.getPage());
 		assertEquals(document.setIndex(0), true);
@@ -58,6 +68,7 @@ class DocumentTest {
 	}
 	
 	@Test
+	@Order(2)
 	public void getImage() {
 		assertEquals(document.setIndex(0), true);
 		assertNotNull(document.getPage());
@@ -87,10 +98,93 @@ class DocumentTest {
 			assertEquals(document.getImage(point).uuid, image.uuid);
 		}
 	}
+//	
+	@Test
+	@Order(3)
+	public void joinPages() {
+		document.cache.script = "JOIN 0:1;";
+    	document.cache.pageList = document.getPageList();
+    	try {
+			document.pattern.execute("executeScript");
+		} catch (Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+		assertEquals(document.setIndex(0), true);
+		assertNotNull(document.getPage());
+		assertEquals(document.getPage().getImageList().size(),2);
+		for(Image image: document.getPage().imageList) {
+			Point point = new Point(image.position.point);
+			point.x += image.position.dimension.width/2;
+			point.y += image.position.dimension.height/2;
+			assertNotNull(document.getImage(point));
+			assertEquals(document.getImage(point).uuid, image.uuid);
+		}
+		
+		document.cache.script = "JOIN 0:1;";
+    	document.cache.pageList = document.getPageList();
+    	try {
+			document.pattern.execute("executeScript");
+		} catch (Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+		assertEquals(document.setIndex(0), true);
+		assertNotNull(document.getPage());
+		assertEquals(document.getPage().getImageList().size(),4);
+		for(Image image: document.getPage().imageList) {
+			Point point = new Point(image.position.point);
+			point.x += image.position.dimension.width/2;
+			point.y += image.position.dimension.height/2;
+			assertNotNull(document.getImage(point));
+			assertEquals(document.getImage(point).uuid, image.uuid);
+		}
+	}
 	
 	@Test
-	public void addShape() {
-		
+	@Order(4)
+	public void splitPages() {
+		document.cache.script = "SPLIT 0;";
+    	document.cache.pageList = document.getPageList();
+    	try {
+			document.pattern.execute("executeScript");
+		} catch (Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+    	assertEquals(document.getPageList().size(), 4);
+		assertEquals(document.setIndex(0), true);
+		assertNotNull(document.getPage());
+		for(Image image: document.getPage().imageList) {
+			Point point = new Point(image.position.point);
+			point.x += image.position.dimension.width/2;
+			point.y += image.position.dimension.height/2;
+			assertNotNull(document.getImage(point));
+			assertEquals(document.getImage(point).uuid, image.uuid);
+		}
+		assertEquals(document.setIndex(1), true);
+		assertNotNull(document.getPage());
+		for(Image image: document.getPage().imageList) {
+			Point point = new Point(image.position.absolutePoint);
+			point.x += image.position.dimension.width/2;
+			point.y += image.position.dimension.height/2;
+			assertNotNull(document.getImage(point));
+			assertEquals(document.getImage(point).uuid, image.uuid);
+		}
+		assertEquals(document.setIndex(2), true);
+		assertNotNull(document.getPage());
+		for(Image image: document.getPage().imageList) {
+			Point point = new Point(image.position.absolutePoint);
+			point.x += image.position.dimension.width/2;
+			point.y += image.position.dimension.height/2;
+			assertNotNull(document.getImage(point));
+			assertEquals(document.getImage(point).uuid, image.uuid);
+		}
+		assertEquals(document.setIndex(3), true);
+		assertNotNull(document.getPage());
+		for(Image image: document.getPage().imageList) {
+			Point point = new Point(image.position.absolutePoint);
+			point.x += image.position.dimension.width/2;
+			point.y += image.position.dimension.height/2;
+			assertNotNull(document.getImage(point));
+			assertEquals(document.getImage(point).uuid, image.uuid);
+		}
 	}
-
 }

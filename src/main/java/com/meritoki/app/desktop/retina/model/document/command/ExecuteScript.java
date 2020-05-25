@@ -127,15 +127,7 @@ public class ExecuteScript extends Command {
 
 	}
 	
-	public List<Page> copyPageList(List<Page> pageList) {
-		List<Page> pList = new ArrayList<>();
-		for (Page page : pageList) {
-			pList.add(new Page(page));
-		}
-		return pList;
-	}
-
-//
+	//
 //	public  void interlacePage(List<Page> pageList, String a, String b) throws Exception {
 //		logger.info("interlace(" + a + "," + b + ")");
 //		String[] A;
@@ -206,6 +198,7 @@ public class ExecuteScript extends Command {
 	}
 
 	public List<Operation> joinPage(List<Page> pageList, String a, String b) {
+		logger.info("joinPage(" + a + "," + b + ")");
 		List<Operation> operationList = new ArrayList<>();
 		// Operation Undo
 		Operation operation = new Operation();
@@ -265,6 +258,14 @@ public class ExecuteScript extends Command {
 		operation.name = "join";
 		operationList.add(operation);
 		return operationList;
+	}
+
+	public List<Page> copyPageList(List<Page> pageList) {
+		List<Page> pList = new ArrayList<>();
+		for (Page page : pageList) {
+			pList.add(new Page(page));
+		}
+		return pList;
 	}
 }
 
