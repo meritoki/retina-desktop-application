@@ -18,6 +18,7 @@ public class Position {
 		Position d = new Position();
 		System.out.println(d);
 	}
+
 	@JsonIgnore
 	private static Logger logger = LogManager.getLogger(Position.class.getName());
 	@JsonProperty
@@ -26,7 +27,7 @@ public class Position {
 	public double scale = 1;
 	@JsonProperty
 	public Point point = new Point();
-	@JsonProperty 
+	@JsonProperty
 	public Point absolutePoint = new Point();
 	@JsonProperty
 	public Point relativePoint = null;
@@ -41,7 +42,7 @@ public class Position {
 
 	public Position() {
 	}
-	
+
 	public Position(int x, int y, int width, int height) {
 		this.absolutePoint.x = x;
 		this.absolutePoint.y = y;
@@ -50,7 +51,7 @@ public class Position {
 	}
 
 	public Position(Point a, Point b, double addScale, double offset, double margin) {
-		logger.info("Position("+a+", "+b+", "+addScale+", "+offset+", "+margin+")");
+		logger.info("Position(" + a + ", " + b + ", " + addScale + ", " + offset + ", " + margin + ")");
 		List<Point> pointList = new ArrayList<>();
 		pointList.add(a);
 		pointList.add(b);
@@ -64,9 +65,9 @@ public class Position {
 		this.absoluteDimension.width = Math.abs(endPoint.x - this.absolutePoint.x);
 		this.absoluteDimension.height = Math.abs(endPoint.y - this.absolutePoint.y);
 		this.relativePoint = this.getRelativePoint();
-		
+
 	}
-	
+
 	public Position(Position position) {
 		this.absolutePoint.x = position.absolutePoint.x;
 		this.absolutePoint.y = position.absolutePoint.y;
@@ -103,18 +104,18 @@ public class Position {
 	public Point getRelativePoint() {
 		Point point = new Point();
 		point.x = this.absolutePoint.x - offset;
-		point.y = this.absolutePoint.y - margin*this.addScale;
+		point.y = this.absolutePoint.y - margin * this.addScale;
 		return point;
 	}
-	
+
 	public void setAbsolutePoint(Point point) {
 		this.absolutePoint = point;
 	}
-	
+
 	public void setAbsoluteDimension(Dimension dimension) {
 		this.absoluteDimension = dimension;
 	}
-	
+
 	public void addAbsolutionDimension(double width, double height) {
 		this.absoluteDimension.width += width;
 		this.absoluteDimension.height += height;
@@ -122,12 +123,12 @@ public class Position {
 
 	@JsonIgnore
 	public void setScale(double scale) {
-		this.scale = (this.addScale > 0)? scale/this.addScale: scale;
+		this.scale = (this.addScale > 0) ? scale / this.addScale : scale;
 		this.scale();
 	}
-	
+
 	public void setAddScale(double addScale) {
-		logger.info("setAddScale("+addScale+")");
+		logger.info("setAddScale(" + addScale + ")");
 		this.addScale = addScale;
 	}
 
@@ -160,14 +161,14 @@ public class Position {
 	public Point getStopPoint() {
 		return new Point((this.point.x + this.dimension.width), (this.point.y + this.dimension.height));
 	}
-	
+
 	public void scale() {
-		if(this.relativePoint != null) {
-			this.point.x = this.relativePoint.x+this.offset;
-			this.point.y = this.relativePoint.y+this.margin*this.addScale;
+		if (this.relativePoint != null) {
+			this.point.x = this.relativePoint.x + this.offset;
+			this.point.y = this.relativePoint.y + this.margin * this.addScale;
 		} else {
 			this.point.x = this.absolutePoint.x;
-			this.point.y = this.absolutePoint.y+this.margin;
+			this.point.y = this.absolutePoint.y + this.margin;
 		}
 		this.dimension.width = this.absoluteDimension.width;
 		this.dimension.height = this.absoluteDimension.height;
@@ -176,7 +177,6 @@ public class Position {
 		this.dimension.width *= this.scale;
 		this.dimension.height *= this.scale;
 	}
-
 
 	@JsonIgnore
 	public boolean containsPoint(Point point) {
@@ -199,17 +199,19 @@ public class Position {
 		Point startPoint = this.getStartPoint();
 		Point stopPoint = this.getStopPoint();
 		double margin = 20 * this.scale;
-		if (point.x > (startPoint.x - margin) && point.x < (startPoint.x + margin) && point.y > (startPoint.y - margin) && point.y < (startPoint.y + margin)) {
+		if (point.x > (startPoint.x - margin) && point.x < (startPoint.x + margin) && point.y > (startPoint.y - margin)
+				&& point.y < (startPoint.y + margin)) {
 			selection = Selection.TOP_LEFT;
-		} else if (point.x > (stopPoint.x - margin) && point.x < (stopPoint.x + margin) && point.y > (startPoint.y - margin) && point.y < (startPoint.y + margin)) {
+		} else if (point.x > (stopPoint.x - margin) && point.x < (stopPoint.x + margin)
+				&& point.y > (startPoint.y - margin) && point.y < (startPoint.y + margin)) {
 			selection = Selection.TOP_RIGHT;
-		} else if (point.x > (startPoint.x - margin) && point.x < (startPoint.x + margin) && point.y > (stopPoint.y - margin) && point.y < (stopPoint.y + margin)) {
+		} else if (point.x > (startPoint.x - margin) && point.x < (startPoint.x + margin)
+				&& point.y > (stopPoint.y - margin) && point.y < (stopPoint.y + margin)) {
 			selection = Selection.BOTTOM_LEFT;
-			
-		} else if (point.x > (stopPoint.x - margin) && point.x < (stopPoint.x + margin) && point.y > (stopPoint.y - margin) && point.y < (stopPoint.y + margin)) {
-			
+		} else if (point.x > (stopPoint.x - margin) && point.x < (stopPoint.x + margin)
+				&& point.y > (stopPoint.y - margin) && point.y < (stopPoint.y + margin)) {
 			selection = Selection.BOTTOM_RIGHT;
-		}  else if (point.y >= (startPoint.y) && point.y < (startPoint.y + margin) && point.x > startPoint.x
+		} else if (point.y >= (startPoint.y) && point.y < (startPoint.y + margin) && point.x > startPoint.x
 				&& point.x < stopPoint.x) {
 			selection = Selection.TOP;
 		} else if (point.y > (stopPoint.y - margin) && point.y <= (stopPoint.y) && point.x > startPoint.x
@@ -278,20 +280,30 @@ public class Position {
 			break;
 		}
 		}
+//		if(this.relativePoint != null) {
+//			this.relativePoint.x = startPoint.x;
+//			this.relativePoint.y = startPoint.y;
+//			this.absoluteDimension.width = stopPoint.x - this.relativePoint.x;
+//			this.absoluteDimension.height = stopPoint.y - this.relativePoint.y;
+//		}
+		this.absolutePoint.x = startPoint.x;
+		this.absolutePoint.y = startPoint.y;
+		this.absoluteDimension.width = stopPoint.x - this.absolutePoint.x;
+		this.absoluteDimension.height = stopPoint.y - this.absolutePoint.y;
+		this.relativePoint = this.getRelativePoint();
 	}
 
-	
 	@JsonIgnore
 	public void movePoint(Point point) {
 		logger.info("movePoint(" + point + ")");
 		Point origin = null;
-		if(this.relativePoint != null) {
+		if (this.relativePoint != null) {
 			origin = this.relativePoint;
 		} else {
 			origin = this.absolutePoint;
 		}
-		origin.x += point.x/scale;
-		origin.y += point.y/scale;
+		origin.x += point.x / scale;
+		origin.y += point.y / scale;
 	}
 
 	@JsonIgnore
