@@ -44,7 +44,7 @@ public class Document {
 	public Document() {
 		this.uuid = UUID.randomUUID().toString();
 		this.pattern = new Pattern(this);
-		this.test();
+//		this.test();
 	}
 	
 	@JsonIgnore
@@ -144,7 +144,7 @@ public class Document {
 	@JsonIgnore
 	public Page getPage() {
 		int size = this.pageList.size();
-		return (this.index < size && size > 0) ? this.pageList.get(this.index) : new Page();
+		return (this.index < size && size > 0) ? this.pageList.get(this.index) : null;
 	}
 
 	/**

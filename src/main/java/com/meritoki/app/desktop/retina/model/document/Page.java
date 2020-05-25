@@ -492,7 +492,7 @@ public class Page {
 	@Override
 	public String toString() {
 		String string = "";
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		ObjectWriter ow = new ObjectMapper().writer();//.withDefaultPrettyPrinter();
 		try {
 			string = ow.writeValueAsString(this);
 		} catch (IOException ex) {
@@ -502,100 +502,3 @@ public class Page {
 		return string;
 	}
 }
-
-/**
- * DIMENSION 2 A Function is the only place where the File objects receive the
- * metadata necessary to correctly process shapes.
- *
- * @return
- */
-//@JsonIgnore
-//public List<Image> getImageList() {
-//	double offset = 0;
-//	for (Image image : this.imageList) {
-//		if (image.getBufferedImage() == null) {
-//			BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getImageCache(),
-//					image.uuid + "." + image.getExtension());
-//			if (bufferedImage == null) {
-//				bufferedImage = NodeController.openBufferedImage(image.file);
-//				if (bufferedImage != null) {
-//					image.setBufferedImage(bufferedImage);
-//					if (image.getExtension().equals("jpg") || image.getExtension().equals("jpeg")) {
-//						NodeController.saveJpg(NodeController.getImageCache(),
-//								image.uuid + "." + image.getExtension(), bufferedImage);
-//					}
-//				}
-//
-//			} else {
-//				image.setBufferedImage(bufferedImage);
-//			}
-//		}
-//		image.setOffset(offset);
-//		image.setScale(this.position.scale);
-//		this.position.dimension.width += image.position.dimension.width;
-//		offset += image.position.dimension.width;
-//	}
-//	return this.imageList;
-//}
-
-
-///**
-//* DIMENSION 2 A Function is the only place where the File objects receive the
-//* metadata necessary to correctly process shapes.
-//*
-//* @return
-//*/
-//@JsonIgnore
-//public List<Image> getImageList() {
-//	double offset = 0;
-//	for (Image image : this.imageList) {
-//		if (image.getBufferedImage() == null) {
-//			BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getImageCache(),
-//					image.uuid + "." + image.extension);
-//			if (bufferedImage == null) {
-//				bufferedImage = NodeController.openBufferedImage(image.getPath(), image.getNameAndExtension());
-//				if (bufferedImage != null) {
-//					image.setBufferedImage(bufferedImage);
-//					if (image.extension.equals("jpg") || image.extension.equals("jpeg")) {
-//						NodeController.saveJpg(NodeController.getImageCache(), image.uuid + "." + image.extension,
-//								bufferedImage);
-//					}
-//					// TODO Add support for PNG
-////					if (ClientController.fileClient.checkHealth()) {
-////						ClientController.fileClient.registerFile(image.uuid);
-////						if (ClientController.fileClient.checkFile(image.uuid)) {
-////							ClientController.fileClient.uploadFile(
-////									NodeController.getImageCache() + NodeController.getSeperator(),
-////									image.uuid + "." + image.extension);
-////						}
-////					}
-//				} else {
-////					if (ClientController.fileClient.checkHealth()) {
-////						if (ClientController.fileClient.checkFile(image.uuid)) {
-////							ClientController.fileClient.downloadFile(
-////									NodeController.getImageCache() + NodeController.getSeperator(),
-////									image.getUUID() + "." + image.getExtension());
-////							ClientController.fileClient.unmarkFile(image.uuid);
-////						} else {
-////							ClientController.fileClient.markFile(image.uuid);
-////						}
-////					}
-//				}
-//			} else {
-//				image.setBufferedImage(bufferedImage);
-////				if (ClientController.fileClient.checkHealth()) {
-////					ClientController.fileClient.registerFile(image.uuid);
-////					if (ClientController.fileClient.checkFile(image.uuid)) {
-////						ClientController.fileClient.uploadFile(
-////								NodeController.getImageCache() + NodeController.getSeperator(),
-////								image.uuid + "." + image.extension);
-////					}
-////				}
-//			}
-//		}
-//		image.setOffset(offset);
-//		image.setScale(this.scale);
-//		offset += image.dimension.offset;
-//	}
-//	return this.imageList;
-//}
