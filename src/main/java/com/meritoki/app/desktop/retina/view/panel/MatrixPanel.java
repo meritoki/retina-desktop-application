@@ -73,7 +73,7 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 	@Override
 	public Dimension getPreferredSize() {
 		Dimension dimension = new Dimension(1028, 512);
-		Document document = (this.model != null) ? this.model.getDocument() : null;
+		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
 		Matrix matrix = (page != null) ? page.getMatrix():null;
 		if(matrix != null) {
@@ -89,7 +89,7 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 		graphics.setColor(Color.white);
 		graphics.fillRect(0, 0, this.getWidth(), this.getHeight());
 		if (this.model != null) {
-			Document document = (this.model != null) ? this.model.getDocument() : null;
+			Document document = (this.model != null) ? this.model.document : null;
 			Page page = (document != null) ? document.getPage() : null;
 			Matrix matrix = page.getMatrix();
 			matrix.setScale(this.model.document.cache.scale);

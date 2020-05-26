@@ -54,7 +54,7 @@ public class SaveAsDialog extends javax.swing.JDialog {
 		int result = this.saveFileChooser.showSaveDialog(null);
 		if (result == JFileChooser.APPROVE_OPTION) {
 			this.model.system.file = this.saveFileChooser.getSelectedFile();
-			DocumentController.save(this.model.system.file, model.getDocument());
+			DocumentController.save(this.model.system.file, model.document);
 			((MainFrame) this.getParent()).init();
 			((MainFrame) this.getParent()).repaint();
 			this.model.system.newDocument = false;

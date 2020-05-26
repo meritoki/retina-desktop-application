@@ -404,11 +404,11 @@ public final class MainFrame extends JFrame {
     }//GEN-LAST:event_loginMenuItemActionPerformed
 
     private void undoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_undoMenuItemActionPerformed
-        this.model.getDocument().pattern.undo();
+        this.model.document.pattern.undo();
     }//GEN-LAST:event_undoMenuItemActionPerformed
 
     private void redoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_redoMenuItemActionPerformed
-        this.model.getDocument().pattern.redo();
+        this.model.document.pattern.redo();
     }//GEN-LAST:event_redoMenuItemActionPerformed
 
     private void zooniverseImportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zooniverseImportMenuItemActionPerformed

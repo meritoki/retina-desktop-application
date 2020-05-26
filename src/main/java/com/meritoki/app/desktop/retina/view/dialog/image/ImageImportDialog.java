@@ -55,7 +55,7 @@ public class ImageImportDialog extends javax.swing.JDialog {
 			if (model != null) {
 				model.document.cache.fileArray = files;
 				try {
-					model.getDocument().pattern.execute("addPage");
+					model.document.pattern.execute("addPage");
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

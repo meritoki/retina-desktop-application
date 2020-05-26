@@ -69,7 +69,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 	@Override
 	public Dimension getPreferredSize() {
 		Dimension dimension = new Dimension(1028, 512);
-		Document document = (this.model != null) ? this.model.getDocument() : null;
+		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
 		if(page != null) {
 			dimension.setSize(page.position.dimension.width, page.position.dimension.height);
@@ -82,7 +82,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 		super.paint(graphics);
 		if (this.model != null) {
 			Graphics2D graphics2D = (Graphics2D) graphics.create();
-			Document document = (this.model != null) ? this.model.getDocument() : null;
+			Document document = (this.model != null) ? this.model.document : null;
 			Page page = (document != null)? document.getPage(): null;
 			if(page != null) {
 				page.setScale(this.model.document.cache.scale);
@@ -137,7 +137,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 					logger.info("Exception "+e.getMessage());
 				}
 		} else {
-			this.model.document.cache.selection = this.model.getDocument().getPage()
+			this.model.document.cache.selection = this.model.document.getPage()
 					.intersectShape(this.model.document.cache.pressedPoint);
 			if (this.model.document.cache.selection != null) {
 				try {
@@ -151,14 +151,14 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 					this.model.document.cache.releasedImage = this.model.document
 							.getImage(this.model.document.cache.releasedPoint);
 					try {
-						this.model.getDocument().pattern.execute("moveShape");
+						this.model.document.pattern.execute("moveShape");
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				} else {
 					try {
-						this.model.getDocument().pattern.execute("addShape");
+						this.model.document.pattern.execute("addShape");
 					} catch (Exception e) {
 						JOptionPane.showMessageDialog(main, e.getMessage(), "Query Error", JOptionPane.ERROR_MESSAGE);
 					}
@@ -188,7 +188,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 //		this.model.document.cache.scale += delta;
 //		if (this.model.document.cache.scale >= 0 && this.model.document.cache.scale <= 2) {
 //			logger.trace("mouseWheelMoved(...) scale = " + this.model.document.cache.scale);
-//			this.model.getDocument().getPage().setScale(this.model.document.cache.scale);
+//			this.model.document.getPage().setScale(this.model.document.cache.scale);
 //			revalidate();
 //			repaint();
 //		}
@@ -228,7 +228,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 			}
 			case KeyEvent.VK_DOWN:{
 				logger.debug("keyPressed(e) KeyEvent.DOWN");
-				Page page = this.model.getDocument().getPage();
+				Page page = this.model.document.getPage();
 				page.setBufferedImage(null);
 				Image image = (page != null) ? page.getImage() : null;
 				if (image != null) {
@@ -240,7 +240,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 			}
 			case KeyEvent.VK_UP:{
 				logger.debug("keyPressed(e) KeyEvent.VK_UP");
-				Page page = this.model.getDocument().getPage();
+				Page page = this.model.document.getPage();
 				page.setBufferedImage(null);
 				Image image = (page != null) ? page.getImage() : null;
 				if (image != null) {
@@ -252,14 +252,14 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 			}
 			case KeyEvent.VK_Z:{
 				logger.debug("keyPressed(e) KeyEvent.VK_Z");
-				this.model.getDocument().pattern.undo();
+				this.model.document.pattern.undo();
 				this.main.init();
 				this.repaint();
 				break;
 			}
 			case KeyEvent.VK_Y:{
 				logger.debug("keyPressed(e) KeyEvent.VK_Y");
-				this.model.getDocument().pattern.redo();
+				this.model.document.pattern.redo();
 				this.main.init();
 				repaint();
 				break;
@@ -267,25 +267,25 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 			}
 			case KeyEvent.VK_M:{
 				String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-				List<Shape> shapeList = this.model.getDocument().getPage().getShapeList();
+				List<Shape> shapeList = this.model.document.getPage().getShapeList();
 				this.generateManifest(timeStamp, shapeList);
 				break;
 			}
 			case KeyEvent.VK_T:{
 				List<String[]> stringArrayList = NodeController.openCsv("import.csv");
-				this.model.getDocument().importText(stringArrayList);
+				this.model.document.importText(stringArrayList);
 				break;
 			}
 			}
 		} else {
 			ke.consume();
 			int keyCode = ke.getKeyCode();
-			int index = this.model.getDocument().getIndex();
+			int index = this.model.document.getIndex();
 			switch (keyCode) {
 			case KeyEvent.VK_BACK_SPACE: {
-				this.model.document.cache.pressedShape = this.model.getDocument().getPage().getShape();
+				this.model.document.cache.pressedShape = this.model.document.getPage().getShape();
 				try {
-					this.model.getDocument().pattern.execute("removeShape");
+					this.model.document.pattern.execute("removeShape");
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -295,28 +295,28 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 			}
 			case KeyEvent.VK_LEFT: {
 				logger.debug("keyPressed(LEFT)");
-				this.model.getDocument().setIndex(--index);
+				this.model.document.setIndex(--index);
 				this.main.init();
 				this.repaint();
 				break;
 			}
 			case KeyEvent.VK_RIGHT: {
 				logger.debug("keyPressed(RIGHT)");
-				this.model.getDocument().setIndex(++index);
+				this.model.document.setIndex(++index);
 				this.main.init();
 				this.repaint();
 				break;
 			}
 			case KeyEvent.VK_UP: {
 				logger.debug("keyPressed(UP)");
-				this.model.getDocument().setIndex(--index);
+				this.model.document.setIndex(--index);
 				this.main.init();
 				this.repaint();
 				break;
 			}
 			case KeyEvent.VK_DOWN: {
 				logger.debug("keyPressed(DOWN)");
-				this.model.getDocument().setIndex(++index);
+				this.model.document.setIndex(++index);
 				this.main.init();
 				this.repaint();
 				break;

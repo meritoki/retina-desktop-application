@@ -54,12 +54,12 @@ public class CommandDialog extends javax.swing.JDialog {
     }
 
     public void initList() {
-        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Document document = (this.model != null) ? this.model.document : null;
         int pageIndex = (document != null) ? document.getIndex() : 0;
-        List<Command> undoCommandList = (document != null) ? document.pattern.event.undoStack : null;
-        User user = (document != null) ? document.pattern.event.user : null;
+        List<Command> undoCommandList = (document != null) ? document.pattern.state.undoStack : null;
+        User user = (document != null) ? document.pattern.state.user : null;
         this.initUndoCommandList(undoCommandList, user);
-        List<Command> redoCommandList = (document != null) ? document.pattern.event.redoStack : null;
+        List<Command> redoCommandList = (document != null) ? document.pattern.state.redoStack : null;
         this.initRedoCommandList(redoCommandList, user);
     }
 

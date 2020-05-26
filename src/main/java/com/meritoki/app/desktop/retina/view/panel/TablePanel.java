@@ -61,7 +61,7 @@ public class TablePanel extends javax.swing.JPanel {
 
 	public void initDataTable() {
 		logger.debug("initDataTable()");
-		Document document = (this.model != null) ? this.model.getDocument() : null;
+		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
 		Table table = (page != null)? page.getTable(): null;
 		if (table != null) {
@@ -127,7 +127,7 @@ public class TablePanel extends javax.swing.JPanel {
 //
 //public void initDataTable() {
 //	logger.debug("initDataTable()");
-//	Document document = (this.model != null) ? this.model.getDocument() : null;
+//	Document document = (this.model != null) ? this.model.document : null;
 //	Page page = (document != null) ? document.getPage() : null;
 //	Table table = page.getTable();
 //	if (page != null) {

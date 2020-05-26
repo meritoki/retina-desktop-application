@@ -24,16 +24,6 @@ import com.meritoki.app.desktop.retina.model.vendor.microsoft.Microsoft;
 public class System {
 	private static final Logger logger = LogManager.getLogger(System.class.getName());
 	@JsonIgnore
-	public List<String> emptyList = new ArrayList<>();
-	@JsonIgnore
-	public List<String> timeList = Arrays.asList("year", "month", "week", "day", "hour", "minute", "second");
-	@JsonIgnore
-	public List<String> spaceList = Arrays.asList("latitude", "longitude", "locale", "location");
-	@JsonIgnore
-	public List<String> energyList = Arrays.asList("label", "temperature", "pressure");
-	@JsonIgnore
-	public List<String> languageList = Arrays.asList("letter", "word", "sentance", "paragraph");
-	@JsonIgnore
 	public Properties properties = null;
 	@JsonProperty
 	public List<Provider> providerList = new ArrayList<>();
@@ -42,7 +32,7 @@ public class System {
 	@JsonIgnore
 	public List<User> userList = new ArrayList<User>();
 	@JsonIgnore
-	public User user = null;
+	public User user = null;//When a user is logged in the User is retained in this variable
 	@JsonIgnore
 	public File file = null;//The file that corresponds to the loaded document
 	@JsonIgnore

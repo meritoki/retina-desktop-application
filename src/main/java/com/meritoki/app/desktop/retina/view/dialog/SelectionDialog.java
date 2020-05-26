@@ -91,7 +91,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 
 	public void initLabel() {
 //		logger.debug("initLabel()");
-		Document document = (this.model != null) ? this.model.getDocument() : null;
+		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
 		Image file = (page != null) ? page.getImage() : null;
 		Shape shape = (file != null) ? file.getShape() : null;
@@ -100,7 +100,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 
 	public void initList() {
 //		logger.debug("initList()");
-		Document document = (this.model != null) ? this.model.getDocument() : null;
+		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
 		List<Shape> shapeList = (page != null) ? page.getShapeList() : null;
 		if (shapeList == null) {
@@ -115,7 +115,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 
 	public void initComboBox() {
 //		logger.debug("initComboBox()");
-		Document document = (this.model != null) ? this.model.getDocument() : null;
+		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
 		Image file = (page != null) ? page.getImage() : null;
 		Shape shape = (file != null) ? file.getShape() : null;
@@ -133,28 +133,28 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 			this.unitTypeComboBox.setSelectedItem(data.unit.type);
 			switch (data.unit.type) {
 			case DATA: {
-				this.initUnitValueComboBox(this.model.system.emptyList);
+				this.initUnitValueComboBox(this.model.resource.emptyList);
 				break;
 			}
 			case TIME: {
-				this.initUnitValueComboBox(this.model.system.timeList);
+				this.initUnitValueComboBox(this.model.resource.timeList);
 				break;
 			}
 			case SPACE: {
-				this.initUnitValueComboBox(this.model.system.spaceList);
+				this.initUnitValueComboBox(this.model.resource.spaceList);
 				break;
 			}
 			case ENERGY: {
-				this.initUnitValueComboBox(this.model.system.energyList);
+				this.initUnitValueComboBox(this.model.resource.energyList);
 				break;
 			}
 			case LANGUAGE: {
-				this.initUnitValueComboBox(this.model.system.languageList);
+				this.initUnitValueComboBox(this.model.resource.languageList);
 				break;
 			}
 			}
 		} else {
-			this.initUnitValueComboBox(this.model.system.emptyList);
+			this.initUnitValueComboBox(this.model.resource.emptyList);
 		}
 	}
 
@@ -173,7 +173,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 		this.textValueComboBox.setModel(new DefaultComboBoxModel(array));
 		boolean flag = this.textValueDefaultCheckBox.isSelected();
 		if (flag) {
-			Document document = (this.model != null) ? this.model.getDocument() : null;
+			Document document = (this.model != null) ? this.model.document : null;
 			Page page = (document != null) ? document.getPage() : null;
 			Shape shape = (page != null) ? page.getImage().getShape() : null;
 			Data data = (shape != null) ? shape.getData() : null;
@@ -197,23 +197,23 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 				int selectedIndex = unitTypeComboBox.getSelectedIndex();
 				switch (selectedIndex) {
 				case 0: {
-					initUnitValueComboBox(model.system.emptyList);
+					initUnitValueComboBox(model.resource.emptyList);
 					break;
 				}
 				case 1: {
-					initUnitValueComboBox(model.system.timeList);
+					initUnitValueComboBox(model.resource.timeList);
 					break;
 				}
 				case 2: {
-					initUnitValueComboBox(model.system.spaceList);
+					initUnitValueComboBox(model.resource.spaceList);
 					break;
 				}
 				case 3: {
-					initUnitValueComboBox(model.system.energyList);
+					initUnitValueComboBox(model.resource.energyList);
 					break;
 				}
 				case 4: {
-					initUnitValueComboBox(model.system.languageList);
+					initUnitValueComboBox(model.resource.languageList);
 				}
 				}
 			}
@@ -253,11 +253,11 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getClickCount() == 1) {
-			Page page = this.model.getDocument().getPage();
+			Page page = this.model.document.getPage();
 			if (page != null) {
 				String selectedItem = this.rectangleList.getSelectedValue();
 				logger.info("mouseClicked(e) selectedItem=" + selectedItem);
-				Document document = (this.model != null) ? this.model.getDocument() : null;
+				Document document = (this.model != null) ? this.model.document : null;
 				document.getPage().setShape(selectedItem);
 				this.getParent().repaint();
 				this.init();
@@ -291,7 +291,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int keyCode = e.getKeyCode();
-		Document document = (this.model != null) ? this.model.getDocument() : null;
+		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
 		if (page != null) {
 			int index = page.getIndex();
@@ -335,7 +335,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	@Override
 	public void keyReleased(KeyEvent e) {
 		String uuid = rectangleList.getSelectedValue();
-		Document document = (this.model != null) ? this.model.getDocument() : null;
+		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
 		if (page != null && !uuid.equals(page.getImage().getShape().uuid)) {
 			document.getPage().getImage().setShape(uuid);
@@ -688,7 +688,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 		String value = this.textInputTextField.getText().trim();
 		Text text = new Text();
 		text.value = value;
-		Document document = (this.model != null) ? this.model.getDocument() : null;
+		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
 		Shape shape = (page != null) ? page.getImage().getShape() : null;
 		if (shape != null) {
@@ -702,7 +702,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	private void textValueDefaultCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_textValueDefaultCheckBoxActionPerformed
 		boolean flag = this.textValueDefaultCheckBox.isSelected();
 		if (flag) {
-			Document document = (this.model != null) ? this.model.getDocument() : null;
+			Document document = (this.model != null) ? this.model.document : null;
 			Page page = (document != null) ? document.getPage() : null;
 			Shape shape = (page != null) ? page.getImage().getShape() : null;
 			if (shape != null) {
@@ -717,7 +717,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 
 	private void deleteRectangleButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_deleteRectangleButtonActionPerformed
 		int index = this.rectangleList.getSelectedIndex();
-		Document document = (this.model != null) ? this.model.getDocument() : null;
+		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
 		page.getShapeList().remove(index);
 		this.init();
@@ -726,7 +726,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 
 	private void applyUnitButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_applyUnitButtonActionPerformed
 		logger.info("applyUnitButtonActionPerformed(...)");
-		Document document = (this.model != null) ? this.model.getDocument() : null;
+		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
 		Shape shape = (page != null) ? page.getImage().getShape() : null;
 		Data data = (shape != null) ? shape.getData() : null;
@@ -769,7 +769,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	}// GEN-LAST:event_ellipseButtonActionPerformed
 
 	private void setTextButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_setTextButtonActionPerformed
-		Shape shape = this.model.getDocument().getPage().getShape();
+		Shape shape = this.model.document.getPage().getShape();
 		Data data = (shape != null) ? shape.data : null;
 		Text text = (data != null) ? data.text : null;
 		String value = (String) this.textValueComboBox.getSelectedItem();
@@ -784,7 +784,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 	private void setButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_executeButtonActionPerformed
 		//Executes the latest instructions added to the text field.
 		String value = this.scriptTextArea.getText();
-		Document document = (this.model != null) ? this.model.getDocument() : null;
+		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
 		if(page != null) {
 			page.script.value+=value;
@@ -797,7 +797,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 //        	private void executeButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_executeButtonActionPerformed
 //		//Executes the latest instructions added to the text field.
 //		String value = this.scriptTextArea.getText();
-//		Document document = (this.model != null) ? this.model.getDocument() : null;
+//		Document document = (this.model != null) ? this.model.document : null;
 //		Project project = (document != null) ? document.getProject() : null;
 //		Page page = (document != null) ? document.getPage() : null;
 //		if(page != null) {
@@ -810,7 +810,7 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
         
 	private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_resetButtonActionPerformed
 		logger.info("resetButtonActionPerformed()");
-		Document document = (this.model != null) ? this.model.getDocument() : null;
+		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
 		Script script = (page != null) ? page.script : null;
 		if (page != null && script != null) {

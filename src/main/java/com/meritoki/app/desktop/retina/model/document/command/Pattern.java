@@ -21,11 +21,13 @@ public class Pattern {
 	@JsonIgnore
 	public Document document;
 	@JsonProperty
-	public State event = new State();
-	@JsonProperty
-	public LinkedList<State> eventStack = new LinkedList<>();
+	public State state = new State();
 	@JsonIgnore
 	private final HashMap<String, Command> commandMap = new HashMap<>();
+	
+	public Pattern() {
+		//Default constructor for loading from JSON;
+	}
 	
 	public Pattern(Document document) {
 		this.document = document;
@@ -68,13 +70,13 @@ public class Pattern {
 		Command newCommand = new Command(this.document, command.name);
 		newCommand.user = command.user;
 		newCommand.operationList = command.operationList;
-		this.event.undoStack.push(newCommand);
+		this.state.undoStack.push(newCommand);
 		command.reset();
 	}
 	
 	public void undo() {
-		if (this.event.undoStack.size() > 0) {
-			Command command = this.event.undoStack.pop();
+		if (this.state.undoStack.size() > 0) {
+			Command command = this.state.undoStack.pop();
 			logger.info("undo() command.name=" + command.name);
 			Operation operation = null;
 			switch (command.name) {
@@ -174,13 +176,13 @@ public class Pattern {
 
 			}
 			}
-			this.event.redoStack.push(command);
+			this.state.redoStack.push(command);
 		}
 	}
 
 	public void redo() {
-		if (this.event.redoStack.size() > 0) {
-			Command command = this.event.redoStack.pop();
+		if (this.state.redoStack.size() > 0) {
+			Command command = this.state.redoStack.pop();
 			Operation operation = null;
 			switch (command.name) {
 			case "setShape": {
@@ -269,7 +271,7 @@ public class Pattern {
 
 			}
 			}
-			this.event.undoStack.push(command);
+			this.state.undoStack.push(command);
 		}
 	}
 }

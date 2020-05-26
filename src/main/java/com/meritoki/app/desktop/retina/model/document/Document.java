@@ -41,8 +41,12 @@ public class Document {
 	public Cache cache = new Cache();
 	@JsonProperty
 	public List<Layout> layoutList = new ArrayList<>();
-
+	
 	public Document() {
+		//Defualt constructor for loading from JSON;
+	}
+
+	public Document(User user) {
 		this.uuid = UUID.randomUUID().toString();
 		this.pattern = new Pattern(this);
 //		this.test();

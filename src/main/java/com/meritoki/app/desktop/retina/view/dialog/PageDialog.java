@@ -88,7 +88,7 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
       
     public void initLabel(){
         logger.debug("initLabel()");
-        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Document document = (this.model != null) ? this.model.document: null;
         Page page = (document != null)? document.getPage():null;
         BufferedImage bufferedPage = (page != null)?page.getBufferedImage():null;
         int pageIndex = (document != null)? document.getIndex():0;
@@ -117,7 +117,7 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
     
     public void initList(){
         logger.debug("initList()");
-        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Document document = (this.model != null) ? this.model.document: null;
         int pageIndex = (document != null)? document.getIndex():0;
         List<Page> pageList = (document != null)? document.getPageList():null;
         this.initPageList(pageList);
@@ -145,7 +145,7 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
     public void mouseClicked(MouseEvent e) {
         if(e.getClickCount()==1){
             String selectedItem = (String) this.pageList.getSelectedValue();
-            Document document = (this.model != null) ? this.model.getDocument() : null;
+            Document document = (this.model != null) ? this.model.document: null;
             document.setPage(selectedItem);
             this.initLabel();
             this.main.repaint();
@@ -177,7 +177,7 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Document document = (this.model != null) ? this.model.document: null;
         int index = document.getIndex();
         switch(keyCode) {
             case KeyEvent.VK_LEFT:{
@@ -216,7 +216,7 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
     @Override
     public void keyReleased(KeyEvent e) {
         String uuid = (String) pageList.getSelectedValue();
-        Document document = (this.model != null) ? this.model.getDocument() : null;
+        Document document = (this.model != null) ? this.model.document: null;
         Page page = document.getPage();
         if(page != null && uuid != null && !uuid.equals(page.uuid)){
             document.setPage(uuid);
@@ -421,7 +421,7 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
     }// </editor-fold>//GEN-END:initComponents
 
     private void executeImageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeImageScriptButtonActionPerformed
-        Document document = (this.model != null) ? this.model.getDocument() : null; 
+        Document document = (this.model != null) ? this.model.document: null; 
         if(document != null) {
         	document.cache.script = this.pageScriptTextArea.getText();
         	document.cache.pageList = document.getPageList();//BUG 201912212221 this step is stripping the fileList, which it why the shapes do not appear after a join.
@@ -440,7 +440,7 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
     }//GEN-LAST:event_clearScriptButtonActionPerformed
 
     private void deletePageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deletePageButtonActionPerformed
-    	Document document = (this.model != null) ? this.model.getDocument() : null; 
+    	Document document = (this.model != null) ? this.model.document: null; 
     	if(document != null) {
             String selectedItem = (String) this.pageList.getSelectedValue();
             document.setPage(selectedItem);
