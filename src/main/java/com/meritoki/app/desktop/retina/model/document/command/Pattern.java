@@ -21,15 +21,11 @@ public class Pattern {
 	@JsonIgnore
 	public Document document;
 	@JsonProperty
-	public Event event = new Event();
+	public State event = new State();
 	@JsonProperty
-	public LinkedList<Event> eventStack = new LinkedList<>();
+	public LinkedList<State> eventStack = new LinkedList<>();
 	@JsonIgnore
 	private final HashMap<String, Command> commandMap = new HashMap<>();
-	
-	public Pattern() {
-		
-	}
 	
 	public Pattern(Document document) {
 		this.document = document;

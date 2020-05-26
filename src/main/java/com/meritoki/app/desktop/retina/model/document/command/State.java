@@ -12,7 +12,7 @@ import com.meritoki.app.desktop.retina.model.document.user.User;
  * @author jorodriguez
  *
  */
-public class Event {
+public class State {
 	@JsonProperty
 	public User user;
 	@JsonProperty
@@ -22,7 +22,7 @@ public class Event {
 	@JsonProperty
 	public int index = 0;
 	
-	public Event() {
+	public State() {
 		
 	}
 }
