@@ -30,6 +30,11 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+//import org.codehaus.jackson.annotate.JsonIgnore;
+//import org.codehaus.jackson.annotate.JsonProperty;
+//import org.codehaus.jackson.map.ObjectMapper;
+//import org.codehaus.jackson.map.ObjectWriter;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -65,7 +70,7 @@ public class Page {
 	 * List of Images loaded by user.
 	 */
 	@JsonProperty
-	public List<Image> imageList = new ArrayList<Image>();
+	public List<Image> imageList = new ArrayList<>();
 	/**
 	 * Current file index selected by user. Default is zero for a fileList of size
 	 * 1.
@@ -151,6 +156,7 @@ public class Page {
 		return null;
 	}
 
+	@JsonIgnore
 	public List<Image> getImageList() {
 		return this.imageList;
 	}
@@ -197,6 +203,7 @@ public class Page {
 		return shapeList;
 	}
 
+	@JsonIgnore
 	public BufferedImage getShapeBufferedImage(Shape shape) {
 		BufferedImage bufferedImage = null;
 		if (this.getBufferedImage() != null) {
@@ -205,14 +212,17 @@ public class Page {
 		return bufferedImage;
 	}
 
+	@JsonIgnore
 	public Matrix getMatrix() {
 		return new Matrix(this.getShapeList(), this.script);
 	}
 	
+	@JsonIgnore
 	public Table getTable() {
 		return new Table(this.getMatrix());
 	}
 	
+	@JsonIgnore
 	public Archive getArchive() {
 		return new Archive(this.getMatrix());
 	}
@@ -329,6 +339,7 @@ public class Page {
 		}
 	}
 	
+	@JsonIgnore
 	public Image removeImage(Image image) {
 		return this.removeImage(image.uuid);
 	}
@@ -354,6 +365,7 @@ public class Page {
 	 * @param shape
 	 * @return
 	 */
+	@JsonIgnore
 	public Shape removeShape(Shape shape) {
 		logger.info("removeShape(" + shape + ")");
 		Shape s = null;
@@ -384,22 +396,22 @@ public class Page {
 		for (int i = 0; i < imageList.size(); i++) {
 			Image a = imageList.get(i);
 			if (bufferedImage == null) {
-				int width = a.bufferedImage.getWidth();
-				int height = (int) (a.bufferedImage.getHeight() + a.position.margin);
+				int width = a.getBufferedImage().getWidth();
+				int height = (int) (a.getBufferedImage().getHeight() + a.position.margin);
 				bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 				Graphics2D graphics2D = bufferedImage.createGraphics();
 				graphics2D.setPaint(Color.BLACK);
 				graphics2D.fillRect(0, 0, width, height);
 				graphics2D.setColor(Color.BLACK);
-				graphics2D.drawImage(a.bufferedImage, null, 0, (int)(a.position.margin));
+				graphics2D.drawImage(a.getBufferedImage(), null, 0, (int)(a.position.margin));
 				graphics2D.dispose();
 			}
 			if (i + 1 < imageList.size()) {
 				Image b = imageList.get(i + 1);
 				int w = bufferedImage.getWidth();
 				int h = bufferedImage.getHeight();
-				int width = w + b.bufferedImage.getWidth();
-				int height = Math.max(h, b.bufferedImage.getHeight() + (int) b.position.margin);
+				int width = w + b.getBufferedImage().getWidth();
+				int height = Math.max(h, b.getBufferedImage().getHeight() + (int) b.position.margin);
 				BufferedImage bI = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 				Graphics2D graphics2D = bI.createGraphics();
 				Color oldColor = graphics2D.getColor();
@@ -407,7 +419,7 @@ public class Page {
 				graphics2D.fillRect(0, 0, width, height);
 				graphics2D.setColor(oldColor);
 				graphics2D.drawImage(bufferedImage, null, 0, 0);
-				graphics2D.drawImage(b.bufferedImage, null, w, (int) (b.position.margin));
+				graphics2D.drawImage(b.getBufferedImage(), null, w, (int) (b.position.margin));
 				graphics2D.dispose();
 				bufferedImage = bI;
 			}
@@ -415,6 +427,7 @@ public class Page {
 		return bufferedImage;
 	}
 
+	@JsonIgnore
 	public void paint(Graphics2D graphics2D) {
 		AffineTransform affineTransform = new AffineTransform();
 		affineTransform.scale(this.position.scale, this.position.scale);

@@ -14,10 +14,14 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import com.meritoki.app.desktop.retina.controller.document.DocumentController;
+import com.meritoki.app.desktop.retina.model.document.Data;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
+import com.meritoki.app.desktop.retina.model.document.Shape;
+import com.meritoki.app.desktop.retina.model.document.Text;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class DocumentTest {
@@ -196,7 +200,6 @@ class DocumentTest {
 		assertEquals(document.setIndex(0), true);
 		assertEquals(document.getPage().setIndex(0),true);
 		document.cache.pressedImage = document.getImage();
-		System.out.println("======="+document.getImage());
 		int x = (int)(document.cache.pressedImage.position.absoluteDimension.width/2 - dimension/2);
 		int y = (int)(document.cache.pressedImage.position.absoluteDimension.height/2 - dimension/2);
 		int width = dimension;
@@ -577,4 +580,166 @@ class DocumentTest {
 			assertNotNull(image.getShape(new Point(x,y)));
 		}
 	}
+	
+	@Test
+	@Order(10)
+	public void save() {
+		DocumentController.save(new java.io.File("./document-test.json"), document);
+	}
+	
+	@Test
+	@Order(11)
+	public void open() {
+		document = DocumentController.open(new java.io.File("./document-test.json"));
+		assertEquals(document.setIndex(0), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.absoluteDimension.width/2);
+			int y = (int)(image.position.absoluteDimension.height/2);
+			assertNotNull(image.file);
+			assertNotNull(image.getShape(new Point(x,y)));
+		}
+		
+		assertEquals(document.setIndex(1), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.absoluteDimension.width/2);
+			int y = (int)(image.position.absoluteDimension.height/2);
+			assertNotNull(image.file);
+			assertNotNull(image.getShape(new Point(x,y)));
+		}
+		
+		assertEquals(document.setIndex(2), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.absoluteDimension.width/2);
+			int y = (int)(image.position.absoluteDimension.height/2);
+			assertNotNull(image.file);
+			assertNotNull(image.getShape(new Point(x,y)));
+		}
+		
+		assertEquals(document.setIndex(3), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.absoluteDimension.width/2);
+			int y = (int)(image.position.absoluteDimension.height/2);
+			assertNotNull(image.file);
+			assertNotNull(image.getShape(new Point(x,y)));
+		}
+	}
+	
+	@Test
+	@Order(12) 
+	public void setShapeData() {
+		assertEquals(document.setIndex(0), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.absoluteDimension.width/2);
+			int y = (int)(image.position.absoluteDimension.height/2);
+			Shape shape = image.getShape(new Point(x,y));
+			assertNotNull(shape);
+			Data data = new Data();
+			data.text = new Text("Hello World 0");
+			shape.setData(data);
+		}
+		
+		assertEquals(document.setIndex(1), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.absoluteDimension.width/2);
+			int y = (int)(image.position.absoluteDimension.height/2);
+			Shape shape = image.getShape(new Point(x,y));
+			assertNotNull(shape);
+			Data data = new Data();
+			data.text = new Text("Hello World 1");
+			shape.setData(data);
+		}
+		
+		assertEquals(document.setIndex(2), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.absoluteDimension.width/2);
+			int y = (int)(image.position.absoluteDimension.height/2);
+			Shape shape = image.getShape(new Point(x,y));
+			assertNotNull(shape);
+			Data data = new Data();
+			data.text = new Text("Hello World 2");
+			shape.setData(data);
+		}
+		
+		assertEquals(document.setIndex(3), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.absoluteDimension.width/2);
+			int y = (int)(image.position.absoluteDimension.height/2);
+			Shape shape = image.getShape(new Point(x,y));
+			assertNotNull(shape);
+			Data data = new Data();
+			data.text = new Text("Hello World 3");
+			shape.setData(data);
+		}
+	}
+	
+	@Test
+	@Order(13)
+	public void saveShapeData() {
+		DocumentController.save(new java.io.File("./document-test.json"), document);
+	}
+	
+	@Test
+	@Order(14)
+	public void openShapeData() {
+		document = DocumentController.open(new java.io.File("./document-test.json"));
+		assertEquals(document.setIndex(0), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.absoluteDimension.width/2);
+			int y = (int)(image.position.absoluteDimension.height/2);
+			Shape shape = image.getShape(new Point(x,y));
+			assertNotNull(shape);
+			assertEquals(shape.data.text.value, "Hello World 0");
+		}
+		
+		assertEquals(document.setIndex(1), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.absoluteDimension.width/2);
+			int y = (int)(image.position.absoluteDimension.height/2);
+			Shape shape = image.getShape(new Point(x,y));
+			assertNotNull(shape);
+			assertEquals(shape.data.text.value, "Hello World 1");
+		}
+		
+		assertEquals(document.setIndex(2), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.absoluteDimension.width/2);
+			int y = (int)(image.position.absoluteDimension.height/2);
+			Shape shape = image.getShape(new Point(x,y));
+			assertNotNull(shape);
+			assertEquals(shape.data.text.value, "Hello World 2");
+		}
+		
+		assertEquals(document.setIndex(3), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.absoluteDimension.width/2);
+			int y = (int)(image.position.absoluteDimension.height/2);
+			Shape shape = image.getShape(new Point(x,y));
+			assertNotNull(shape);
+			assertEquals(shape.data.text.value, "Hello World 3");
+		}
+	}	
 }

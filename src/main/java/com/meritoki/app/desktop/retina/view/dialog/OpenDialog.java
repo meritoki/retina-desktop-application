@@ -77,8 +77,9 @@ public class OpenDialog extends javax.swing.JDialog {
 			this.model.document = (DocumentController.open(model.system.file));
 			((MainFrame) this.getParent()).init();
 			((MainFrame) this.getParent()).repaint();
-			this.hideLoad();
+			
 			this.setVisible(false);
+			this.hideLoad();
 		} else if (result == JFileChooser.CANCEL_OPTION) {
 			logger.info("Cancel");
 			this.setVisible(false);

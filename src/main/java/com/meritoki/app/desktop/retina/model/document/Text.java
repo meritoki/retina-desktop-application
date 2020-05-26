@@ -15,7 +15,11 @@
  */
 package com.meritoki.app.desktop.retina.model.document;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+
 
 public class Text {
 	
@@ -23,6 +27,10 @@ public class Text {
 	
 	public Text() {
 		
+	}
+	
+	public Text(String value) {
+		this.value = value;
 	}
 	
 	public Text(Text text) {

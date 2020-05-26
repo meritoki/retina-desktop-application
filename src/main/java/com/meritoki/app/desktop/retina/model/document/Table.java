@@ -10,14 +10,6 @@ import org.apache.logging.log4j.Logger;
 
 public class Table {
 	private static Logger logger = LogManager.getLogger(Table.class.getName());
-
-	public Time time = new Time();
-	public Space space = new Space();
-	public Energy energy = new Energy();
-	public boolean timeFlag = false;
-	public boolean spaceFlag = false;
-	public boolean energyFlag = false;
-	public Shape previousShape = null;
 	public Matrix matrix;
 
 	public Table(Matrix matrix) {

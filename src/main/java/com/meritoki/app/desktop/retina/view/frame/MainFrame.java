@@ -67,6 +67,7 @@ public final class MainFrame extends JFrame {
 
     public MainFrame(Model model) {
         this.initComponents();
+        this.setTitle("Retina Desktop Application");
         this.setModel(model);
         this.initIconImage();
         this.init();
@@ -109,10 +110,10 @@ public final class MainFrame extends JFrame {
 
     public void init() {
         logger.debug("init()");
-        this.setTitle("Retina Desktop Application");
         this.pagePanel.setMain(this);
         this.pagePanel.setFocusable(true);
         this.pagePanel.requestFocusInWindow();
+        this.tablePanel.init();
         this.imageDialog.init();
         this.selectionDialog.init();
         this.commandDialog.init();

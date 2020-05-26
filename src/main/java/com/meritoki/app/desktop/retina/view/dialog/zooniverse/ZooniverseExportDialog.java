@@ -88,7 +88,7 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
     }
 
     public void initZooniverse() {
-        for (Provider provider : this.model.getSystem().providerList) {
+        for (Provider provider : this.model.system.providerList) {
             if (provider instanceof Zooniverse) {
                 this.zooniverse = (Zooniverse) provider;
             }
@@ -560,7 +560,7 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
         
         if(pageList != null) {
 	        SubjectSet subjectSet = new SubjectSet();
-	        List<Shape> shapeList = this.model.getDocument().getShapeList();
+	        List<Shape> shapeList = this.model.document.getShapeList();
 	        subjectSet.title = subjectSetTitle;
 	        if (zooniverse != null) {
 	            this.showLoad();

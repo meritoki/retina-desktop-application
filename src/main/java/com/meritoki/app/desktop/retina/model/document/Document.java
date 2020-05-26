@@ -10,10 +10,10 @@ import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 import com.meritoki.app.desktop.retina.model.document.command.Pattern;
 import com.meritoki.app.desktop.retina.model.document.user.User;
@@ -35,23 +35,23 @@ public class Document {
 	public List<Page> pageList = new ArrayList<>();
 	@JsonProperty
 	public List<User> userList = new LinkedList<>();
-	@JsonProperty
+	@JsonIgnore
 	public Pattern pattern;
-	@JsonProperty
+	@JsonIgnore
 	public Cache cache = new Cache();
-	@JsonProperty
+	@JsonIgnore
 	public List<Layout> layoutList = new ArrayList<>();
-	
-	public Document() {
-		//Defualt constructor for loading from JSON;
-	}
 
-	public Document(User user) {
+//	public Document() {
+//		//Defualt constructor for loading from JSON;
+//	}
+
+	public Document() {
 		this.uuid = UUID.randomUUID().toString();
 		this.pattern = new Pattern(this);
 //		this.test();
 	}
-	
+
 	@JsonIgnore
 	public void test() {
 		Page page = new Page();
@@ -61,42 +61,48 @@ public class Document {
 		page = new Page(new Image(new File("./data/image/03.jpg")));
 		this.addPage(page);
 	}
-	
+
+	@JsonIgnore
 	public Image getImage() {
 		Image image = null;
-		if(this.getPage() != null) {
+		if (this.getPage() != null) {
 			image = this.getPage().getImage();
 		}
 		return image;
 	}
-	
+
+	@JsonIgnore
 	public Image getImage(Point point) {
 		Image image = null;
-		if(this.getPage() != null) {
+		if (this.getPage() != null) {
 			image = this.getPage().getImage(point);
 		}
 		return image;
 	}
-	
+
+	@JsonIgnore
 	public void setImage(String uuid) {
-		if(this.getPage() != null) {
+		if (this.getPage() != null) {
 			this.getPage().setImage(uuid);
 		}
 	}
-	
+
+	@JsonIgnore
 	public Shape getShape(Point point) {
 		Shape shape = null;
-		if(this.getPage() != null) {
+		if (this.getPage() != null) {
 			shape = this.getPage().getShape(point);
 		}
 		return shape;
 	}
-	
+
+	@JsonIgnore
 	public void addShape(Shape shape) {
-		if(this.getPage() != null) {
+		if (this.getPage() != null) {
 			this.getPage().addShape(shape);
 		}
 	}
+
 	/**
 	 * Get the index of the current Page, used by Dialogs
 	 * 
@@ -166,6 +172,7 @@ public class Document {
 		this.pageList.add(page);
 	}
 
+	@JsonIgnore
 	public List<Shape> getShapeList() {
 		List<Shape> shapeList = new ArrayList<>();
 		for (Page page : this.pageList) {
@@ -174,6 +181,7 @@ public class Document {
 		return shapeList;
 	}
 
+	@JsonIgnore
 	public boolean importText(List<String[]> stringArrayList) {
 		logger.info("importText(...)");
 		boolean flag = false;
@@ -225,6 +233,7 @@ public class Document {
 		return flag;
 	}
 
+	@JsonIgnore
 	public boolean removeUser(User user) {
 		boolean flag = false;
 		for (int i = 0; i < this.userList.size(); i++) {
@@ -241,12 +250,12 @@ public class Document {
 	@JsonIgnore
 	public Page removePage(String uuid) {
 		ListIterator<Page> pageListIterator = this.pageList.listIterator();
-		while(pageListIterator.hasNext()){
+		while (pageListIterator.hasNext()) {
 			Page page = pageListIterator.next();
-		    if(page.uuid.equals(uuid)){
-		    	pageListIterator.remove();
-		        return page;
-		    }
+			if (page.uuid.equals(uuid)) {
+				pageListIterator.remove();
+				return page;
+			}
 		}
 		return null;
 	}

@@ -15,12 +15,19 @@
  */
 package com.meritoki.app.desktop.retina.model.document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+
 /**
  *
  * @author osvaldo.rodriguez
  */
 public class Unit {
+	@JsonProperty
     public UnitType type = UnitType.DATA;
+    @JsonProperty
     public String value;
     
     public Unit() {

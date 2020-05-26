@@ -1,4 +1,7 @@
-package com.meritoki.app.desktop.retina.model.document;
+package com.meritoki.app.desktop.retina.model.document.prototype;
+
+import com.meritoki.app.desktop.retina.model.document.Data;
+import com.meritoki.app.desktop.retina.model.document.Shape;
 
 public class Energy {
 	

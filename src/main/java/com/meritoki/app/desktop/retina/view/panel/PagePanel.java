@@ -139,7 +139,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 		} else {
 			this.model.document.cache.selection = this.model.document.getPage()
 					.intersectShape(this.model.document.cache.pressedPoint);
-			if (this.model.document.cache.selection != null) {
+			if (this.model.document.cache.selection != null && this.model.document.cache.pressedShape != null) {
 				try {
 					this.model.document.pattern.execute("resizeShape");
 				} catch (Exception e1) {

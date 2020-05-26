@@ -34,6 +34,7 @@ public class Pattern {
 		this.register();
 	}
 	
+	@JsonIgnore
 	public void register() {
 		Command addPage = new AddPage(this.document);
 		Command setPage = new SetPage(this.document);
@@ -74,6 +75,7 @@ public class Pattern {
 		command.reset();
 	}
 	
+	@JsonIgnore
 	public void undo() {
 		if (this.state.undoStack.size() > 0) {
 			Command command = this.state.undoStack.pop();
@@ -180,6 +182,7 @@ public class Pattern {
 		}
 	}
 
+	@JsonIgnore
 	public void redo() {
 		if (this.state.redoStack.size() > 0) {
 			Command command = this.state.redoStack.pop();

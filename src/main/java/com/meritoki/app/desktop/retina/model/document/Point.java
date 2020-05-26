@@ -33,6 +33,7 @@ public class Point {
 		this.y = y;
 	}
 	
+	@JsonIgnore
 	public boolean equals(Point point) {
 		boolean flag = false;
 		if(this.x == point.x && this.y == point.y) {

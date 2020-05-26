@@ -261,7 +261,7 @@ public class ZooniverseImportDialog extends javax.swing.JDialog {
                     if (p.name.equals(searchProjectName)) {
 //                        zooniverse.downloadClassification(p, "./"+timeStamp + ".csv");
                     	zooniverse.downloadClassification(p, this.getClassificationPath()+timeStamp + ".csv");
-                        if(!this.model.getDocument().importText(NodeController.openCsv(this.getClassificationPath()+timeStamp+".csv"))) {
+                        if(!this.model.document.importText(NodeController.openCsv(this.getClassificationPath()+timeStamp+".csv"))) {
                         	JOptionPane.showMessageDialog(this, "No shape uuid matches");
                         }
                         break;

@@ -69,11 +69,11 @@ public class TablePanel extends javax.swing.JPanel {
 		}
 	}	
 
-	@Override
-	public void paint(Graphics g) {
-		super.paint(g);
-		this.initDataTable();
-	}
+//	@Override
+//	public void paint(Graphics g) {
+//		super.paint(g);
+//		this.initDataTable();
+//	}
 
 	/**
 	 * This method is called from within the constructor to initialize the form.

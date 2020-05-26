@@ -3,6 +3,7 @@ package com.meritoki.app.desktop.retina.model.document;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -15,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 
 /**
@@ -27,15 +29,19 @@ public class Image {
 	@JsonIgnore
 	static Logger logger = LogManager.getLogger(Image.class.getName());
 	@JsonProperty
-	public String uuid = null;
+	public String uuid;
+	@JsonIgnore 
+	public File file;
 	@JsonProperty
-	public File file = null;
+	public String filePath;
+	@JsonProperty
+	public String fileName;
 	@JsonProperty
 	public List<Shape> shapeList = new ArrayList<>();
 	@JsonProperty
 	public Position position = new Position();
 	@JsonIgnore
-	public BufferedImage bufferedImage = null;
+	public BufferedImage bufferedImage;
 	@JsonIgnore
 	public int index = 0;
 
@@ -43,7 +49,14 @@ public class Image {
 	 * Default constructor
 	 */
 	public Image() {
-		this.uuid = UUID.randomUUID().toString();
+		if(this.file == null) {
+			this.file = new File(this.filePath+getSeperator()+this.fileName);
+		}
+//		this.initBufferedImage();
+	}
+	
+	public static String getSeperator() {
+		return FileSystems.getDefault().getSeparator();
 	}
 
 	/**
@@ -54,7 +67,9 @@ public class Image {
 	public Image(Image image) {
 		this.uuid = image.uuid;
 		this.file = image.file;
-		this.bufferedImage = image.bufferedImage;
+		this.filePath = image.filePath;
+		this.fileName = image.fileName;
+		this.bufferedImage = image.getBufferedImage();
 		this.position = image.position;
 		this.index = image.index;
 		for (Shape shape : image.shapeList) {
@@ -65,31 +80,20 @@ public class Image {
 	public Image(File file) {
 		this.uuid = UUID.randomUUID().toString();
 		this.file = file;
-		BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getImageCache(),
-				this.uuid + "." + this.getExtension());
-		if (bufferedImage == null) {
-			bufferedImage = NodeController.openBufferedImage(this.file);
-			if (bufferedImage != null) {
-				this.setBufferedImage(bufferedImage);
-				if (this.getExtension().equals("jpg") || this.getExtension().equals("jpeg")) {
-					NodeController.saveJpg(NodeController.getImageCache(), this.uuid + "." + this.getExtension(),
-							bufferedImage);
-				}
-			}
-
-		} else {
-			this.setBufferedImage(bufferedImage);
-		}
-		this.position.absoluteDimension.width = this.getBufferedImage().getWidth();
-		this.position.absoluteDimension.height = this.getBufferedImage().getHeight();
+		this.filePath = this.file.getParent();
+		this.fileName = this.file.getName();
+		System.out.println(this.filePath+" "+this.fileName);
+		this.initBufferedImage();
 	}
 
+	@JsonIgnore
 	public String getUUID() {
 		return this.uuid;
 	}
 
+	@JsonIgnore
 	public String getExtension() {
-		return file.getName().substring(file.getName().lastIndexOf(".") + 1);
+		return this.fileName.substring(this.fileName.lastIndexOf(".") + 1);
 	}
 
 	/**
@@ -98,6 +102,7 @@ public class Image {
 	 * @param file
 	 * @return flag
 	 */
+	@JsonIgnore
 	public boolean equals(Image file) {
 		boolean flag = false;
 		if (this.uuid.equals(file.uuid)) {
@@ -137,6 +142,7 @@ public class Image {
 	 * @param point
 	 * @return
 	 */
+	@JsonIgnore
 	public Shape getShape(Point point) {
 		for (Shape shape : this.shapeList) {
 			if (shape.position.containsPoint((point))) {
@@ -152,13 +158,40 @@ public class Image {
 	 * 
 	 * @return
 	 */
+	@JsonIgnore
 	public List<Shape> getShapeList() {
 		return this.shapeList;
 	}
 
 	@JsonIgnore
 	public BufferedImage getBufferedImage() {
+		if(this.bufferedImage == null) {
+			this.initBufferedImage();
+		}
 		return this.bufferedImage;
+	}
+
+	@JsonIgnore
+	public void initBufferedImage() {
+		this.bufferedImage = NodeController.openBufferedImage(NodeController.getImageCache(),
+				this.uuid + "." + this.getExtension());
+		if (bufferedImage == null) {
+			if (this.file != null) {
+				bufferedImage = NodeController.openBufferedImage(this.file);
+				if (bufferedImage != null) {
+					this.setBufferedImage(bufferedImage);
+					if (this.getExtension().equals("jpg") || this.getExtension().equals("jpeg")) {
+						NodeController.saveJpg(NodeController.getImageCache(), this.uuid + "." + this.getExtension(),
+								bufferedImage);
+					}
+				}
+			}
+		}
+
+		if (this.bufferedImage != null) {
+			this.position.absoluteDimension.width = this.bufferedImage.getWidth();
+			this.position.absoluteDimension.height = this.bufferedImage.getHeight();
+		}
 	}
 
 	/**
@@ -173,6 +206,7 @@ public class Image {
 		}
 	}
 
+	@JsonIgnore
 	public void setScale(double scale) {
 		this.position.setScale(scale);
 		for (Shape shape : this.shapeList) {
@@ -187,6 +221,7 @@ public class Image {
 		this.position.absoluteDimension.height = this.bufferedImage.getHeight();
 	}
 
+	@JsonIgnore
 	public void setOffset(double offset) {
 		this.position.offset = offset;
 		for (Shape shape : this.shapeList) {
@@ -199,6 +234,7 @@ public class Image {
 	 * 
 	 * @param margin
 	 */
+	@JsonIgnore
 	public void setMargin(double margin) {
 		logger.info("setMargin(" + margin + ")");
 		this.position.margin = margin;
@@ -242,9 +278,11 @@ public class Image {
 
 	/**
 	 * Need To Refactor
+	 * 
 	 * @param point
 	 * @return
 	 */
+	@JsonIgnore
 	public Selection intersectShape(Point point) {
 		Selection selection = null;
 		Shape shape = this.getShape();
@@ -263,16 +301,16 @@ public class Image {
 	public Shape removeShape(Shape shape) {
 		return this.removeShape(shape.uuid);
 	}
-	
+
 	@JsonIgnore
 	public Shape removeShape(String uuid) {
 		ListIterator<Shape> shapeListIterator = this.shapeList.listIterator();
-		while(shapeListIterator.hasNext()){
+		while (shapeListIterator.hasNext()) {
 			Shape shape = shapeListIterator.next();
-		    if(shape.uuid.equals(uuid)){
-		        shapeListIterator.remove();
-		        return shape;
-		    }
+			if (shape.uuid.equals(uuid)) {
+				shapeListIterator.remove();
+				return shape;
+			}
 		}
 		return null;
 	}
@@ -283,6 +321,7 @@ public class Image {
 	 * @param point
 	 * @return
 	 */
+	@JsonIgnore
 	public boolean containsPoint(Point point) {
 		return this.position.containsPoint(point);
 	}

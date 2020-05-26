@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+
 public class Position {
 
 	public static void main(String[] args) {
@@ -102,6 +103,7 @@ public class Position {
 		}
 	}
 
+	@JsonIgnore
 	public Point getRelativePoint() {
 		Point point = new Point();
 		point.x = this.absolutePoint.x - offset;
@@ -109,14 +111,17 @@ public class Position {
 		return point;
 	}
 
+	@JsonIgnore
 	public void setAbsolutePoint(Point point) {
 		this.absolutePoint = point;
 	}
 
+	@JsonIgnore
 	public void setAbsoluteDimension(Dimension dimension) {
 		this.absoluteDimension = dimension;
 	}
 
+	@JsonIgnore
 	public void addAbsolutionDimension(double width, double height) {
 		this.absoluteDimension.width += width;
 		this.absoluteDimension.height += height;
@@ -128,6 +133,7 @@ public class Position {
 		this.scale();
 	}
 
+	@JsonIgnore
 	public void setAddScale(double addScale) {
 		logger.info("setAddScale(" + addScale + ")");
 		this.addScale = addScale;
@@ -163,6 +169,7 @@ public class Position {
 		return new Point((this.point.x + this.dimension.width), (this.point.y + this.dimension.height));
 	}
 
+	@JsonIgnore
 	public void scale() {
 		if (this.relativePoint != null) {
 			this.point.x = this.relativePoint.x + this.offset;

@@ -3,7 +3,11 @@ package com.meritoki.app.desktop.retina.model.document;
 import java.io.File;
 import java.util.List;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+
 
 import com.meritoki.app.desktop.retina.model.document.user.User;
 
