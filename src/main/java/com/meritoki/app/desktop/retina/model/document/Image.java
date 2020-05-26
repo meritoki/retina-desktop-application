@@ -82,7 +82,6 @@ public class Image {
 		this.file = file;
 		this.filePath = this.file.getParent();
 		this.fileName = this.file.getName();
-		System.out.println(this.filePath+" "+this.fileName);
 		this.initBufferedImage();
 	}
 

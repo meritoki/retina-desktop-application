@@ -281,4 +281,8 @@ public class NodeController {
 		}
 		return object;
 	}
+	
+	public static void deleteDirectory(File directory) {
+		directory.delete();
+	}
 }

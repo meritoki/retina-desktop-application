@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.File;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import com.meritoki.app.desktop.retina.controller.document.DocumentController;
+import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.document.Data;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Image;
@@ -22,6 +24,7 @@ import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.Text;
+import com.meritoki.app.desktop.retina.model.provider.zooniverse.Zooniverse;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class DocumentTest {
@@ -41,7 +44,7 @@ class DocumentTest {
 	
 	static String shapeZeroUUID = null;
 	
-	static int dimension = 4;
+	static int dimension = 256;
 
 	@BeforeAll
 	public static void initialize() {
@@ -498,6 +501,19 @@ class DocumentTest {
 	
 	@Test
 	@Order(9)
+	public void getShapeBufferedImageAfterJoin() {
+		assertEquals(document.setIndex(0), true);
+		List<Shape> shapeList = document.getPage().getShapeList();
+		for(Shape s: shapeList) {
+			assertNotNull(s.bufferedImage);
+		}
+		Zooniverse zooniverse = new Zooniverse();
+		NodeController.deleteDirectory(new File("./manifest-test-A"));
+		zooniverse.generateManifest("./manifest-test-A", shapeList);
+	}
+	
+	@Test
+	@Order(10)
 	public void splitWithShapesAgain() {
 		document.cache.script = "SPLIT 0;";
     	document.cache.pageList = document.getPageList();
@@ -582,13 +598,13 @@ class DocumentTest {
 	}
 	
 	@Test
-	@Order(10)
+	@Order(11)
 	public void save() {
 		DocumentController.save(new java.io.File("./document-test.json"), document);
 	}
 	
 	@Test
-	@Order(11)
+	@Order(12)
 	public void open() {
 		document = DocumentController.open(new java.io.File("./document-test.json"));
 		assertEquals(document.setIndex(0), true);
@@ -633,7 +649,7 @@ class DocumentTest {
 	}
 	
 	@Test
-	@Order(12) 
+	@Order(13) 
 	public void setShapeData() {
 		assertEquals(document.setIndex(0), true);
 		assertEquals(document.getPage().setIndex(0),true);
@@ -689,13 +705,13 @@ class DocumentTest {
 	}
 	
 	@Test
-	@Order(13)
+	@Order(14)
 	public void saveShapeData() {
 		DocumentController.save(new java.io.File("./document-test.json"), document);
 	}
 	
 	@Test
-	@Order(14)
+	@Order(15)
 	public void openShapeData() {
 		document = DocumentController.open(new java.io.File("./document-test.json"));
 		assertEquals(document.setIndex(0), true);
@@ -742,4 +758,17 @@ class DocumentTest {
 			assertEquals(shape.data.text.value, "Hello World 3");
 		}
 	}	
+	
+	@Test
+	@Order(16)
+	public void getShapeBufferedImage() {
+		assertEquals(document.setIndex(0), true);
+		List<Shape> shapeList = document.getPage().getShapeList();
+		for(Shape s: shapeList) {
+			assertNotNull(s.bufferedImage);
+		}
+		Zooniverse zooniverse = new Zooniverse();
+		NodeController.deleteDirectory(new File("./manifest-test-B"));
+		zooniverse.generateManifest("./manifest-test-B", shapeList);
+	}
 }

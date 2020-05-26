@@ -1,9 +1,12 @@
 sudo apt-get update
 sudo apt-get -y install python
 sudo apt install -y python-pip
+sudo apt-get install libpython-dev
+pip install awscli
 # pip install --upgrade cryptography --user
 pip install -U panoptescli
-
+sudo pip install --upgrade cryptography
+sudo python -m easy_install --upgrade pyOpenSSL
 # pip install -U pyopenssl
 # pip install -U PyYAML
 # export PY_USER_BIN=$(python -c 'import site; print(site.USER_BASE + "/bin")')

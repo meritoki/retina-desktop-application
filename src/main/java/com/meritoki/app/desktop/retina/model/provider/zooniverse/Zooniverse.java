@@ -141,7 +141,9 @@ public class Zooniverse extends Provider {
             data.put("endpoint", "https://www.zooniverse.org");
             new File(this.getConfigPath()).mkdirs();
             NodeController.saveYaml(this.getConfigPath(), "config.yml", data);
-            NodeController.executeCommand("cp "+this.getConfigPath()+NodeController.getSeperator()+"config.yml "+NodeController.getPanoptesHome());
+            File file = new File(NodeController.getPanoptesHome());
+            file.mkdir();
+            NodeController.executeCommand("cp "+this.getConfigPath()+NodeController.getSeperator()+"config.yml "+NodeController.getPanoptesHome()+NodeController.getSeperator());
 //            NodeController.executeCommand("panoptes configure");
         }
     }
