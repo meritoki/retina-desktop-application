@@ -6,12 +6,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.controller.security.SecurityController;
 import com.meritoki.app.desktop.retina.controller.user.UserController;
+import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Zooniverse;
@@ -19,6 +22,7 @@ import com.meritoki.app.desktop.retina.model.vendor.Vendor;
 import com.meritoki.app.desktop.retina.model.vendor.microsoft.Microsoft;
 
 public class System {
+	private static final Logger logger = LogManager.getLogger(System.class.getName());
 	@JsonIgnore
 	public List<String> emptyList = new ArrayList<>();
 	@JsonIgnore
@@ -80,8 +84,10 @@ public class System {
 	}
 	
 	public void initUsers() {
-		if(UserController.exists()) {
-			this.userList = UserController.open();
+		logger.info("initUsers()");
+		UserController userController = new UserController(this);
+		if(userController.exists()) {
+			this.userList = userController.open();
 		}
 		if (this.userList.size() == 0) {
 			this.newUser = true;
@@ -91,9 +97,9 @@ public class System {
 			user.hash = SecurityController.hash("anonymous", 11);
 			user.email = "null";
 			this.userList.add(user);
-			UserController.save(this.userList);
+			userController.save(this.userList);
 		} else {
-			this.loginUser = false;
+			this.loginUser = true;
 		}
 	}
 }

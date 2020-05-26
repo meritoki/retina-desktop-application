@@ -43,7 +43,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
-import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.system.System;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 
 public class VisionClient {
@@ -52,8 +52,8 @@ public class VisionClient {
 	private String url = null;
 	private Properties properties = null;
 
-	public VisionClient(Model model) {
-		this.properties = model.system.properties;
+	public VisionClient(System system) {
+		this.properties = system.properties;
 		boolean gateway = Boolean.parseBoolean((String) this.properties.get("gateway"));
 		if (gateway) {
 			this.url = this.properties.getProperty("service.web.gateway.url") + "/vision";
@@ -272,7 +272,7 @@ public class VisionClient {
 
 	
 	public static void main(String args[]) {
-		Model model = new Model();
+		System model = new System();
 		VisionClient visionClient = new VisionClient(model);
 		UserClient userClient = new UserClient(model);
 		User user = new User();

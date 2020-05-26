@@ -221,7 +221,7 @@ public class UserRegisterDialog extends javax.swing.JDialog {
         }
         
         if(success) {
-        	UserController userController = new UserController(this.model);
+        	UserController userController = new UserController(this.model.system);
         	userController.registerUser(user);
         	this.setVisible(false);
         	this.login.setVisible(true);

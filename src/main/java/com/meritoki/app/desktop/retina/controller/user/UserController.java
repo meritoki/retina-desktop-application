@@ -13,7 +13,7 @@ import com.meritoki.app.desktop.retina.controller.Controller;
 import com.meritoki.app.desktop.retina.controller.client.ClientController;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.controller.security.SecurityController;
-import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.system.System;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 
 /**
@@ -26,21 +26,21 @@ import com.meritoki.app.desktop.retina.model.document.user.User;
  */
 public class UserController extends Controller {
 	
-	public static void main(String[] args) {
-		List<User> userList = new ArrayList<>();
-		userList.add(new User());
-		UserController.save(userList);
-		userList = UserController.open();
-		for(User u: userList) {
-			System.out.println(u);
-		}
-	}
+//	public static void main(String[] args) {
+//		List<User> userList = new ArrayList<>();
+//		userList.add(new User());
+//		UserController.save(userList);
+//		userList = UserController.open();
+//		for(User u: userList) {
+//			System.out.println(u);
+//		}
+//	}
 	
 	private static Logger logger = LogManager.getLogger(UserController.class.getName());
 	public static String filePath = NodeController.getRetinaHome()+NodeController.getSeperator();
 	public static String fileName = "users.json";
 	
-	public UserController(Model model) {
+	public UserController(System model) {
 		super(model);
 	}
 	
@@ -63,17 +63,19 @@ public class UserController extends Controller {
 	
 
 	public boolean loginUser(String userName, String password) {
+		logger.info("loginUser("+userName+", "+password+")");
 		boolean flag = false;
-		ClientController clientController = new ClientController(this.model);
+		ClientController clientController = new ClientController(this.system);
 		if(clientController.userClient.checkHealth()) {
 			User user = new User(userName, password);
 			flag = clientController.userClient.login(user);
 		} else {
-			for (User u : model.system.userList) {
+			for (User u : system.userList) {
+				logger.info(u.name);
 				if (u.name.equals(userName)) {
 					if (SecurityController.verifyHash(password, u.hash)) {
 						flag = true;
-						this.model.system.user = u;
+						this.system.user = u;
 					}
 				}
 			}
@@ -82,7 +84,7 @@ public class UserController extends Controller {
 	}
 
 	public void registerUser(User user) {
-		this.model.system.userList.add(user);
-		UserController.save(this.model.system.userList);
+		this.system.userList.add(user);
+		UserController.save(this.system.userList);
 	}
 }

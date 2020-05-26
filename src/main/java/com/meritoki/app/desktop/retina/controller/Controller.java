@@ -1,12 +1,12 @@
 package com.meritoki.app.desktop.retina.controller;
 
-import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.system.System;
 
 public class Controller {
 
-	protected Model model;
+	protected System system;
 	
-	public Controller(Model model) {
-		this.model = model;
+	public Controller(System system) {
+		this.system = system;
 	}
 }

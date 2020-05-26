@@ -1,11 +1,10 @@
-package com.meritoki.app.desktop.retina.model.document;
+package com.meritoki.app.desktop.retina.model.document.command;
 
 import java.util.LinkedList;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import com.meritoki.app.desktop.retina.model.document.command.Command;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 
 /**

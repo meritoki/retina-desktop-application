@@ -41,7 +41,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
-import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.system.System;
 
 public class FileClient {
 
@@ -49,8 +49,8 @@ public class FileClient {
 	private String url = null;
 	private Properties properties = null;
 
-	public FileClient(Model model) {
-		this.properties = model.system.properties;
+	public FileClient(System system) {
+		this.properties = system.properties;
 		boolean gateway = Boolean.parseBoolean((String) this.properties.get("gateway"));
 		if(gateway) {
 			this.url = this.properties.getProperty("service.web.gateway.url")+"/file";
@@ -104,7 +104,6 @@ public class FileClient {
 			headers.set("Authorization", "Bearer " + token);
 			HttpEntity<String> entity = new HttpEntity<String>(fileJson, headers);
 			String returns = restTemplate.postForObject(uri, entity, String.class);
-			System.out.println(returns);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		} catch (ResourceAccessException e) {
@@ -250,7 +249,7 @@ public class FileClient {
 	}
 
 	public static void main(String args[]) {
-		FileClient fileClient = new FileClient(new Model());
+		FileClient fileClient = new FileClient(new System());
 		fileClient.checkHealth();
 		fileClient.registerFile("123");
 		fileClient.checkFile("123");

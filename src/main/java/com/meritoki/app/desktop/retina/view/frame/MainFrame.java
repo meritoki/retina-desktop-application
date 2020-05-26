@@ -100,7 +100,7 @@ public final class MainFrame extends JFrame {
         this.loginDialog.setModel(this.model);
         this.loginDialog.setRegisterDialog(this.registerDialog);
         if (this.model.system.newUser) {
-        	System.out.println("New User");
+        	logger.info("New User");
             this.registerDialog.setVisible(true);
         } else if (this.model.system.loginUser) {
             this.loginDialog.setVisible(true);

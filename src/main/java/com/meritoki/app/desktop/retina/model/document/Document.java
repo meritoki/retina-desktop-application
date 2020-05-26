@@ -56,41 +56,6 @@ public class Document {
 		this.addPage(page);
 		page = new Page(new Image(new File("./data/image/03.jpg")));
 		this.addPage(page);
-//		Page page = new Page();
-//		Image image = new Image(new File("./data/image/01.jpg"));
-//		page.addImage(image);
-//		image = new Image(new File("./data/image/02.jpg"));
-//		page.addImage(image);
-//		image = new Image(new File("./data/image/03.jpg"));
-//		page.addImage(image);
-//		image = new Image(new File("./data/image/04.jpg"));
-//		page.addImage(image);
-//		pageList.add(page);
-//		page = new Page();
-//		image = new Image(new File("./data/image/03.jpg"));
-//		page.addImage(image);
-//		pageList.add(page);
-////		page = new Page();
-////		image = new Image("./data/image","04.jpg");
-////		page.imageList.add(image);
-////		pageList.add(page);
-////		page = new Page();
-////		image = new Image("./data/image","05.jpg");
-////		page.imageList.add(image);
-////		pageList.add(page);
-////		page = new Page();
-////		image = new Image("./data/image","06.jpg");
-////		page.imageList.add(image);
-////		pageList.add(page);
-////		page = new Page();
-////		image = new Image("./data/image","07.jpg");
-////		page.imageList.add(image);
-////		pageList.add(page);
-////		page = new Page();
-////		image = new Image("./data/image","08.jpg");
-////		page.imageList.add(image);
-////		pageList.add(page);
-//		this.setIndex(0);
 	}
 	
 	public Image getImage() {
@@ -128,10 +93,6 @@ public class Document {
 			this.getPage().addShape(shape);
 		}
 	}
-	
-//	public Selection 
-	
-
 	/**
 	 * Get the index of the current Page, used by Dialogs
 	 * 
@@ -139,7 +100,6 @@ public class Document {
 	 */
 	@JsonIgnore
 	public int getIndex() {
-		logger.debug("getIndex() this.index=" + this.index);
 		return this.index;
 	}
 
@@ -166,7 +126,6 @@ public class Document {
 
 	@JsonIgnore
 	public boolean setIndex(int index) {
-		logger.debug("setIndex(" + index + ")");
 		boolean flag = false;
 		if (index >= 0 && index < this.pageList.size()) {
 			this.index = index;
@@ -301,78 +260,3 @@ public class Document {
 		return string;
 	}
 }
-
-//@JsonIgnore
-//public Page removePage(String uuid) {
-//	Page s = null;
-//	for (int i = 0; i < this.pageList.size(); i++) {
-//		s = this.pageList.get(i);
-//		if (s.uuid.equals(uuid)) {
-//			this.pageList.remove(i);
-//			break;
-//		} else {
-//			s = null;
-//		}
-//	}
-//	return s;
-//}
-
-//@JsonIgnore
-//public void test() {
-//	Page page = new Page();
-//	File file = new File("./data/image", "01.jpg");
-//	page.fileList.add(file);
-//	file = new File("./data/image","02.jpg");
-//	page.fileList.add(file);
-//	pageList.add(page);
-//	page = new Page();
-//	file = new File("./data/image","02.jpg");
-//	page.fileList.add(file);
-//	pageList.add(page);
-//	page = new Page();
-//	file = new File("./data/image","03.jpg");
-//	page.fileList.add(file);
-//	pageList.add(page);
-//	page = new Page();
-//	file = new File("./data/image","04.jpg");
-//	page.fileList.add(file);
-//	pageList.add(page);
-//	page = new Page();
-//	file = new File("./data/image","05.jpg");
-//	page.fileList.add(file);
-//	pageList.add(page);
-//	page = new Page();
-//	file = new File("./data/image","06.jpg");
-//	page.fileList.add(file);
-//	pageList.add(page);
-//	page = new Page();
-//	file = new File("./data/image","07.jpg");
-//	page.fileList.add(file);
-//	pageList.add(page);
-//	page = new Page();
-//	file = new File("./data/image","08.jpg");
-//	page.fileList.add(file);
-//	pageList.add(page);
-//	this.setIndex(0);
-//}
-//public static void main(String[] args) throws IOException{
-//    Project project = new Project();
-////    File file = new File("~/test.json");
-//    project.initTest();
-//    ObjectMapper mapper = new ObjectMapper();
-//    Model model = new Model();
-//    model.getDocument().project = project;
-////    model.open(new java.io.File("/home/jorodriguez/test.json"));
-////    mapper.setVisibility(JsonMethod.FIELD, Visibility.ANY);
-////    mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
-////    mapper.writeValue(file, project);
-////    project = mapper.readValue(file, Project.class);
-//    String jsonInString = mapper.writeValueAsString(model.getDocument());
-//    ModelClient modelClient = new ModelClient();
-//    User user = new User();
-//    user.name = "javainuse";
-//    user.password = "password";
-//    modelClient.login(user);
-//    modelClient.uploadProject(jsonInString);
-//    System.out.println(project);
-//}
