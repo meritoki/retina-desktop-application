@@ -46,6 +46,7 @@ public class ArchivePanel extends javax.swing.JPanel {
      */
     public ArchivePanel() {
         initComponents();
+        this.archiveTextArea.setEditable(false);
     }
 
     public void setModel(Model model) {

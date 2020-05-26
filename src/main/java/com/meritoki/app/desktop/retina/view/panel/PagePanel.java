@@ -71,7 +71,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 		Dimension dimension = new Dimension(1028, 512);
 		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
-		if(page != null) {
+		if (page != null) {
 			dimension.setSize(page.position.dimension.width, page.position.dimension.height);
 		}
 		return dimension;
@@ -83,8 +83,8 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 		if (this.model != null) {
 			Graphics2D graphics2D = (Graphics2D) graphics.create();
 			Document document = (this.model != null) ? this.model.document : null;
-			Page page = (document != null)? document.getPage(): null;
-			if(page != null) {
+			Page page = (document != null) ? document.getPage() : null;
+			if (page != null) {
 				page.setScale(this.model.document.cache.scale);
 				page.paint(graphics2D);
 			}
@@ -114,12 +114,12 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 		Point point = new Point();
 		point.x = e.getX();
 		point.y = e.getY();
+		this.model.document.cache.pressedPoint = point;
 		this.model.document.cache.pressedImage = this.model.document.getImage(point);
 		if (this.model.document.cache.pressedImage != null) {
 			this.model.document.setImage(this.model.document.cache.pressedImage.uuid);
 			this.model.document.cache.pressedShape = this.model.document.getShape(point);
 		}
-		this.model.document.cache.pressedPoint = point;
 	}
 
 	/**
@@ -134,33 +134,33 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				try {
 					this.model.document.pattern.execute("setShape");
 				} catch (Exception e) {
-					logger.info("Exception "+e.getMessage());
+					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 		} else {
-			this.model.document.cache.selection = this.model.document.getPage()
-					.intersectShape(this.model.document.cache.pressedPoint);
-			if (this.model.document.cache.selection != null && this.model.document.cache.pressedShape != null) {
-				try {
-					this.model.document.pattern.execute("resizeShape");
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			} else {
+			Page page = this.model.document.getPage();
+			if (page != null) {
 				if (this.model.document.cache.pressedShape != null) {
-					this.model.document.cache.releasedImage = this.model.document
-							.getImage(this.model.document.cache.releasedPoint);
-					try {
-						this.model.document.pattern.execute("moveShape");
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+					this.model.document.cache.selection = page.intersectShape(this.model.document.cache.pressedPoint);
+					if (this.model.document.cache.selection != null) {
+						try {
+							this.model.document.pattern.execute("resizeShape");
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+						}
+					} else {
+						this.model.document.cache.releasedImage = this.model.document
+								.getImage(this.model.document.cache.releasedPoint);
+						try {
+							this.model.document.pattern.execute("moveShape");
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+						}
 					}
 				} else {
 					try {
 						this.model.document.pattern.execute("addShape");
 					} catch (Exception e) {
-						JOptionPane.showMessageDialog(main, e.getMessage(), "Query Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
@@ -226,7 +226,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				this.revalidate();
 				break;
 			}
-			case KeyEvent.VK_DOWN:{
+			case KeyEvent.VK_DOWN: {
 				logger.debug("keyPressed(e) KeyEvent.DOWN");
 				Page page = this.model.document.getPage();
 				page.setBufferedImage(null);
@@ -238,7 +238,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				repaint();
 				break;
 			}
-			case KeyEvent.VK_UP:{
+			case KeyEvent.VK_UP: {
 				logger.debug("keyPressed(e) KeyEvent.VK_UP");
 				Page page = this.model.document.getPage();
 				page.setBufferedImage(null);
@@ -250,28 +250,28 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				repaint();
 				break;
 			}
-			case KeyEvent.VK_Z:{
+			case KeyEvent.VK_Z: {
 				logger.debug("keyPressed(e) KeyEvent.VK_Z");
 				this.model.document.pattern.undo();
 				this.main.init();
 				this.repaint();
 				break;
 			}
-			case KeyEvent.VK_Y:{
+			case KeyEvent.VK_Y: {
 				logger.debug("keyPressed(e) KeyEvent.VK_Y");
 				this.model.document.pattern.redo();
 				this.main.init();
 				repaint();
 				break;
-				
+
 			}
-			case KeyEvent.VK_M:{
+			case KeyEvent.VK_M: {
 				String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 				List<Shape> shapeList = this.model.document.getPage().getShapeList();
 				this.generateManifest(timeStamp, shapeList);
 				break;
 			}
-			case KeyEvent.VK_T:{
+			case KeyEvent.VK_T: {
 				List<String[]> stringArrayList = NodeController.openCsv("import.csv");
 				this.model.document.importText(stringArrayList);
 				break;
@@ -352,3 +352,51 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 	public void keyReleased(KeyEvent e) {
 	}
 }
+
+//@Override
+//public void mouseReleased(MouseEvent me) {
+////	e.consume();
+//	this.model.document.cache.releasedPoint = new Point(me.getX(), me.getY());
+//	if (this.model.document.cache.pressedPoint.equals(this.model.document.cache.releasedPoint)) {
+//		if (this.model.document.cache.pressedShape != null)
+//			try {
+//				this.model.document.pattern.execute("setShape");
+//			} catch (Exception e) {
+//				logger.info("Exception " + e.getMessage());
+//			}
+//	} else {
+//		Page page = this.model.document.getPage();
+//		if (page != null) {
+//			
+//			this.model.document.cache.selection = page.intersectShape(this.model.document.cache.pressedPoint);
+//			if (this.model.document.cache.selection != null && this.model.document.cache.pressedShape != null) {
+//				try {
+//					this.model.document.pattern.execute("resizeShape");
+//				} catch (Exception e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//			} else {
+//				if (this.model.document.cache.pressedShape != null) {
+//					this.model.document.cache.releasedImage = this.model.document
+//							.getImage(this.model.document.cache.releasedPoint);
+//					try {
+//						this.model.document.pattern.execute("moveShape");
+//					} catch (Exception e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
+//				} else {
+//					try {
+//						this.model.document.pattern.execute("addShape");
+//					} catch (Exception e) {
+//						JOptionPane.showMessageDialog(main, e.getMessage(), "Query Error",
+//								JOptionPane.ERROR_MESSAGE);
+//					}
+//				}
+//			}
+//		}
+//	}
+//	this.main.init();
+//	this.repaint();
+//}

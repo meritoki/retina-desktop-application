@@ -68,15 +68,14 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 		logger.debug("setModel(" + model + ")");
 		this.model = model;
 	}
-	
 
 	@Override
 	public Dimension getPreferredSize() {
 		Dimension dimension = new Dimension(1028, 512);
 		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
-		Matrix matrix = (page != null) ? page.getMatrix():null;
-		if(matrix != null) {
+		Matrix matrix = (page != null) ? page.getMatrix() : null;
+		if (matrix != null) {
 			matrix.setScale(this.model.document.cache.scale);
 			dimension.setSize(matrix.position.dimension.width, matrix.position.dimension.height);
 		}
@@ -91,9 +90,11 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 		if (this.model != null) {
 			Document document = (this.model != null) ? this.model.document : null;
 			Page page = (document != null) ? document.getPage() : null;
-			Matrix matrix = page.getMatrix();
-			matrix.setScale(this.model.document.cache.scale);
-			matrix.paint(graphics);
+			Matrix matrix = (page != null) ? page.getMatrix() : null;
+			if (matrix != null) {
+				matrix.setScale(this.model.document.cache.scale);
+				matrix.paint(graphics);
+			}
 		}
 	}
 
@@ -104,22 +105,22 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		
+
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		
+
 	}
 
 	@Override
@@ -129,7 +130,7 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		
+
 	}
 
 	@Override
