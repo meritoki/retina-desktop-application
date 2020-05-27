@@ -1,5 +1,7 @@
 package com.meritoki.app.desktop.retina.model.document;
 
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -44,6 +46,8 @@ public class Image {
 	public BufferedImage bufferedImage;
 	@JsonIgnore
 	public int index = 0;
+	@JsonProperty
+	public double scale = 1;
 
 	/**
 	 * Default constructor
@@ -167,7 +171,15 @@ public class Image {
 		if(this.bufferedImage == null) {
 			this.initBufferedImage();
 		}
-		return this.bufferedImage;
+		BufferedImage before = this.bufferedImage;
+		int w = before.getWidth();
+		int h = before.getHeight();
+		BufferedImage after = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+		AffineTransform at = new AffineTransform();
+		at.scale(this.scale, this.scale);
+		AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+		after = scaleOp.filter(before, after);
+		return after;
 	}
 
 	@JsonIgnore

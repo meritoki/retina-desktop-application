@@ -179,6 +179,7 @@ public class UserLoginDialog extends javax.swing.JDialog {
 
     private void skipButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_skipButtonActionPerformed
     	JOptionPane.showMessageDialog(this, "Welcome");
+    	this.setVisible(false);
     }//GEN-LAST:event_skipButtonActionPerformed
 
     /**

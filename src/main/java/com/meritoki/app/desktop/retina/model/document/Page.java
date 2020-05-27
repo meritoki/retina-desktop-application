@@ -207,7 +207,6 @@ public class Page {
 	public BufferedImage getShapeBufferedImage(Shape shape) {
 		BufferedImage bufferedImage = null;
 		if (this.getBufferedImage() != null) {
-			shape.position.scale();
 			bufferedImage = this.getBufferedImage().getSubimage((int)shape.position.point.x, (int)shape.position.point.y, (int)shape.position.dimension.width, (int)shape.position.dimension.height);
 		}
 		return bufferedImage;

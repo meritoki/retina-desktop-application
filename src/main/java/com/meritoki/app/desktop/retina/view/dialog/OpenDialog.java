@@ -55,27 +55,10 @@ public class OpenDialog extends javax.swing.JDialog {
 		this.loadDialog = new LoadDialog(parent, true);
 	}
 
-	private void showLoad() {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				loadDialog.setVisible(true);
-			}
-		});
-	}
-
-	private void hideLoad() {
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				loadDialog.setVisible(false);
-			}
-		});
-	}
-
 	public void result() {
 		int result = this.openFileChooser.showOpenDialog(null);
 		if (result == JFileChooser.APPROVE_OPTION) {
 			this.model.system.file = this.openFileChooser.getSelectedFile();
-			this.showLoad();
 			this.model.document = (DocumentController.open(model.system.file));
 			if(this.model.system.user != null) { 
 				this.model.document.userList.add(this.model.system.user);
@@ -84,7 +67,6 @@ public class OpenDialog extends javax.swing.JDialog {
 			this.mainFrame.init();
 			this.mainFrame.repaint();
 			this.setVisible(false);
-			this.hideLoad();
 		} else if (result == JFileChooser.CANCEL_OPTION) {
 			logger.info("Cancel");
 			this.setVisible(false);

@@ -46,5 +46,7 @@ public class Cache {
 	public int pageIndex = -1;
 	@JsonIgnore
 	public String pageUUID = null;
+	@JsonIgnore
+	public double scaleFactor = 1;
 	
 }

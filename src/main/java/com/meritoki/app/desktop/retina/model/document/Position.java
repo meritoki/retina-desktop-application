@@ -49,6 +49,7 @@ public class Position {
 		this.absolutePoint.y = y;
 		this.absoluteDimension.width = width;
 		this.absoluteDimension.height = height;
+		this.scale();
 	}
 
 	public Position(Point a, Point b, double addScale, double offset, double margin) {
@@ -67,6 +68,7 @@ public class Position {
 		this.absoluteDimension.height = Math.abs(stopPoint.y - this.absolutePoint.y);
 		this.dimension = this.absoluteDimension;
 		this.relativePoint = this.getRelativePoint();
+		this.scale();
 
 	}
 

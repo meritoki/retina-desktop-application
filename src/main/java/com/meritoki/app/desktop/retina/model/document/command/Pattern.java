@@ -50,6 +50,7 @@ public class Pattern {
 		Command resizeShape = new ResizeShape(this.document);
 		Command executeScript = new ExecuteScript(this.document);
 		Command removePage = new RemovePage(this.document);
+		Command resizeImage = new ResizeImage(this.document);
 		this.register("addPage", addPage);
 		this.register("setPage", setPage);
 		this.register("addShape", addShape);
@@ -59,6 +60,7 @@ public class Pattern {
 		this.register("resizeShape", resizeShape);
 		this.register("executeScript", executeScript);
 		this.register("removePage", removePage);
+		this.register("resizeImage", resizeImage);
 	}
 
 	@JsonIgnore

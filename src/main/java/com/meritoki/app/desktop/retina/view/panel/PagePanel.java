@@ -250,6 +250,32 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				repaint();
 				break;
 			}
+			case KeyEvent.VK_LEFT: {
+				logger.info("keyPressed(e) KeyEvent.VK_LEFT");
+				this.model.document.cache.scaleFactor = 0.9;
+				try {
+					this.model.document.pattern.execute("resizeImage");
+					this.main.init();
+					this.repaint();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				break;
+			}
+			case KeyEvent.VK_RIGHT: {
+				logger.info("keyPressed(e) KeyEvent.VK_RIGHT");
+				this.model.document.cache.scaleFactor = 1.1;
+				try {
+					this.model.document.pattern.execute("resizeImage");
+					this.main.init();
+					this.repaint();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				break;
+			}
 			case KeyEvent.VK_Z: {
 				logger.debug("keyPressed(e) KeyEvent.VK_Z");
 				this.model.document.pattern.undo();
