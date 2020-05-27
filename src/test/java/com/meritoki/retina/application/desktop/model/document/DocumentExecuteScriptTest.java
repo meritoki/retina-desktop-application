@@ -118,7 +118,7 @@ public class DocumentExecuteScriptTest {
 	@Test
 	@Order(2) 
 	public void executeScript() {
-		document.cache.script = "JOIN 0:1; SPLIT 1;";
+		document.cache.script = "JOIN 0:1; SPLIT 1; SWAP 0:1; INSERT 2:1;";
     	document.cache.pageList = document.getPageList();
     	try {
 			document.pattern.execute("executeScript");

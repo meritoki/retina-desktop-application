@@ -79,6 +79,7 @@ public class Position {
 		this.addScale = position.addScale;
 		this.margin = position.margin;
 		this.offset = position.offset;
+		this.scale();
 	}
 
 	@JsonIgnore
@@ -306,6 +307,7 @@ public class Position {
 		}
 		origin.x += point.x / scale;
 		origin.y += point.y / scale;
+		this.scale();
 	}
 
 	@JsonIgnore

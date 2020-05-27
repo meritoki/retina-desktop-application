@@ -2,6 +2,7 @@ package com.meritoki.app.desktop.retina.model.document.command;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -23,7 +24,9 @@ public class Pattern {
 	@JsonIgnore
 	public User user;
 	@JsonProperty
-	public State state = new State();
+	public LinkedList<Command> undoStack = new LinkedList<>();
+	@JsonIgnore
+	public LinkedList<Command> redoStack = new LinkedList<>();
 	@JsonIgnore
 	private final HashMap<String, Command> commandMap = new HashMap<>();
 	
@@ -73,15 +76,15 @@ public class Pattern {
 		Command newCommand = new Command(this.document, command.name);
 		newCommand.user = this.user;
 		newCommand.operationList = command.operationList;
-		logger.info(newCommand.operationList.size());
-		this.state.undoStack.push(newCommand);
+		this.undoStack.push(newCommand);
+		this.redoStack = new LinkedList<>();
 		command.reset();
 	}
 	
 	@JsonIgnore
 	public void undo() {
-		if (this.state.undoStack.size() > 0) {
-			Command command = this.state.undoStack.pop();
+		if (this.undoStack.size() > 0) {
+			Command command = this.undoStack.pop();
 			logger.info("undo() command.name=" + command.name);
 			Operation operation = null;
 			switch (command.name) {
@@ -191,14 +194,14 @@ public class Pattern {
 
 			}
 			}
-			this.state.redoStack.push(command);
+			this.redoStack.push(command);
 		}
 	}
 
 	@JsonIgnore
 	public void redo() {
-		if (this.state.redoStack.size() > 0) {
-			Command command = this.state.redoStack.pop();
+		if (this.redoStack.size() > 0) {
+			Command command = this.redoStack.pop();
 			Operation operation = null;
 			switch (command.name) {
 			case "setShape": {
@@ -288,7 +291,7 @@ public class Pattern {
 
 			}
 			}
-			this.state.undoStack.push(command);
+			this.undoStack.push(command);
 		}
 	}
 }
