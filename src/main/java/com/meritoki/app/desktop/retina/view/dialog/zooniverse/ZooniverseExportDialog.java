@@ -17,6 +17,7 @@ package com.meritoki.app.desktop.retina.view.dialog.zooniverse;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
@@ -599,6 +600,7 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
         boolean spaceFlag = this.spaceCheckBox.isSelected();
         boolean energyFlag = this.energyCheckBox.isSelected();
         boolean languageFlag = this.languageCheckBox.isSelected();
+        boolean randomFlag = this.randomCheckBox.isSelected();
         try {
 			pageList = this.parsePages(page);
 		} catch (Exception e) {
@@ -649,6 +651,9 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
 				default:
 					break;
     			}
+    		}
+    		if(randomFlag) {
+    			Collections.shuffle(shapeList);
     		}
 	        SubjectSet subjectSet = new SubjectSet();
 	        subjectSet.title = subjectSetTitle;
