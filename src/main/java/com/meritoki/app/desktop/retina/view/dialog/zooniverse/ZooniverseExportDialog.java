@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.ListIterator;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -29,6 +30,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Credential;
@@ -224,12 +226,12 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
         pageTextField = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         randomCheckBox = new javax.swing.JCheckBox();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jCheckBox3 = new javax.swing.JCheckBox();
-        jCheckBox4 = new javax.swing.JCheckBox();
+        orderLabel = new javax.swing.JLabel();
+        typeLabel = new javax.swing.JLabel();
+        languageCheckBox = new javax.swing.JCheckBox();
+        timeCheckBox = new javax.swing.JCheckBox();
+        spaceCheckBox = new javax.swing.JCheckBox();
+        energyCheckBox = new javax.swing.JCheckBox();
         jSeparator8 = new javax.swing.JSeparator();
         jSeparator9 = new javax.swing.JSeparator();
         jSeparator10 = new javax.swing.JSeparator();
@@ -316,17 +318,17 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
 
         randomCheckBox.setText("Random");
 
-        jLabel13.setText("Order:");
+        orderLabel.setText("Order:");
 
-        jLabel14.setText("Type:");
+        typeLabel.setText("Type:");
 
-        jCheckBox1.setText("Language");
+        languageCheckBox.setText("Language");
 
-        jCheckBox2.setText("Time");
+        timeCheckBox.setText("Time");
 
-        jCheckBox3.setText("Space");
+        spaceCheckBox.setText("Space");
 
-        jCheckBox4.setText("Energy");
+        energyCheckBox.setText("Energy");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -392,19 +394,19 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(39, 39, 39)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel14)
-                                    .addComponent(jLabel13))
+                                    .addComponent(typeLabel)
+                                    .addComponent(orderLabel))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(randomCheckBox)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jCheckBox2)
+                                        .addComponent(timeCheckBox)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jCheckBox3)
+                                        .addComponent(spaceCheckBox)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jCheckBox4)
+                                        .addComponent(energyCheckBox)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jCheckBox1))))
+                                        .addComponent(languageCheckBox))))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(31, 31, 31)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -494,15 +496,15 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
                     .addComponent(jLabel12))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel14)
-                    .addComponent(jCheckBox2)
-                    .addComponent(jCheckBox3)
-                    .addComponent(jCheckBox4)
-                    .addComponent(jCheckBox1))
+                    .addComponent(typeLabel)
+                    .addComponent(timeCheckBox)
+                    .addComponent(spaceCheckBox)
+                    .addComponent(energyCheckBox)
+                    .addComponent(languageCheckBox))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(randomCheckBox)
-                    .addComponent(jLabel13))
+                    .addComponent(orderLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(uploadButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -587,19 +589,68 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
     private void uploadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadButtonActionPerformed
         String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
         String subjectSetTitle = this.subjectSetNameTextField.getText();
+        subjectSetTitle.trim();
+        subjectSetTitle.replaceAll(" ", "_");
         String projectName = (String) this.projectComboBox.getSelectedItem();
         String workflowTitle = (String) this.projectWorkflowComboBox.getSelectedItem();
         String page = this.pageTextField.getText();
         List<Integer> pageList = null;
+        boolean timeFlag = this.timeCheckBox.isSelected();
+        boolean spaceFlag = this.spaceCheckBox.isSelected();
+        boolean energyFlag = this.energyCheckBox.isSelected();
+        boolean languageFlag = this.languageCheckBox.isSelected();
         try {
 			pageList = this.parsePages(page);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
-        
         if(pageList != null) {
+        	List<Shape> shapeList = new ArrayList<>();
+        	if (pageList.contains(-1)) {
+				shapeList = this.model.document.getShapeList();
+			} else {
+				for (Integer i : pageList) {
+					if (this.model.document.setIndex(i)) {
+						Page p = this.model.document.getPage();
+						if (p != null) {
+							shapeList = p.getShapeList();
+						}
+					}
+				}
+			}
+    		ListIterator<Shape> shapeListIterator = shapeList.listIterator();
+    		while (shapeListIterator.hasNext()) {
+    			Shape shape = shapeListIterator.next();
+    			switch(shape.data.unit.type) {
+    			case TIME:{
+    				if(!timeFlag) {
+    					shapeListIterator.remove();
+    				}
+    				break;
+    			}
+    			case SPACE:{
+    				if(!spaceFlag) {
+    					shapeListIterator.remove();
+    				}
+    				break;
+    			}
+    			case ENERGY:{
+    				if(!energyFlag) {
+    					shapeListIterator.remove();
+    				}
+    				break;
+    			}
+    			case LANGUAGE:{
+    				if(!languageFlag) {
+    					shapeListIterator.remove();
+    				}
+    				break;
+    			}
+				default:
+					break;
+    			}
+    		}
 	        SubjectSet subjectSet = new SubjectSet();
-	        List<Shape> shapeList = this.model.document.getShapeList();
 	        subjectSet.title = subjectSetTitle;
 	        if (zooniverse != null) {
 	            this.showLoad();
@@ -661,17 +712,12 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addNewProject;
     private javax.swing.JButton addProjectButton;
+    private javax.swing.JCheckBox energyCheckBox;
     private javax.swing.JButton findProjectButton;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JCheckBox jCheckBox3;
-    private javax.swing.JCheckBox jCheckBox4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -687,6 +733,8 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
     private javax.swing.JSeparator jSeparator6;
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JSeparator jSeparator9;
+    private javax.swing.JCheckBox languageCheckBox;
+    private javax.swing.JLabel orderLabel;
     private javax.swing.JTextField pageTextField;
     private javax.swing.JTextField passwordTextField;
     private javax.swing.JComboBox projectComboBox;
@@ -697,7 +745,10 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
     private javax.swing.JCheckBox randomCheckBox;
     private javax.swing.JComboBox searchProjectComboBox;
     private javax.swing.JButton setCredential;
+    private javax.swing.JCheckBox spaceCheckBox;
     private javax.swing.JTextField subjectSetNameTextField;
+    private javax.swing.JCheckBox timeCheckBox;
+    private javax.swing.JLabel typeLabel;
     private javax.swing.JButton updateProjectWorkflowButton;
     private javax.swing.JButton uploadButton;
     private javax.swing.JTextField userNameTextField;
