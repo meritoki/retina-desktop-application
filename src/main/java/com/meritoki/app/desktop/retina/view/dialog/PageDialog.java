@@ -439,6 +439,8 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
         	try {
 				document.pattern.execute("executeScript");
 		        this.initPageList(document.cache.pageList);
+		        this.main.repaint();
+		        this.main.init();
 			} catch (Exception e) {
 				logger.error("Exception "+e.getMessage());
 				///TODO add dialog that shows error;

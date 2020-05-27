@@ -313,6 +313,13 @@ public class Image {
 		}
 		return null;
 	}
+	
+	@JsonIgnore
+	public List<Shape> removeAllShapes() {
+		List<Shape> shapeList = this.shapeList;
+		this.shapeList = new ArrayList<>();
+		return shapeList;
+	}
 
 	/**
 	 * Function returns true if point is contained within file

@@ -2,7 +2,6 @@ package com.meritoki.app.desktop.retina.model.document.command;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -11,8 +10,9 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.meritoki.app.desktop.retina.model.document.Document;
-import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.Page;
+import com.meritoki.app.desktop.retina.model.document.Shape;
+import com.meritoki.app.desktop.retina.model.document.user.User;
 
 public class Pattern {
 
@@ -20,6 +20,8 @@ public class Pattern {
 	static Logger logger = LogManager.getLogger(Pattern.class.getName());
 	@JsonIgnore
 	public Document document;
+	@JsonIgnore
+	public User user;
 	@JsonProperty
 	public State state = new State();
 	@JsonIgnore
@@ -69,7 +71,7 @@ public class Pattern {
 		}
 		command.execute();
 		Command newCommand = new Command(this.document, command.name);
-		newCommand.user = command.user;
+		newCommand.user = this.user;
 		newCommand.operationList = command.operationList;
 		this.state.undoStack.push(newCommand);
 		command.reset();

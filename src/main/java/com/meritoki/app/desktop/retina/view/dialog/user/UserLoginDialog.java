@@ -164,7 +164,7 @@ public class UserLoginDialog extends javax.swing.JDialog {
         String userName = this.userNameTextField.getText();
         String password = new String(this.userPasswordField.getPassword());
 //        User user = new User();
-        UserController userController = new UserController(this.model.system);
+        UserController userController = new UserController(this.model);
         if(userController.loginUser(userName, password)) {
         	JOptionPane.showMessageDialog(this, "Welcome");
         	this.setVisible(false);
@@ -180,7 +180,7 @@ public class UserLoginDialog extends javax.swing.JDialog {
     private void skipButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_skipButtonActionPerformed
         String userName = "anonymous";
         String password = "anonymous";
-        UserController userController = new UserController(this.model.system);
+        UserController userController = new UserController(this.model);
         if(userController.loginUser(userName, password)) {
         	JOptionPane.showMessageDialog(this, "Welcome");
         	this.setVisible(false);

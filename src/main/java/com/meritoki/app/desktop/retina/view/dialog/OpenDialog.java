@@ -37,6 +37,7 @@ public class OpenDialog extends javax.swing.JDialog {
 	private static final long serialVersionUID = 6241323189102604811L;
 	private static Logger logger = LogManager.getLogger(OpenDialog.class.getName());
 	private Model model = null;
+	private MainFrame mainFrame;
 	public LoadDialog loadDialog;
 
 	/**
@@ -48,6 +49,7 @@ public class OpenDialog extends javax.swing.JDialog {
 	public OpenDialog(java.awt.Frame parent, boolean flag, Model model) {
 		super(parent, flag);
 		this.model = model;
+		this.mainFrame = ((MainFrame) this.getParent());
 		this.initComponents();
 		this.result();
 		this.loadDialog = new LoadDialog(parent, true);
@@ -75,9 +77,12 @@ public class OpenDialog extends javax.swing.JDialog {
 			this.model.system.file = this.openFileChooser.getSelectedFile();
 			this.showLoad();
 			this.model.document = (DocumentController.open(model.system.file));
-			((MainFrame) this.getParent()).init();
-			((MainFrame) this.getParent()).repaint();
-			
+			if(this.model.system.user != null) { 
+				this.model.document.userList.add(this.model.system.user);
+				this.model.document.pattern.user = this.model.system.user;
+			}
+			this.mainFrame.init();
+			this.mainFrame.repaint();
 			this.setVisible(false);
 			this.hideLoad();
 		} else if (result == JFileChooser.CANCEL_OPTION) {

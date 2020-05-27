@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
+import com.meritoki.app.desktop.retina.model.document.Shape;
 
 public class ExecuteScript extends Command {
 
@@ -64,6 +65,16 @@ public class ExecuteScript extends Command {
 				instruction = i.replaceFirst("SPLIT", "");
 				a = instruction.trim();
 				operationList.addAll(splitPage(pageList,a));
+			} else if(i.contains("LAYOUT")) {
+				instruction = i.replaceFirst("LAYOUT", "");
+				parameters = instruction.split(":");
+				a = parameters[0].trim();
+				b = parameters[1].trim();
+				operationList.addAll(layoutPage(pageList, a, b));
+			} else if(i.contains("CLEAR")) {
+				instruction = i.replaceFirst("CLEAR", "");
+				a = instruction.trim();
+				operationList.addAll(clearPage(pageList,a));
 			}
 		}
 		return operationList;
@@ -249,6 +260,72 @@ public class ExecuteScript extends Command {
 			image.setOffset(0);
 			image.setMargin(0);
 			pageList.add(x, new Page(image));
+		}
+		// End Logic
+	
+		// Operation Redo
+		operation = new Operation();
+		operation.object = this.copyPageList(pageList);
+		operation.sign = 1;
+		operation.id = UUID.randomUUID().toString();
+		operation.name = "join";
+		operationList.add(operation);
+		return operationList;
+	}
+	
+	public List<Operation> layoutPage(List<Page> pageList, String a, String b) {
+		logger.info("joinPage(" + a + "," + b + ")");
+		List<Operation> operationList = new ArrayList<>();
+		// Operation Undo
+		Operation operation = new Operation();
+		operation.object = this.copyPageList(pageList);
+		operation.sign = 0;
+		operation.id = UUID.randomUUID().toString();
+		operation.name = "join";
+		operationList.add(operation);
+	
+		// Logic
+		int x = Integer.parseInt(a);
+		int y = Integer.parseInt(b);
+		Page pageA = pageList.get(x);
+		Page pageB = pageList.get(y);
+		//Pending
+		for(Image image: pageA.imageList) {
+			for(Shape shape:image.shapeList) {
+				for(Image i: pageB.imageList) {
+					if(i.containsShape(shape)) {
+						pageB.addShape(new Shape(shape));
+					}
+				}
+			}
+		}
+		
+		// End Logic
+	
+		// Operation Redo
+		operation = new Operation();
+		operation.object = this.copyPageList(pageList);
+		operation.sign = 1;
+		operation.id = UUID.randomUUID().toString();
+		operation.name = "join";
+		operationList.add(operation);
+		return operationList;
+	}
+	
+	public List<Operation> clearPage(List<Page> pageList, String a) {
+		Operation operation = new Operation();
+		operation.object = this.copyPageList(pageList);
+		operation.sign = 0;
+		operation.id = UUID.randomUUID().toString();
+		operation.name = "join";
+		operationList.add(operation);
+	
+		// Logic
+		int x = Integer.parseInt(a);
+//		int y = Integer.parseInt(b);
+		Page page = pageList.get(x);
+		for(Image image: page.imageList) {
+			image.removeAllShapes();
 		}
 		// End Logic
 	

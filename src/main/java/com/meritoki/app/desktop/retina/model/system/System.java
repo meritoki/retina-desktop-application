@@ -29,8 +29,7 @@ public class System {
 	public List<Provider> providerList = new ArrayList<>();
 	@JsonProperty
 	public List<Vendor> vendorList = new ArrayList<>();
-	@JsonIgnore
-	public List<User> userList = new ArrayList<User>();
+
 	@JsonIgnore
 	public User user = null;//When a user is logged in the User is retained in this variable
 	@JsonIgnore
@@ -49,7 +48,6 @@ public class System {
 		this.initProviders();
 		this.initVendors();
 		this.initProperties();
-		this.initUsers();
 	}
 	
 	public void initDirectories() {
@@ -73,23 +71,5 @@ public class System {
 		this.vendorList.add(new Microsoft());
 	}
 	
-	public void initUsers() {
-		logger.info("initUsers()");
-		UserController userController = new UserController(this);
-		if(userController.exists()) {
-			this.userList = userController.open();
-		}
-		if (this.userList.size() == 0) {
-			this.newUser = true;
-			User user = new User();
-			user.name = "anonymous";
-			user.fullName = "anonymous";
-			user.hash = SecurityController.hash("anonymous", 11);
-			user.email = "null";
-			this.userList.add(user);
-			userController.save(this.userList);
-		} else {
-			this.loginUser = true;
-		}
-	}
+
 }

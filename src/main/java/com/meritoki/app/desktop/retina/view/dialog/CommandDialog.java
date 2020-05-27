@@ -57,29 +57,28 @@ public class CommandDialog extends javax.swing.JDialog {
         Document document = (this.model != null) ? this.model.document : null;
         int pageIndex = (document != null) ? document.getIndex() : 0;
         List<Command> undoCommandList = (document != null) ? document.pattern.state.undoStack : null;
-        User user = (document != null) ? document.pattern.state.user : null;
-        this.initUndoCommandList(undoCommandList, user);
+        this.initUndoCommandList(undoCommandList);
         List<Command> redoCommandList = (document != null) ? document.pattern.state.redoStack : null;
-        this.initRedoCommandList(redoCommandList, user);
+        this.initRedoCommandList(redoCommandList);
     }
 
-    public void initUndoCommandList(List<Command> pageList, User user) {
+    public void initUndoCommandList(List<Command> commandList) {
 //        logger.debug("initPageList(...)");
         DefaultListModel<String> defaultListModel = new DefaultListModel<>();
-        if (pageList != null) {
-            for (int i = 0; i < pageList.size(); i++) {
-                defaultListModel.addElement(pageList.get(i).name+" "+((user != null)?user.name:null));
+        if (commandList != null) {
+            for (int i = 0; i < commandList.size(); i++) {
+                defaultListModel.addElement(commandList.get(i).name+" "+commandList.get(i).user.name);
             }
         }
         this.undoCommandList.setModel(defaultListModel);
     }
 
-    public void initRedoCommandList(List<Command> pageList, User user) {
+    public void initRedoCommandList(List<Command> commandList) {
 //        logger.debug("initPageList(...)");
         DefaultListModel<String> defaultListModel = new DefaultListModel<>();
-        if (pageList != null) {
-            for (int i = 0; i < pageList.size(); i++) {
-                defaultListModel.addElement(pageList.get(i).name+" "+((user != null)?user.name:null));
+        if (commandList != null) {
+            for (int i = 0; i < commandList.size(); i++) {
+                defaultListModel.addElement(commandList.get(i).name+" "+commandList.get(i).user.name);
             }
         }
         this.redoCommandList.setModel(defaultListModel);

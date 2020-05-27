@@ -12,9 +12,9 @@ public class ClientController extends Controller {
 	
 	public ClientController(System system) {
 		super(system);
-		this.modelClient = new ModelClient(this.system);
-		this.fileClient = new FileClient(this.system);
-		this.userClient = new UserClient(this.system);
-		this.visionClient = new VisionClient(this.system);
+		this.modelClient = new ModelClient(this.model);
+		this.fileClient = new FileClient(this.model);
+		this.userClient = new UserClient(this.model);
+		this.visionClient = new VisionClient(this.model);
 	}
 }

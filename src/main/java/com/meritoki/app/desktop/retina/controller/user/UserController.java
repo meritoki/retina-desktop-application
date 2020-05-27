@@ -14,6 +14,7 @@ import com.meritoki.app.desktop.retina.controller.client.ClientController;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.controller.security.SecurityController;
 import com.meritoki.app.desktop.retina.model.system.System;
+import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 
 /**
@@ -39,7 +40,7 @@ public class UserController extends Controller {
 	public static String filePath = NodeController.getRetinaHome() + NodeController.getSeperator();
 	public static String fileName = "users.json";
 
-	public UserController(System model) {
+	public UserController(Model model) {
 		super(model);
 	}
 
@@ -65,11 +66,12 @@ public class UserController extends Controller {
 	public boolean loginUser(String userName, String password) {
 		logger.info("loginUser(" + userName + ", " + password + ")");
 		boolean flag = false;
-		for (User u : system.userList) {
+		for (User u : model.userList) {
 			if (u.name.equals(userName)) {
 				if (SecurityController.verifyHash(password, u.hash)) {
 					flag = true;
-					this.system.user = u;
+					this.model.system.user = u;
+					this.model.document.pattern.user = this.model.system.user;
 				}
 			}
 		}
@@ -77,8 +79,8 @@ public class UserController extends Controller {
 	}
 
 	public void registerUser(User user) {
-		this.system.userList.add(user);
-		UserController.save(this.system.userList);
+		this.model.userList.add(user);
+		UserController.save(this.model.userList);
 	}
 }
 
