@@ -32,15 +32,11 @@ public class Model {
 		if(userController.exists()) {
 			this.userList = userController.open();
 		}
+		this.system.user = userController.getAnonymousUser();
+		this.document.pattern.user = this.system.user;
+		
 		if (this.userList.size() == 0) {
 			this.system.newUser = true;
-			User user = new User();
-			user.name = "anonymous";
-			user.fullName = "anonymous";
-			user.hash = SecurityController.hash("anonymous", 11);
-			user.email = "null";
-			this.userList.add(user);
-			userController.save(this.userList);
 		} else {
 			this.system.loginUser = true;
 		}

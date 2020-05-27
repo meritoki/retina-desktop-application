@@ -31,6 +31,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meritoki.app.desktop.retina.model.system.System;
+import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Shape;
@@ -43,8 +44,8 @@ public class ModelClient {
 	private Token token = null;
 	private Properties properties;
 	
-	public ModelClient(System system) {
-		this.properties = system.properties;
+	public ModelClient(Model model) {
+		this.properties = model.system.properties;
 		boolean gateway = Boolean.parseBoolean((String) this.properties.get("gateway"));
 		if(gateway) {
 			this.url = this.properties.getProperty("service.web.gateway.url")+"/model";

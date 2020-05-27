@@ -178,15 +178,7 @@ public class UserLoginDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_registerButtonActionPerformed
 
     private void skipButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_skipButtonActionPerformed
-        String userName = "anonymous";
-        String password = "anonymous";
-        UserController userController = new UserController(this.model);
-        if(userController.loginUser(userName, password)) {
-        	JOptionPane.showMessageDialog(this, "Welcome");
-        	this.setVisible(false);
-        } else {
-        	JOptionPane.showMessageDialog(this, "Username or Password Incorrect");
-        }
+    	JOptionPane.showMessageDialog(this, "Welcome");
     }//GEN-LAST:event_skipButtonActionPerformed
 
     /**

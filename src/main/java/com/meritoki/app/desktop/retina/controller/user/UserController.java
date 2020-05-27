@@ -82,6 +82,15 @@ public class UserController extends Controller {
 		this.model.userList.add(user);
 		UserController.save(this.model.userList);
 	}
+	
+	public static User getAnonymousUser() {
+		User user = new User();
+		user.name = "anonymous";
+		user.fullName = "anonymous";
+		user.hash = SecurityController.hash("anonymous", 11);
+		user.email = "null";
+		return user;
+	}
 }
 
 //public boolean loginUser(String userName, String password) {

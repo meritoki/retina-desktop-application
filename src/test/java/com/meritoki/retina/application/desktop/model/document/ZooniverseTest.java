@@ -33,7 +33,7 @@ public class ZooniverseTest {
 	
 	@Test
 	@Order(1)
-	public void export() {
+	public void upload() {
 		
 	}
 }

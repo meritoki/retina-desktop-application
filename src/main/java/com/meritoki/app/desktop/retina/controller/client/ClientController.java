@@ -16,6 +16,6 @@ public class ClientController extends Controller {
 		this.modelClient = new ModelClient(this.model);
 		this.fileClient = new FileClient(this.model);
 		this.userClient = new UserClient(this.model);
-		this.visionClient = new VisionClient(this.model);
+//		this.visionClient = new VisionClient(this.model);
 	}
 }

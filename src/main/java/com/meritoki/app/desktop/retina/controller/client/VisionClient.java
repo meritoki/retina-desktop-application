@@ -271,27 +271,27 @@ public class VisionClient {
 	}
 
 	
-	public static void main(String args[]) {
-		System model = new System();
-		VisionClient visionClient = new VisionClient(model);
-		UserClient userClient = new UserClient(model);
-		User user = new User();
-		user.name = "javainuse";
-		user.password = "password";
-		if (userClient.checkHealth()) {
-			if (userClient.login(user)) {
-				String uuid = UUID.randomUUID().toString();
-				visionClient.newNetwork(uuid);
-				visionClient.saveNetwork(uuid);
-				visionClient.loadNetwork(uuid);
-				
-				visionClient.uploadFile("./data/image/", "01.jpg");
-//				visionClient.downloadFile(NodeController.getImageCache() + NodeController.getSeperator(), "01.jpg");
-				visionClient.trainNetwork("01.jpg", 1, 0, 0, "test");
-				visionClient.inferNetwork("01.jpg", 1, 0, 0);
-			}
-		}
-	}
+//	public static void main(String args[]) {
+//		System model = new System();
+//		VisionClient visionClient = new VisionClient(model);
+//		UserClient userClient = new UserClient(model);
+//		User user = new User();
+//		user.name = "javainuse";
+//		user.password = "password";
+//		if (userClient.checkHealth()) {
+//			if (userClient.login(user)) {
+//				String uuid = UUID.randomUUID().toString();
+//				visionClient.newNetwork(uuid);
+//				visionClient.saveNetwork(uuid);
+//				visionClient.loadNetwork(uuid);
+//				
+//				visionClient.uploadFile("./data/image/", "01.jpg");
+////				visionClient.downloadFile(NodeController.getImageCache() + NodeController.getSeperator(), "01.jpg");
+//				visionClient.trainNetwork("01.jpg", 1, 0, 0, "test");
+//				visionClient.inferNetwork("01.jpg", 1, 0, 0);
+//			}
+//		}
+//	}
 }
 
 //public void registerFile(String uuid) {

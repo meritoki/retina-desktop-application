@@ -259,8 +259,8 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 				logger.info("mouseClicked(e) selectedItem=" + selectedItem);
 				Document document = (this.model != null) ? this.model.document : null;
 				document.getPage().setShape(selectedItem);
-				this.getParent().repaint();
-				this.init();
+				this.main.repaint();
+				this.main.init();
 			}
 		}
 	}
@@ -303,7 +303,8 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 				page.setIndex(index);
 				this.init();
 //                    this.setRectangleListSelectedIndex(index);
-				this.getParent().repaint();
+				this.main.repaint();
+				this.main.init();
 				break;
 			}
 			case KeyEvent.VK_RIGHT: {
@@ -313,7 +314,8 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 				page.setIndex(index);
 				this.init();
 //                    this.setRectangleListSelectedIndex(index);
-				this.getParent().repaint();
+				this.main.repaint();
+				this.main.init();
 				break;
 			}
 
@@ -339,8 +341,8 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 		Page page = (document != null) ? document.getPage() : null;
 		if (page != null && !uuid.equals(page.getImage().getShape().uuid)) {
 			document.getPage().getImage().setShape(uuid);
-			this.init();
-			this.getParent().repaint();
+			this.main.repaint();
+			this.main.init();
 		}
 	}
 
@@ -720,8 +722,8 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
 		page.getShapeList().remove(index);
-		this.init();
-		((MainFrame) this.getParent()).repaint();
+		this.main.repaint();
+		this.main.init();
 	}// GEN-LAST:event_deleteRectangleButtonActionPerformed
 
 	private void applyUnitButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_applyUnitButtonActionPerformed
@@ -757,6 +759,8 @@ public class SelectionDialog extends javax.swing.JDialog implements MouseListene
 			logger.info("applyUnitButtonActionPerformed(e) data.unit.value=" + data.unit.value);
 			logger.info("applyUnitButtonActionPerformed(e) data.unit.type=" + data.unit.type);
 		}
+		this.main.repaint();
+		this.main.init();
 	}// GEN-LAST:event_applyUnitButtonActionPerformed
 
 	private void rectangleButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_rectangleButtonActionPerformed
