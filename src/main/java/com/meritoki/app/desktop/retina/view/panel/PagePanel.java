@@ -227,7 +227,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				break;
 			}
 			case KeyEvent.VK_DOWN: {
-				logger.debug("keyPressed(e) KeyEvent.DOWN");
+				logger.debug("keyPressed(e) KeyEvent.VK_DOWN");
 				Page page = this.model.document.getPage();
 				page.setBufferedImage(null);
 				Image image = (page != null) ? page.getImage() : null;
@@ -294,31 +294,55 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				break;
 			}
 			case KeyEvent.VK_LEFT: {
-				logger.debug("keyPressed(LEFT)");
-				this.model.document.setIndex(--index);
-				this.main.init();
-				this.repaint();
+				logger.debug("keyPressed(e) KeyEvent.VK_LEFT");
+				this.model.document.cache.pageIndex = --index;
+				try {
+					this.model.document.pattern.execute("setPage");
+					this.main.init();
+					this.repaint();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				break;
 			}
 			case KeyEvent.VK_RIGHT: {
-				logger.debug("keyPressed(RIGHT)");
-				this.model.document.setIndex(++index);
-				this.main.init();
-				this.repaint();
+				logger.debug("keyPressed(e) KeyEvent.VK_RIGHT");
+				this.model.document.cache.pageIndex = ++index;
+				try {
+					this.model.document.pattern.execute("setPage");
+					this.main.init();
+					this.repaint();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				break;
 			}
 			case KeyEvent.VK_UP: {
-				logger.debug("keyPressed(UP)");
-				this.model.document.setIndex(--index);
-				this.main.init();
-				this.repaint();
+				logger.debug("keyPressed(e) KeyEvent.VK_UP");
+				this.model.document.cache.pageIndex = --index;
+				try {
+					this.model.document.pattern.execute("setPage");
+					this.main.init();
+					this.repaint();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				break;
 			}
 			case KeyEvent.VK_DOWN: {
-				logger.debug("keyPressed(DOWN)");
-				this.model.document.setIndex(++index);
-				this.main.init();
-				this.repaint();
+				logger.debug("keyPressed(e) KeyEvent.VK_DOWN");
+				this.model.document.cache.pageIndex = ++index;
+				try {
+					this.model.document.pattern.execute("setPage");
+					this.main.init();
+					this.repaint();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				break;
 			}
 			}

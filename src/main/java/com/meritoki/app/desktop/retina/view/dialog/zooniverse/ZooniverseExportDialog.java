@@ -658,7 +658,7 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
 	        SubjectSet subjectSet = new SubjectSet();
 	        subjectSet.title = subjectSetTitle;
 	        if (zooniverse != null) {
-	            this.showLoad();
+//	            this.showLoad();
 	            zooniverse.generateManifest(this.getSubjectSetPath() + timeStamp, shapeList);
 	            Project project = zooniverse.getProject(projectName);
 	            if (project != null) {
@@ -667,7 +667,7 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
 	                zooniverse.uploadSubjectSet(subjectSet, this.getSubjectSetPath() + timeStamp, "manifest.csv");
 	                zooniverse.workflowUploadSubjectSet(workflow, subjectSet);
 	            }
-	            this.hideLoad();
+//	            this.hideLoad();
 	        }
         }
     }//GEN-LAST:event_uploadButtonActionPerformed

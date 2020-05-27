@@ -144,13 +144,18 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
     @Override
     public void mouseClicked(MouseEvent e) {
         if(e.getClickCount()==1){
-            String selectedItem = (String) this.pageList.getSelectedValue();
+            String uuid = (String) this.pageList.getSelectedValue();
             Document document = (this.model != null) ? this.model.document: null;
-            document.setPage(selectedItem);
-            this.initLabel();
-            this.main.repaint();
-            this.main.selectionDialog.init();
-//            ((Main)this.getParent()).matrixDialog.init();
+            document.cache.pageUUID = uuid;
+            try {
+				document.pattern.execute("setPage");
+                this.initLabel();
+                this.main.repaint();
+                this.main.init();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
         }
     }
     
@@ -181,27 +186,34 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
         int index = document.getIndex();
         switch(keyCode) {
             case KeyEvent.VK_LEFT:{
-                logger.debug("keyPressed LEFT");
-                index = document.getIndex();
-                index=index-1;
-                document.setIndex(index);
-                this.initLabel();
-                this.setPageListSelectedIndex(index);
-                this.getParent().repaint();
-                ((MainFrame)this.getParent()).selectionDialog.init();
-//                ((Main)this.getParent()).matrixDialog.init();
+                logger.debug("keyEvent.VK_LEFT");
+                document.cache.pageIndex = --index;
+                try {
+					document.pattern.execute("setPage");
+	                this.initLabel();
+	                this.setPageListSelectedIndex(index);
+	                this.main.repaint();
+	                this.main.init();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+//                document.setIndex(index);
                 break;
             }
             case KeyEvent.VK_RIGHT:{
-                logger.debug("keyPressed RIGHT");
-                index = document.getIndex();
-                index=index+1;
-                document.setIndex(index);
-                this.initLabel();
-                this.setPageListSelectedIndex(index);
-                this.getParent().repaint();
-                ((MainFrame)this.getParent()).selectionDialog.init();
-//                ((Main)this.getParent()).matrixDialog.init();
+                logger.debug("keyEvent.VK_RIGHT");
+                document.cache.pageIndex = ++index;
+                try {
+					document.pattern.execute("setPage");
+	                this.initLabel();
+	                this.setPageListSelectedIndex(index);
+	                this.main.repaint();
+	                this.main.init();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
                 break;
             }
 
@@ -221,9 +233,8 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
         if(page != null && uuid != null && !uuid.equals(page.uuid)){
             document.setPage(uuid);
             this.initLabel();
-            this.getParent().repaint();
-            ((MainFrame)this.getParent()).selectionDialog.init();
-//            ((Main)this.getParent()).matrixDialog.init();
+            this.main.repaint();
+            this.main.init();
         }
     }
 
@@ -527,3 +538,41 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
 
 
 }
+
+//@Override
+//public void keyPressed(KeyEvent e) {
+//    int keyCode = e.getKeyCode();
+//    Document document = (this.model != null) ? this.model.document: null;
+//    int index = document.getIndex();
+//    switch(keyCode) {
+//        case KeyEvent.VK_LEFT:{
+//            logger.debug("keyPressed LEFT");
+//            document.cache.pageIndex = index-1;
+//            try {
+//				document.pattern.execute("setPage");
+//                this.initLabel();
+//                this.setPageListSelectedIndex(index);
+//                this.main.repaint();
+//                this.main.init();
+//			} catch (Exception e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			}
+////            document.setIndex(index);
+//
+//            break;
+//        }
+//        case KeyEvent.VK_RIGHT:{
+//            logger.debug("keyPressed RIGHT");
+//            index = document.getIndex();
+//            index=index+1;
+//            document.setIndex(index);
+//            this.initLabel();
+//            this.setPageListSelectedIndex(index);
+//            this.main.repaint();
+//            this.main.init();
+//            break;
+//        }
+//
+//    }
+//}
