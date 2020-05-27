@@ -73,6 +73,7 @@ public class Pattern {
 		Command newCommand = new Command(this.document, command.name);
 		newCommand.user = this.user;
 		newCommand.operationList = command.operationList;
+		logger.info(newCommand.operationList.size());
 		this.state.undoStack.push(newCommand);
 		command.reset();
 	}
@@ -156,6 +157,7 @@ public class Pattern {
 				break;
 			}
 			case "executeScript" : {
+				logger.info("undo() executeScript command.operationList.size()="+command.operationList.size());
 				Collections.reverse(command.operationList);
 				for(Operation o: command.operationList) {
 					if(o.sign == 0) {
@@ -271,6 +273,7 @@ public class Pattern {
 				break;
 			}
 			case "executeScript" : {
+				
 				Collections.reverse(command.operationList);
 				for(Operation o: command.operationList) {
 					if(o.sign == 1) {

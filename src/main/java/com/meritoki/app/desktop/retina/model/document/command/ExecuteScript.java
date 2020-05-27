@@ -23,8 +23,9 @@ public class ExecuteScript extends Command {
 	}
 
 	public void execute() throws Exception {
+		logger.info("execute()");
 		this.user = this.document.cache.user;
-		this.operationList.addAll(this.getOperationList(this.document.cache.pageList, this.document.cache.script));
+		this.operationList = (LinkedList<Operation>)this.getOperationList(this.document.cache.pageList, this.document.cache.script);
 	}
 
 	/**
@@ -77,6 +78,7 @@ public class ExecuteScript extends Command {
 				operationList.addAll(clearPage(pageList,a));
 			}
 		}
+		logger.info("getOperationList(...) operationList.size()="+operationList.size());
 		return operationList;
 	}
 
@@ -120,7 +122,6 @@ public class ExecuteScript extends Command {
 		logger.info("swap(" + a + "," + b + ")");
 		List<Operation> operationList = new ArrayList<>();
 		Operation operation = new Operation();
-		operation.name = "swap";
 		operation.object = this.copyPageList(pageList);
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
@@ -129,7 +130,6 @@ public class ExecuteScript extends Command {
 		Collections.swap(pageList, a, b);
 
 		operation = new Operation();
-		operation.name = "swap";
 		operation.object = this.copyPageList(pageList);
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
@@ -216,7 +216,6 @@ public class ExecuteScript extends Command {
 		operation.object = this.copyPageList(pageList);
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
-		operation.name = "join";
 		operationList.add(operation);
 	
 		// Logic
@@ -236,17 +235,16 @@ public class ExecuteScript extends Command {
 		operation.object = this.copyPageList(pageList);
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
-		operation.name = "join";
 		operationList.add(operation);
 		return operationList;
 	}
 	
 	public List<Operation> splitPage(List<Page> pageList, String a) {
+		logger.info("splitPage("+a+")");
 		Operation operation = new Operation();
 		operation.object = this.copyPageList(pageList);
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
-		operation.name = "join";
 		operationList.add(operation);
 	
 		// Logic
@@ -268,7 +266,6 @@ public class ExecuteScript extends Command {
 		operation.object = this.copyPageList(pageList);
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
-		operation.name = "join";
 		operationList.add(operation);
 		return operationList;
 	}
@@ -281,7 +278,6 @@ public class ExecuteScript extends Command {
 		operation.object = this.copyPageList(pageList);
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
-		operation.name = "join";
 		operationList.add(operation);
 	
 		// Logic
@@ -307,7 +303,6 @@ public class ExecuteScript extends Command {
 		operation.object = this.copyPageList(pageList);
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
-		operation.name = "join";
 		operationList.add(operation);
 		return operationList;
 	}
@@ -317,7 +312,6 @@ public class ExecuteScript extends Command {
 		operation.object = this.copyPageList(pageList);
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
-		operation.name = "join";
 		operationList.add(operation);
 	
 		// Logic
@@ -334,7 +328,6 @@ public class ExecuteScript extends Command {
 		operation.object = this.copyPageList(pageList);
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
-		operation.name = "join";
 		operationList.add(operation);
 		return operationList;
 	}
