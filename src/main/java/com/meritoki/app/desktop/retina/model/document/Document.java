@@ -42,10 +42,6 @@ public class Document {
 	@JsonIgnore
 	public List<Layout> layoutList = new ArrayList<>();
 
-//	public Document() {
-//		//Defualt constructor for loading from JSON;
-//	}
-
 	public Document() {
 		this.uuid = UUID.randomUUID().toString();
 		this.pattern = new Pattern(this);

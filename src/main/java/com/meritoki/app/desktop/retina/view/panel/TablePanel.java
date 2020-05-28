@@ -50,13 +50,12 @@ public class TablePanel extends javax.swing.JPanel {
 	}
 
 	public void setModel(Model model) {
-		logger.debug("setModel(" + model + ")");
 		this.model = model;
 		this.init();
 	}
 
 	public void init() {
-		logger.info("init()");
+		logger.debug("init()");
 		this.initDataTable();
 	}
 

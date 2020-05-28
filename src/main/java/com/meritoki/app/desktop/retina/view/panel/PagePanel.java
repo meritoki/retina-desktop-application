@@ -13,10 +13,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -31,7 +27,6 @@ import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
-import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 /**
@@ -41,7 +36,7 @@ import com.meritoki.app.desktop.retina.view.frame.MainFrame;
  * @author jorodriguez
  *
  */
-public class PagePanel extends JPanel implements MouseListener, MouseWheelListener, KeyListener {
+public class PagePanel extends JPanel implements MouseListener, KeyListener {
 
 	private static final long serialVersionUID = 3989576625299550361L;
 	private static Logger logger = LogManager.getLogger(PagePanel.class.getName());
@@ -52,7 +47,6 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 		super();
 		this.setBackground(Color.black);
 		this.addMouseListener(this);
-		this.addMouseWheelListener(this);
 		this.addKeyListener(this);
 	}
 
@@ -66,7 +60,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 	}
 	
 	public void init() {
-		logger.info("init()");
+		logger.debug("init()");
 		this.repaint();
 		this.revalidate();
 	}
@@ -187,18 +181,6 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 	}
 
 	@Override
-	public void mouseWheelMoved(MouseWheelEvent e) {
-//		double delta = 0.05f * e.getPreciseWheelRotation();
-//		this.model.document.cache.scale += delta;
-//		if (this.model.document.cache.scale >= 0 && this.model.document.cache.scale <= 2) {
-//			logger.trace("mouseWheelMoved(...) scale = " + this.model.document.cache.scale);
-//			this.model.document.getPage().setScale(this.model.document.cache.scale);
-//			revalidate();
-//			repaint();
-//		}
-	}
-
-	@Override
 	public void keyPressed(KeyEvent ke) {
 		ke.consume();
 		if (ke.isControlDown()) {
@@ -259,9 +241,8 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				try {
 					this.model.document.pattern.execute("resizeImage");
 					this.main.init();
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
 			}
@@ -273,9 +254,8 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 					this.model.document.pattern.execute("resizeImage");
 					this.model.document.getPage().setBufferedImage(null);
 					this.main.init();
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
 			}
@@ -292,12 +272,6 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				break;
 
 			}
-			case KeyEvent.VK_M: {
-				String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-				List<Shape> shapeList = this.model.document.getPage().getShapeList();
-				this.generateManifest(timeStamp, shapeList);
-				break;
-			}
 			case KeyEvent.VK_T: {
 				List<String[]> stringArrayList = NodeController.openCsv("import.csv");
 				this.model.document.importText(stringArrayList);
@@ -313,9 +287,8 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				this.model.document.cache.pressedShape = this.model.document.getPage().getShape();
 				try {
 					this.model.document.pattern.execute("removeShape");
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				this.main.init();
 				break;
@@ -326,9 +299,8 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				try {
 					this.model.document.pattern.execute("setPage");
 					this.main.init();
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
 			}
@@ -338,9 +310,8 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				try {
 					this.model.document.pattern.execute("setPage");
 					this.main.init();
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
 			}
@@ -350,9 +321,8 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				try {
 					this.model.document.pattern.execute("setPage");
 					this.main.init();
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
 			}
@@ -362,33 +332,13 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				try {
 					this.model.document.pattern.execute("setPage");
 					this.main.init();
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
 			}
 			}
 		}
-	}
-
-	public void generateManifest(String timeStamp, List<Shape> shapeList) {
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("my_own_id");
-		stringBuilder.append(",");
-		stringBuilder.append("the_image");
-		stringBuilder.append("\n");
-		new java.io.File("./" + timeStamp).mkdir();
-		Shape shape = null;
-		for (int i = 0; i < shapeList.size(); i++) {
-			shape = shapeList.get(i);
-			stringBuilder.append(i);
-			stringBuilder.append(",");
-			NodeController.saveJpg("./" + timeStamp, shape.uuid + ".jpg", shape.bufferedImage);
-			stringBuilder.append(shape.uuid + ".jpg");
-			stringBuilder.append("\n");
-		}
-		NodeController.saveCsv("./" + timeStamp, "manifest.csv", stringBuilder);
 	}
 
 	@Override
@@ -399,51 +349,3 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 	public void keyReleased(KeyEvent e) {
 	}
 }
-
-//@Override
-//public void mouseReleased(MouseEvent me) {
-////	e.consume();
-//	this.model.document.cache.releasedPoint = new Point(me.getX(), me.getY());
-//	if (this.model.document.cache.pressedPoint.equals(this.model.document.cache.releasedPoint)) {
-//		if (this.model.document.cache.pressedShape != null)
-//			try {
-//				this.model.document.pattern.execute("setShape");
-//			} catch (Exception e) {
-//				logger.info("Exception " + e.getMessage());
-//			}
-//	} else {
-//		Page page = this.model.document.getPage();
-//		if (page != null) {
-//			
-//			this.model.document.cache.selection = page.intersectShape(this.model.document.cache.pressedPoint);
-//			if (this.model.document.cache.selection != null && this.model.document.cache.pressedShape != null) {
-//				try {
-//					this.model.document.pattern.execute("resizeShape");
-//				} catch (Exception e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//			} else {
-//				if (this.model.document.cache.pressedShape != null) {
-//					this.model.document.cache.releasedImage = this.model.document
-//							.getImage(this.model.document.cache.releasedPoint);
-//					try {
-//						this.model.document.pattern.execute("moveShape");
-//					} catch (Exception e1) {
-//						// TODO Auto-generated catch block
-//						e1.printStackTrace();
-//					}
-//				} else {
-//					try {
-//						this.model.document.pattern.execute("addShape");
-//					} catch (Exception e) {
-//						JOptionPane.showMessageDialog(main, e.getMessage(), "Query Error",
-//								JOptionPane.ERROR_MESSAGE);
-//					}
-//				}
-//			}
-//		}
-//	}
-//	this.main.init();
-//	this.repaint();
-//}

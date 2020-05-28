@@ -84,7 +84,7 @@ public class ShapeDialog extends javax.swing.JDialog implements MouseListener, K
 	}
 
 	public void init() {
-		logger.info("init()");
+		logger.debug("init()");
 		this.initLabel();
 		this.initList();
 		this.initComboBox();

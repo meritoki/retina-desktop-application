@@ -43,7 +43,7 @@ import com.meritoki.app.desktop.retina.model.document.Page;
 public class MatrixPanel extends JPanel implements MouseListener, MouseWheelListener, KeyListener {
 
 	private static final long serialVersionUID = 6483831845668642285L;
-	private static Logger logger = LogManager.getLogger(Data.class.getName());
+	private static Logger logger = LogManager.getLogger(MatrixPanel.class.getName());
 	private Model model = null;
 
 	/**
@@ -55,7 +55,6 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 		this.addMouseListener(this);
 		this.addMouseWheelListener(this);
 		this.addKeyListener(this);
-
 	}
 
 	/**
@@ -69,7 +68,7 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 	}
 
 	public void init() {
-		logger.info("init()");
+		logger.debug("init()");
 		this.repaint();
 		this.revalidate();
 	}

@@ -288,6 +288,7 @@ public class Page {
 	@JsonIgnore
 	public void setScale(double scale) {
 		this.position.scale = scale;
+//		this.position.setScale(scale);
 		for (Image image : this.imageList) {
 			image.setScale(scale);
 		}

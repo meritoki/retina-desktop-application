@@ -50,7 +50,7 @@ public class CommandDialog extends javax.swing.JDialog {
     }
 
     public void init() {
-    	logger.info("init()");
+    	logger.debug("init()");
         this.initList();
     }
 

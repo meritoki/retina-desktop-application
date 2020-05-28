@@ -80,13 +80,12 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
      * Function instantiates view. 
      */
     public void init(){
-    	logger.info("init()");
+    	logger.debug("init()");
         this.initLabel();
         this.initList();
     }
       
     public void initLabel(){
-        logger.debug("initLabel()");
         Document document = (this.model != null) ? this.model.document: null;
         Page page = (document != null)? document.getPage():null;
         BufferedImage bufferedPage = (page != null)?page.getBufferedImage():null;

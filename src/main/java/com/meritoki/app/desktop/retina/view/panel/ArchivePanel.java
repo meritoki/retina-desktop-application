@@ -55,7 +55,7 @@ public class ArchivePanel extends javax.swing.JPanel {
     }
     
 	public void init() {
-		logger.info("init()");
+		logger.debug("init()");
 		this.repaint();
 		this.revalidate();
 	}
