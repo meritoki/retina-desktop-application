@@ -185,7 +185,7 @@ public class Image {
 			BufferedImage before = this.bufferedImage;
 			int w = before.getWidth();
 			int h = before.getHeight();
-			BufferedImage after = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+			BufferedImage after = new BufferedImage((int)(w*this.position.scale), (int)(h*this.position.scale), BufferedImage.TYPE_INT_ARGB);
 			AffineTransform at = new AffineTransform();
 			logger.info("getBufferedImage() this.position.scale="+this.position.scale);
 			at.scale(this.position.scale, this.position.scale);

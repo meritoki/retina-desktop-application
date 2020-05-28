@@ -50,7 +50,4 @@ public class Cache {
 	public double scaleFactor = 1;
 	@JsonIgnore
 	public char scaleOperator = ' ';
-	@JsonIgnore
-	public double resizeScale = 0;
-	
 }
