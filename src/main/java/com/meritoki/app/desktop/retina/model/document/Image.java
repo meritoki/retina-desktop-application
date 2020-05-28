@@ -77,7 +77,7 @@ public class Image {
 		this.position = image.position;
 		this.index = image.index;
 		for (Shape shape : image.shapeList) {
-			this.shapeList.add(new Shape(shape));
+			this.shapeList.add(new Shape(shape,true));
 		}
 	}
 

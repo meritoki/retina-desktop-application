@@ -290,7 +290,7 @@ public class ExecuteScript extends Command {
 			for(Shape shape:image.shapeList) {
 				for(Image i: pageB.imageList) {
 					if(i.containsShape(shape)) {
-						pageB.addShape(new Shape(shape));
+						pageB.addShape(new Shape(shape,false));
 					}
 				}
 			}

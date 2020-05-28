@@ -31,7 +31,7 @@ public class AddShape extends Command {
 					this.document.cache.pressedImage.position.offset, this.document.cache.pressedImage.position.margin);
 			this.document.addShape(this.document.cache.pressedShape);
 			Operation operation = new Operation();
-			operation.object = new Shape(this.document.cache.pressedShape);
+			operation.object = new Shape(this.document.cache.pressedShape,true);
 			operation.sign = 1;
 			operation.id = UUID.randomUUID().toString();
 			operation.uuid = this.document.cache.pressedShape.uuid;

@@ -22,7 +22,7 @@ public class RemoveShape extends Command {
     	this.user = this.document.cache.user;
 		this.document.getPage().removeShape(this.document.cache.pressedShape);
 		Operation operation = new Operation();
-		operation.object = new Shape(this.document.cache.pressedShape);
+		operation.object = new Shape(this.document.cache.pressedShape,true);
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		operation.uuid = this.document.cache.pressedShape.uuid;

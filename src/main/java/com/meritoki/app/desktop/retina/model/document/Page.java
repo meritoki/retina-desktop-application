@@ -288,8 +288,8 @@ public class Page {
 	@JsonIgnore
 	public void setScale(double scale) {
 		logger.info("setScale("+scale+")");
-		this.position.scale = scale;
-//		this.position.setScale(scale);
+//		this.position.scale = scale;
+		this.position.setScale(scale);
 		for (Image image : this.imageList) {
 			image.setScale(scale);
 		}
@@ -443,7 +443,6 @@ public class Page {
 		if (imageList != null) {
 			for (Image i : imageList) {
 				p = i.position;
-//				p.scale();
 				if (image != null && i.uuid.equals(image.uuid)) {
 					graphics2D.setColor(Color.RED);
 				} else {
@@ -460,7 +459,6 @@ public class Page {
 		if (shapeList != null) {
 			for (Shape s : shapeList) {
 				p = s.position;
-				p.scale();
 				if (shape != null && s.uuid.equals(shape.uuid)) {
 					graphics2D.setColor(Color.RED);
 				} else {
@@ -487,7 +485,6 @@ public class Page {
 				previousShape = s;
 			}
 		}
-		this.position.scale();
 		graphics2D.setColor(Color.BLUE);
 		Rectangle2D.Double frame = new Rectangle2D.Double(0, 0, this.position.dimension.width, this.position.dimension.height);
 		graphics2D.draw(frame);

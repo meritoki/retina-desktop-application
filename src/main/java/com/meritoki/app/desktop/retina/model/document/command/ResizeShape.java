@@ -23,7 +23,7 @@ public class ResizeShape extends Command {
     	logger.info("execute()");
     	this.user = this.document.cache.user;
 		Operation operation = new Operation();
-		operation.object = new Shape(this.document.cache.pressedShape);
+		operation.object = new Shape(this.document.cache.pressedShape,true);
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		operation.uuid = this.document.cache.pressedShape.uuid;
@@ -31,7 +31,7 @@ public class ResizeShape extends Command {
 		Point releasedPoint = new Point(this.document.cache.releasedPoint);
 		this.document.cache.pressedShape.position.resizePoint(releasedPoint, this.document.cache.selection);
 		operation = new Operation();
-		operation.object = new Shape(this.document.cache.pressedShape);
+		operation.object = new Shape(this.document.cache.pressedShape,true);
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
 		operation.uuid = this.document.cache.pressedShape.uuid;

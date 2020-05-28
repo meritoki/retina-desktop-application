@@ -57,8 +57,12 @@ public class Shape {
 	 * 
 	 * @param shape
 	 */
-	public Shape(Shape shape) {
-		this.uuid = shape.uuid;
+	public Shape(Shape shape, boolean flag) {
+		if(flag) {
+			this.uuid = shape.uuid;
+		} else {
+			this.uuid = UUID.randomUUID().toString();
+		}
 		this.type = shape.type;
 		this.position = new Position(shape.position);
 		this.bufferedImage = shape.bufferedImage;

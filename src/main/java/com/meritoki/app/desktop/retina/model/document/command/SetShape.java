@@ -30,7 +30,7 @@ public class SetShape extends Command {
     	if(this.document.cache.pressedShape != null) {
 	    	this.document.getPage().setShape(this.document.cache.pressedShape.uuid);
 			Operation operation = new Operation();
-			operation.object = new Shape(this.document.getPage().getShape());
+			operation.object = new Shape(this.document.getPage().getShape(),true);
 			operation.sign = 0;
 			operation.id = UUID.randomUUID().toString();
 			operation.uuid = this.document.cache.pressedShape.uuid;
