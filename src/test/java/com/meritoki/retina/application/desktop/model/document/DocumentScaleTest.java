@@ -2,6 +2,7 @@ package com.meritoki.retina.application.desktop.model.document;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.awt.Graphics;
 import java.io.File;
 
 import org.apache.logging.log4j.LogManager;
@@ -60,6 +61,7 @@ public class DocumentScaleTest {
 	public void scaleGrow() {
 		double scale = 1;
 		scale = scale * 1.5;
+//		Graphics graphics = new Graphics();
 		
 	}
 	

@@ -287,6 +287,7 @@ public class Page {
 	 */
 	@JsonIgnore
 	public void setScale(double scale) {
+		logger.info("setScale("+scale+")");
 		this.position.scale = scale;
 //		this.position.setScale(scale);
 		for (Image image : this.imageList) {
@@ -442,7 +443,7 @@ public class Page {
 		if (imageList != null) {
 			for (Image i : imageList) {
 				p = i.position;
-				p.scale();
+//				p.scale();
 				if (image != null && i.uuid.equals(image.uuid)) {
 					graphics2D.setColor(Color.RED);
 				} else {

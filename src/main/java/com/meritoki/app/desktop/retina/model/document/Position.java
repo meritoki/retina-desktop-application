@@ -61,18 +61,17 @@ public class Position {
 		this.addScale = addScale;
 		this.offset = offset;
 		this.margin = margin;
-		this.absolutePoint = pointList.get(0);
+		this.absolutePoint = new Point(pointList.get(0));
 		this.point = this.absolutePoint;
-		Point stopPoint = pointList.get(1);
+		Point stopPoint = new Point(pointList.get(1));
 		this.absoluteDimension.width = Math.abs(stopPoint.x - this.absolutePoint.x);
 		this.absoluteDimension.height = Math.abs(stopPoint.y - this.absolutePoint.y);
-		this.dimension = this.absoluteDimension;
 		this.relativePoint = this.getRelativePoint();
-//		this.scale();
-
+		this.scale();
 	}
 
 	public Position(Position position) {
+		logger.info("Position("+position+")");
 		this.absolutePoint.x = position.absolutePoint.x;
 		this.absolutePoint.y = position.absolutePoint.y;
 		this.absoluteDimension.width = position.absoluteDimension.width;
@@ -81,7 +80,7 @@ public class Position {
 		this.addScale = position.addScale;
 		this.margin = position.margin;
 		this.offset = position.offset;
-//		this.scale();
+		this.scale();
 	}
 
 	@JsonIgnore
@@ -121,6 +120,7 @@ public class Position {
 
 	@JsonIgnore
 	public void setAbsoluteDimension(Dimension dimension) {
+		logger.info("setAbsoluteDimension("+dimension+")");
 		this.absoluteDimension = dimension;
 	}
 
@@ -139,6 +139,7 @@ public class Position {
 			this.point.x = this.absolutePoint.x;
 			this.point.y = this.absolutePoint.y + this.margin;
 		}
+		logger.info("scale() this.absoluteDimension="+this.absoluteDimension);
 		this.dimension.width = this.absoluteDimension.width;
 		this.dimension.height = this.absoluteDimension.height;
 		this.point.x *= this.scale;
@@ -149,8 +150,10 @@ public class Position {
 
 	@JsonIgnore
 	public void setScale(double scale) {
+		logger.info("setScale("+scale+")");
 		this.scale = (this.addScale > 0) ? scale / this.addScale : scale;
-//		this.scale();
+		logger.info("setScale("+scale+") this.scale="+this.scale);
+		this.scale();
 	}
 
 	@JsonIgnore

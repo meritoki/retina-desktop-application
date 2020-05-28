@@ -221,6 +221,7 @@ public class Image {
 
 	@JsonIgnore
 	public void setScale(double scale) {
+		logger.info("setScale("+scale+")");
 		this.position.setScale(scale);
 		for (Shape shape : this.shapeList) {
 			shape.setScale(scale);
