@@ -33,7 +33,7 @@ public class ResizeImage extends Command {
 		logger.info("execute() this.document.cache.scale="+this.document.cache.scale);
 		double scale = (this.document.cache.scale == this.document.cache.pressedImage.position.relativeScale)?this.document.cache.scale/this.document.cache.pressedImage.position.relativeScale:this.document.cache.pressedImage.position.relativeScale;
 		logger.info("execute() scale="+scale);
-		double factor = 1.05;
+		double factor = 1.01;
 		switch(this.document.cache.scaleOperator) {
 		case '*':{
 			scale *= factor;

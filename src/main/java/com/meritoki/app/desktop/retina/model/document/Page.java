@@ -302,8 +302,7 @@ public class Page {
 		logger.info("addImage(" + image + ")");
 		this.imageList.add(image);
 		image.setScale(this.position.scale);
-		image.position.setOffset(this.position.absoluteDimension.width);
-		image.position.setAbsolutePoint(new Point(this.position.absoluteDimension.width, 0));
+		image.setOffset(this.position.absoluteDimension.width);
 		this.position.addAbsoluteDimension(new Dimension(image.position.absoluteDimension.width,0));
 		for(Shape shape: image.shapeList) {
 			shape.position.setOffset(image.position.offset);
@@ -394,6 +393,7 @@ public class Page {
 			}
 			if (i + 1 < imageList.size()) {
 				Image b = imageList.get(i + 1);
+				b.setOffset(a.position.absoluteDimension.width);
 				int w = bufferedImage.getWidth();
 				int h = bufferedImage.getHeight();
 				int width = w + b.getBufferedImage().getWidth();

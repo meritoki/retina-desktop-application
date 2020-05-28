@@ -204,7 +204,7 @@ public class Image {
 			AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
 			after = scaleOp.filter(before, after);
 			this.bufferedImage = after;
-			this.position.setAbsoluteDimension(new Dimension(this.bufferedImage.getWidth(),this.bufferedImage.getHeight()));//Remove
+			this.position.setAbsoluteDimension(new Dimension(this.bufferedImage.getWidth(),this.bufferedImage.getHeight()));
 		}
 		return this.bufferedImage;
 	}
