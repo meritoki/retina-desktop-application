@@ -24,13 +24,14 @@ public class ScalePage extends Command {
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);
 		double scale = this.document.cache.scale;
+		double factor = 1.5;
 		switch(this.document.cache.scaleOperator) {
 		case '*':{
-			scale = scale * 1.5;
+			scale *= factor;
 			break;
 		}
 		case '/':{
-			scale = scale / 1.5;
+			scale /= factor;
 			break;
 		}
 		}

@@ -3,6 +3,7 @@ target/
 error
 output
 logs/
+test/
 *.xlsx
 *.docx
 *.wav

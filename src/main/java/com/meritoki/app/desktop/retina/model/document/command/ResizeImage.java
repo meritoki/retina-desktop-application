@@ -28,7 +28,10 @@ public class ResizeImage extends Command {
 		//Logic
 		this.document.cache.pressedPage.setBufferedImage(null);
 		this.document.cache.pressedImage.setBufferedImage(null);
-		double scale = (this.document.cache.scale == this.document.cache.pressedImage.position.scale)?this.document.cache.scale/this.document.cache.pressedImage.position.scale:this.document.cache.pressedImage.position.scale;
+		//This LINE IS ESSENTIAL TO FIXING THE BUG
+		logger.info("execute() this.document.cache.pressedImage.position.scale="+this.document.cache.pressedImage.position.relativeScale);
+		logger.info("execute() this.document.cache.scale="+this.document.cache.scale);
+		double scale = (this.document.cache.scale == this.document.cache.pressedImage.position.relativeScale)?this.document.cache.scale/this.document.cache.pressedImage.position.relativeScale:this.document.cache.pressedImage.position.relativeScale;
 		logger.info("execute() scale="+scale);
 		double factor = 1.05;
 		switch(this.document.cache.scaleOperator) {
@@ -41,7 +44,7 @@ public class ResizeImage extends Command {
 			break;
 		}
 		}
-		this.document.cache.pressedImage.setScale(scale);
+		this.document.cache.pressedImage.setRelativeScale(scale);
 		//Redo Operation
 		operation = new Operation();
 		operation.object = new Image(this.document.cache.pressedImage);

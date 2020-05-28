@@ -36,6 +36,8 @@ public class Position {
 	@JsonProperty
 	public double scale = 1;
 	@JsonProperty
+	public double relativeScale = 1;
+	@JsonProperty
 	public Point point = new Point();
 	@JsonProperty
 	public Point absolutePoint = new Point();
@@ -75,7 +77,6 @@ public class Position {
 		Point stopPoint = new Point(pointList.get(1));
 		this.absoluteDimension.width = Math.abs(stopPoint.x - this.absolutePoint.x);
 		this.absoluteDimension.height = Math.abs(stopPoint.y - this.absolutePoint.y);
-//		this.dimension = this.absoluteDimension;//caused huge BUG!!!!!
 		this.relativePoint = this.getRelativePoint();
 		this.scale();
 	}
@@ -162,6 +163,14 @@ public class Position {
 		logger.info("setScale("+scale+")");
 		this.scale = (this.addScale > 0) ? scale / this.addScale : scale;
 		logger.info("setScale("+scale+") this.scale="+this.scale);
+		this.scale();
+	}
+	
+	@JsonIgnore
+	public void setRelativeScale(double scale) {
+		logger.info("setRelativeScale("+scale+")");
+		this.relativeScale = (this.addScale > 0) ? scale / this.addScale : scale;
+		logger.info("setRelativeScale("+scale+") this.relativeScale="+this.relativeScale);
 		this.scale();
 	}
 

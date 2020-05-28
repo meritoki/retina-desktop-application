@@ -61,8 +61,6 @@ public class Image {
 	public BufferedImage bufferedImage;
 	@JsonIgnore
 	public int index = 0;
-	@JsonProperty
-	public double scale = 1;
 
 	/**
 	 * Default constructor
@@ -117,13 +115,13 @@ public class Image {
 	/**
 	 * Function returns true if files have the same uuid
 	 * 
-	 * @param file
+	 * @param image
 	 * @return flag
 	 */
 	@JsonIgnore
-	public boolean equals(Image file) {
+	public boolean equals(Image image) {
 		boolean flag = false;
-		if (this.uuid.equals(file.uuid)) {
+		if (this.uuid.equals(image.uuid)) {
 			flag = true;
 		}
 		return flag;
@@ -200,9 +198,9 @@ public class Image {
 			BufferedImage before = this.bufferedImage;
 			int w = before.getWidth();
 			int h = before.getHeight();
-			BufferedImage after = new BufferedImage((int)(w*this.position.scale), (int)(h*this.position.scale), BufferedImage.TYPE_INT_ARGB);
+			BufferedImage after = new BufferedImage((int)(w*this.position.relativeScale), (int)(h*this.position.relativeScale), BufferedImage.TYPE_INT_ARGB);
 			AffineTransform at = new AffineTransform();
-			at.scale(this.position.scale, this.position.scale);
+			at.scale(this.position.relativeScale, this.position.relativeScale);
 			AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
 			after = scaleOp.filter(before, after);
 			this.bufferedImage = after;
@@ -227,8 +225,18 @@ public class Image {
 	public void setScale(double scale) {
 		logger.info("setScale("+scale+")");
 		this.position.setScale(scale);
+
 		for (Shape shape : this.shapeList) {
 			shape.setScale(scale);
+		}
+	}
+	
+	@JsonIgnore
+	public void setRelativeScale(double scale) {
+		logger.info("setRelativeScale("+scale+")");
+		this.position.setRelativeScale(scale);
+		for (Shape shape : this.shapeList) {
+//			shape.setRelativeScale(scale);
 		}
 	}
 

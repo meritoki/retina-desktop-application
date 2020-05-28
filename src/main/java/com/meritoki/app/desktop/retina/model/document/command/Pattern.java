@@ -205,6 +205,9 @@ public class Pattern {
 				}
 				break;
 			}
+			case "resizeImage":{
+				
+			}
 			default: {
 
 			}

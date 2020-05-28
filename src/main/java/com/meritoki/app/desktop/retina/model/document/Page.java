@@ -132,7 +132,7 @@ public class Page {
 	}
 
 	/**
-	 * Function returns file that contains the point parameter
+	 * Function returns Image that contains the Point
 	 *
 	 * @param Point
 	 * @return File
@@ -219,10 +219,6 @@ public class Page {
 	public Archive getArchive() {
 		return new Archive(this.getMatrix());
 	}
-
-
-
-	
 	/**
 	 * Function returns bufferedImage with one or more File bufferedImages from the
 	 * fileList
@@ -402,6 +398,7 @@ public class Page {
 				int h = bufferedImage.getHeight();
 				int width = w + b.getBufferedImage().getWidth();
 				int height = Math.max(h, b.getBufferedImage().getHeight() + (int) b.position.margin);
+				
 				BufferedImage bI = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 				Graphics2D graphics2D = bI.createGraphics();
 				Color oldColor = graphics2D.getColor();
@@ -420,7 +417,7 @@ public class Page {
 	@JsonIgnore
 	public void paint(Graphics2D graphics2D) {
 		AffineTransform affineTransform = new AffineTransform();
-		affineTransform.scale(this.position.scale, this.position.scale);
+		affineTransform.scale(this.position.scale, this.position.scale);//this handles scaling the bufferedImage
 		BufferedImage bufferedImage = this.getBufferedImage();
 		if (bufferedImage != null) {
 			graphics2D.drawImage(bufferedImage, affineTransform, null);
@@ -430,12 +427,15 @@ public class Page {
 		if (imageList != null) {
 			for (Image i : imageList) {
 				Position p = i.position;
+//				p.scale();
+				logger.info("paint(g) p="+p);
 				if (image != null && i.uuid.equals(image.uuid)) {
 					graphics2D.setColor(Color.RED);
 				} else {
 					graphics2D.setColor(Color.YELLOW);
 				}
 				Rectangle2D.Double rectangle = new Rectangle2D.Double(p.point.x, p.point.y, p.dimension.width, p.dimension.height);
+				logger.info("paint(g) rectangle="+rectangle);
 				graphics2D.draw(rectangle);
 			}
 
