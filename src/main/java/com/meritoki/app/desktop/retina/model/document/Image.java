@@ -244,7 +244,7 @@ public class Image {
 	@JsonIgnore
 	public void setMargin(double margin) {
 		logger.info("setMargin(" + margin + ")");
-		this.position.margin = margin;
+		this.position.setMargin(margin);
 		for (Shape shape : this.shapeList) {
 			shape.setMargin(margin);
 		}

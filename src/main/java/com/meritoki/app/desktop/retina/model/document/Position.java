@@ -165,6 +165,7 @@ public class Position {
 	@JsonIgnore
 	public void setMargin(double margin) {
 		this.margin = margin;
+		this.scale();
 	}
 
 	@JsonIgnore
