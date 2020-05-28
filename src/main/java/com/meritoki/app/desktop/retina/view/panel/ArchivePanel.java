@@ -50,9 +50,15 @@ public class ArchivePanel extends javax.swing.JPanel {
     }
 
     public void setModel(Model model) {
-        logger.debug("setModel(" + model + ")");
         this.model = model;
+        this.init();
     }
+    
+	public void init() {
+		logger.info("init()");
+		this.repaint();
+		this.revalidate();
+	}
     
     public void paint(Graphics graphics) {
     	super.paint(graphics);

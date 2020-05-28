@@ -51,7 +51,6 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 	 */
 	public MatrixPanel() {
 		super();
-//		this.setOpaque(true);
 		this.setBackground(Color.white);
 		this.addMouseListener(this);
 		this.addMouseWheelListener(this);
@@ -65,8 +64,14 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 	 * @param model
 	 */
 	public void setModel(Model model) {
-		logger.debug("setModel(" + model + ")");
 		this.model = model;
+		this.init();
+	}
+
+	public void init() {
+		logger.info("init()");
+		this.repaint();
+		this.revalidate();
 	}
 
 	@Override

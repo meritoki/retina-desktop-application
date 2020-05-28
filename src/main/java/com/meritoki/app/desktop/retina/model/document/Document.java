@@ -49,7 +49,7 @@ public class Document {
 	public Document() {
 		this.uuid = UUID.randomUUID().toString();
 		this.pattern = new Pattern(this);
-//		this.test();
+		this.test();
 	}
 
 	@JsonIgnore

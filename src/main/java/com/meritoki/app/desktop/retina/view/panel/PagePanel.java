@@ -56,14 +56,19 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 		this.addKeyListener(this);
 	}
 
-	public void setMain(MainFrame main) {
+	public void setMainFrame(MainFrame main) {
 		this.main = main;
 	}
 
 	public void setModel(Model model) {
-		logger.debug("setModel(" + model + ")");
 		this.model = model;
 		this.setPreferredSize(this.getPreferredSize());
+	}
+	
+	public void init() {
+		logger.info("init()");
+		this.repaint();
+		this.revalidate();
 	}
 
 	@Override
@@ -166,7 +171,6 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 			}
 		}
 		this.main.init();
-		this.repaint();
 	}
 
 	@Override
@@ -204,8 +208,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				double scale = this.model.document.cache.scale;
 				scale = scale * 1.5;
 				this.model.document.cache.scale = scale;
-				this.repaint();
-				this.revalidate();
+				this.main.init();
 				break;
 			}
 			case KeyEvent.VK_PLUS: {
@@ -213,8 +216,8 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				double scale = this.model.document.cache.scale;
 				scale = scale * 1.5;
 				this.model.document.cache.scale = scale;
-				this.repaint();
-				this.revalidate();
+				this.main.init();
+				
 				break;
 			}
 			case KeyEvent.VK_MINUS: {
@@ -222,8 +225,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				double scale = this.model.document.cache.scale;
 				scale = scale / 1.5;
 				this.model.document.cache.scale = scale;
-				this.repaint();
-				this.revalidate();
+				this.main.init();
 				break;
 			}
 			case KeyEvent.VK_DOWN: {
@@ -235,7 +237,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 					image.setMargin(image.position.margin + 10);
 					page.setBufferedImage(null);
 				}
-				repaint();
+				this.main.init();
 				break;
 			}
 			case KeyEvent.VK_UP: {
@@ -247,16 +249,16 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 					image.setMargin(image.position.margin - 10);
 					page.setBufferedImage(null);
 				}
-				repaint();
+				this.main.init();
 				break;
 			}
 			case KeyEvent.VK_LEFT: {
 				logger.info("keyPressed(e) KeyEvent.VK_LEFT");
 				this.model.document.cache.scaleFactor = 0.9;
+				this.model.document.cache.pressedPage = this.model.document.getPage();
 				try {
 					this.model.document.pattern.execute("resizeImage");
 					this.main.init();
-					this.repaint();
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -266,10 +268,11 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 			case KeyEvent.VK_RIGHT: {
 				logger.info("keyPressed(e) KeyEvent.VK_RIGHT");
 				this.model.document.cache.scaleFactor = 1.1;
+				this.model.document.cache.pressedPage = this.model.document.getPage();
 				try {
 					this.model.document.pattern.execute("resizeImage");
+					this.model.document.getPage().setBufferedImage(null);
 					this.main.init();
-					this.repaint();
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -280,14 +283,12 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				logger.debug("keyPressed(e) KeyEvent.VK_Z");
 				this.model.document.pattern.undo();
 				this.main.init();
-				this.repaint();
 				break;
 			}
 			case KeyEvent.VK_Y: {
 				logger.debug("keyPressed(e) KeyEvent.VK_Y");
 				this.model.document.pattern.redo();
 				this.main.init();
-				repaint();
 				break;
 
 			}
@@ -316,7 +317,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				this.repaint();
+				this.main.init();
 				break;
 			}
 			case KeyEvent.VK_LEFT: {
@@ -325,7 +326,6 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				try {
 					this.model.document.pattern.execute("setPage");
 					this.main.init();
-					this.repaint();
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -338,7 +338,6 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				try {
 					this.model.document.pattern.execute("setPage");
 					this.main.init();
-					this.repaint();
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -351,7 +350,6 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				try {
 					this.model.document.pattern.execute("setPage");
 					this.main.init();
-					this.repaint();
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -364,7 +362,6 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				try {
 					this.model.document.pattern.execute("setPage");
 					this.main.init();
-					this.repaint();
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

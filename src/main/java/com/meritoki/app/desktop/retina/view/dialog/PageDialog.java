@@ -72,7 +72,6 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
      * @param model
      */
     public void setModel(Model model){
-        logger.debug("setModel("+model+")");
         this.model = model;
         this.init();
     }
@@ -81,7 +80,7 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
      * Function instantiates view. 
      */
     public void init(){
-        logger.debug("init()");
+    	logger.info("init()");
         this.initLabel();
         this.initList();
     }
@@ -149,8 +148,6 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
             document.cache.pageUUID = uuid;
             try {
 				document.pattern.execute("setPage");
-                this.initLabel();
-                this.main.repaint();
                 this.main.init();
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
@@ -190,9 +187,7 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
                 document.cache.pageIndex = --index;
                 try {
 					document.pattern.execute("setPage");
-	                this.initLabel();
 	                this.setPageListSelectedIndex(index);
-	                this.main.repaint();
 	                this.main.init();
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
@@ -206,9 +201,7 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
                 document.cache.pageIndex = ++index;
                 try {
 					document.pattern.execute("setPage");
-	                this.initLabel();
 	                this.setPageListSelectedIndex(index);
-	                this.main.repaint();
 	                this.main.init();
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
@@ -232,8 +225,6 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
         Page page = document.getPage();
         if(page != null && uuid != null && !uuid.equals(page.uuid)){
             document.setPage(uuid);
-            this.initLabel();
-            this.main.repaint();
             this.main.init();
         }
     }
@@ -438,8 +429,8 @@ public class PageDialog extends javax.swing.JDialog implements MouseListener, Ke
         	document.cache.pageList = document.getPageList();//BUG 201912212221 this step is stripping the fileList, which it why the shapes do not appear after a join.
         	try {
 				document.pattern.execute("executeScript");
-		        this.initPageList(document.cache.pageList);
-		        this.main.repaint();
+//		        this.initPageList(document.cache.pageList);
+//		        this.main.repaint();
 		        this.main.init();
 			} catch (Exception e) {
 				logger.error("Exception "+e.getMessage());

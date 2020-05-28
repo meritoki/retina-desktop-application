@@ -27,7 +27,10 @@ public class ResizeImage extends Command {
 		this.operationList.push(operation);
 		//Logic
 		double scale = this.document.cache.pressedImage.scale;
+		System.out.println(scale);
+		System.out.println(this.document.cache.scaleFactor);
 		scale *= this.document.cache.scaleFactor;
+		System.out.println(scale);
 		this.document.cache.pressedImage.scale = scale;
 		
 		//Redo Operation

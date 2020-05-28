@@ -56,6 +56,7 @@ public class TablePanel extends javax.swing.JPanel {
 	}
 
 	public void init() {
+		logger.info("init()");
 		this.initDataTable();
 	}
 
@@ -70,13 +71,7 @@ public class TablePanel extends javax.swing.JPanel {
 			this.dataTable.setModel(new javax.swing.table.DefaultTableModel(new Object[0][0], new Object[0]));
 		}
 	}	
-
-//	@Override
-//	public void paint(Graphics g) {
-//		super.paint(g);
-//		this.initDataTable();
-//	}
-
+	
 	/**
 	 * This method is called from within the constructor to initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is always

@@ -31,7 +31,7 @@ import com.meritoki.app.desktop.retina.view.dialog.PageDialog;
 import com.meritoki.app.desktop.retina.view.dialog.CommandDialog;
 import com.meritoki.app.desktop.retina.view.dialog.OpenDialog;
 import com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog;
-import com.meritoki.app.desktop.retina.view.dialog.SelectionDialog;
+import com.meritoki.app.desktop.retina.view.dialog.ShapeDialog;
 import com.meritoki.app.desktop.retina.view.dialog.audio.AudioExportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.image.ImageImportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.microsoft.MicrosoftExportDialog;
@@ -57,9 +57,9 @@ public final class MainFrame extends JFrame {
     public OpenDialog openDialog = null;
     public SaveAsDialog saveAsDialog = null;
     public ImageImportDialog imageImportDialog = null;
-    public PageDialog imageDialog = new PageDialog(this, false);
+    public PageDialog pageDialog = new PageDialog(this, false);
     public CommandDialog commandDialog = new CommandDialog(this, false);
-    public SelectionDialog selectionDialog = new SelectionDialog(this, false);
+    public ShapeDialog selectionDialog = new ShapeDialog(this, false);
     public ZooniverseExportDialog zooniverseExportDialog = new ZooniverseExportDialog(this, false);
     public ZooniverseImportDialog zooniverseImportDialog = new ZooniverseImportDialog(this, false);
     public MicrosoftExportDialog microsoftExportDialog = new MicrosoftExportDialog(this, false);
@@ -69,6 +69,7 @@ public final class MainFrame extends JFrame {
         this.initComponents();
         this.setTitle("Retina Desktop Application");
         this.setModel(model);
+        this.setMainFrame();
         this.initIconImage();
         this.init();
     }
@@ -78,6 +79,10 @@ public final class MainFrame extends JFrame {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Image image = toolkit.createImage(url);
         this.setIconImage(image);
+    }
+    
+    public void setMainFrame() {
+    	this.pagePanel.setMainFrame(this);
     }
 
     public void setModel(Model model) {
@@ -90,7 +95,7 @@ public final class MainFrame extends JFrame {
         this.archivePanel.setModel(this.model);
         //Dialog
         this.commandDialog.setModel(this.model);
-        this.imageDialog.setModel(this.model);
+        this.pageDialog.setModel(this.model);
         this.selectionDialog.setModel(this.model);
         this.zooniverseExportDialog.setModel(this.model);
         this.zooniverseImportDialog.setModel(this.model);
@@ -109,12 +114,13 @@ public final class MainFrame extends JFrame {
     }
 
     public void init() {
-        logger.debug("init()");
-        this.pagePanel.setMain(this);
-        this.pagePanel.setFocusable(true);
-        this.pagePanel.requestFocusInWindow();
+        logger.info("init()");
+        this.repaint();
+        this.pagePanel.init();
+        this.matrixPanel.init();
         this.tablePanel.init();
-        this.imageDialog.init();
+        this.archivePanel.init();
+        this.pageDialog.init();
         this.selectionDialog.init();
         this.commandDialog.init();
     }
@@ -325,7 +331,7 @@ public final class MainFrame extends JFrame {
         });
         dialogMenu.add(pageMenuItem);
 
-        selectionMenuItem.setText("Selection");
+        selectionMenuItem.setText("Shape");
         selectionMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 selectionMenuItemActionPerformed(evt);
@@ -380,7 +386,7 @@ public final class MainFrame extends JFrame {
     }//GEN-LAST:event_openMenuItemActionPerformed
 
     private void pageMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pageMenuItemActionPerformed
-        this.imageDialog.setVisible(true);
+        this.pageDialog.setVisible(true);
     }//GEN-LAST:event_pageMenuItemActionPerformed
 
     private void selectionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectionMenuItemActionPerformed
@@ -502,3 +508,7 @@ public final class MainFrame extends JFrame {
     private javax.swing.JMenuItem zooniverseImportMenuItem;
     // End of variables declaration//GEN-END:variables
 }
+
+//this.pagePanel.setMain(this);
+//this.pagePanel.setFocusable(true);
+//this.pagePanel.requestFocusInWindow();

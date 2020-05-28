@@ -176,6 +176,7 @@ public class Image {
 		int h = before.getHeight();
 		BufferedImage after = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 		AffineTransform at = new AffineTransform();
+		logger.info("getBufferedImage() this.scale="+this.scale);
 		at.scale(this.scale, this.scale);
 		AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
 		after = scaleOp.filter(before, after);
