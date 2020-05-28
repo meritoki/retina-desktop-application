@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Joaquin Osvaldo Rodriguez
+ * Copyright 2020 Joaquin Osvaldo Rodriguez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,56 +49,57 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 public class Page {
 
 	/**
-	 * Logger for Page class.
+	 * Logger for class.
 	 */
 	@JsonIgnore
 	static Logger logger = LogManager.getLogger(Page.class.getName());
 
 	/**
-	 * Identifier for Page class
+	 * Unique identifier instance of Page class
 	 */
 	@JsonProperty
 	public String uuid;
 	/**
-	 * List of Images loaded by user.
+	 * List of Images
 	 */
 	@JsonProperty
 	public List<Image> imageList = new ArrayList<>();
 	/**
-	 * Current file index selected by user. Default is zero for a fileList of size
-	 * 1.
+	 * Current Image index selected. Default is zero.
 	 */
 	@JsonIgnore
 	public int index = 0;
 	/**
-	 * Cached copy of joined bufferedImage from one or more files.
+	 * Cached copy of joined bufferedImage from one or more Images.
 	 */
 	@JsonIgnore
 	public BufferedImage bufferedImage = null;
 	/**
-	 * Scale of the entire page, applied to all files.
+	 * Position of class.
 	 */
 	@JsonProperty
 	public Position position = new Position();
-
+	/**
+	 * Script applied to Matrix
+	 */
 	@JsonProperty
 	public Script script;
-
 	/**
-	 * Page class retains references to one or more files
+	 * Class constructor
 	 */
 	public Page() {
 		this.uuid = UUID.randomUUID().toString();
 	}
-	
+	/**
+	 * Class constructor that accepts image as parameter
+	 */
 	public Page(Image image) {
 		this.uuid = UUID.randomUUID().toString();
 		this.addImage(image);
 		this.index = 0;
 	}
-
 	/**
-	 * Copy constructor INCOMPLETE AND CAUSING A BUG
+	 * Class copy constructor
 	 *
 	 * @param page
 	 */
@@ -110,9 +111,8 @@ public class Page {
 		this.index = page.index;
 		this.position = new Position(page.position);
 	}
-
 	/**
-	 * Function gets the current index selected by user.
+	 * Function gets the current index.
 	 *
 	 * @return this.index
 	 */
@@ -120,9 +120,8 @@ public class Page {
 	public int getIndex() {
 		return this.index;
 	}
-
 	/**
-	 * Function returns file using index
+	 * Function returns Image using index
 	 *
 	 * @return file
 	 */
@@ -148,12 +147,14 @@ public class Page {
 		}
 		return null;
 	}
-
+	/**
+	 * Function returns list of Image objects
+	 * @return List<Image>
+	 */
 	@JsonIgnore
 	public List<Image> getImageList() {
 		return this.imageList;
 	}
-
 	/**
 	 * Function returns shape that contains the point parameter
 	 *
@@ -163,7 +164,7 @@ public class Page {
 	@JsonIgnore
 	public Shape getShape(Point point) {
 		Shape s = null;
-		for (Image image : this.getImageList()) {
+		for (Image image : this.imageList) {
 			s = image.getShape(point);
 			if (s != null) {
 				break;
@@ -171,9 +172,8 @@ public class Page {
 		}
 		return s;
 	}
-
 	/**
-	 * Function returns the Shape at the current index in File
+	 * Function returns the Shape at the current index in Image
 	 *
 	 * @return shape
 	 */
@@ -293,9 +293,9 @@ public class Page {
 	 */
 	@JsonIgnore
 	public void setShape(String uuid) {
-		for (Image file : this.getImageList()) {
-			if (file.setShape(uuid)) {
-				this.setImage(file.uuid);
+		for (Image image : this.getImageList()) {
+			if (image.setShape(uuid)) {
+				this.setImage(image.uuid);
 				break;
 			}
 		}
@@ -371,7 +371,6 @@ public class Page {
 
 	@JsonIgnore
 	public Selection intersectShape(Point point) {
-		logger.trace("intersectShape(" + point + ")");
 		Selection selection = null;
 		Image image = this.getImage();
 		if (image != null) {
@@ -426,22 +425,21 @@ public class Page {
 		if (bufferedImage != null) {
 			graphics2D.drawImage(bufferedImage, affineTransform, null);
 		}
-//		List<Image> imageList = this.getImageList();
-//		Image image = this.getImage();
-//		Position p = null;
-//		if (imageList != null) {
-//			for (Image i : imageList) {
-//				p = i.position;
-//				if (image != null && i.uuid.equals(image.uuid)) {
-//					graphics2D.setColor(Color.RED);
-//				} else {
-//					graphics2D.setColor(Color.YELLOW);
-//				}
-//				Rectangle2D.Double rectangle = new Rectangle2D.Double(p.point.x, p.point.y, p.dimension.width, p.dimension.height);
-//				graphics2D.draw(rectangle);
-//			}
-//
-//		}
+		List<Image> imageList = this.getImageList();
+		Image image = this.getImage();
+		if (imageList != null) {
+			for (Image i : imageList) {
+				Position p = i.position;
+				if (image != null && i.uuid.equals(image.uuid)) {
+					graphics2D.setColor(Color.RED);
+				} else {
+					graphics2D.setColor(Color.YELLOW);
+				}
+				Rectangle2D.Double rectangle = new Rectangle2D.Double(p.point.x, p.point.y, p.dimension.width, p.dimension.height);
+				graphics2D.draw(rectangle);
+			}
+
+		}
 		List<Shape> shapeList = this.getMatrix().getShapeList();
 		Shape shape = this.getShape();
 		Shape previousShape = null;
@@ -492,22 +490,3 @@ public class Page {
 		return string;
 	}
 }
-//
-//@JsonIgnore
-//public List<Shape> getShapeList() {
-//	List<Shape> shapeList = new ArrayList<>();
-//	for (Image image : this.getImageList()) {
-//		for (Shape shape : image.getShapeList()) {
-////			shape.dimension.setScale(image.dimension.scale);
-////			shape.dimension.setOffset(image.dimension.offset);
-////			shape.dimension.setMargin(image.dimension.margin);
-////			shape.setDimension(null);
-////			dimension = shape.getDimension();
-////			dimension.x += (image.getOffset() * image.scale);
-////			dimension.y += (image.getMargin() * image.scale);
-//			shape.bufferedImage = this.getShapeBufferedImage(shape);
-//			shapeList.add(shape);
-//		}
-//	}
-//	return shapeList;
-//}

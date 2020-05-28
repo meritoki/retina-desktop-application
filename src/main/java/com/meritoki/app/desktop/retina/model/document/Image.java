@@ -1,3 +1,18 @@
+/*
+ * Copyright 2020 Joaquin Osvaldo Rodriguez
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.meritoki.app.desktop.retina.model.document;
 
 import java.awt.geom.AffineTransform;
@@ -126,7 +141,7 @@ public class Image {
 	}
 
 	/**
-	 * Functions gets shape for index.
+	 * Functions returns shape for index.
 	 * 
 	 * @return
 	 */
@@ -140,7 +155,7 @@ public class Image {
 	}
 
 	/**
-	 * DIMENSION 1
+	 * Functions returns shape for Point
 	 * 
 	 * @param point
 	 * @return
@@ -157,7 +172,7 @@ public class Image {
 	}
 
 	/**
-	 * Function transforms the
+	 * Function returns list of Shape objects
 	 * 
 	 * @return
 	 */
@@ -187,12 +202,11 @@ public class Image {
 			int h = before.getHeight();
 			BufferedImage after = new BufferedImage((int)(w*this.position.scale), (int)(h*this.position.scale), BufferedImage.TYPE_INT_ARGB);
 			AffineTransform at = new AffineTransform();
-			logger.info("getBufferedImage() this.position.scale="+this.position.scale);
 			at.scale(this.position.scale, this.position.scale);
 			AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
 			after = scaleOp.filter(before, after);
 			this.bufferedImage = after;
-			this.position.setAbsoluteDimension(new Dimension(this.bufferedImage.getWidth(),this.bufferedImage.getHeight()));
+			this.position.setAbsoluteDimension(new Dimension(this.bufferedImage.getWidth(),this.bufferedImage.getHeight()));//Remove
 		}
 		return this.bufferedImage;
 	}
@@ -304,11 +318,21 @@ public class Image {
 		return this.containsPoint(shape.position.getStartPoint());
 	}
 
+	/**
+	 * Function returns true if input Shape is removed
+	 * @param shape
+	 * @return
+	 */
 	@JsonIgnore
 	public Shape removeShape(Shape shape) {
 		return this.removeShape(shape.uuid);
 	}
 
+	/**
+	 * Function returns true if input Shape is removed by UUID
+	 * @param uuid
+	 * @return
+	 */
 	@JsonIgnore
 	public Shape removeShape(String uuid) {
 		ListIterator<Shape> shapeListIterator = this.shapeList.listIterator();
@@ -330,7 +354,7 @@ public class Image {
 	}
 
 	/**
-	 * Function returns true if point is contained within file
+	 * Function returns true if Point is contained within Image
 	 * 
 	 * @param point
 	 * @return
@@ -350,7 +374,6 @@ public class Image {
 		} catch (IOException e) {
 			logger.error("IOException " + e.getMessage());
 		}
-
 		return string;
 	}
 }
