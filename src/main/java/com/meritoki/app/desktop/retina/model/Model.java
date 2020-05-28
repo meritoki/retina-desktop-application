@@ -36,9 +36,9 @@ public class Model {
 		this.document.pattern.user = this.system.user;
 		
 		if (this.userList.size() == 0) {
-			this.system.newUser = true;
+			this.system.newUser = false;
 		} else {
-			this.system.loginUser = true;
+			this.system.loginUser = false;
 		}
 	}
 }

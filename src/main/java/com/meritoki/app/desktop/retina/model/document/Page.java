@@ -308,9 +308,7 @@ public class Page {
 		image.setScale(this.position.scale);
 		image.position.setOffset(this.position.absoluteDimension.width);
 		image.position.setAbsolutePoint(new Point(this.position.absoluteDimension.width, 0));
-		image.position.scale();
-		this.position.addAbsolutionDimension(image.position.absoluteDimension.width,0);
-		this.position.scale();
+		this.position.addAbsoluteDimension(new Dimension(image.position.absoluteDimension.width,0));
 		for(Shape shape: image.shapeList) {
 			shape.position.setOffset(image.position.offset);
 		}

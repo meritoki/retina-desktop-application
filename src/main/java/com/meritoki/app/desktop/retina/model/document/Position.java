@@ -82,19 +82,13 @@ public class Position {
 	public void normalize(List<Point> pointList) {
 		Point pointZero = pointList.get(0);
 		Point pointOne = pointList.get(1);
-		// Case B
 		if (pointZero.x > pointOne.x && pointZero.y < pointOne.y) {
-			// logger.info("sortPointList() Case B");
 			pointList.set(0, new Point(pointOne.x, pointZero.y));
 			pointList.set(1, new Point(pointZero.x, pointOne.y));
-			// Case C
 		} else if (pointZero.x < pointOne.x && pointZero.y > pointOne.y) {
-			// logger.info("sortPointList() Case C");
 			pointList.set(0, new Point(pointZero.x, pointOne.y));
 			pointList.set(1, new Point(pointOne.x, pointZero.y));
-			// Case D
 		} else if (pointZero.x > pointOne.x && pointZero.y > pointOne.y) {
-			// logger.info("sortPointList() Case D");
 			pointList.set(0, pointOne);
 			pointList.set(1, pointZero);
 		}
@@ -110,6 +104,7 @@ public class Position {
 
 	@JsonIgnore
 	public void setAbsolutePoint(Point point) {
+		logger.info("setAbsolutePoint("+point+")");
 		this.absolutePoint = point;
 		this.scale();
 	}
@@ -122,14 +117,16 @@ public class Position {
 	}
 
 	@JsonIgnore
-	public void addAbsolutionDimension(double width, double height) {
-		this.absoluteDimension.width += width;
-		this.absoluteDimension.height += height;
+	public void addAbsoluteDimension(Dimension dimension) {//double width, double height) {
+		logger.info("addAbsoluteDimension("+dimension+")");
+		this.absoluteDimension.width += dimension.width;
+		this.absoluteDimension.height += dimension.height;
 		this.scale();
 	}
 
 	@JsonIgnore
 	public void scale() {
+		logger.info("scale()");
 		if (this.relativePoint != null) {
 			this.point.x = this.relativePoint.x + this.offset;
 			this.point.y = this.relativePoint.y + this.margin * this.addScale;
@@ -161,6 +158,7 @@ public class Position {
 
 	@JsonIgnore
 	public void setOffset(double offset) {
+		logger.info("setOffset("+offset+")");
 		this.offset = offset;
 	}
 

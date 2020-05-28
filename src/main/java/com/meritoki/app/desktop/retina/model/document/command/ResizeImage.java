@@ -29,16 +29,18 @@ public class ResizeImage extends Command {
 		this.document.cache.pressedPage.setBufferedImage(null);
 		this.document.cache.pressedImage.setBufferedImage(null);
 		double scale = this.document.cache.pressedImage.position.scale;
-//		System.out.println(scale);
-//		System.out.println(this.document.cache.scaleFactor);
-		if(this.document.cache.scaleFactor == -1) {
-			scale /= 1.1;
-		} else if(this.document.cache.scaleFactor == 1) {
-			scale *= 1.1;
+		double factor = 1.05;
+		switch(this.document.cache.scaleOperator) {
+		case '*':{
+			scale *= factor;
+			break;
 		}
-//		System.out.println(scale);
+		case '/':{
+			scale /= factor;
+			break;
+		}
+		}
 		this.document.cache.pressedImage.setScale(scale);
-		
 		//Redo Operation
 		operation = new Operation();
 		operation.object = new Image(this.document.cache.pressedImage);
