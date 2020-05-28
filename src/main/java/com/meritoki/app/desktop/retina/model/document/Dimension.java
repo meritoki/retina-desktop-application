@@ -24,6 +24,11 @@ public class Dimension {
 		
 	}
 	
+	public Dimension(Dimension dimension) {
+		this.width = dimension.width;
+		this.height = dimension.height;
+	}
+	
 	public Dimension(double width, double height) {
 		this.width = width;
 		this.height = height;

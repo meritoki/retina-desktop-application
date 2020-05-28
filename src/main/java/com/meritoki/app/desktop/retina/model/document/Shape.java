@@ -60,7 +60,7 @@ public class Shape {
 	public Shape(Shape shape) {
 		this.uuid = shape.uuid;
 		this.type = shape.type;
-		this.position = shape.position;//new Position(shape.position);
+		this.position = new Position(shape.position);
 		this.bufferedImage = shape.bufferedImage;
 		this.data = new Data(shape.data);
 		for(Text text: shape.textList) {

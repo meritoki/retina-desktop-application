@@ -14,12 +14,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 
 
 public class Position {
-
-	public static void main(String[] args) {
-		Position d = new Position();
-		System.out.println(d);
-	}
-
 	@JsonIgnore
 	private static Logger logger = LogManager.getLogger(Position.class.getName());
 	@JsonProperty
@@ -66,6 +60,7 @@ public class Position {
 		Point stopPoint = new Point(pointList.get(1));
 		this.absoluteDimension.width = Math.abs(stopPoint.x - this.absolutePoint.x);
 		this.absoluteDimension.height = Math.abs(stopPoint.y - this.absolutePoint.y);
+//		this.dimension = this.absoluteDimension;//caused huge BUG!!!!!
 		this.relativePoint = this.getRelativePoint();
 		this.scale();
 	}
