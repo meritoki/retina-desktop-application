@@ -41,14 +41,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
 /**
- * The Page class is used to hold a list of shapes. The list of shapes can be
- * loaded from a Layout.
- *
- *
- * Displacement of shapeLists is maitained in the Page object. This is simply a
- * mechanism that converts the points in a Shape to the coordinate system of the
- * page. The page is the size of all the Files loaded into a bufferedImage and
- * displayed.
+ * The Page class is used to hold a list of Images.
  *
  * @author jorodriguez
  *
@@ -207,7 +200,7 @@ public class Page {
 	public BufferedImage getShapeBufferedImage(Shape shape) {
 		BufferedImage bufferedImage = null;
 		if (this.getBufferedImage() != null) {
-			bufferedImage = this.getBufferedImage().getSubimage((int)shape.position.point.x, (int)shape.position.point.y, (int)shape.position.dimension.width, (int)shape.position.dimension.height);
+//			bufferedImage = this.getBufferedImage().getSubimage((int)shape.position.point.x, (int)shape.position.point.y, (int)shape.position.dimension.width, (int)shape.position.dimension.height);
 		}
 		return bufferedImage;
 	}
@@ -240,8 +233,7 @@ public class Page {
 	public BufferedImage getBufferedImage() {
 		if (this.bufferedImage == null) {
 			this.bufferedImage = this.joinImages(this.getImageList());
-			this.position.absoluteDimension.width = this.bufferedImage.getWidth();
-			this.position.absoluteDimension.height = this.bufferedImage.getHeight();
+			this.position.setAbsoluteDimension(new Dimension(this.bufferedImage.getWidth(),this.bufferedImage.getHeight()));
 		}
 		return this.bufferedImage;
 	}
@@ -288,7 +280,6 @@ public class Page {
 	@JsonIgnore
 	public void setScale(double scale) {
 		logger.info("setScale("+scale+")");
-//		this.position.scale = scale;
 		this.position.setScale(scale);
 		for (Image image : this.imageList) {
 			image.setScale(scale);
@@ -393,7 +384,7 @@ public class Page {
 
 	@JsonIgnore
 	public BufferedImage joinImages(List<Image> imageList) {
-		logger.debug("joinImages(" + imageList + ")");
+		logger.info("joinImages(" + imageList + ")");
 		BufferedImage bufferedImage = null;
 		for (int i = 0; i < imageList.size(); i++) {
 			Image a = imageList.get(i);

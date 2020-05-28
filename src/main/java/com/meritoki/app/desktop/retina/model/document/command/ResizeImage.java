@@ -26,12 +26,18 @@ public class ResizeImage extends Command {
 		operation.uuid = this.document.cache.pressedImage.uuid;
 		this.operationList.push(operation);
 		//Logic
-		double scale = this.document.cache.pressedImage.scale;
-		System.out.println(scale);
-		System.out.println(this.document.cache.scaleFactor);
-		scale *= this.document.cache.scaleFactor;
-		System.out.println(scale);
-		this.document.cache.pressedImage.scale = scale;
+		this.document.cache.pressedPage.setBufferedImage(null);
+		this.document.cache.pressedImage.setBufferedImage(null);
+		double scale = this.document.cache.pressedImage.position.scale;
+//		System.out.println(scale);
+//		System.out.println(this.document.cache.scaleFactor);
+		if(this.document.cache.scaleFactor == -1) {
+			scale /= 1.1;
+		} else if(this.document.cache.scaleFactor == 1) {
+			scale *= 1.1;
+		}
+//		System.out.println(scale);
+		this.document.cache.pressedImage.setScale(scale);
 		
 		//Redo Operation
 		operation = new Operation();

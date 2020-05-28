@@ -51,6 +51,7 @@ public class Pattern {
 		Command executeScript = new ExecuteScript(this.document);
 		Command removePage = new RemovePage(this.document);
 		Command resizeImage = new ResizeImage(this.document);
+		Command scalePage = new ScalePage(this.document);
 		this.register("addPage", addPage);
 		this.register("setPage", setPage);
 		this.register("addShape", addShape);
@@ -61,6 +62,7 @@ public class Pattern {
 		this.register("executeScript", executeScript);
 		this.register("removePage", removePage);
 		this.register("resizeImage", resizeImage);
+		this.register("scalePage", scalePage);
 	}
 
 	@JsonIgnore
@@ -191,6 +193,17 @@ public class Pattern {
 						}
 					}
 				}
+				break;
+			}
+			case "scalePage":{
+				for(Operation o: command.operationList) {
+					if(o.sign == 0) {
+						if(o.object instanceof Double) {
+							this.document.getPage().setScale((double)o.object);
+						}
+					}
+				}
+				break;
 			}
 			default: {
 

@@ -61,7 +61,9 @@ public class OpenDialog extends javax.swing.JDialog {
 			this.model.system.file = this.openFileChooser.getSelectedFile();
 			this.model.document = (DocumentController.open(model.system.file));
 			if(this.model.system.user != null) { 
-				this.model.document.userList.add(this.model.system.user);
+				if(!this.model.document.userList.contains(this.model.system.user)) { 
+					this.model.document.userList.add(this.model.system.user);
+				}
 				this.model.document.pattern.user = this.model.system.user;
 			}
 			this.mainFrame.init();

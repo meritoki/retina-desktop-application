@@ -175,11 +175,15 @@ public class Image {
 			int h = before.getHeight();
 			BufferedImage after = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 			AffineTransform at = new AffineTransform();
-			logger.info("getBufferedImage() this.scale="+this.scale);
-			at.scale(this.scale, this.scale);
+			logger.info("getBufferedImage() this.position.scale="+this.position.scale);
+			at.scale(this.position.scale, this.position.scale);
 			AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
 			after = scaleOp.filter(before, after);
 			this.bufferedImage = after;
+		}
+		if (this.bufferedImage != null) {
+			this.position.absoluteDimension.width = this.bufferedImage.getWidth();
+			this.position.absoluteDimension.height = this.bufferedImage.getHeight();
 		}
 		return this.bufferedImage;
 	}
@@ -201,10 +205,10 @@ public class Image {
 			}
 		}
 
-		if (this.bufferedImage != null) {
-			this.position.absoluteDimension.width = this.bufferedImage.getWidth();
-			this.position.absoluteDimension.height = this.bufferedImage.getHeight();
-		}
+//		if (this.bufferedImage != null) {
+//			this.position.absoluteDimension.width = this.bufferedImage.getWidth();
+//			this.position.absoluteDimension.height = this.bufferedImage.getHeight();
+//		}
 	}
 
 	/**
@@ -230,9 +234,12 @@ public class Image {
 
 	@JsonIgnore
 	public void setBufferedImage(BufferedImage bufferedImage) {
+		logger.info("setBufferedImage("+bufferedImage+")");
 		this.bufferedImage = bufferedImage;
+		if(this.bufferedImage != null) {
 		this.position.absoluteDimension.width = this.bufferedImage.getWidth();
 		this.position.absoluteDimension.height = this.bufferedImage.getHeight();
+		}
 	}
 
 	@JsonIgnore

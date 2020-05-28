@@ -29,13 +29,6 @@ import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
-/**
- * Image extends JPanel and contains many of the functions and features for
- * preparing subset images to upload to a provider such as Zooniverse.
- * 
- * @author jorodriguez
- *
- */
 public class PagePanel extends JPanel implements MouseListener, KeyListener {
 
 	private static final long serialVersionUID = 3989576625299550361L;
@@ -56,6 +49,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 
 	public void setModel(Model model) {
 		this.model = model;
+		this.init();
 		this.setPreferredSize(this.getPreferredSize());
 	}
 	
@@ -84,7 +78,6 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			Document document = (this.model != null) ? this.model.document : null;
 			Page page = (document != null) ? document.getPage() : null;
 			if (page != null) {
-				page.setScale(this.model.document.cache.scale);
 				page.paint(graphics2D);
 			}
 		}
@@ -187,27 +180,38 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			switch (ke.getKeyCode()) {
 			case KeyEvent.VK_EQUALS: {
 				logger.debug("keyPressed(e) KeyEvent.VK_EQUALS");
-				double scale = this.model.document.cache.scale;
-				scale = scale * 1.5;
-				this.model.document.cache.scale = scale;
-				this.main.init();
+				this.model.document.cache.scaleOperator = '*';
+				this.model.document.cache.pressedPage = this.model.document.getPage();
+				try {
+					this.model.document.pattern.execute("scalePage");
+					this.main.init();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
 				break;
 			}
 			case KeyEvent.VK_PLUS: {
 				logger.debug("keyPressed(e) KeyEvent.VK_PLUS");
-				double scale = this.model.document.cache.scale;
-				scale = scale * 1.5;
-				this.model.document.cache.scale = scale;
-				this.main.init();
-				
+				this.model.document.cache.scaleOperator = '*';
+				this.model.document.cache.pressedPage = this.model.document.getPage();
+				try {
+					this.model.document.pattern.execute("scalePage");
+					this.main.init();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}	
 				break;
 			}
 			case KeyEvent.VK_MINUS: {
 				logger.debug("keyPressed(e) KeyEvent.VK_MINUS");
-				double scale = this.model.document.cache.scale;
-				scale = scale / 1.5;
-				this.model.document.cache.scale = scale;
-				this.main.init();
+				this.model.document.cache.scaleOperator = '/';
+				this.model.document.cache.pressedPage = this.model.document.getPage();
+				try {
+					this.model.document.pattern.execute("scalePage");
+					this.main.init();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
 				break;
 			}
 			case KeyEvent.VK_DOWN: {
@@ -236,10 +240,11 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_LEFT: {
 				logger.info("keyPressed(e) KeyEvent.VK_LEFT");
-				this.model.document.cache.scaleFactor = 0.9;
+				this.model.document.cache.scaleFactor = -1;
 				this.model.document.cache.pressedPage = this.model.document.getPage();
 				try {
 					this.model.document.pattern.execute("resizeImage");
+					
 					this.main.init();
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -248,11 +253,10 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_RIGHT: {
 				logger.info("keyPressed(e) KeyEvent.VK_RIGHT");
-				this.model.document.cache.scaleFactor = 1.1;
+				this.model.document.cache.scaleFactor = 1;
 				this.model.document.cache.pressedPage = this.model.document.getPage();
 				try {
 					this.model.document.pattern.execute("resizeImage");
-					this.model.document.getPage().setBufferedImage(null);
 					this.main.init();
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

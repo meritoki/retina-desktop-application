@@ -4,6 +4,9 @@ import java.util.UUID;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.meritoki.app.desktop.retina.model.document.Image;
+
 public class User {
 	@JsonProperty
 	public String uuid;
@@ -24,4 +27,19 @@ public class User {
         this.name = name;
         this.password = password;
     }
+	
+	/**
+	 * Function returns true if Users have the same uuid
+	 * 
+	 * @param user
+	 * @return flag
+	 */
+	@JsonIgnore
+	public boolean equals(User user) {
+		boolean flag = false;
+		if (this.uuid.equals(user.uuid)) {
+			flag = true;
+		}
+		return flag;
+	}
 }
