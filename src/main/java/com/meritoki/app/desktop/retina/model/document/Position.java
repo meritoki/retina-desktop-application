@@ -160,6 +160,7 @@ public class Position {
 	public void setOffset(double offset) {
 		logger.info("setOffset("+offset+")");
 		this.offset = offset;
+		this.scale();
 	}
 
 	@JsonIgnore

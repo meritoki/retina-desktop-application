@@ -28,7 +28,10 @@ public class ResizeImage extends Command {
 		//Logic
 		this.document.cache.pressedPage.setBufferedImage(null);
 		this.document.cache.pressedImage.setBufferedImage(null);
-		double scale = this.document.cache.pressedImage.position.scale;
+		logger.info("this.document.cache.pressedImage.position.scale="+this.document.cache.pressedImage.position.scale);
+		logger.info("this.document.cache.resizeScale="+this.document.cache.resizeScale);
+		double scale = (this.document.cache.resizeScale == this.document.cache.pressedImage.position.scale)?this.document.cache.resizeScale/this.document.cache.pressedImage.position.scale:this.document.cache.pressedImage.position.scale;
+		logger.info("execute() scale="+scale);
 		double factor = 1.05;
 		switch(this.document.cache.scaleOperator) {
 		case '*':{

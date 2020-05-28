@@ -426,28 +426,28 @@ public class Page {
 		if (bufferedImage != null) {
 			graphics2D.drawImage(bufferedImage, affineTransform, null);
 		}
-		List<Image> imageList = this.getImageList();
-		Image image = this.getImage();
-		Position p = null;
-		if (imageList != null) {
-			for (Image i : imageList) {
-				p = i.position;
-				if (image != null && i.uuid.equals(image.uuid)) {
-					graphics2D.setColor(Color.RED);
-				} else {
-					graphics2D.setColor(Color.YELLOW);
-				}
-				Rectangle2D.Double rectangle = new Rectangle2D.Double(p.point.x, p.point.y, p.dimension.width, p.dimension.height);
-				graphics2D.draw(rectangle);
-			}
-
-		}
+//		List<Image> imageList = this.getImageList();
+//		Image image = this.getImage();
+//		Position p = null;
+//		if (imageList != null) {
+//			for (Image i : imageList) {
+//				p = i.position;
+//				if (image != null && i.uuid.equals(image.uuid)) {
+//					graphics2D.setColor(Color.RED);
+//				} else {
+//					graphics2D.setColor(Color.YELLOW);
+//				}
+//				Rectangle2D.Double rectangle = new Rectangle2D.Double(p.point.x, p.point.y, p.dimension.width, p.dimension.height);
+//				graphics2D.draw(rectangle);
+//			}
+//
+//		}
 		List<Shape> shapeList = this.getMatrix().getShapeList();
 		Shape shape = this.getShape();
 		Shape previousShape = null;
 		if (shapeList != null) {
 			for (Shape s : shapeList) {
-				p = s.position;
+				Position position = s.position;
 				if (shape != null && s.uuid.equals(shape.uuid)) {
 					graphics2D.setColor(Color.RED);
 				} else {
@@ -455,21 +455,21 @@ public class Page {
 				}
 				switch (s.type) {
 				case ELLIPSE: {
-					Ellipse2D.Double ellipse = new Ellipse2D.Double(p.point.x, p.point.y, p.dimension.width, p.dimension.height);
+					Ellipse2D.Double ellipse = new Ellipse2D.Double(position.point.x, position.point.y, position.dimension.width, position.dimension.height);
 					graphics2D.draw(ellipse);
 					break;
 				}
 				case RECTANGLE: {
-					Rectangle2D.Double rectangle = new Rectangle2D.Double(p.point.x, p.point.y, p.dimension.width, p.dimension.height);
+					Rectangle2D.Double rectangle = new Rectangle2D.Double(position.point.x, position.point.y, position.dimension.width, position.dimension.height);
 					graphics2D.draw(rectangle);
 					break;
 				}
 				}
 				if (previousShape != null) {
-					Position position = previousShape.position;
+					position = previousShape.position;
 					graphics2D.drawLine((int) (position.point.x + (position.dimension.width / 2)),
-							(int) (position.point.y + (position.dimension.height / 2)), (int) (p.point.x + (p.dimension.width / 2)),
-							(int) (p.point.y + (p.dimension.height / 2)));
+							(int) (position.point.y + (position.dimension.height / 2)), (int) (position.point.x + (position.dimension.width / 2)),
+							(int) (position.point.y + (position.dimension.height / 2)));
 				}
 				previousShape = s;
 			}

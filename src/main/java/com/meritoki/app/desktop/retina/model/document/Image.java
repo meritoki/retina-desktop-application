@@ -230,7 +230,7 @@ public class Image {
 
 	@JsonIgnore
 	public void setOffset(double offset) {
-		this.position.offset = offset;
+		this.position.setOffset(offset);
 		for (Shape shape : this.shapeList) {
 			shape.position.setOffset(offset);
 		}
@@ -354,23 +354,3 @@ public class Image {
 		return string;
 	}
 }
-
-/**
- * DIMENSION 4 Function removes Shape from shapeList using uuid.
- * 
- * @param shape
- */
-//@JsonIgnore
-//public Shape removeShape(String uuid) {
-//	Shape s = null;
-//	for (int i = 0; i < this.shapeList.size(); i++) {
-//		s = this.shapeList.get(i);
-//		if (s.uuid.equals(uuid)) {
-//			this.shapeList.remove(i);
-//			break;
-//		} else {
-//			s = null;
-//		}
-//	}
-//	return s;
-//}
