@@ -338,9 +338,18 @@ public class Position {
 			break;
 		}
 		}
+		//changing the absolute point is required, this dictates the raw dimensions of a shape
+		//the problem appears to be with scaling in and out, when changing the absolute point and dimension b/c this fundamentally changes the 
+		//original shape and how it is rendered on the page
+		//there is a scaling issue that has to be accounted for in this process.
+		startPoint.x = startPoint.x/this.scale - this.offset/this.addScale;
+		startPoint.y = startPoint.y/this.scale - this.margin/this.addScale;
+		stopPoint.x = stopPoint.x/this.scale - this.offset/this.addScale;
+		stopPoint.y = stopPoint.y/this.scale - this.offset/this.addScale;
 		this.absolutePoint = new Point(startPoint);
+//		this.absoluteDimension = new Dimension(100,100);
 		this.absoluteDimension = new Dimension(stopPoint.x - this.absolutePoint.x,stopPoint.y - this.absolutePoint.y);
-//		this.relativePoint = this.getRelativePoint();
+		this.relativePoint = this.getRelativePoint();
 		this.scale();
 	}
 
