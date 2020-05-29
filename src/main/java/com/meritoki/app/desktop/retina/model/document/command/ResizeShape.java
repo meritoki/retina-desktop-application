@@ -29,7 +29,8 @@ public class ResizeShape extends Command {
 		operation.uuid = this.document.cache.pressedShape.uuid;
 		this.operationList.push(operation);
 		Point releasedPoint = new Point(this.document.cache.releasedPoint);
-		this.document.cache.pressedShape.position.resizePoint(releasedPoint, this.document.cache.selection);
+		Shape pressedShape = this.document.cache.pressedShape;
+		pressedShape.position.resizePoint(releasedPoint, this.document.cache.selection);
 		operation = new Operation();
 		operation.object = new Shape(this.document.cache.pressedShape,true);
 		operation.sign = 1;

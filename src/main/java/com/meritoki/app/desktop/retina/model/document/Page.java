@@ -445,7 +445,6 @@ public class Page {
 		if (shapeList != null) {
 			for (Shape s : shapeList) {
 				Position position = s.position;
-				logger.info("@@@@@@@@@@="+position);
 				if (shape != null && s.uuid.equals(shape.uuid)) {
 					graphics2D.setColor(Color.RED);
 				} else {

@@ -284,9 +284,9 @@ public class Position {
 
 	@JsonIgnore
 	public boolean intersectPoint(Point point) {
-		logger.info("intersectPoint(" + point + ")");
 		boolean flag = false;
 		if (this.selectionPoint(point) != null) {
+			logger.info("intersectPoint(" + point + ")");
 			flag = true;
 		}
 		return flag;
@@ -336,8 +336,7 @@ public class Position {
 		}
 		}
 		this.absolutePoint = new Point(startPoint);
-		this.absoluteDimension.width = stopPoint.x - this.absolutePoint.x;
-		this.absoluteDimension.height = stopPoint.y - this.absolutePoint.y;
+		this.absoluteDimension = new Dimension(stopPoint.x - this.absolutePoint.x,stopPoint.y - this.absolutePoint.y);
 		this.relativePoint = this.getRelativePoint();
 	}
 

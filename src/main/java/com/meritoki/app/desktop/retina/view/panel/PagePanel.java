@@ -102,10 +102,10 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 	 * is the release point.
 	 */
 	@Override
-	public void mousePressed(MouseEvent e) {
+	public void mousePressed(MouseEvent me) {
 		Point point = new Point();
-		point.x = e.getX();
-		point.y = e.getY();
+		point.x = me.getX();
+		point.y = me.getY();
 		this.model.document.cache.pressedPoint = point;
 		logger.info("mousePressed(e) point="+point);
 		this.model.document.cache.pressedImage = this.model.document.getImage(point);
