@@ -145,6 +145,7 @@ public class Position {
 		logger.info("addAbsoluteDimension("+dimension+")");
 		this.absoluteDimension.width += dimension.width;
 		this.absoluteDimension.height += dimension.height;
+		logger.info("addAbsoluteDimension("+dimension+") this.absoluteDimension="+this.absoluteDimension);
 		this.scale();
 	}
 
@@ -164,6 +165,8 @@ public class Position {
 		this.point.y *= this.scale;
 		this.dimension.width *= this.scale;
 		this.dimension.height *= this.scale;
+		logger.info("scale() this.point="+this.point);
+		logger.info("scale() this.dimension="+this.dimension);
 	}
 
 	@JsonIgnore

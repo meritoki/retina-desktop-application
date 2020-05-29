@@ -200,7 +200,7 @@ public class Page {
 	public BufferedImage getShapeBufferedImage(Shape shape) {
 		BufferedImage bufferedImage = null;
 		if (this.getBufferedImage() != null) {
-//			bufferedImage = this.getBufferedImage().getSubimage((int)shape.position.point.x, (int)shape.position.point.y, (int)shape.position.dimension.width, (int)shape.position.dimension.height);
+			bufferedImage = this.getBufferedImage().getSubimage((int)shape.position.point.x, (int)shape.position.point.y, (int)shape.position.dimension.width, (int)shape.position.dimension.height);
 		}
 		return bufferedImage;
 	}
@@ -378,6 +378,7 @@ public class Page {
 	public BufferedImage joinImages(List<Image> imageList) {
 		logger.info("joinImages(" + imageList + ")");
 		BufferedImage bufferedImage = null;
+		double offset = 0;
 		for (int i = 0; i < imageList.size(); i++) {
 			Image a = imageList.get(i);
 			if (bufferedImage == null) {
@@ -390,15 +391,15 @@ public class Page {
 				graphics2D.setColor(Color.BLACK);
 				graphics2D.drawImage(a.getBufferedImage(), null, 0, (int)(a.position.margin));
 				graphics2D.dispose();
+				offset = a.position.absoluteDimension.width;
 			}
 			if (i + 1 < imageList.size()) {
 				Image b = imageList.get(i + 1);
-				b.setOffset(a.position.absoluteDimension.width);
+				b.setOffset(offset);
 				int w = bufferedImage.getWidth();
 				int h = bufferedImage.getHeight();
 				int width = w + b.getBufferedImage().getWidth();
 				int height = Math.max(h, b.getBufferedImage().getHeight() + (int) b.position.margin);
-				
 				BufferedImage bI = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 				Graphics2D graphics2D = bI.createGraphics();
 				Color oldColor = graphics2D.getColor();
@@ -409,6 +410,7 @@ public class Page {
 				graphics2D.drawImage(b.getBufferedImage(), null, w, (int) (b.position.margin));
 				graphics2D.dispose();
 				bufferedImage = bI;
+				offset+= b.position.absoluteDimension.width;
 			}
 		}
 		return bufferedImage;

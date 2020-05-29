@@ -33,7 +33,7 @@ public class MoveShape extends Command {
 		this.operationList.push(operation);
 		this.document.cache.movedPoint = this.getMovedPoint(new Point(this.document.cache.releasedPoint), new Point(this.document.cache.pressedPoint));
 		Shape shape = null;
-		if (this.document.cache.releasedImage != null &&!this.document.cache.pressedImage.equals(this.document.cache.releasedImage)) {
+		if (this.document.cache.releasedImage != null && !this.document.cache.pressedImage.equals(this.document.cache.releasedImage)) {
 			shape = new Shape(this.document.cache.pressedShape,true);
 			shape.position = new Position(this.document.cache.pressedShape.position);
 			shape.position.movePoint(this.document.cache.movedPoint);

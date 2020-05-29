@@ -77,6 +77,11 @@ public class Shape {
 		this.position.setScale(scale);
 	}
 	
+	public void setRelativeScale(double scale) {
+		logger.info("setRelativeScale("+scale+")");
+		this.position.setRelativeScale(scale);
+	}
+	
 	public void setMargin(double margin) {
 		logger.info("setMargin("+margin+")");
 		this.position.setMargin(margin);

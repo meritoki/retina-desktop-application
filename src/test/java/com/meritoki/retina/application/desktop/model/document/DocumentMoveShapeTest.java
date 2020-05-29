@@ -45,7 +45,6 @@ public class DocumentMoveShapeTest {
 		page = new Page();
 		page.addImage(new Image(new File("./data/image/04.jpg")));
 		page.addImage(new Image(new File("./data/image/05.jpg")));
-		page.addImage(new Image(new File("./data/image/06.jpg")));
 		pageTwoUUID = page.uuid;
 		document.addPage(page);
 		assertEquals(document.pageList.size(), 3);
@@ -54,11 +53,12 @@ public class DocumentMoveShapeTest {
 	@Test
 	@Order(1)
 	public void addShapes() {
+		//Page Zero
 		assertEquals(document.setIndex(0), true);
 		assertEquals(document.getPage().setIndex(0), true);
 		document.cache.pressedImage = document.getImage();
-		int x = (int) (document.cache.pressedImage.position.absoluteDimension.width / 2 - dimension / 2);
-		int y = (int) (document.cache.pressedImage.position.absoluteDimension.height / 2 - dimension / 2);
+		int x = (int) (document.cache.pressedImage.position.dimension.width / 2 - dimension / 2);
+		int y = (int) (document.cache.pressedImage.position.dimension.height / 2 - dimension / 2);
 		int width = dimension;
 		int height = dimension;
 		document.cache.pressedPoint = new Point(x, y);
@@ -68,10 +68,12 @@ public class DocumentMoveShapeTest {
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		}
+		//Page One
 		assertEquals(document.setIndex(1), true);
+		assertEquals(document.getPage().setIndex(0),true);
 		document.cache.pressedImage = document.getImage();
-		x = (int) (document.cache.pressedImage.position.absoluteDimension.width / 2 - dimension / 2);
-		y = (int) (document.cache.pressedImage.position.absoluteDimension.height / 2 - dimension / 2);
+		x = (int) (document.cache.pressedImage.position.dimension.width / 2 - dimension / 2);
+		y = (int) (document.cache.pressedImage.position.dimension.height / 2 - dimension / 2);
 		width = dimension;
 		height = dimension;
 		document.cache.pressedPoint = new Point(x, y);
@@ -81,11 +83,12 @@ public class DocumentMoveShapeTest {
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		}
-
+		//Page Two
 		assertEquals(document.setIndex(2), true);
+		assertEquals(document.getPage().setIndex(1),true);
 		document.cache.pressedImage = document.getImage();
-		x = (int) (document.cache.pressedImage.position.absoluteDimension.width / 2 - dimension / 2);
-		y = (int) (document.cache.pressedImage.position.absoluteDimension.height / 2 - dimension / 2);
+		x = (int) (document.cache.pressedImage.position.dimension.width / 2 - dimension / 2);
+		y = (int) (document.cache.pressedImage.position.dimension.height / 2 - dimension / 2);
 		width = dimension;
 		height = dimension;
 		document.cache.pressedPoint = new Point(x, y);
@@ -100,14 +103,54 @@ public class DocumentMoveShapeTest {
 	@Test
 	@Order(2)
 	public void moveShapes() {
+		//Movement in Single Page
 		assertEquals(document.setIndex(0), true);
 		assertEquals(document.getPage().setIndex(0), true);
-		int x = (int) (document.cache.pressedImage.position.absoluteDimension.width / 2);
-		int y = (int) (document.cache.pressedImage.position.absoluteDimension.height / 2);
+		document.cache.pressedImage = document.getPage().getImage();
+		int x = (int) (document.cache.pressedImage.position.dimension.width / 2);
+		int y = (int) (document.cache.pressedImage.position.dimension.height / 2);
 		document.cache.pressedPoint = new Point(x, y);
 		document.cache.pressedShape = document.getPage().getShape(document.cache.pressedPoint);
-		x = (int) (document.cache.pressedImage.position.absoluteDimension.width / 2);
-		y = (int) (document.cache.pressedImage.position.absoluteDimension.height / 4);
+		x = (int) (document.cache.pressedImage.position.dimension.width / 2);
+		y = (int) (document.cache.pressedImage.position.dimension.height / 4);
+		document.cache.releasedPoint = new Point(x, y);
+		try {
+			document.pattern.execute("moveShape");
+		} catch (Exception e) {
+			logger.error("Exception " + e.getMessage());
+		}
+		assertNotNull(document.getPage().getShape(new Point(x,y)));
+		//Movement from Left to Right
+		assertEquals(document.setIndex(1), true);
+		assertEquals(document.getPage().setIndex(0), true);
+		document.cache.pressedImage = document.getPage().getImage();
+		assertEquals(document.getPage().setIndex(1), true);
+		document.cache.releasedImage = document.getPage().getImage();
+		x = (int) (document.cache.pressedImage.position.dimension.width / 2);
+		y = (int) (document.cache.pressedImage.position.dimension.height / 2);
+		document.cache.pressedPoint = new Point(x, y);
+		document.cache.pressedShape = document.getPage().getShape(document.cache.pressedPoint);
+		x = (int) (document.cache.releasedImage.position.point.x+document.cache.releasedImage.position.dimension.width / 2);
+		y = (int) (document.cache.releasedImage.position.point.y+document.cache.releasedImage.position.dimension.height / 2);
+		document.cache.releasedPoint = new Point(x, y);
+		try {
+			document.pattern.execute("moveShape");
+		} catch (Exception e) {
+			logger.error("Exception " + e.getMessage());
+		}
+		assertNotNull(document.getPage().getShape(new Point(x,y)));
+		//Movement from Right to Left
+		assertEquals(document.setIndex(2), true);
+		assertEquals(document.getPage().setIndex(1), true);
+		document.cache.pressedImage = document.getPage().getImage();
+		assertEquals(document.getPage().setIndex(0), true);
+		document.cache.releasedImage = document.getPage().getImage();
+		x = (int) (document.cache.pressedImage.position.dimension.width / 2);
+		y = (int) (document.cache.pressedImage.position.dimension.height / 2);
+		document.cache.pressedPoint = new Point(x, y);
+		document.cache.pressedShape = document.getPage().getShape(document.cache.pressedPoint);
+		x = (int) (document.cache.releasedImage.position.dimension.width / 2);
+		y = (int) (document.cache.releasedImage.position.dimension.height / 2);
 		document.cache.releasedPoint = new Point(x, y);
 		try {
 			document.pattern.execute("moveShape");
@@ -118,16 +161,25 @@ public class DocumentMoveShapeTest {
 	}
 	
 	@Test
-	@Order(3) 
+	@Order(3)
+	public void save() {
+		DocumentController.save(new java.io.File("./test/document-move-shape-test.json"), document);
+	}
+	
+	@Test
+	@Order(4) 
 	public void undoMoveShape() {
+		document.pattern.undo();
+		document.pattern.undo();
 		document.pattern.undo();
 	}
 	
 	@Test
-	@Order(4)
+	@Order(5)
 	public void verifyShapePosition() {
 		assertEquals(document.setIndex(0), true);
 		assertEquals(document.getPage().setIndex(0), true);
+		document.cache.pressedImage = document.getPage().getImage();
 		int x = (int) (document.cache.pressedImage.position.absoluteDimension.width / 2);
 		int y = (int) (document.cache.pressedImage.position.absoluteDimension.height / 2);
 		assertNotNull(document.getPage().getShape(new Point(x,y)));

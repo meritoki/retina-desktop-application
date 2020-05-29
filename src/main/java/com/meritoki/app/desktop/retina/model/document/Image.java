@@ -69,7 +69,6 @@ public class Image {
 		if(this.file == null) {
 			this.file = new File(this.filePath+getSeperator()+this.fileName);
 		}
-		this.getBufferedImage();
 	}
 	
 	public static String getSeperator() {
@@ -236,7 +235,7 @@ public class Image {
 		logger.info("setRelativeScale("+scale+")");
 		this.position.setRelativeScale(scale);
 		for (Shape shape : this.shapeList) {
-//			shape.setRelativeScale(scale);
+			shape.setRelativeScale(scale);
 		}
 	}
 

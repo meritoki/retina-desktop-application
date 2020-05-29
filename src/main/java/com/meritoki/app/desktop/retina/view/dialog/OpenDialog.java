@@ -60,7 +60,7 @@ public class OpenDialog extends javax.swing.JDialog {
 		if (result == JFileChooser.APPROVE_OPTION) {
 			this.model.system.file = this.openFileChooser.getSelectedFile();
 			this.model.document = (DocumentController.open(model.system.file));
-			if(this.model.system.user != null) { 
+			if(this.model.document.userList != null && this.model.system.user != null) { 
 				if(!this.model.document.userList.contains(this.model.system.user)) { 
 					this.model.document.userList.add(this.model.system.user);
 				}
