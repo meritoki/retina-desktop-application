@@ -523,8 +523,8 @@ class DocumentTest {
 			assertNotNull(s.bufferedImage);
 		}
 		Zooniverse zooniverse = new Zooniverse();
-		NodeController.deleteDirectory(new File("./manifest-test-A"));
-		zooniverse.generateManifest("./manifest-test-A", shapeList);
+		NodeController.deleteDirectory(new File("./test/manifest-test-A"));
+		zooniverse.generateManifest("./test/manifest-test-A", shapeList);
 	}
 
 	@Test
@@ -668,128 +668,128 @@ class DocumentTest {
 			assertNotNull(image.getShape(new Point(x,y)));
 		}
 	}
-//	
-//	@Test
-//	@Order(13) 
-//	public void setShapeData() {
-//		assertEquals(document.setIndex(0), true);
-//		assertEquals(document.getPage().setIndex(0),true);
-//		for(Image image: document.getPage().getImageList()) {
-//			document.getPage().setImage(image.uuid);
-//			int x = (int)(image.position.absoluteDimension.width/2);
-//			int y = (int)(image.position.absoluteDimension.height/2);
-//			Shape shape = image.getShape(new Point(x,y));
-//			assertNotNull(shape);
-//			Data data = new Data();
-//			data.text = new Text("Hello World 0");
-//			shape.setData(data);
-//		}
-//		
-//		assertEquals(document.setIndex(1), true);
-//		assertEquals(document.getPage().setIndex(0),true);
-//		for(Image image: document.getPage().getImageList()) {
-//			document.getPage().setImage(image.uuid);
-//			int x = (int)(image.position.absoluteDimension.width/2);
-//			int y = (int)(image.position.absoluteDimension.height/2);
-//			Shape shape = image.getShape(new Point(x,y));
-//			assertNotNull(shape);
-//			Data data = new Data();
-//			data.text = new Text("Hello World 1");
-//			shape.setData(data);
-//		}
-//		
-//		assertEquals(document.setIndex(2), true);
-//		assertEquals(document.getPage().setIndex(0),true);
-//		for(Image image: document.getPage().getImageList()) {
-//			document.getPage().setImage(image.uuid);
-//			int x = (int)(image.position.absoluteDimension.width/2);
-//			int y = (int)(image.position.absoluteDimension.height/2);
-//			Shape shape = image.getShape(new Point(x,y));
-//			assertNotNull(shape);
-//			Data data = new Data();
-//			data.text = new Text("Hello World 2");
-//			shape.setData(data);
-//		}
-//		
-//		assertEquals(document.setIndex(3), true);
-//		assertEquals(document.getPage().setIndex(0),true);
-//		for(Image image: document.getPage().getImageList()) {
-//			document.getPage().setImage(image.uuid);
-//			int x = (int)(image.position.absoluteDimension.width/2);
-//			int y = (int)(image.position.absoluteDimension.height/2);
-//			Shape shape = image.getShape(new Point(x,y));
-//			assertNotNull(shape);
-//			Data data = new Data();
-//			data.text = new Text("Hello World 3");
-//			shape.setData(data);
-//		}
-//	}
-//	
-//	@Test
-//	@Order(14)
-//	public void saveShapeData() {
-//		DocumentController.save(new java.io.File("./test/document-test-b.json"), document);
-//	}
-//	
-//	@Test
-//	@Order(15)
-//	public void openShapeData() {
-//		document = DocumentController.open(new java.io.File("./test/document-test-b.json"));
-//		assertEquals(document.setIndex(0), true);
-//		assertEquals(document.getPage().setIndex(0),true);
-//		for(Image image: document.getPage().getImageList()) {
-//			document.getPage().setImage(image.uuid);
-//			int x = (int)(image.position.absoluteDimension.width/2);
-//			int y = (int)(image.position.absoluteDimension.height/2);
-//			Shape shape = image.getShape(new Point(x,y));
-//			assertNotNull(shape);
-//			assertEquals(shape.data.text.value, "Hello World 0");
-//		}
-//		
-//		assertEquals(document.setIndex(1), true);
-//		assertEquals(document.getPage().setIndex(0),true);
-//		for(Image image: document.getPage().getImageList()) {
-//			document.getPage().setImage(image.uuid);
-//			int x = (int)(image.position.absoluteDimension.width/2);
-//			int y = (int)(image.position.absoluteDimension.height/2);
-//			Shape shape = image.getShape(new Point(x,y));
-//			assertNotNull(shape);
-//			assertEquals(shape.data.text.value, "Hello World 1");
-//		}
-//		
-//		assertEquals(document.setIndex(2), true);
-//		assertEquals(document.getPage().setIndex(0),true);
-//		for(Image image: document.getPage().getImageList()) {
-//			document.getPage().setImage(image.uuid);
-//			int x = (int)(image.position.absoluteDimension.width/2);
-//			int y = (int)(image.position.absoluteDimension.height/2);
-//			Shape shape = image.getShape(new Point(x,y));
-//			assertNotNull(shape);
-//			assertEquals(shape.data.text.value, "Hello World 2");
-//		}
-//		
-//		assertEquals(document.setIndex(3), true);
-//		assertEquals(document.getPage().setIndex(0),true);
-//		for(Image image: document.getPage().getImageList()) {
-//			document.getPage().setImage(image.uuid);
-//			int x = (int)(image.position.absoluteDimension.width/2);
-//			int y = (int)(image.position.absoluteDimension.height/2);
-//			Shape shape = image.getShape(new Point(x,y));
-//			assertNotNull(shape);
-//			assertEquals(shape.data.text.value, "Hello World 3");
-//		}
-//	}	
-//	
-//	@Test
-//	@Order(16)
-//	public void getShapeBufferedImage() {
-//		assertEquals(document.setIndex(0), true);
-//		List<Shape> shapeList = document.getPage().getShapeList();
-//		for(Shape s: shapeList) {
-//			assertNotNull(s.bufferedImage);
-//		}
-//		Zooniverse zooniverse = new Zooniverse();
-//		NodeController.deleteDirectory(new File("./manifest-test-B"));
-//		zooniverse.generateManifest("./manifest-test-B", shapeList);
-//	}
+	
+	@Test
+	@Order(13) 
+	public void setShapeData() {
+		assertEquals(document.setIndex(0), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.dimension.width/2);
+			int y = (int)(image.position.dimension.height/2);
+			Shape shape = image.getShape(new Point(x,y));
+			assertNotNull(shape);
+			Data data = new Data();
+			data.text = new Text("Hello World 0");
+			shape.setData(data);
+		}
+		
+		assertEquals(document.setIndex(1), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.dimension.width/2);
+			int y = (int)(image.position.dimension.height/2);
+			Shape shape = image.getShape(new Point(x,y));
+			assertNotNull(shape);
+			Data data = new Data();
+			data.text = new Text("Hello World 1");
+			shape.setData(data);
+		}
+		
+		assertEquals(document.setIndex(2), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.dimension.width/2);
+			int y = (int)(image.position.dimension.height/2);
+			Shape shape = image.getShape(new Point(x,y));
+			assertNotNull(shape);
+			Data data = new Data();
+			data.text = new Text("Hello World 2");
+			shape.setData(data);
+		}
+		
+		assertEquals(document.setIndex(3), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.dimension.width/2);
+			int y = (int)(image.position.dimension.height/2);
+			Shape shape = image.getShape(new Point(x,y));
+			assertNotNull(shape);
+			Data data = new Data();
+			data.text = new Text("Hello World 3");
+			shape.setData(data);
+		}
+	}
+	
+	@Test
+	@Order(14)
+	public void saveShapeData() {
+		DocumentController.save(new java.io.File("./test/document-test-b.json"), document);
+	}
+	
+	@Test
+	@Order(15)
+	public void openShapeData() {
+		document = DocumentController.open(new java.io.File("./test/document-test-b.json"));
+		assertEquals(document.setIndex(0), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.dimension.width/2);
+			int y = (int)(image.position.dimension.height/2);
+			Shape shape = image.getShape(new Point(x,y));
+			assertNotNull(shape);
+			assertEquals(shape.data.text.value, "Hello World 0");
+		}
+		
+		assertEquals(document.setIndex(1), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.dimension.width/2);
+			int y = (int)(image.position.dimension.height/2);
+			Shape shape = image.getShape(new Point(x,y));
+			assertNotNull(shape);
+			assertEquals(shape.data.text.value, "Hello World 1");
+		}
+		
+		assertEquals(document.setIndex(2), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.dimension.width/2);
+			int y = (int)(image.position.dimension.height/2);
+			Shape shape = image.getShape(new Point(x,y));
+			assertNotNull(shape);
+			assertEquals(shape.data.text.value, "Hello World 2");
+		}
+		
+		assertEquals(document.setIndex(3), true);
+		assertEquals(document.getPage().setIndex(0),true);
+		for(Image image: document.getPage().getImageList()) {
+			document.getPage().setImage(image.uuid);
+			int x = (int)(image.position.dimension.width/2);
+			int y = (int)(image.position.dimension.height/2);
+			Shape shape = image.getShape(new Point(x,y));
+			assertNotNull(shape);
+			assertEquals(shape.data.text.value, "Hello World 3");
+		}
+	}	
+	
+	@Test
+	@Order(16)
+	public void getShapeBufferedImage() {
+		assertEquals(document.setIndex(0), true);
+		List<Shape> shapeList = document.getPage().getShapeList();
+		for(Shape s: shapeList) {
+			assertNotNull(s.bufferedImage);
+		}
+		Zooniverse zooniverse = new Zooniverse();
+		NodeController.deleteDirectory(new File("./test/manifest-test-B"));
+		zooniverse.generateManifest("./test/manifest-test-B", shapeList);
+	}
 }
