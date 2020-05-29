@@ -82,6 +82,7 @@ public class Position {
 	}
 	
 	public Position(Point absolutePoint, Dimension absoluteDimension, double addScale, double offset, double margin) {
+		logger.info("Position("+absolutePoint+", "+absoluteDimension+", "+addScale+", "+offset+", "+margin+")");
 		this.addScale = addScale;
 		this.offset = offset;
 		this.margin = margin;
@@ -123,7 +124,7 @@ public class Position {
 	@JsonIgnore
 	public Point getRelativePoint() {
 		Point point = new Point();
-		point.x = this.absolutePoint.x - offset;
+		point.x = this.absolutePoint.x - offset * this.addScale;
 		point.y = this.absolutePoint.y - margin * this.addScale;
 		return point;
 	}
@@ -347,7 +348,6 @@ public class Position {
 		stopPoint.x = stopPoint.x/this.scale - this.offset/this.addScale;
 		stopPoint.y = stopPoint.y/this.scale - this.offset/this.addScale;
 		this.absolutePoint = new Point(startPoint);
-//		this.absoluteDimension = new Dimension(100,100);
 		this.absoluteDimension = new Dimension(stopPoint.x - this.absolutePoint.x,stopPoint.y - this.absolutePoint.y);
 		this.relativePoint = this.getRelativePoint();
 		this.scale();
