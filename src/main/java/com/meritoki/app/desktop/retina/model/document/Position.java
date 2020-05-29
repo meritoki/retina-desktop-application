@@ -241,12 +241,15 @@ public class Position {
 		boolean flag = false;
 		Point startPoint = this.getStartPoint();
 		Point stopPoint = this.getStopPoint();
+		logger.info(startPoint);
+		logger.info(stopPoint);
 		if (startPoint.x < stopPoint.x && startPoint.y < stopPoint.y) {
 			if (startPoint.x <= point.x && point.x <= stopPoint.x && startPoint.y <= point.y
 					&& point.y <= stopPoint.y) {
 				flag = true;
 			}
 		}
+		logger.info("containsPoint("+point+") flag="+flag);
 		return flag;
 	}
 

@@ -200,7 +200,7 @@ public class Page {
 	public BufferedImage getShapeBufferedImage(Shape shape) {
 		BufferedImage bufferedImage = null;
 		if (this.getBufferedImage() != null) {
-			bufferedImage = this.getBufferedImage().getSubimage((int)shape.position.point.x, (int)shape.position.point.y, (int)shape.position.dimension.width, (int)shape.position.dimension.height);
+//			bufferedImage = this.getBufferedImage().getSubimage((int)shape.position.point.x, (int)shape.position.point.y, (int)shape.position.dimension.width, (int)shape.position.dimension.height);
 		}
 		return bufferedImage;
 	}
@@ -303,7 +303,7 @@ public class Page {
 		this.imageList.add(image);
 		image.setScale(this.position.scale);
 		image.setOffset(this.position.absoluteDimension.width);
-		this.position.addAbsoluteDimension(new Dimension(image.position.absoluteDimension.width,0));
+		this.position.addAbsoluteDimension(new Dimension(image.position.absoluteDimension.width,image.position.absoluteDimension.height));//added height to fix contain point method and allow MoveShapeTest to work
 		for(Shape shape: image.shapeList) {
 			shape.position.setOffset(image.position.offset);
 		}

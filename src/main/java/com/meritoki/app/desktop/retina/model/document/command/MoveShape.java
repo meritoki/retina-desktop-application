@@ -34,7 +34,7 @@ public class MoveShape extends Command {
 		operation.uuid = this.document.cache.pressedShape.uuid;
 		this.operationList.push(operation);
 		//Logic
-		Page pressedPage = this.document.cache.pressedPage;
+		Page pressedPage = this.document.getPage();
 		Shape pressedShape = this.document.cache.pressedShape;
 		Image pressedImage = this.document.cache.pressedImage;
 		Image releasedImage = this.document.cache.releasedImage;
