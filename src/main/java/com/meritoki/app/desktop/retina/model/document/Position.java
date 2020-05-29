@@ -249,7 +249,7 @@ public class Position {
 
 	@JsonIgnore
 	public Selection selectionPoint(Point point) {
-		logger.info("selectionPoint(" + point + ")");
+		
 		Selection selection = null;
 		Point startPoint = this.getStartPoint();
 		Point stopPoint = this.getStopPoint();
@@ -279,18 +279,19 @@ public class Position {
 				&& point.y < stopPoint.y) {
 			selection = Selection.RIGHT;
 		}
+		logger.info("selectionPoint(" + point + ") selection="+selection);
 		return selection;
 	}
 
-	@JsonIgnore
-	public boolean intersectPoint(Point point) {
-		boolean flag = false;
-		if (this.selectionPoint(point) != null) {
-			logger.info("intersectPoint(" + point + ")");
-			flag = true;
-		}
-		return flag;
-	}
+//	@JsonIgnore
+//	public boolean intersectPoint(Point point) {
+//		boolean flag = false;
+//		if (this.selectionPoint(point) != null) {
+//			logger.info("intersectPoint(" + point + ")");
+//			flag = true;
+//		}
+//		return flag;
+//	}
 
 	@JsonIgnore
 	public void resizePoint(Point point, Selection selection) {
@@ -338,6 +339,7 @@ public class Position {
 		this.absolutePoint = new Point(startPoint);
 		this.absoluteDimension = new Dimension(stopPoint.x - this.absolutePoint.x,stopPoint.y - this.absolutePoint.y);
 		this.relativePoint = this.getRelativePoint();
+		this.scale();
 	}
 
 	@JsonIgnore
