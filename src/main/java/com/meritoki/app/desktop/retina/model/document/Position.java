@@ -161,9 +161,8 @@ public class Position {
 
 	@JsonIgnore
 	public void scale() {
-		logger.info("scale()");
 		if (this.relativePoint != null) {
-			this.point.x = this.relativePoint.x + this.offset * this.addScale;
+			this.point.x = this.relativePoint.x + this.offset * this.addScale;// this was apparent fix for shift margin with shape;
 			this.point.y = this.relativePoint.y + this.margin * this.addScale;
 		} else {
 			this.point.x = this.absolutePoint.x + this.offset;
@@ -175,8 +174,8 @@ public class Position {
 		this.point.y *= this.scale;
 		this.dimension.width *= this.scale;
 		this.dimension.height *= this.scale;
-		logger.info("scale() this.point="+this.point);
-		logger.info("scale() this.dimension="+this.dimension);
+//		logger.info("scale() this.point="+this.point);
+//		logger.info("scale() this.dimension="+this.dimension);
 	}
 
 	@JsonIgnore

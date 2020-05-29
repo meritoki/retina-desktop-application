@@ -43,7 +43,7 @@ public class MoveShape extends Command {
 		if (releasedImage != null && !pressedImage.equals(releasedImage)) {
 			newShape = new Shape(pressedShape,true);
 			newShape.position = new Position(pressedShape.position);
-			newShape.position.movePoint(movedPoint);//flag, the issue is appearing here;
+			newShape.position.movePoint(movedPoint);
 			pressedImage.removeShape(newShape.uuid);
 			releasedImage.addShape(newShape);
 		} else {

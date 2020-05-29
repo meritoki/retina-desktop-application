@@ -187,7 +187,7 @@ public class DocumentMoveShapeTest {
 		assertEquals(document.getPage().setIndex(0), true);
 		Image image = document.getPage().getImage();
 		image.setMargin(100);
-		int x = (int)(image.position.point.x+image.position.dimension.width/2);
+		int x = (int)(image.position.dimension.width/2);
 		int y = (int)(image.position.point.y+image.position.dimension.height/4);
 		assertNotNull(image.getShape(new Point(x,y)));
 		logger.info("right");
@@ -195,18 +195,20 @@ public class DocumentMoveShapeTest {
 		assertEquals(document.getPage().setIndex(1), true);
 		image = document.getPage().getImage();
 		image.setMargin(100);
-		x = (int)(image.position.point.x+image.position.dimension.width/2);
+		logger.info("@@@@@ image"+image);
+		logger.info("##### shapeList+"+image.shapeList);
+		x = (int)(image.position.dimension.width/2);
 		y = (int)(image.position.point.y+image.position.dimension.height/2);
 		logger.info(x+" "+y);
 		assertNotNull(image.getShape(new Point(x,y)));
-//		logger.info("left");
-//		assertEquals(document.setIndex(2), true);
-//		assertEquals(document.getPage().setIndex(0), true);
-//		image = document.getPage().getImage();
-//		image.setMargin(100);
-//		x = (int)(image.position.point.x+image.position.dimension.width/2);
-//		y = (int)(image.position.point.y+image.position.dimension.height/2);
-//		assertNotNull(image.getShape(new Point(x,y)));
+		logger.info("left");
+		assertEquals(document.setIndex(2), true);
+		assertEquals(document.getPage().setIndex(0), true);
+		image = document.getPage().getImage();
+		image.setMargin(100);
+		x = (int)(image.position.dimension.width/2);
+		y = (int)(image.position.point.y+image.position.dimension.height/2);
+		assertNotNull(image.getShape(new Point(x,y)));
 	}
 	
 	

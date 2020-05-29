@@ -54,9 +54,9 @@ public class Image {
 	@JsonProperty
 	public String fileName;
 	@JsonProperty
-	public List<Shape> shapeList = new ArrayList<>();
-	@JsonProperty
 	public Position position = new Position();
+	@JsonProperty
+	public List<Shape> shapeList = new ArrayList<>();
 	@JsonIgnore
 	public BufferedImage bufferedImage;
 	@JsonIgnore
@@ -293,9 +293,7 @@ public class Image {
 	}
 
 	/**
-	 * DIMENSION 3 B Functions adds shape to shapeList. The only place a shape's
-	 * point list is modified to fit within the File
-	 * 
+	 * Function adds Shape to Shape List
 	 * @param shape
 	 */
 	@JsonIgnore

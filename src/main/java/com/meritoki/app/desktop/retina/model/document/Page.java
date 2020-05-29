@@ -429,15 +429,12 @@ public class Page {
 		if (imageList != null) {
 			for (Image i : imageList) {
 				Position p = i.position;
-//				p.scale();
-				logger.info("paint(g) p="+p);
 				if (image != null && i.uuid.equals(image.uuid)) {
 					graphics2D.setColor(Color.RED);
 				} else {
 					graphics2D.setColor(Color.YELLOW);
 				}
 				Rectangle2D.Double rectangle = new Rectangle2D.Double(p.point.x, p.point.y, p.dimension.width, p.dimension.height);
-				logger.info("paint(g) rectangle="+rectangle);
 				graphics2D.draw(rectangle);
 			}
 
@@ -448,6 +445,7 @@ public class Page {
 		if (shapeList != null) {
 			for (Shape s : shapeList) {
 				Position position = s.position;
+				logger.info("@@@@@@@@@@="+position);
 				if (shape != null && s.uuid.equals(shape.uuid)) {
 					graphics2D.setColor(Color.RED);
 				} else {
