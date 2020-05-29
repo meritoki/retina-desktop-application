@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.document.Position;
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 
@@ -31,20 +32,26 @@ public class MoveShape extends Command {
 		operation.id = UUID.randomUUID().toString();
 		operation.uuid = this.document.cache.pressedShape.uuid;
 		this.operationList.push(operation);
-		this.document.cache.movedPoint = this.getMovedPoint(new Point(this.document.cache.releasedPoint), new Point(this.document.cache.pressedPoint));
-		Shape shape = null;
-		if (this.document.cache.releasedImage != null && !this.document.cache.pressedImage.equals(this.document.cache.releasedImage)) {
-			shape = new Shape(this.document.cache.pressedShape,true);
-			shape.position = new Position(this.document.cache.pressedShape.position);
-			shape.position.movePoint(this.document.cache.movedPoint);
-			this.document.cache.pressedImage.removeShape(shape.uuid);
-			this.document.cache.releasedImage.addShape(shape);
+		//Logic
+		Shape pressedShape = this.document.cache.pressedShape;
+		Image pressedImage = this.document.cache.pressedImage;
+		Image releasedImage = this.document.cache.releasedImage;
+		Point releasedPoint = this.document.cache.releasedPoint;
+		Point pressedPoint = this.document.cache.pressedPoint;
+		Point movedPoint = this.getMovedPoint(new Point(releasedPoint), new Point(pressedPoint));
+		Shape newShape = null;
+		if (releasedImage != null && !pressedImage.equals(releasedImage)) {
+			newShape = new Shape(pressedShape,true);
+			newShape.position = new Position(pressedShape.position);
+			newShape.position.movePoint(movedPoint);//flag, the issue is appearing here;
+			pressedImage.removeShape(newShape.uuid);
+			releasedImage.addShape(newShape);
 		} else {
-			this.document.cache.pressedShape.position.movePoint(this.document.cache.movedPoint);
-			shape = this.document.cache.pressedShape;
+			pressedShape.position.movePoint(movedPoint);
+			newShape = pressedShape;
 		}		
 		operation = new Operation();
-		operation.object = new Shape(shape,true);
+		operation.object = new Shape(newShape,true);
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
 		operation.uuid = this.document.cache.pressedShape.uuid;
@@ -54,4 +61,8 @@ public class MoveShape extends Command {
 	public Point getMovedPoint(Point a, Point b) {
 		return new Point(a.x - b.x, a.y - b.y);
 	}
+	
+//	Image i = this.document.cache.releasedImage;
+//	Position p = this.document.cache.pressedShape.position;
+//	shape.position = new Position(p.absolutePoint,p.absoluteDimension,p.addScale,i.position.offset,i.position.margin);
 }

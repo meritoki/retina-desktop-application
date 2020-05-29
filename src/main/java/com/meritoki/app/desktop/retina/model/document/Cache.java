@@ -47,8 +47,6 @@ public class Cache {
 	@JsonIgnore
 	public Point releasedPoint = new Point();
 	@JsonIgnore
-	public Point movedPoint = new Point();
-	@JsonIgnore
 	public double scale = 1;
 	@JsonIgnore
 	public String script;
@@ -56,8 +54,6 @@ public class Cache {
 	public int pageIndex = -1;
 	@JsonIgnore
 	public String pageUUID = null;
-	@JsonIgnore
-	public double scaleFactor = 1;
 	@JsonIgnore
 	public char scaleOperator = ' ';
 }

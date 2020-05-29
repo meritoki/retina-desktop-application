@@ -73,24 +73,34 @@ public class Position {
 		this.offset = offset;
 		this.margin = margin;
 		this.absolutePoint = new Point(pointList.get(0));
-		this.point = this.absolutePoint;
+		this.point = new Point(this.absolutePoint);//possible bug cause
 		Point stopPoint = new Point(pointList.get(1));
 		this.absoluteDimension.width = Math.abs(stopPoint.x - this.absolutePoint.x);
 		this.absoluteDimension.height = Math.abs(stopPoint.y - this.absolutePoint.y);
 		this.relativePoint = this.getRelativePoint();
 		this.scale();
 	}
+	
+	public Position(Point absolutePoint, Dimension absoluteDimension, double addScale, double offset, double margin) {
+		this.addScale = addScale;
+		this.offset = offset;
+		this.margin = margin;
+		this.absolutePoint = absolutePoint;
+		this.absoluteDimension = absoluteDimension;
+		this.relativePoint = this.getRelativePoint();
+		this.scale();
+	}
 
 	public Position(Position position) {
 		logger.info("Position("+position+")");
-		this.absolutePoint.x = position.absolutePoint.x;
-		this.absolutePoint.y = position.absolutePoint.y;
-		this.absoluteDimension.width = position.absoluteDimension.width;
-		this.absoluteDimension.height = position.absoluteDimension.height;
+		this.absolutePoint = new Point(position.absolutePoint);
+		this.absoluteDimension = new Dimension(position.absoluteDimension);
 		this.scale = position.scale;
 		this.addScale = position.addScale;
 		this.margin = position.margin;
 		this.offset = position.offset;
+		if(position.relativePoint != null)
+			this.relativePoint = new Point(position.relativePoint);
 		this.scale();
 	}
 
@@ -141,7 +151,7 @@ public class Position {
 	}
 
 	@JsonIgnore
-	public void addAbsoluteDimension(Dimension dimension) {//double width, double height) {
+	public void addAbsoluteDimension(Dimension dimension) {
 		logger.info("addAbsoluteDimension("+dimension+")");
 		this.absoluteDimension.width += dimension.width;
 		this.absoluteDimension.height += dimension.height;
@@ -153,7 +163,7 @@ public class Position {
 	public void scale() {
 		logger.info("scale()");
 		if (this.relativePoint != null) {
-			this.point.x = this.relativePoint.x + this.offset;
+			this.point.x = this.relativePoint.x + this.offset * this.addScale;
 			this.point.y = this.relativePoint.y + this.margin * this.addScale;
 		} else {
 			this.point.x = this.absolutePoint.x + this.offset;
@@ -326,8 +336,7 @@ public class Position {
 			break;
 		}
 		}
-		this.absolutePoint.x = startPoint.x;
-		this.absolutePoint.y = startPoint.y;
+		this.absolutePoint = new Point(startPoint);
 		this.absoluteDimension.width = stopPoint.x - this.absolutePoint.x;
 		this.absoluteDimension.height = stopPoint.y - this.absolutePoint.y;
 		this.relativePoint = this.getRelativePoint();
@@ -360,41 +369,3 @@ public class Position {
 		return string;
 	}
 }
-
-//@JsonIgnore
-//public void movePoint(Point point) {
-//	logger.info("movePoint(" + point + ")");
-//	Point source = null;
-//	if(this.relativePoint != null) {
-//		source = this.relativePoint;
-//	}
-//	this.pointList.get(0).x = this.pointList.get(0).x + point.x * (1 / this.scale);
-//	this.pointList.get(0).y = this.pointList.get(0).y + point.y * (1 / this.scale);
-//	this.pointList.get(1).x = this.pointList.get(1).x + point.x * (1 / this.scale);
-//	this.pointList.get(1).y = this.pointList.get(1).y + point.y * (1 / this.scale);
-//}
-
-//@JsonIgnore
-//public void scale() {
-//	if (this.pointList != null && this.pointList.size() == 2) {
-//		Point a = this.pointList.get(0);
-//		Point b = this.pointList.get(1);
-//		this.x = Math.min(a.x, b.x);
-//		this.y = Math.min(a.y, b.y);
-//		this.x += (this.offset * this.addScale);
-//		this.y += (this.margin)*this.addScale;
-//		this.dimension.width = Math.abs(a.x - b.x);
-//		this.dimension.height = Math.abs(a.y - b.y);
-//	} else {
-//		this.x = 0;
-//		this.y = 0;
-//		this.dimension.width = this.absoluteDimension.width;
-//		this.dimension.height = this.absoluteDimension.height;
-//		this.x += this.offset*1/this.scale;
-//		this.y += this.margin;
-//	}
-//	this.x *= this.scale;
-//	this.y *= this.scale;
-//	this.dimension.width *= this.scale;
-//	this.dimension.height *= this.scale;
-//}
