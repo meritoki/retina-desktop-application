@@ -225,11 +225,13 @@ public class Position {
 
 	@JsonIgnore
 	public Point getStartPoint() {
+		this.scale();
 		return this.point;
 	}
 
 	@JsonIgnore
 	public Point getStopPoint() {
+		this.scale();
 		return new Point((this.point.x + this.dimension.width), (this.point.y + this.dimension.height));
 	}
 
