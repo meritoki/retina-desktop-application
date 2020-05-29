@@ -44,7 +44,7 @@ class DocumentTest {
 
 	static String shapeZeroUUID = null;
 
-	static int dimension = 4;
+	static int dimension = 128;
 
 	@BeforeAll
 	public static void initialize() {

@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import com.meritoki.app.desktop.retina.model.document.Position;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Image;
+import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 
@@ -23,7 +24,7 @@ public class MoveShape extends Command {
 	 * PENDING, DO NOT ALLOW MOVE IF MOVEMENT IS OUTSIDE OF AN IMAGE
 	 */
     @Override // Command
-    public void execute() {
+    public void execute() throws Exception {
     	logger.info("execute()");
     	this.user = this.document.cache.user;
 		Operation operation = new Operation();
@@ -33,6 +34,7 @@ public class MoveShape extends Command {
 		operation.uuid = this.document.cache.pressedShape.uuid;
 		this.operationList.push(operation);
 		//Logic
+		Page pressedPage = this.document.cache.pressedPage;
 		Shape pressedShape = this.document.cache.pressedShape;
 		Image pressedImage = this.document.cache.pressedImage;
 		Image releasedImage = this.document.cache.releasedImage;
@@ -40,6 +42,7 @@ public class MoveShape extends Command {
 		Point pressedPoint = this.document.cache.pressedPoint;
 		Point movedPoint = this.getMovedPoint(new Point(releasedPoint), new Point(pressedPoint));
 		Shape newShape = null;
+		if(pressedPage.contains(releasedPoint)) { 
 		if (releasedImage != null && !pressedImage.equals(releasedImage)) {
 			newShape = new Shape(pressedShape,true);
 			newShape.position = new Position(pressedShape.position);
@@ -50,6 +53,9 @@ public class MoveShape extends Command {
 			pressedShape.position.movePoint(movedPoint);
 			newShape = pressedShape;
 		}		
+		} else {
+			throw new Exception("Release Point Invalid");
+		}
 		operation = new Operation();
 		operation.object = new Shape(newShape,true);
 		operation.sign = 1;
