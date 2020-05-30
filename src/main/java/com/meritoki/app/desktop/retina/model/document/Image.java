@@ -160,11 +160,12 @@ public class Image {
 	@JsonIgnore
 	public Shape getShape(Point point) {
 		for (Shape shape : this.shapeList) {
-			if (shape.position.containsPoint((point))) {
+			if (shape.position.contains((point))) {
 				logger.info("getShape(" + point + ") shape=" + shape);
 				return shape;
 			}
 		}
+		logger.info("getShape(" + point + ") shape=null");
 		return null;
 	}
 
@@ -251,6 +252,7 @@ public class Image {
 
 	@JsonIgnore
 	public void setOffset(double offset) {
+		logger.info("setOffset("+offset+")");
 		this.position.setOffset(offset);
 		for (Shape shape : this.shapeList) {
 			shape.position.setOffset(offset);
@@ -313,7 +315,7 @@ public class Image {
 		Selection selection = null;
 		Shape shape = this.getShape();
 		if (shape != null) {
-			selection = shape.position.selectionPoint(point);
+			selection = shape.position.selection(point);
 		}
 		return selection;
 	}
@@ -366,7 +368,7 @@ public class Image {
 	 */
 	@JsonIgnore
 	public boolean containsPoint(Point point) {
-		boolean flag = this.position.containsPoint(point);
+		boolean flag = this.position.contains(point);
 		logger.info("contains("+point+") flag="+flag);
 		return flag;
 	}
@@ -376,10 +378,14 @@ public class Image {
 	public String toString() {
 		String string = "";
 		ObjectWriter ow = new ObjectMapper().writer();
+		if(logger.isDebugEnabled()) {
 		try {
 			string = ow.writeValueAsString(this);
 		} catch (IOException e) {
 			logger.error("IOException " + e.getMessage());
+		}
+		} else if (logger.isInfoEnabled()) {
+			string = "{\"uuid\":"+this.uuid+", \"position\":"+position+", \"shapeList\":"+this.shapeList+"}";
 		}
 		return string;
 	}

@@ -27,7 +27,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
-
 public class Position {
 	@JsonIgnore
 	private static Logger logger = LogManager.getLogger(Position.class.getName());
@@ -64,7 +63,7 @@ public class Position {
 	}
 
 	public Position(Point a, Point b, double addScale, double offset, double margin) {
-		logger.info("Position(" + a + ", " + b + ", " + addScale + ", " + offset + ", " + margin + ")");
+		logger.debug("Position(" + a + ", " + b + ", " + addScale + ", " + offset + ", " + margin + ")");
 		List<Point> pointList = new ArrayList<>();
 		pointList.add(a);
 		pointList.add(b);
@@ -73,16 +72,17 @@ public class Position {
 		this.offset = offset;
 		this.margin = margin;
 		this.absolutePoint = new Point(pointList.get(0));
-		this.point = new Point(this.absolutePoint);//possible bug cause
+		this.point = new Point(this.absolutePoint);// possible bug cause
 		Point stopPoint = new Point(pointList.get(1));
 		this.absoluteDimension.width = Math.abs(stopPoint.x - this.absolutePoint.x);
 		this.absoluteDimension.height = Math.abs(stopPoint.y - this.absolutePoint.y);
 		this.relativePoint = this.getRelativePoint();
 		this.scale();
 	}
-	
+
 	public Position(Point absolutePoint, Dimension absoluteDimension, double addScale, double offset, double margin) {
-		logger.info("Position("+absolutePoint+", "+absoluteDimension+", "+addScale+", "+offset+", "+margin+")");
+		logger.debug("Position(" + absolutePoint + ", " + absoluteDimension + ", " + addScale + ", " + offset + ", "
+				+ margin + ")");
 		this.addScale = addScale;
 		this.offset = offset;
 		this.margin = margin;
@@ -93,14 +93,14 @@ public class Position {
 	}
 
 	public Position(Position position) {
-		logger.info("Position("+position+")");
+		logger.debug("Position(" + position + ")");
 		this.absolutePoint = new Point(position.absolutePoint);
 		this.absoluteDimension = new Dimension(position.absoluteDimension);
 		this.scale = position.scale;
 		this.addScale = position.addScale;
 		this.margin = position.margin;
 		this.offset = position.offset;
-		if(position.relativePoint != null)
+		if (position.relativePoint != null)
 			this.relativePoint = new Point(position.relativePoint);
 		this.scale();
 	}
@@ -131,14 +131,14 @@ public class Position {
 
 	@JsonIgnore
 	public void setAbsolutePoint(Point point) {
-		logger.info("setAbsolutePoint("+point+")");
+		logger.debug("setAbsolutePoint(" + point + ")");
 		this.absolutePoint = point;
 		this.scale();
 	}
-	
+
 	@JsonIgnore
 	public void setAbsolutePoint(double x, double y) {
-		logger.info("setAbsolutePoint("+point+")");
+		logger.debug("setAbsolutePoint(" + point + ")");
 		this.absolutePoint.x = x;
 		this.absolutePoint.y = y;
 		this.scale();
@@ -146,24 +146,24 @@ public class Position {
 
 	@JsonIgnore
 	public void setAbsoluteDimension(Dimension dimension) {
-		logger.info("setAbsoluteDimension("+dimension+")");
+		logger.debug("setAbsoluteDimension(" + dimension + ")");
 		this.absoluteDimension = dimension;
 		this.scale();
 	}
 
 	@JsonIgnore
 	public void addAbsoluteDimension(Dimension dimension) {
-		logger.info("addAbsoluteDimension("+dimension+")");
 		this.absoluteDimension.width += dimension.width;
 		this.absoluteDimension.height += dimension.height;
-		logger.info("addAbsoluteDimension("+dimension+") this.absoluteDimension="+this.absoluteDimension);
+		logger.debug("addAbsoluteDimension(" + dimension + ") this.absoluteDimension=" + this.absoluteDimension);
 		this.scale();
 	}
 
 	@JsonIgnore
 	public void scale() {
 		if (this.relativePoint != null) {
-			this.point.x = this.relativePoint.x + this.offset * this.addScale;// this was apparent fix for shift margin with shape;
+			this.point.x = this.relativePoint.x + this.offset * this.addScale;// this was apparent fix for shift margin
+																				// with shape;
 			this.point.y = this.relativePoint.y + this.margin * this.addScale;
 		} else {
 			this.point.x = this.absolutePoint.x + this.offset;
@@ -175,23 +175,20 @@ public class Position {
 		this.point.y *= this.scale;
 		this.dimension.width *= this.scale;
 		this.dimension.height *= this.scale;
-//		logger.info("scale() this.point="+this.point);
-//		logger.info("scale() this.dimension="+this.dimension);
 	}
 
 	@JsonIgnore
 	public void setScale(double scale) {
-		logger.info("setScale("+scale+")");
 		this.scale = (this.addScale > 0) ? scale / this.addScale : scale;
-		logger.info("setScale("+scale+") this.scale="+this.scale);
+		logger.debug("setScale(" + scale + ") this.scale=" + this.scale);
 		this.scale();
 	}
-	
+
 	@JsonIgnore
 	public void setRelativeScale(double scale) {
-		logger.info("setRelativeScale("+scale+")");
+		logger.info("setRelativeScale(" + scale + ")");
 		this.relativeScale = (this.addScale > 0) ? scale / this.addScale : scale;
-		logger.info("setRelativeScale("+scale+") this.relativeScale="+this.relativeScale);
+		logger.info("setRelativeScale(" + scale + ") this.relativeScale=" + this.relativeScale);
 		this.scale();
 	}
 
@@ -203,7 +200,7 @@ public class Position {
 
 	@JsonIgnore
 	public void setOffset(double offset) {
-		logger.info("setOffset("+offset+")");
+		logger.debug("setOffset(" + offset + ")");
 		this.offset = offset;
 		this.scale();
 	}
@@ -237,25 +234,23 @@ public class Position {
 	}
 
 	@JsonIgnore
-	public boolean containsPoint(Point point) {
+	public boolean contains(Point point) {
 		boolean flag = false;
 		Point startPoint = this.getStartPoint();
 		Point stopPoint = this.getStopPoint();
-		logger.info(startPoint);
-		logger.info(stopPoint);
 		if (startPoint.x < stopPoint.x && startPoint.y < stopPoint.y) {
 			if (startPoint.x <= point.x && point.x <= stopPoint.x && startPoint.y <= point.y
 					&& point.y <= stopPoint.y) {
 				flag = true;
 			}
 		}
-		logger.info("containsPoint("+point+") flag="+flag);
+		logger.debug("contains(" + point + ") flag=" + flag);
 		return flag;
 	}
 
 	@JsonIgnore
-	public Selection selectionPoint(Point point) {
-		
+	public Selection selection(Point point) {
+
 		Selection selection = null;
 		Point startPoint = this.getStartPoint();
 		Point stopPoint = this.getStopPoint();
@@ -285,7 +280,7 @@ public class Position {
 				&& point.y < stopPoint.y) {
 			selection = Selection.RIGHT;
 		}
-		logger.info("selectionPoint(" + point + ") selection="+selection);
+		logger.debug("selection(" + point + ") selection=" + selection);
 		return selection;
 	}
 
@@ -342,16 +337,16 @@ public class Position {
 			break;
 		}
 		}
-		//changing the absolute point is required, this dictates the raw dimensions of a shape
-		//the problem appears to be with scaling in and out, when changing the absolute point and dimension b/c this fundamentally changes the 
-		//original shape and how it is rendered on the page
-		//there is a scaling issue that has to be accounted for in this process.
-		startPoint.x = startPoint.x/this.scale - this.offset/this.addScale;
-		startPoint.y = startPoint.y/this.scale - this.margin/this.addScale;
-		stopPoint.x = stopPoint.x/this.scale - this.offset/this.addScale;
-		stopPoint.y = stopPoint.y/this.scale - this.offset/this.addScale;
+		// changing the absolute point is required, this dictates the raw dimensions of
+		// a shape
+		// the problem appears to be with scaling in and out, when changing the absolute
+		// point and dimension b/c this fundamentally changes the
+		// original shape and how it is rendered on the page
+		// there is a scaling issue that has to be accounted for in this process.
+		startPoint = new Point(startPoint.x / this.scale - this.offset / this.addScale,startPoint.y / this.scale - this.margin / this.addScale);
+		stopPoint = new Point(stopPoint.x / this.scale - this.offset / this.addScale,stopPoint.y / this.scale - this.margin / this.addScale);
 		this.absolutePoint = new Point(startPoint);
-		this.absoluteDimension = new Dimension(stopPoint.x - this.absolutePoint.x,stopPoint.y - this.absolutePoint.y);
+		this.absoluteDimension = new Dimension(stopPoint.x - this.absolutePoint.x, stopPoint.y - this.absolutePoint.y);
 		this.relativePoint = this.getRelativePoint();
 		this.scale();
 	}
@@ -374,11 +369,16 @@ public class Position {
 	@Override
 	public String toString() {
 		String string = "";
-		ObjectWriter ow = new ObjectMapper().writer();// .withDefaultPrettyPrinter();
-		try {
-			string = ow.writeValueAsString(this);
-		} catch (IOException ex) {
-			logger.error("IOException " + ex.getMessage());
+		ObjectWriter ow = new ObjectMapper().writer();
+		if (logger.isDebugEnabled()) {
+			// .withDefaultPrettyPrinter();
+			try {
+				string = ow.writeValueAsString(this);
+			} catch (IOException ex) {
+				logger.error("IOException " + ex.getMessage());
+			}
+		} else if (logger.isInfoEnabled()) {
+			string = "{\"point\":" + this.point + ", \"dimenstion\":" + this.dimension + "}";
 		}
 		return string;
 	}

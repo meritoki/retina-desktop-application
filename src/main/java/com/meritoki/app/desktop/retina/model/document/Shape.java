@@ -159,10 +159,14 @@ public class Shape {
 	public String toString() {
 		String string = "";
 		ObjectWriter ow = new ObjectMapper().writer();//.withDefaultPrettyPrinter();
+		if(logger.isDebugEnabled()) {
 		try {
 			string = ow.writeValueAsString(this);
 		} catch (IOException ex) {
 			logger.error("IOException " + ex.getMessage());
+		}
+		} else if(logger.isInfoEnabled()) {
+			string = "{\"uuid\":"+this.uuid+", \"position\":"+position+"}";
 		}
 		return string;
 	}

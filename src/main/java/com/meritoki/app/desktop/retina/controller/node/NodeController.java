@@ -74,9 +74,8 @@ public class NodeController {
 		BufferedImage bufferedImage = null;
 		try {
 			bufferedImage = ImageIO.read(file);
-			logger.info("opened...");
 		} catch (IOException ex) {
-			logger.error(ex);
+			logger.error("IOException "+ex.getMessage());
 		}
 		return bufferedImage;
 	}
@@ -91,7 +90,7 @@ public class NodeController {
 		logger.info("saveJpg("+file+", "+bufferedImage+")");
 		try {
 			ImageIO.write(bufferedImage, "jpg", file);
-			logger.info("saved...");
+			
 		} catch (IOException ex) {
 			logger.error(ex);
 		}
@@ -105,7 +104,7 @@ public class NodeController {
 //		mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
 		try {
 			object = mapper.readValue(file, className);
-			logger.info("opened...");
+			
 		} catch (JsonGenerationException e) {
 			logger.error(e);
 		} catch (JsonMappingException e) {
@@ -123,7 +122,7 @@ public class NodeController {
 //		mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
 		try {
 			object = mapper.readValue(file, typeReference);
-			logger.info("opened...");
+			
 		} catch (JsonGenerationException e) {
 			logger.error(e);
 		} catch (JsonMappingException e) {
@@ -171,11 +170,9 @@ public class NodeController {
 	public static void saveJson(File file, Object object) {
 		logger.info("saveJson("+file.getAbsolutePath()+",object)");
 		ObjectMapper mapper = new ObjectMapper();
-//		mapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY);
 		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		try {
 			mapper.writeValue(file, object);
-			logger.info("saved...");
 		} catch (IOException ex) {
 			logger.error(ex);
 		}
@@ -214,7 +211,7 @@ public class NodeController {
 		try (PrintWriter writer = new PrintWriter(new File(filePath + getSeperator() + fileName))) {
 			if (object instanceof StringBuilder)
 				writer.write(((StringBuilder) object).toString());
-			System.out.println("saved...");
+			
 		} catch (FileNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
@@ -271,7 +268,7 @@ public class NodeController {
 //		mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
 		try {
 			object = mapper.readValue(string, className);
-			logger.info("opened...");
+			
 		} catch (JsonGenerationException e) {
 			logger.error(e);
 		} catch (JsonMappingException e) {

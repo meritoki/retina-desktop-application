@@ -195,11 +195,8 @@ public class DocumentMoveShapeTest {
 		assertEquals(document.getPage().setIndex(1), true);
 		image = document.getPage().getImage();
 		image.setMargin(100);
-		logger.info("@@@@@ image"+image);
-		logger.info("##### shapeList+"+image.shapeList);
 		x = (int)(image.position.dimension.width/2);
 		y = (int)(image.position.point.y+image.position.dimension.height/2);
-		logger.info(x+" "+y);
 		assertNotNull(image.getShape(new Point(x,y)));
 		logger.info("left");
 		assertEquals(document.setIndex(2), true);

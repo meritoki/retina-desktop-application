@@ -21,6 +21,7 @@ public class ResizeShape extends Command {
     @Override // Command
     public void execute() {
     	logger.info("execute()");
+    	//Undo
     	this.user = this.document.cache.user;
 		Operation operation = new Operation();
 		operation.object = new Shape(this.document.cache.pressedShape,true);
@@ -28,9 +29,11 @@ public class ResizeShape extends Command {
 		operation.id = UUID.randomUUID().toString();
 		operation.uuid = this.document.cache.pressedShape.uuid;
 		this.operationList.push(operation);
-		Point releasedPoint = new Point(this.document.cache.releasedPoint);
+		//Logic
+		Point releasedPoint = this.document.cache.releasedPoint;
 		Shape pressedShape = this.document.cache.pressedShape;
-		pressedShape.position.resizePoint(releasedPoint, this.document.cache.selection);
+		pressedShape.position.resizePoint(new Point(releasedPoint), this.document.cache.selection);
+		//Redo
 		operation = new Operation();
 		operation.object = new Shape(this.document.cache.pressedShape,true);
 		operation.sign = 1;

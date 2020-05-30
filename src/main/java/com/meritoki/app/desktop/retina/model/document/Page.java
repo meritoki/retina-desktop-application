@@ -128,7 +128,9 @@ public class Page {
 	@JsonIgnore
 	public Image getImage() {
 		int size = this.imageList.size();
-		return (this.index < size && size > 0) ? this.imageList.get(this.index) : null;
+		Image image = (this.index < size && size > 0) ? this.imageList.get(this.index) : null;
+		logger.info("getImage() image="+image);
+		return image;
 	}
 
 	/**
@@ -380,7 +382,7 @@ public class Page {
 	
 	@JsonIgnore
 	public boolean contains(Point point) {
-		boolean flag = this.position.containsPoint(point);
+		boolean flag = this.position.contains(point);
 		logger.info("contains("+point+") flag="+flag);
 		return flag;
 	}
