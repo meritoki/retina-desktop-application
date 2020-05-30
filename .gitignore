@@ -1,9 +1,9 @@
-archive/
-target/
+/archive/
+/target/
 error
 output
-logs/
-test/
+/logs/
+/test/
 *.xlsx
 *.docx
 *.wav
