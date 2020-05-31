@@ -26,7 +26,7 @@ public class DocumentRandomMoveShapeTest {
 	static Logger logger = LogManager.getLogger(DocumentMoveShapeTest.class.getName());
 	static Document document = null;
 	static int dimension = 256;
-	static int limit = 1000;
+	static int limit = 10000;
 
 	@BeforeAll
 	public static void initialize() {
@@ -84,8 +84,6 @@ public class DocumentRandomMoveShapeTest {
 			count--;
 		}
 	}
-	
-	
 	
 	public static Point getRandomPoint(Position position) {
 		Point point = new Point();
