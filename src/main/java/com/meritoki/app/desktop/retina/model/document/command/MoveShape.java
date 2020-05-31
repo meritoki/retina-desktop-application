@@ -46,11 +46,11 @@ public class MoveShape extends Command {
 		if (releasedImage != null && !pressedImage.equals(releasedImage)) {
 			newShape = new Shape(pressedShape,true);
 			newShape.position = new Position(pressedShape.position);
-			newShape.position.movePoint(movedPoint);
+			newShape.position.move(movedPoint);
 			pressedImage.removeShape(newShape.uuid);
 			releasedImage.addShape(newShape);
 		} else {
-			pressedShape.position.movePoint(movedPoint);
+			pressedShape.position.move(movedPoint);
 			newShape = pressedShape;
 		}		
 		} else {

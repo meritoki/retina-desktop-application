@@ -63,7 +63,7 @@ public class Position {
 	}
 
 	public Position(Point a, Point b, double addScale, double offset, double margin) {
-		logger.debug("Position(" + a + ", " + b + ", " + addScale + ", " + offset + ", " + margin + ")");
+		logger.info("Position(" + a + ", " + b + ", " + addScale + ", " + offset + ", " + margin + ")");
 		List<Point> pointList = new ArrayList<>();
 		pointList.add(a);
 		pointList.add(b);
@@ -163,14 +163,19 @@ public class Position {
 	public void scale() {
 		if (this.relativePoint != null) {
 			this.point.x = this.relativePoint.x + this.offset * this.addScale;// this was apparent fix for shift margin
-																				// with shape;
 			this.point.y = this.relativePoint.y + this.margin * this.addScale;
+			this.dimension.width = this.absoluteDimension.width;
+			this.dimension.height = this.absoluteDimension.height;
+			this.point.x *= this.relativeScale;
+			this.point.y *= this.relativeScale;
+			this.dimension.width *= this.relativeScale;
+			this.dimension.height *= this.relativeScale;
 		} else {
 			this.point.x = this.absolutePoint.x + this.offset;
 			this.point.y = this.absolutePoint.y + this.margin;
+			this.dimension.width = this.absoluteDimension.width;
+			this.dimension.height = this.absoluteDimension.height;
 		}
-		this.dimension.width = this.absoluteDimension.width;
-		this.dimension.height = this.absoluteDimension.height;
 		this.point.x *= this.scale;
 		this.point.y *= this.scale;
 		this.dimension.width *= this.scale;
@@ -186,7 +191,6 @@ public class Position {
 
 	@JsonIgnore
 	public void setRelativeScale(double scale) {
-		logger.info("setRelativeScale(" + scale + ")");
 		this.relativeScale = (this.addScale > 0) ? scale / this.addScale : scale;
 		logger.info("setRelativeScale(" + scale + ") this.relativeScale=" + this.relativeScale);
 		this.scale();
@@ -284,19 +288,11 @@ public class Position {
 		return selection;
 	}
 
-//	@JsonIgnore
-//	public boolean intersectPoint(Point point) {
-//		boolean flag = false;
-//		if (this.selectionPoint(point) != null) {
-//			logger.info("intersectPoint(" + point + ")");
-//			flag = true;
-//		}
-//		return flag;
-//	}
+
 
 	@JsonIgnore
-	public void resizePoint(Point point, Selection selection) {
-		logger.info("resizePoint(" + point + ", " + selection + ")");
+	public void resize(Point point, Selection selection) {
+		logger.info("resize(" + point + ", " + selection + ")");
 		Point startPoint = this.getStartPoint();
 		Point stopPoint = this.getStopPoint();
 		switch (selection) {
@@ -352,8 +348,8 @@ public class Position {
 	}
 
 	@JsonIgnore
-	public void movePoint(Point point) {
-		logger.info("movePoint(" + point + ")");
+	public void move(Point point) {
+		logger.info("move(" + point + ")");
 		Point origin = null;
 		if (this.relativePoint != null) {
 			origin = this.relativePoint;
@@ -378,8 +374,18 @@ public class Position {
 				logger.error("IOException " + ex.getMessage());
 			}
 		} else if (logger.isInfoEnabled()) {
-			string = "{\"point\":" + this.point + ", \"dimenstion\":" + this.dimension + "}";
+			string = "{\"point\":" + this.point + ", \"dimension\":" + this.dimension + "}";
 		}
 		return string;
 	}
 }
+
+//@JsonIgnore
+//public boolean intersectPoint(Point point) {
+//	boolean flag = false;
+//	if (this.selectionPoint(point) != null) {
+//		logger.info("intersectPoint(" + point + ")");
+//		flag = true;
+//	}
+//	return flag;
+//}
