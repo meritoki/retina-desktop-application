@@ -39,6 +39,7 @@ public class DocumentMarginShiftMoveShapeTest {
 	@Order(1) 
 	public void addShape() {
 		assertEquals(document.setIndex(0), true);
+		//add right
 		assertEquals(document.getPage().setIndex(1), true);
 		document.cache.pressedImage = document.getImage();
 		int x = (int) (document.cache.pressedImage.position.point.x+document.cache.pressedImage.position.dimension.width / 2 - dimension / 2);
@@ -61,6 +62,7 @@ public class DocumentMarginShiftMoveShapeTest {
 	@Order(2)
 	public void marginShift() {
 		assertEquals(document.setIndex(0), true);
+		//shift right
 		assertEquals(document.getPage().setIndex(1), true);
 		document.cache.pressedImage = document.getImage();
 		document.cache.pressedImage.setMargin(100);
@@ -81,14 +83,17 @@ public class DocumentMarginShiftMoveShapeTest {
 		int y = (int) (document.cache.pressedImage.position.point.y+document.cache.pressedImage.position.dimension.height / 2);
 		document.cache.pressedPoint = new Point(x, y);
 		document.cache.pressedShape = document.getPage().getShape(document.cache.pressedPoint);
-		x = (int) (document.cache.releasedImage.position.dimension.width / 2);
-		y = (int) (document.cache.releasedImage.position.dimension.height / 2);
+		x = (int) (document.cache.releasedImage.position.point.x+document.cache.releasedImage.position.dimension.width / 2);
+		y = (int) (document.cache.releasedImage.position.point.y+document.cache.releasedImage.position.dimension.height / 2);
 		document.cache.releasedPoint = new Point(x, y);
 		try {
 			document.pattern.execute("moveShape");
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		}
+		logger.info("releasedPoint="+document.cache.releasedPoint);
+		logger.info("releasedImage="+document.cache.releasedImage);
+		logger.info("shapeList="+document.getShapeList());
 		assertNotNull(document.getPage().getShape(new Point(x,y)));
 	}
 }

@@ -25,7 +25,7 @@ public class DocumentRandomMoveShapeTest {
 
 	static Logger logger = LogManager.getLogger(DocumentMoveShapeTest.class.getName());
 	static Document document = null;
-	static int dimension = 256;
+	static int dimension = 2;
 	static int limit = 10000;
 
 	@BeforeAll

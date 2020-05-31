@@ -233,7 +233,7 @@ public class Page {
 	 */
 	@JsonIgnore
 	public BufferedImage getBufferedImage() {
-		logger.info("getBufferedImage()");
+//		logger.info("getBufferedImage()");
 		if (this.bufferedImage == null) {
 			this.bufferedImage = this.joinImages(this.getImageList());
 			this.position.setAbsoluteDimension(new Dimension(this.bufferedImage.getWidth(),this.bufferedImage.getHeight()));

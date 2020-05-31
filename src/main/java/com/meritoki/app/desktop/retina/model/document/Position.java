@@ -366,7 +366,7 @@ public class Position {
 		stopPoint = new Point(stopPoint.x / this.scale - this.offset / this.addScale,stopPoint.y / this.scale - this.margin / this.addScale);
 		this.absolutePoint = new Point(startPoint);
 		this.absoluteDimension = new Dimension(stopPoint.x - this.absolutePoint.x, stopPoint.y - this.absolutePoint.y);
-		this.relativePoint = this.getRelativePoint();
+//		this.relativePoint = this.getRelativePoint();//could be cause of a major bug;
 		this.scale();
 	}
 
