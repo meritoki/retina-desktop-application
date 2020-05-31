@@ -161,23 +161,19 @@ public class Position {
 	@JsonIgnore
 	public Point getRelativePoint(double relativeScale) {
 		Point point = new Point();
-		point.x = this.absolutePoint.x - offset * this.addScale/relativeScale;
-		point.y = this.absolutePoint.y - margin * this.addScale/relativeScale;
+//		point.x = this.absolutePoint.x - offset * this.addScale;
+//		point.y = this.absolutePoint.y - margin * this.addScale;
+		point.x = this.absolutePoint.x*relativeScale - offset * this.addScale;
+		point.y = this.absolutePoint.y*relativeScale - margin * this.addScale;
 		return point;
 	}
 
 	@JsonIgnore
 	public void scale() {
 		if (this.relative) {
-			logger.info("scale() addRelativeScale="+this.addRelativeScale);
-			logger.info("scale() relativeScale="+this.relativeScale);
-			logger.info("scale() scale="+this.scale);
-			logger.info("scale() addScale="+this.addScale);
 			this.relativePoint = this.getRelativePoint(this.relativeScale);
-			logger.info(this.offset * addScale/relativeScale);
-			logger.info(this.margin * addScale/relativeScale);
-			this.point.x = this.relativePoint.x*relativeScale + this.offset * addScale/relativeScale;// this was apparent fix for shift margin
-			this.point.y = this.relativePoint.y*relativeScale + this.margin * addScale/relativeScale;
+			this.point.x = this.relativePoint.x + this.offset * addScale;
+			this.point.y = this.relativePoint.y + this.margin * addScale;
 			this.dimension.width = this.absoluteDimension.width;
 			this.dimension.height = this.absoluteDimension.height;
 			this.dimension.width *= this.relativeScale;
@@ -226,15 +222,25 @@ public class Position {
 		this.margin = margin;
 		this.scale();
 	}
+	
+//	@JsonIgnore
+//	public Point getAbsolutePoint(double relativeScale) {
+//		return new Point(this.absolutePoint.x*relativeScale,this.absolutePoint.y*relativeScale);
+//	}
+//	
+//	@JsonIgnore
+//	public Dimension getAbsoluteDimension(double relativeScale) {
+//		return new Dimension(this.absoluteDimension.width*relativeScale,this.absoluteDimension.height*relativeScale);
+//	}
 
 	@JsonIgnore
 	public double getCenterX() {
-		return this.absolutePoint.x + (this.dimension.width / 2);
+		return this.point.x + (this.dimension.width / 2);
 	}
 
 	@JsonIgnore
 	public double getCenterY() {
-		return this.absolutePoint.y + (this.dimension.height / 2);
+		return this.point.y + (this.dimension.height / 2);
 	}
 
 	@JsonIgnore
