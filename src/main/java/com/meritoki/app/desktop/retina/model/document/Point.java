@@ -39,8 +39,10 @@ public class Point {
 	 * @param p
 	 */
 	public Point(Point p) {
-		this.x = p.x;
-		this.y = p.y;
+		if(p != null) {
+			this.x = p.x;
+			this.y = p.y;
+		}
 	}
 	
 	public Point(Point p, double scale) {
