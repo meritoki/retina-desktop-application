@@ -45,7 +45,13 @@ public class MoveShape extends Command {
 		if(pressedPage.contains(releasedPoint)) { 
 		if (releasedImage != null && !pressedImage.equals(releasedImage)) {
 			newShape = new Shape(pressedShape,true);
-			newShape.position = new Position(pressedShape.position);//I suspect this is the bug line
+			Position position = pressedShape.position;
+//			position.setOffset(releasedImage.position.offset);
+//			position.setMargin(releasedImage.position.margin);
+			newShape.position = new Position(position);//I suspect this is the bug line\
+			newShape.setOffset(releasedImage.position.offset);
+//			newShape.setMargin(releasedImage.position.margin);
+			newShape.position.relativePoint = newShape.position.getRelativePoint();
 			newShape.position.move(movedPoint);
 			pressedImage.removeShape(newShape.uuid);
 			releasedImage.addShape(newShape);

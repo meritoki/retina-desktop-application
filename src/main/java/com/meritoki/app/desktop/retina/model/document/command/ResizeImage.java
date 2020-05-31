@@ -45,7 +45,7 @@ public class ResizeImage extends Command {
 		}
 		}
 		this.document.cache.pressedImage.setRelativeScale(scale);
-		this.document.cache.pressedPage.getBufferedImage();
+//		this.document.cache.pressedPage.getBufferedImage();
 		//Redo Operation
 		operation = new Operation();
 		operation.object = new Image(this.document.cache.pressedImage);

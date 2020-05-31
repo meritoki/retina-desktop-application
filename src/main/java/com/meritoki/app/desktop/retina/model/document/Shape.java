@@ -86,6 +86,11 @@ public class Shape {
 		logger.info("setMargin("+margin+")");
 		this.position.setMargin(margin);
 	}
+	
+	public void setOffset(double offset) {
+		logger.info("setOffset("+offset+")");
+		this.position.setOffset(offset);
+	}
 
 	@JsonProperty
 	public void addText(Text text) {

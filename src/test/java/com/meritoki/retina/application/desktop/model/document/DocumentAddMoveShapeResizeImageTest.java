@@ -71,8 +71,8 @@ public class DocumentAddMoveShapeResizeImageTest {
 		int y = (int) (document.cache.pressedImage.position.dimension.height / 2);
 		document.cache.pressedPoint = new Point(x, y);
 		document.cache.pressedShape = document.getPage().getShape(document.cache.pressedPoint);
-		x = (int) (document.cache.releasedImage.position.dimension.width / 2);
-		y = (int) (document.cache.releasedImage.position.dimension.height / 2);
+		x = (int) (document.cache.releasedImage.position.point.x+document.cache.releasedImage.position.dimension.width / 2);
+		y = (int) (document.cache.releasedImage.position.point.y+document.cache.releasedImage.position.dimension.height / 2);
 		document.cache.releasedPoint = new Point(x, y);
 		try {
 			document.pattern.execute("moveShape");
@@ -103,7 +103,7 @@ public class DocumentAddMoveShapeResizeImageTest {
 		}
 		int x = (int) (document.cache.pressedImage.position.point.x+document.cache.pressedImage.position.dimension.width / 2);
 		int y = (int) (document.cache.pressedImage.position.point.y+document.cache.pressedImage.position.dimension.height / 2);
-//		logger.info(document.getShapeList());
+		logger.info(document.getShapeList());
 		assertNotNull(document.getShape(new Point(x,y)));
 	}
 	
