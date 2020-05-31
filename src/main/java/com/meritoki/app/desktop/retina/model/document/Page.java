@@ -476,9 +476,9 @@ public class Page {
 				}
 				}
 				if (previousShape != null) {
-					position = previousShape.position;
-					graphics2D.drawLine((int) (position.point.x + (position.dimension.width / 2)),
-							(int) (position.point.y + (position.dimension.height / 2)), (int) (position.point.x + (position.dimension.width / 2)),
+					Position p = previousShape.position;
+					graphics2D.drawLine((int) (p.point.x + (p.dimension.width / 2)),
+							(int) (p.point.y + (p.dimension.height / 2)), (int) (position.point.x + (position.dimension.width / 2)),
 							(int) (position.point.y + (position.dimension.height / 2)));
 				}
 				previousShape = s;
