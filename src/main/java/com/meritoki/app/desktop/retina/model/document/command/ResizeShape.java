@@ -32,7 +32,7 @@ public class ResizeShape extends Command {
 		//Logic
 		Point releasedPoint = this.document.cache.releasedPoint;
 		Shape pressedShape = this.document.cache.pressedShape;
-		pressedShape.position.resizePoint(new Point(releasedPoint), this.document.cache.selection);
+		pressedShape.position.resize(new Point(releasedPoint), this.document.cache.selection);
 		//Redo
 		operation = new Operation();
 		operation.object = new Shape(this.document.cache.pressedShape,true);

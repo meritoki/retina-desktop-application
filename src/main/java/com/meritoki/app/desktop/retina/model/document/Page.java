@@ -129,7 +129,7 @@ public class Page {
 	public Image getImage() {
 		int size = this.imageList.size();
 		Image image = (this.index < size && size > 0) ? this.imageList.get(this.index) : null;
-		logger.info("getImage() image="+image);
+		logger.debug("getImage() image="+image);
 		return image;
 	}
 
