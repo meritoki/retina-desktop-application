@@ -189,7 +189,7 @@ public class Page {
 	@JsonIgnore
 	public List<Shape> getShapeList() {
 		List<Shape> shapeList = new ArrayList<>();
-		for (Image image : this.getImageList()) {
+		for (Image image : this.imageList) {
 			for (Shape shape : image.getShapeList()) {
 				shape.bufferedImage = this.getShapeBufferedImage(shape);
 				shapeList.add(shape);

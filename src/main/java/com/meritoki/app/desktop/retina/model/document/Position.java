@@ -108,7 +108,8 @@ public class Position {
 		this.margin = position.margin;
 		this.offset = position.offset;
 		this.relative = position.relative;
-		this.relativePoint = new Point(position.relativePoint);
+		if(position.relativePoint != null)
+			this.relativePoint = new Point(position.relativePoint);
 		this.scale();
 	}
 
@@ -277,7 +278,6 @@ public class Position {
 
 	@JsonIgnore
 	public Selection selection(Point point) {
-
 		Selection selection = null;
 		Point startPoint = this.getStartPoint();
 		Point stopPoint = this.getStopPoint();

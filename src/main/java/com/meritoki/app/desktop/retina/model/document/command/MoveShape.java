@@ -45,7 +45,7 @@ public class MoveShape extends Command {
 		if(pressedPage.contains(releasedPoint)) { 
 		if (releasedImage != null && !pressedImage.equals(releasedImage)) {
 			newShape = new Shape(pressedShape,true);
-			newShape.position = new Position(pressedShape.position);
+			newShape.position = new Position(pressedShape.position);//I suspect this is the bug line
 			newShape.position.move(movedPoint);
 			pressedImage.removeShape(newShape.uuid);
 			releasedImage.addShape(newShape);

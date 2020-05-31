@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import com.meritoki.app.desktop.retina.controller.document.DocumentController;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
@@ -21,7 +22,7 @@ import com.meritoki.app.desktop.retina.model.document.Point;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DocumentAddMoveShapeResizeImageTest {
 	
-	static Logger logger = LogManager.getLogger(DocumentMoveShapeTest.class.getName());
+	static Logger logger = LogManager.getLogger(DocumentAddMoveShapeResizeImageTest.class.getName());
 	static Document document = null;
 	static int dimension = 256;
 
@@ -86,6 +87,7 @@ public class DocumentAddMoveShapeResizeImageTest {
 	public void resizeImage() {
 		assertEquals(document.setIndex(0), true);
 		assertEquals(document.getPage().setIndex(1), true);
+		document.cache.pressedPage = document.getPage();
 		document.cache.pressedImage = document.getImage();
 		document.cache.scaleOperator = '/';
 		document.cache.scaleFactor = 1.01;
@@ -101,7 +103,14 @@ public class DocumentAddMoveShapeResizeImageTest {
 		}
 		int x = (int) (document.cache.pressedImage.position.point.x+document.cache.pressedImage.position.dimension.width / 2);
 		int y = (int) (document.cache.pressedImage.position.point.y+document.cache.pressedImage.position.dimension.height / 2);
+//		logger.info(document.getShapeList());
 		assertNotNull(document.getShape(new Point(x,y)));
+	}
+	
+	@Test
+	@Order(11)
+	public void save() {
+		DocumentController.save(new java.io.File("./test/document-add-move-shape-resize-image-test.json"), document);
 	}
 
 }
