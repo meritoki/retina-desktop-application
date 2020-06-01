@@ -45,15 +45,16 @@ public class MoveShape extends Command {
 		if(pressedPage.contains(releasedPoint)) { 
 		if (releasedImage != null && !pressedImage.equals(releasedImage)) {
 			newShape = new Shape(pressedShape,true);
-//			Position position = pressedShape.position;
-//			newShape.position = new Position(position);//I suspect this is the bug line\
-//			newShape.setOffset(releasedImage.position.offset);
-//			newShape.setMargin(releasedImage.position.margin);
-//			newShape.position.relativePoint = newShape.position.getRelativePoint();
 			newShape.position.move(movedPoint);
-
-//			
-			newShape.position.scale();
+			//Testing new logic
+			newShape.position = new Position(new Point(newShape.position.getStartPoint()),
+					new Point(newShape.position.getStopPoint()), 
+					releasedImage.position.relativeScale, 
+					this.document.cache.scale,
+					releasedImage.position.offset, 
+					releasedImage.position.margin);
+			
+			//end test
 			pressedImage.removeShape(newShape.uuid);
 			releasedImage.addShape(newShape);
 		} else {
@@ -79,3 +80,9 @@ public class MoveShape extends Command {
 //	Position p = this.document.cache.pressedShape.position;
 //	shape.position = new Position(p.absolutePoint,p.absoluteDimension,p.addScale,i.position.offset,i.position.margin);
 }
+
+//Position position = pressedShape.position;
+//newShape.position = new Position(position);//I suspect this is the bug line\
+//newShape.setOffset(releasedImage.position.offset);
+//newShape.setMargin(releasedImage.position.margin);
+//newShape.position.relativePoint = newShape.position.getRelativePoint();

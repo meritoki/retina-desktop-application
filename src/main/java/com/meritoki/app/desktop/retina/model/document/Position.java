@@ -312,7 +312,11 @@ public class Position {
 	}
 
 
-
+	/**
+	 * Leave this method alone!!! It works and has nothing to do with a move
+	 * @param point
+	 * @param selection
+	 */
 	@JsonIgnore
 	public void resize(Point point, Selection selection) {
 		logger.info("resize(" + point + ", " + selection + ")");
@@ -366,7 +370,7 @@ public class Position {
 		stopPoint = new Point(stopPoint.x / this.scale - this.offset / this.addScale,stopPoint.y / this.scale - this.margin / this.addScale);
 		this.absolutePoint = new Point(startPoint);
 		this.absoluteDimension = new Dimension(stopPoint.x - this.absolutePoint.x, stopPoint.y - this.absolutePoint.y);
-//		this.relativePoint = this.getRelativePoint();//could be cause of a major bug;
+		this.relativePoint = this.getRelativePoint();//could be cause of a major bug;
 		this.scale();
 	}
 
@@ -374,7 +378,7 @@ public class Position {
 	public void move(Point point) {
 		logger.info("move(" + point + ")");
 		Point origin = null;
-		if (this.relativePoint != null) {
+		if (this.relative) {
 			origin = this.relativePoint;
 		} else {
 			origin = this.absolutePoint;
@@ -397,7 +401,7 @@ public class Position {
 				logger.error("IOException " + ex.getMessage());
 			}
 		} else if (logger.isInfoEnabled()) {
-			string = "{\"point\":" + this.point + ", \"dimension\":" + this.dimension + "}";
+			string = "{\"offset\":"+this.offset+",\"margin\":"+this.margin+",\"point\":" + this.point + ", \"dimension\":" + this.dimension + "}";
 		}
 		return string;
 	}

@@ -18,13 +18,14 @@ import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
+import com.meritoki.app.desktop.retina.model.document.Shape;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DocumentAddMoveShapeResizeImageTest {
 	
 	static Logger logger = LogManager.getLogger(DocumentAddMoveShapeResizeImageTest.class.getName());
 	static Document document = null;
-	static int dimension = 256;
+	static int dimension = 4;
 
 	@BeforeAll
 	public static void initialize() {
@@ -56,7 +57,9 @@ public class DocumentAddMoveShapeResizeImageTest {
 		}
 		x = (int) (document.cache.pressedImage.position.dimension.width / 2);
 		y = (int) (document.cache.pressedImage.position.dimension.height / 2);
-		assertNotNull(document.getShape(new Point(x, y)));
+		Shape shape =document.getShape(new Point(x, y));
+		logger.info("shape="+shape);
+		assertNotNull(shape);
 	}
 	
 	@Test
@@ -79,7 +82,9 @@ public class DocumentAddMoveShapeResizeImageTest {
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		}
-		assertNotNull(document.getPage().getShape(new Point(x,y)));
+		Shape shape =document.getShape(new Point(x, y));
+		logger.info("shape="+shape);
+		assertNotNull(shape);
 	}
 	
 	@Test
@@ -93,17 +98,12 @@ public class DocumentAddMoveShapeResizeImageTest {
 		document.cache.scaleFactor = 1.01;
 		try {
 			document.pattern.execute("resizeImage");
-			document.pattern.execute("resizeImage");
-			document.pattern.execute("resizeImage");
-			document.pattern.execute("resizeImage");
-			document.pattern.execute("resizeImage");
-			document.pattern.execute("resizeImage");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
 		int x = (int) (document.cache.pressedImage.position.point.x+document.cache.pressedImage.position.dimension.width / 2);
 		int y = (int) (document.cache.pressedImage.position.point.y+document.cache.pressedImage.position.dimension.height / 2);
-		logger.info(document.getShapeList());
+		logger.info("shapeList="+document.getShapeList());
 		assertNotNull(document.getShape(new Point(x,y)));
 	}
 	
