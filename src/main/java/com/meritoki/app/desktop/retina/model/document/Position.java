@@ -207,19 +207,17 @@ public class Position {
 	@JsonIgnore
 	public void move(Point point) {
 		Point startPoint = this.getStartPoint();
-		startPoint.x += point.x;
-		startPoint.y += point.y;
-		logger.info("move("+point+") this.relativeScale="+this.relativeScale);
-//		startPoint = new Point(startPoint.x / this.scale - this.offset / this.addScale,startPoint.y / this.scale - this.margin / this.addScale);
-		startPoint = new Point((startPoint.x / this.scale - this.offset / this.addScale)/this.relativeScale,(startPoint.y / this.scale - this.margin / this.addScale)/this.relativeScale);
-		this.absolutePoint = new Point(startPoint);
-		logger.info("move("+point+") this.absolutePoint="+this.absolutePoint);
-		logger.info("move("+point+") this.absolutePoint="+this.absolutePoint);
+		logger.info("move("+point+") A startPoint="+startPoint);
+		Point movePoint = new Point(startPoint.x + point.x, startPoint.y + point.y);
+		logger.info("move("+point+") B movePoint="+movePoint);
+		Point absolutePoint = new Point((movePoint.x / this.scale)/this.relativeScale,(movePoint.y / this.scale)/this.relativeScale);
+		logger.info("move("+point+") C absolutePoint="+absolutePoint);
+		this.absolutePoint = new Point(absolutePoint);
 		this.relativePoint = this.getRelativePoint();
-		logger.info("move("+point+") this.relativePoint="+this.relativePoint);
 		this.scale();
+		logger.info("move("+point+") D movePoint="+movePoint);
 		logger.info("move("+point+") this.point="+this.point);
-		logger.info(this.point == startPoint);
+		logger.info(this.point == movePoint);
 	}
 
 	@JsonIgnore
