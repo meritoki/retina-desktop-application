@@ -119,8 +119,8 @@ public class DocumentAddMoveShapeResizeImageTest {
 		document.cache.pressedImage = document.getPage().getImage();
 		assertEquals(document.getPage().setIndex(0), true);
 		document.cache.releasedImage = document.getPage().getImage();
-		int x = (int) (document.cache.releasedImage.position.point.x+document.cache.pressedImage.position.dimension.width / 2);
-		int y = (int) (document.cache.releasedImage.position.point.y+document.cache.pressedImage.position.dimension.height / 2);
+		int x = (int) (document.cache.pressedImage.position.point.x+document.cache.pressedImage.position.dimension.width / 2);
+		int y = (int) (document.cache.pressedImage.position.point.y+document.cache.pressedImage.position.dimension.height / 2);
 		document.cache.pressedPoint = new Point(x, y);
 		document.cache.pressedShape = document.getPage().getShape(document.cache.pressedPoint);
 		x = (int) (document.cache.releasedImage.position.point.x+document.cache.releasedImage.position.dimension.width / 2);
@@ -168,8 +168,8 @@ public class DocumentAddMoveShapeResizeImageTest {
 		document.cache.pressedImage = document.getPage().getImage();
 		assertEquals(document.getPage().setIndex(1), true);
 		document.cache.releasedImage = document.getPage().getImage();
-		int x = (int) (document.cache.releasedImage.position.point.x+document.cache.pressedImage.position.dimension.width / 2);
-		int y = (int) (document.cache.releasedImage.position.point.y+document.cache.pressedImage.position.dimension.height / 2);
+		int x = (int) (document.cache.pressedImage.position.point.x+document.cache.pressedImage.position.dimension.width / 2);
+		int y = (int) (document.cache.pressedImage.position.point.y+document.cache.pressedImage.position.dimension.height / 2);
 		document.cache.pressedPoint = new Point(x, y);
 		document.cache.pressedShape = document.getPage().getShape(document.cache.pressedPoint);
 		x = (int) (document.cache.releasedImage.position.point.x+document.cache.releasedImage.position.dimension.width / 2);

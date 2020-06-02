@@ -173,6 +173,20 @@ public class Position {
 		return point;
 	}
 
+	public Point getAbsolutePoint(Point point) {
+			point.x /= this.scale;
+			point.y /= this.scale;
+			point.x -= this.offset*this.addScale;
+			point.y -= this.margin*this.addScale;
+			point.x /= this.relativeScale;
+			point.y /= this.relativeScale;
+			point.x += this.offset*this.addScale;
+			point.y += this.margin*this.addScale;
+			Point absolutePoint = new Point(point);
+			logger.info("getAbsolutePoint("+point+") absolutePoint="+absolutePoint);
+			return absolutePoint;
+		}
+
 	@JsonIgnore
 	public void scale() {
 //		logger.info("scale() addScale="+addScale);
@@ -210,7 +224,7 @@ public class Position {
 		logger.info("move("+point+") A startPoint="+startPoint);
 		Point movePoint = new Point(startPoint.x + point.x, startPoint.y + point.y);
 		logger.info("move("+point+") B movePoint="+movePoint);
-		Point absolutePoint = new Point((movePoint.x / this.scale)/this.relativeScale,(movePoint.y / this.scale)/this.relativeScale);
+		Point absolutePoint = this.getAbsolutePoint(movePoint);
 		logger.info("move("+point+") C absolutePoint="+absolutePoint);
 		this.absolutePoint = new Point(absolutePoint);
 		this.relativePoint = this.getRelativePoint();
@@ -219,7 +233,7 @@ public class Position {
 		logger.info("move("+point+") this.point="+this.point);
 		logger.info(this.point.equals(movePoint));
 	}
-
+	
 	@JsonIgnore
 	public void setScale(double scale) {
 		this.scale = (this.addScale > 0) ? scale / this.addScale : scale;
@@ -390,16 +404,16 @@ public class Position {
 	public String toString() {
 		String string = "";
 		ObjectWriter ow = new ObjectMapper().writer();
-		if (logger.isDebugEnabled()) {
+//		if (logger.isDebugEnabled()) {
 			// .withDefaultPrettyPrinter();
 			try {
 				string = ow.writeValueAsString(this);
 			} catch (IOException ex) {
 				logger.error("IOException " + ex.getMessage());
 			}
-		} else if (logger.isInfoEnabled()) {
-			string = "{\"relativeScale\":"+this.relativeScale+",\"offset\":"+this.offset+",\"margin\":"+this.margin+", \"relativePoint\":"+this.relativePoint+"\",\"point\":" + this.point + ", \"center\":"+this.center+", \"dimension\":" + this.dimension + "}";
-		}
+//		} else if (logger.isInfoEnabled()) {
+//			string = "{\"relativeScale\":"+this.relativeScale+",\"offset\":"+this.offset+",\"margin\":"+this.margin+", \"relativePoint\":"+this.relativePoint+"\",\"point\":" + this.point + ", \"center\":"+this.center+", \"dimension\":" + this.dimension + "}";
+//		}
 		return string;
 	}
 }
