@@ -62,7 +62,7 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 	
 	@Test
 	@Order(2)
-	public void resizeImage() {
+	public void resizeImageZero() {
 		assertEquals(document.setIndex(0), true);
 		assertEquals(document.getPage().setIndex(0), true);
 		document.cache.pressedPage = document.getPage();
@@ -70,6 +70,12 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 		document.cache.scaleOperator = '/';
 		document.cache.scaleFactor = 1.01;
 		try {
+			document.pattern.execute("resizeImage");
+			document.pattern.execute("resizeImage");
+			document.pattern.execute("resizeImage");
+			document.pattern.execute("resizeImage");
+			document.pattern.execute("resizeImage");
+			document.pattern.execute("resizeImage");
 			document.pattern.execute("resizeImage");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
@@ -85,7 +91,7 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 	
 	@Test
 	@Order(3)
-	public void moveShape() {
+	public void moveShapeZero() {
 		assertEquals(document.setIndex(0), true);
 		assertEquals(document.getPage().setIndex(0), true);
 		document.cache.pressedImage = document.getPage().getImage();
@@ -113,5 +119,69 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 		logger.info("shapeList="+document.getShapeList());
 		logger.info("shape="+shape);
 		assertNotNull(shape);
+		assertEquals(document.cache.pressedShape.position.dimension.width, shape.position.dimension.width);
+		assertEquals(document.cache.pressedShape.position.dimension.height, shape.position.dimension.height);
+	}
+	@Test
+	@Order(4)
+	public void resizeImageOne() {
+		assertEquals(document.setIndex(0), true);
+		assertEquals(document.getPage().setIndex(1), true);
+		document.cache.pressedPage = document.getPage();
+		document.cache.pressedImage = document.getImage();
+		document.cache.scaleOperator = '/';
+		document.cache.scaleFactor = 1.01;
+		try {
+			document.pattern.execute("resizeImage");
+			document.pattern.execute("resizeImage");
+			document.pattern.execute("resizeImage");
+			document.pattern.execute("resizeImage");
+			document.pattern.execute("resizeImage");
+			document.pattern.execute("resizeImage");
+			document.pattern.execute("resizeImage");
+		} catch (Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+		int x = (int) (document.cache.pressedImage.position.point.x+document.cache.pressedImage.position.dimension.width / 2);
+		int y = (int) (document.cache.pressedImage.position.point.y+document.cache.pressedImage.position.dimension.height / 2);
+		logger.info("shapeList="+document.getShapeList());
+		Shape shape =document.getShape(new Point(x, y));
+		logger.info("shapeList="+document.getShapeList());
+		logger.info("shape="+shape);
+		assertNotNull(shape);
+	}
+	
+	@Test
+	@Order(5)
+	public void moveShapeOne() {
+		assertEquals(document.setIndex(0), true);
+		assertEquals(document.getPage().setIndex(1), true);
+		document.cache.pressedImage = document.getPage().getImage();
+		assertEquals(document.getPage().setIndex(0), true);
+		document.cache.releasedImage = document.getPage().getImage();
+		int x = (int) (document.cache.pressedImage.position.point.x+document.cache.pressedImage.position.dimension.width / 2);
+		int y = (int) (document.cache.pressedImage.position.point.y+document.cache.pressedImage.position.dimension.height / 2);
+		document.cache.pressedPoint = new Point(x, y);
+		logger.info("pressedImage="+document.cache.pressedImage);
+		logger.info("pressedPoint="+document.cache.pressedPoint);
+		document.cache.pressedShape = document.getPage().getShape(document.cache.pressedPoint);
+		logger.info("pressedShape="+document.cache.pressedShape);
+		assertNotNull(document.cache.pressedShape);
+		x = (int) (document.cache.releasedImage.position.point.x+document.cache.releasedImage.position.dimension.width / 2);
+		y = (int) (document.cache.releasedImage.position.point.y+document.cache.releasedImage.position.dimension.height / 2);
+		document.cache.releasedPoint = new Point(x, y);
+		logger.info("releasedImage="+document.cache.releasedImage);
+		logger.info("releasedPoint="+document.cache.releasedPoint);
+		try {
+			document.pattern.execute("moveShape");
+		} catch (Exception e) {
+			logger.error("Exception " + e.getMessage());
+		}
+		Shape shape =document.getShape(new Point(x, y));
+		logger.info("shapeList="+document.getShapeList());
+		logger.info("shape="+shape);
+		assertNotNull(shape);
+		assertEquals(document.cache.pressedShape.position.dimension.width, shape.position.dimension.width);
+		assertEquals(document.cache.pressedShape.position.dimension.height, shape.position.dimension.height);
 	}
 }

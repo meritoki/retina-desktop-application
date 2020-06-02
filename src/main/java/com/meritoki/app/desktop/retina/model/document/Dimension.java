@@ -50,6 +50,15 @@ public class Dimension {
 	}
 	
 	@JsonIgnore
+	public boolean equals(Dimension dimension) {
+		boolean flag = false;
+		if(this.width == dimension.width && this.height == dimension.height) {
+			flag = true;
+		}
+		return flag;
+	}
+	
+	@JsonIgnore
 	@Override
 	public String toString() {
 		String string = "";

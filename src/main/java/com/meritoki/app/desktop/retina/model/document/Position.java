@@ -217,7 +217,7 @@ public class Position {
 		this.scale();
 		logger.info("move("+point+") D movePoint="+movePoint);
 		logger.info("move("+point+") this.point="+this.point);
-		logger.info(this.point == movePoint);
+		logger.info(this.point.equals(movePoint));
 	}
 
 	@JsonIgnore
