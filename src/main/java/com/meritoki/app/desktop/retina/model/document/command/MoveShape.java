@@ -49,7 +49,7 @@ public class MoveShape extends Command {
 			//Testing new logic
 			newShape.position = new Position(new Point(newShape.position.getStartPoint()),
 					new Point(newShape.position.getStopPoint()), 
-					releasedImage.position.relativeScale, 
+					releasedImage.position.relativeScale,//newShape.position.relativeScale,//newShape.position.addRelativeScale,//1,//releasedImage.position.relativeScale, 
 					releasedImage.position.scale,//this.document.cache.scale,
 					releasedImage.position.offset, 
 					releasedImage.position.margin);

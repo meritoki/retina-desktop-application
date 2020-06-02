@@ -384,7 +384,7 @@ public class Page {
 	@JsonIgnore
 	public boolean contains(Point point) {
 		boolean flag = this.position.contains(point);
-		logger.info("contains("+point+") flag="+flag);
+		logger.debug("contains("+point+") flag="+flag);
 		return flag;
 	}
 

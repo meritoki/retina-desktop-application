@@ -22,7 +22,7 @@ import com.meritoki.app.desktop.retina.model.document.Shape;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DocumentAddShapeResizeImageMoveShapeTest {
 
-	static Logger logger = LogManager.getLogger(DocumentAddMoveShapeResizeImageTest.class.getName());
+	static Logger logger = LogManager.getLogger(DocumentAddShapeMoveShapeResizeImageTest.class.getName());
 	static Document document = null;
 	static int dimension = 4;
 

@@ -29,22 +29,22 @@ public class ResizeImage extends Command {
 		this.document.cache.pressedPage.setBufferedImage(null);
 		this.document.cache.pressedImage.setBufferedImage(null);
 		//This LINE IS ESSENTIAL TO FIXING THE BUG
-		logger.info("execute() this.document.cache.pressedImage.position.scale="+this.document.cache.pressedImage.position.relativeScale);
+		logger.info("execute() this.document.cache.pressedImage.position.relativeScale="+this.document.cache.pressedImage.position.relativeScale);
 		logger.info("execute() this.document.cache.scale="+this.document.cache.scale);
-		double scale = (this.document.cache.scale == this.document.cache.pressedImage.position.relativeScale)?this.document.cache.scale/this.document.cache.pressedImage.position.relativeScale:this.document.cache.pressedImage.position.relativeScale;
-		logger.info("execute() scale="+scale);
+		double relativeScale = (this.document.cache.scale == this.document.cache.pressedImage.position.relativeScale)?this.document.cache.scale/this.document.cache.pressedImage.position.relativeScale:this.document.cache.pressedImage.position.relativeScale;
+		logger.info("execute() relativeScale="+relativeScale);
 		double factor = this.document.cache.scaleFactor;
 		switch(this.document.cache.scaleOperator) {
 		case '*':{
-			scale *= factor;
+			relativeScale *= factor;
 			break;
 		}
 		case '/':{
-			scale /= factor;
+			relativeScale /= factor;
 			break;
 		}
 		}
-		this.document.cache.pressedImage.setRelativeScale(scale);
+		this.document.cache.pressedImage.setRelativeScale(relativeScale);
 //		this.document.cache.pressedPage.getBufferedImage();
 		//Redo Operation
 		operation = new Operation();

@@ -21,9 +21,9 @@ import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class DocumentAddMoveShapeResizeImageTest {
+public class DocumentAddShapeMoveShapeResizeImageTest {
 	
-	static Logger logger = LogManager.getLogger(DocumentAddMoveShapeResizeImageTest.class.getName());
+	static Logger logger = LogManager.getLogger(DocumentAddShapeMoveShapeResizeImageTest.class.getName());
 	static Document document = null;
 	static int dimension = 4;
 
@@ -33,7 +33,6 @@ public class DocumentAddMoveShapeResizeImageTest {
 		Page page = new Page();
 		page.addImage(new Image(new File("./data/image/01.jpg")));
 		page.addImage(new Image(new File("./data/image/02.jpg")));
-//		page.addImage(new Image(new File("./data/image/03.jpg")));
 		document.addPage(page);
 		assertEquals(document.pageList.size(), 1);
 	}
@@ -98,16 +97,29 @@ public class DocumentAddMoveShapeResizeImageTest {
 		document.cache.scaleFactor = 1.01;
 		try {
 			document.pattern.execute("resizeImage");
-			document.pattern.execute("resizeImage");
-			document.pattern.execute("resizeImage");
-			document.pattern.execute("resizeImage");
-			document.pattern.execute("resizeImage");
-			document.pattern.execute("resizeImage");
+//			document.pattern.execute("resizeImage");
+//			document.pattern.execute("resizeImage");
+//			document.pattern.execute("resizeImage");
+//			document.pattern.execute("resizeImage");
+//			document.pattern.execute("resizeImage");
+//			document.pattern.execute("resizeImage");
+//			document.pattern.execute("resizeImage");
+//			document.pattern.execute("resizeImage");
+//			document.pattern.execute("resizeImage");
+//			document.pattern.execute("resizeImage");
+//			document.pattern.execute("resizeImage");
+//			document.pattern.execute("resizeImage");
+//			document.pattern.execute("resizeImage");
+//			document.pattern.execute("resizeImage");
+//			document.pattern.execute("resizeImage");
+//			document.pattern.execute("resizeImage");
+//			document.pattern.execute("resizeImage");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
 		int x = (int) (document.cache.pressedImage.position.point.x+document.cache.pressedImage.position.dimension.width / 2);
 		int y = (int) (document.cache.pressedImage.position.point.y+document.cache.pressedImage.position.dimension.height / 2);
+
 		assertNotNull(document.getShape(new Point(x,y)));
 	}
 	
@@ -115,6 +127,7 @@ public class DocumentAddMoveShapeResizeImageTest {
 	@Order(4)
 	public void moveShapeOne() {
 		assertEquals(document.setIndex(0), true);
+		//right to left
 		assertEquals(document.getPage().setIndex(1), true);
 		document.cache.pressedImage = document.getPage().getImage();
 		assertEquals(document.getPage().setIndex(0), true);
@@ -140,7 +153,7 @@ public class DocumentAddMoveShapeResizeImageTest {
 	@Order(5)
 	public void resizeImageOne() {
 		assertEquals(document.setIndex(0), true);
-		assertEquals(document.getPage().setIndex(1), true);
+		assertEquals(document.getPage().setIndex(0), true);
 		document.cache.pressedPage = document.getPage();
 		document.cache.pressedImage = document.getImage();
 		document.cache.scaleOperator = '/';
@@ -157,6 +170,8 @@ public class DocumentAddMoveShapeResizeImageTest {
 		}
 		int x = (int) (document.cache.pressedImage.position.point.x+document.cache.pressedImage.position.dimension.width / 2);
 		int y = (int) (document.cache.pressedImage.position.point.y+document.cache.pressedImage.position.dimension.height / 2);
+		logger.info("document.cache.pressedImage="+document.cache.pressedImage);
+		logger.info("shapeList="+document.getShapeList());
 		assertNotNull(document.getShape(new Point(x,y)));
 	}
 	
@@ -184,35 +199,42 @@ public class DocumentAddMoveShapeResizeImageTest {
 		logger.info("shape="+shape);
 		assertNotNull(shape);
 	}
-	
+//	
 	@Test
 	@Order(7)
 	public void resizeImageTwo() {
 		assertEquals(document.setIndex(0), true);
-		assertEquals(document.getPage().setIndex(0), true);
+		assertEquals(document.getPage().setIndex(1), true);
 		document.cache.pressedPage = document.getPage();
 		document.cache.pressedImage = document.getImage();
+		int x = (int) (document.cache.pressedImage.position.point.x+document.cache.pressedImage.position.dimension.width / 2);
+		int y = (int) (document.cache.pressedImage.position.point.y+document.cache.pressedImage.position.dimension.height / 2);
+		logger.info("document.cache.pressedImage="+document.cache.pressedImage);
+		Shape shape =document.getShape(new Point(x, y));
 		document.cache.scaleOperator = '/';
 		document.cache.scaleFactor = 1.01;
 		try {
 			document.pattern.execute("resizeImage");
-			document.pattern.execute("resizeImage");
-			document.pattern.execute("resizeImage");
-			document.pattern.execute("resizeImage");
-			document.pattern.execute("resizeImage");
-			document.pattern.execute("resizeImage");
+//			document.pattern.execute("resizeImage");
+//			document.pattern.execute("resizeImage");
+//			document.pattern.execute("resizeImage");
+//			document.pattern.execute("resizeImage");
+//			document.pattern.execute("resizeImage");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
-		int x = (int) (document.cache.pressedImage.position.point.x+document.cache.pressedImage.position.dimension.width / 2);
-		int y = (int) (document.cache.pressedImage.position.point.y+document.cache.pressedImage.position.dimension.height / 2);
-		assertNotNull(document.getShape(new Point(x,y)));
+		x = (int) (document.cache.pressedImage.position.point.x+document.cache.pressedImage.position.dimension.width / 2);
+		y = (int) (document.cache.pressedImage.position.point.y+document.cache.pressedImage.position.dimension.height / 2);
+		logger.info("document.cache.pressedImage="+document.cache.pressedImage);
+		shape =document.getShape(new Point(x, y));
+		logger.info("shape="+shape);
+		assertNotNull(shape);
 	}
-	
-	@Test
-	@Order(8)
-	public void save() {
-		DocumentController.save(new java.io.File("./test/document-add-move-shape-resize-image-test.json"), document);
-	}
+//	
+//	@Test
+//	@Order(8)
+//	public void save() {
+//		DocumentController.save(new java.io.File("./test/document-add-move-shape-resize-image-test.json"), document);
+//	}
 
 }

@@ -174,8 +174,10 @@ public class Position {
 	}
 
 	public Point getAbsolutePoint(Point point) {
+			//correct
 			point.x /= this.scale;
 			point.y /= this.scale;
+			//correct
 			point.x -= this.offset*this.addScale;
 			point.y -= this.margin*this.addScale;
 			point.x /= this.relativeScale;
@@ -192,7 +194,7 @@ public class Position {
 //		logger.info("scale() addScale="+addScale);
 //		logger.info("scale() scale="+scale);
 //		logger.info("scale() addRelativeScale="+addRelativeScale);
-		logger.info("scale() relativeScale="+relativeScale);
+//		logger.info("scale() relativeScale="+relativeScale);
 		if (this.relative) {
 //			logger.info("scale() absolutePoint="+absolutePoint);
 			this.point.x = this.relativePoint.x*this.relativeScale + this.offset * addScale;
@@ -222,9 +224,11 @@ public class Position {
 	public void move(Point point) {
 		Point startPoint = this.getStartPoint();
 		logger.info("move("+point+") A startPoint="+startPoint);
+		Point testPoint = this.getAbsolutePoint(new Point(startPoint));
+		logger.info(this.absolutePoint.equals(testPoint));
 		Point movePoint = new Point(startPoint.x + point.x, startPoint.y + point.y);
 		logger.info("move("+point+") B movePoint="+movePoint);
-		Point absolutePoint = this.getAbsolutePoint(movePoint);
+		Point absolutePoint = this.getAbsolutePoint(new Point(movePoint));
 		logger.info("move("+point+") C absolutePoint="+absolutePoint);
 		this.absolutePoint = new Point(absolutePoint);
 		this.relativePoint = this.getRelativePoint();
@@ -244,7 +248,7 @@ public class Position {
 	@JsonIgnore
 	public void setRelativeScale(double scale) {
 		this.relativeScale = (this.addRelativeScale > 0) ? scale / this.addRelativeScale : scale;
-		logger.info("setRelativeScale(" + scale + ") this.relativeScale=" + this.relativeScale);
+		logger.debug("setRelativeScale(" + scale + ") this.relativeScale=" + this.relativeScale);
 		this.scale();
 	}
 
@@ -404,16 +408,17 @@ public class Position {
 	public String toString() {
 		String string = "";
 		ObjectWriter ow = new ObjectMapper().writer();
-//		if (logger.isDebugEnabled()) {
+		if (logger.isDebugEnabled()) {
 			// .withDefaultPrettyPrinter();
 			try {
 				string = ow.writeValueAsString(this);
 			} catch (IOException ex) {
 				logger.error("IOException " + ex.getMessage());
 			}
-//		} else if (logger.isInfoEnabled()) {
+		} else if (logger.isInfoEnabled()) {
 //			string = "{\"relativeScale\":"+this.relativeScale+",\"offset\":"+this.offset+",\"margin\":"+this.margin+", \"relativePoint\":"+this.relativePoint+"\",\"point\":" + this.point + ", \"center\":"+this.center+", \"dimension\":" + this.dimension + "}";
-//		}
+			string = "{\"relativeScale\":"+this.relativeScale+", \"point\":" + this.point + ", \"center\":"+this.center+", \"dimension\":" + this.dimension + "}";
+		}
 		return string;
 	}
 }
