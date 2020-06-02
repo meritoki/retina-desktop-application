@@ -227,10 +227,10 @@ public class Matrix {
 		int count = 0;
 		double sum = 0;
 		for (Shape s : shapeList) {
-			sum += s.position.getCenterY();
+			sum += s.position.center.y;
 			count += 1;
 		}
-		sum += shape.position.getCenterY();
+		sum += shape.position.center.y;
 		count += 1;
 		average = sum / count;
 		return average;
@@ -241,7 +241,7 @@ public class Matrix {
 		boolean flag = true;
 		double a = 0;
 		double average = this.getShapeListYAverage(shapeList, shape);
-		a = shape.position.getCenterY();
+		a = shape.position.center.y;
 		a = Math.abs(average - a);
 		if (a > (THRESHOLD * shape.position.scale)) {
 			flag = false;
@@ -257,8 +257,8 @@ public class Matrix {
 		}
 		Collections.sort(list, new Comparator<List<Shape>>() {
 			public int compare(List<Shape> ideaVal1, List<Shape> ideaVal2) {
-				Double idea1 = ideaVal1.get(0).position.getCenterY();
-				Double idea2 = ideaVal2.get(0).position.getCenterY();
+				Double idea1 = ideaVal1.get(0).position.center.y;
+				Double idea2 = ideaVal2.get(0).position.center.y;
 				return idea1.compareTo(idea2);
 			}
 		});
@@ -268,8 +268,8 @@ public class Matrix {
 	public void sortRowList(List<Shape> shapeList) {
 		Collections.sort(shapeList, new Comparator<Shape>() {
 			public int compare(Shape ideaVal1, Shape ideaVal2) {
-				Double idea1 = ideaVal1.position.getCenterX();// pointList.get(0).x;
-				Double idea2 = ideaVal2.position.getCenterX();// pointList.get(0).x;
+				Double idea1 = ideaVal1.position.center.x;// pointList.get(0).x;
+				Double idea2 = ideaVal2.position.center.x;// pointList.get(0).x;
 				return idea1.compareTo(idea2);
 			}
 		});

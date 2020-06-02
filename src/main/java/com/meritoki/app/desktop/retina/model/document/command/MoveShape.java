@@ -44,17 +44,18 @@ public class MoveShape extends Command {
 		Shape newShape = null;
 		if(pressedPage.contains(releasedPoint)) { 
 		if (releasedImage != null && !pressedImage.equals(releasedImage)) {
-			newShape = new Shape(pressedShape,true);
+			newShape = pressedShape;//new Shape(pressedShape,true);//uncommented to fix bug
 			newShape.position.move(movedPoint);
 			//Testing new logic
 			newShape.position = new Position(new Point(newShape.position.getStartPoint()),
 					new Point(newShape.position.getStopPoint()), 
 					releasedImage.position.relativeScale, 
-					this.document.cache.scale,
+					releasedImage.position.scale,//this.document.cache.scale,
 					releasedImage.position.offset, 
 					releasedImage.position.margin);
-			
+			newShape = new Shape(newShape, true);
 			//end test
+			
 			pressedImage.removeShape(newShape.uuid);
 			releasedImage.addShape(newShape);
 		} else {

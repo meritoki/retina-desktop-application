@@ -31,6 +31,8 @@ public class Position {
 	@JsonIgnore
 	private static Logger logger = LogManager.getLogger(Position.class.getName());
 	@JsonProperty
+	public boolean relative = false;
+	@JsonProperty
 	public double addScale = 1;
 	@JsonProperty
 	public double scale = 1;
@@ -39,22 +41,21 @@ public class Position {
 	@JsonProperty
 	public double relativeScale = 1;
 	@JsonProperty
+	public double offset = 0;
+	@JsonProperty
+	public double margin = 0;
+	@JsonProperty
 	public Point point = new Point();
 	@JsonProperty
 	public Point absolutePoint = new Point();
 	@JsonProperty
-	public boolean relative = false;
+	public Point center = new Point();
 	@JsonProperty
 	public Point relativePoint = null;
 	@JsonProperty
 	public Dimension dimension = new Dimension();
 	@JsonProperty
 	public Dimension absoluteDimension = new Dimension();
-	@JsonProperty
-	public double offset = 0;
-	@JsonProperty
-	public double margin = 0;
-
 	public Position() {
 	}
 
@@ -67,7 +68,7 @@ public class Position {
 	}
 
 	public Position(Point a, Point b, double addRelativeScale, double addScale, double offset, double margin) {
-		logger.info("Position(" + a + ", " + b + ", " + addScale + ", " + offset + ", " + margin + ")");
+		logger.info("Position(" + a + ", " + b + ", " +addRelativeScale+", "+ addScale + ", " + offset + ", " + margin + ")");
 		List<Point> pointList = new ArrayList<>();
 		pointList.add(a);
 		pointList.add(b);
@@ -161,9 +162,9 @@ public class Position {
 
 	@JsonIgnore
 	public Point getRelativePoint() {
-		logger.info("getRelativePoint()");
-		logger.info("getRelativePoint() offset="+offset);
-		logger.info("getRelativePoint() margin="+margin);
+//		logger.info("getRelativePoint()");
+//		logger.info("getRelativePoint() offset="+offset);
+//		logger.info("getRelativePoint() margin="+margin);
 		Point point = new Point();
 		point.x = this.absolutePoint.x - offset * this.addScale;
 		point.y = this.absolutePoint.y - margin * this.addScale;
@@ -174,10 +175,12 @@ public class Position {
 
 	@JsonIgnore
 	public void scale() {
+//		logger.info("scale() addScale="+addScale);
+//		logger.info("scale() scale="+scale);
+//		logger.info("scale() addRelativeScale="+addRelativeScale);
+		logger.info("scale() relativeScale="+relativeScale);
 		if (this.relative) {
-//			this.relativePoint = this.getRelativePoint();
-//			this.point.x = this.relativePoint.x + this.offset * addScale;
-//			this.point.y = this.relativePoint.y + this.margin * addScale;
+//			logger.info("scale() absolutePoint="+absolutePoint);
 			this.point.x = this.relativePoint.x*this.relativeScale + this.offset * addScale;
 			this.point.y = this.relativePoint.y*this.relativeScale + this.margin * addScale;
 			this.dimension.width = this.absoluteDimension.width;
@@ -194,6 +197,29 @@ public class Position {
 		this.point.y *= this.scale;
 		this.dimension.width *= this.scale;
 		this.dimension.height *= this.scale;
+		this.center = new Point(this.point.x + (this.dimension.width / 2),this.point.y + (this.dimension.height / 2));
+	}
+
+	/** 
+	 * Have to rewrite move method and work will almost be done.
+	 * @param point
+	 */
+	@JsonIgnore
+	public void move(Point point) {
+		Point startPoint = this.getStartPoint();
+		startPoint.x += point.x;
+		startPoint.y += point.y;
+		logger.info("move("+point+") this.relativeScale="+this.relativeScale);
+//		startPoint = new Point(startPoint.x / this.scale - this.offset / this.addScale,startPoint.y / this.scale - this.margin / this.addScale);
+		startPoint = new Point((startPoint.x / this.scale - this.offset / this.addScale)/this.relativeScale,(startPoint.y / this.scale - this.margin / this.addScale)/this.relativeScale);
+		this.absolutePoint = new Point(startPoint);
+		logger.info("move("+point+") this.absolutePoint="+this.absolutePoint);
+		logger.info("move("+point+") this.absolutePoint="+this.absolutePoint);
+		this.relativePoint = this.getRelativePoint();
+		logger.info("move("+point+") this.relativePoint="+this.relativePoint);
+		this.scale();
+		logger.info("move("+point+") this.point="+this.point);
+		logger.info(this.point == startPoint);
 	}
 
 	@JsonIgnore
@@ -228,26 +254,13 @@ public class Position {
 		this.margin = margin;
 		this.scale();
 	}
+
+	@JsonIgnore
+	public Point getCenter() {
+		return this.center;
+	}
 	
-//	@JsonIgnore
-//	public Point getAbsolutePoint(double relativeScale) {
-//		return new Point(this.absolutePoint.x*relativeScale,this.absolutePoint.y*relativeScale);
-//	}
-//	
-//	@JsonIgnore
-//	public Dimension getAbsoluteDimension(double relativeScale) {
-//		return new Dimension(this.absoluteDimension.width*relativeScale,this.absoluteDimension.height*relativeScale);
-//	}
 
-	@JsonIgnore
-	public double getCenterX() {
-		return this.point.x + (this.dimension.width / 2);
-	}
-
-	@JsonIgnore
-	public double getCenterY() {
-		return this.point.y + (this.dimension.height / 2);
-	}
 
 	@JsonIgnore
 	public Point getStartPoint() {
@@ -373,21 +386,7 @@ public class Position {
 		this.relativePoint = this.getRelativePoint();//could be cause of a major bug;
 		this.scale();
 	}
-
-	@JsonIgnore
-	public void move(Point point) {
-		logger.info("move(" + point + ")");
-		Point origin = null;
-		if (this.relative) {
-			origin = this.relativePoint;
-		} else {
-			origin = this.absolutePoint;
-		}
-		origin.x += point.x / scale;
-		origin.y += point.y / scale;
-		this.scale();
-	}
-
+	
 	@JsonIgnore
 	@Override
 	public String toString() {
@@ -401,7 +400,7 @@ public class Position {
 				logger.error("IOException " + ex.getMessage());
 			}
 		} else if (logger.isInfoEnabled()) {
-			string = "{\"offset\":"+this.offset+",\"margin\":"+this.margin+",\"point\":" + this.point + ", \"dimension\":" + this.dimension + "}";
+			string = "{\"relativeScale\":"+this.relativeScale+",\"offset\":"+this.offset+",\"margin\":"+this.margin+", \"relativePoint\":"+this.relativePoint+"\",\"point\":" + this.point + ", \"center\":"+this.center+", \"dimension\":" + this.dimension + "}";
 		}
 		return string;
 	}
@@ -415,4 +414,24 @@ public class Position {
 //		flag = true;
 //	}
 //	return flag;
+//}
+
+
+//@JsonIgnore
+//public void move(Point point) {
+//	logger.info("move(" + point + ")");
+//	Point origin = null;
+//	if (this.relative) {
+//		logger.info("move(" + point + ") relative");
+//		origin = this.relativePoint;
+//		origin.x *= this.relativeScale;
+//		origin.y *= this.relativeScale;
+//	} else {
+//		origin = this.absolutePoint;
+//	}
+//	logger.info("move(" + point + ") beforeOrigin="+origin);
+//	origin.x += point.x / scale;
+//	origin.y += point.y / scale;
+//	logger.info("move(" + point + ") afterOrigin="+origin);
+//	this.scale();
 //}
