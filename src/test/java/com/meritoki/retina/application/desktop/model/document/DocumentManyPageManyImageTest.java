@@ -18,11 +18,12 @@ import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class DocumentManyPageTest {
+public class DocumentManyPageManyImageTest {
 
 	static Logger logger = LogManager.getLogger(DocumentResizeShapeTest.class.getName());
 	static Document document = null;
-	int limit = 16;
+	int pageLimit = 16;
+	int imageLimit = 3;
 	
 	@BeforeAll
 	public static void initialize() {
@@ -32,16 +33,19 @@ public class DocumentManyPageTest {
 	@Test
 	@Order(1)
 	public void addPages() {
-		for(int i=0;i<limit;i++) {
-			Page page = new Page(new Image(new File("./data/image/01.jpg")));
+		for(int i=0;i<pageLimit;i++) {
+			Page page = new Page();
+			for(int j=0;j<imageLimit;j++) {
+				page.addImage(new Image(new File("./data/image/01.jpg")));
+			}
 			document.addPage(page);
 		}
-		assertEquals(document.pageList.size(),limit);
+		assertEquals(document.pageList.size(),pageLimit);
 	}
 	
 	@Test
 	@Order(2)
 	public void savePages() {
-		DocumentController.save(new java.io.File("./test/document-many-page-test.json"), document);
+		DocumentController.save(new java.io.File("./test/document-many-page-many-image-test.json"), document);
 	}
 }

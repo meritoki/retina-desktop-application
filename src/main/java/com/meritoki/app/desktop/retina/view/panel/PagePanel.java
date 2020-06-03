@@ -217,26 +217,46 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_DOWN: {
 				logger.debug("keyPressed(e) KeyEvent.VK_DOWN");
-				Page page = this.model.document.getPage();
-				page.setBufferedImage(null);
-				Image image = (page != null) ? page.getImage() : null;
-				if (image != null) {
-					image.setMargin(image.position.margin + 10);
-					page.setBufferedImage(null);
+				this.model.document.cache.pressedPage = this.model.document.getPage(); 
+				this.model.document.cache.pressedImage = this.model.document.getImage();
+				this.model.document.cache.shiftOperator = '+';
+				this.model.document.cache.shiftFactor = 10;
+				try {
+					this.model.document.pattern.execute("shiftMargin");
+					this.main.init();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
-				this.main.init();
+//				Page page = this.model.document.getPage();
+//				page.setBufferedImage(null);
+//				Image image = (page != null) ? page.getImage() : null;
+//				if (image != null) {
+//					image.setMargin(image.position.margin + 10);
+//					page.setBufferedImage(null);
+//				}
+//				this.main.init();
 				break;
 			}
 			case KeyEvent.VK_UP: {
 				logger.debug("keyPressed(e) KeyEvent.VK_UP");
-				Page page = this.model.document.getPage();
-				page.setBufferedImage(null);
-				Image image = (page != null) ? page.getImage() : null;
-				if (image != null) {
-					image.setMargin(image.position.margin - 10);
-					page.setBufferedImage(null);
+				this.model.document.cache.pressedPage = this.model.document.getPage(); 
+				this.model.document.cache.pressedImage = this.model.document.getImage();
+				this.model.document.cache.shiftOperator = '-';
+				this.model.document.cache.shiftFactor = 10;
+				try {
+					this.model.document.pattern.execute("shiftMargin");
+					this.main.init();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
-				this.main.init();
+//				Page page = this.model.document.getPage();
+//				page.setBufferedImage(null);
+//				Image image = (page != null) ? page.getImage() : null;
+//				if (image != null) {
+//					image.setMargin(image.position.margin - 10);
+//					page.setBufferedImage(null);
+//				}
+//				this.main.init();
 				break;
 			}
 			case KeyEvent.VK_LEFT: {//Shrink Image
@@ -247,7 +267,6 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				this.model.document.cache.pressedImage = this.model.document.getPage().getImage();
 				try {
 					this.model.document.pattern.execute("resizeImage");
-					
 					this.main.init();
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

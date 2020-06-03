@@ -33,19 +33,18 @@ public class ResizeImage extends Command {
 		logger.info("execute() this.document.cache.scale="+this.document.cache.scale);
 		double relativeScale = (this.document.cache.scale == this.document.cache.pressedImage.position.relativeScale)?this.document.cache.scale/this.document.cache.pressedImage.position.relativeScale:this.document.cache.pressedImage.position.relativeScale;
 		logger.info("execute() relativeScale="+relativeScale);
-		double factor = this.document.cache.scaleFactor;
+		double scaleFactor = this.document.cache.scaleFactor;
 		switch(this.document.cache.scaleOperator) {
 		case '*':{
-			relativeScale *= factor;
+			relativeScale *= scaleFactor;
 			break;
 		}
 		case '/':{
-			relativeScale /= factor;
+			relativeScale /= scaleFactor;
 			break;
 		}
 		}
 		this.document.cache.pressedImage.setRelativeScale(relativeScale);
-//		this.document.cache.pressedPage.getBufferedImage();
 		//Redo Operation
 		operation = new Operation();
 		operation.object = new Image(this.document.cache.pressedImage);

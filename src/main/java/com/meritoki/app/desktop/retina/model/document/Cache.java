@@ -57,5 +57,9 @@ public class Cache {
 	@JsonIgnore
 	public char scaleOperator = ' ';
 	@JsonIgnore
+	public char shiftOperator = ' ';
+	@JsonIgnore
 	public double scaleFactor = 1;
+	@JsonIgnore
+	public double shiftFactor = 1;
 }
