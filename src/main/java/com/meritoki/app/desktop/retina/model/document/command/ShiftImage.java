@@ -8,23 +8,26 @@ import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Position;
 
-public class ShiftMargin extends Command {
+public class ShiftImage extends Command {
 	
-	private static Logger logger = LogManager.getLogger(ShiftMargin.class.getName());
+	private static Logger logger = LogManager.getLogger(ShiftImage.class.getName());
 
-	public ShiftMargin(Document document) {
-		super(document, "shiftMargin");
+	public ShiftImage(Document document) {
+		super(document, "shiftImage");
 	}
 	
 	public void execute() {
 		logger.info("execute()");
+		//variables
 		Page pressedPage = this.document.cache.pressedPage;
 		Image pressedImage = this.document.cache.pressedImage;
-		pressedPage.setBufferedImage(null);
-		Position position = pressedImage.position;
-		double margin = position.margin;
+		double margin = pressedImage.position.margin;
 		double shiftFactor = this.document.cache.shiftFactor;
-		switch(this.document.cache.shiftOperator) {
+		char shiftOperator = this.document.cache.shiftOperator;
+		
+		//logic
+		pressedPage.setBufferedImage(null);
+		switch(shiftOperator) {
 		case '+':{
 			margin += shiftFactor;
 			break;

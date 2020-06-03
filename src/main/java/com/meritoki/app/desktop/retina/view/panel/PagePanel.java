@@ -24,7 +24,6 @@ import org.apache.logging.log4j.Logger;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
-import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
@@ -107,7 +106,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 		point.x = me.getX();
 		point.y = me.getY();
 		this.model.document.cache.pressedPoint = point;
-		logger.info("mousePressed(e) point="+point);
+		logger.info("mousePressed(me) point="+point);
 		this.model.document.cache.pressedImage = this.model.document.getImage(point);
 		if (this.model.document.cache.pressedImage != null) {
 			this.model.document.setImage(this.model.document.cache.pressedImage.uuid);
@@ -181,8 +180,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			switch (ke.getKeyCode()) {
 			case KeyEvent.VK_EQUALS: {
 				logger.debug("keyPressed(e) KeyEvent.VK_EQUALS");
-				this.model.document.cache.scaleOperator = '*';
 				this.model.document.cache.pressedPage = this.model.document.getPage();
+				this.model.document.cache.scaleOperator = '*';
+				this.model.document.cache.scaleFactor = 1.5;
 				try {
 					this.model.document.pattern.execute("scalePage");
 					this.main.init();
@@ -193,8 +193,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_PLUS: {
 				logger.debug("keyPressed(e) KeyEvent.VK_PLUS");
-				this.model.document.cache.scaleOperator = '*';
 				this.model.document.cache.pressedPage = this.model.document.getPage();
+				this.model.document.cache.scaleOperator = '*';
+				this.model.document.cache.scaleFactor = 1.5;
 				try {
 					this.model.document.pattern.execute("scalePage");
 					this.main.init();
@@ -205,8 +206,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_MINUS: {
 				logger.debug("keyPressed(e) KeyEvent.VK_MINUS");
-				this.model.document.cache.scaleOperator = '/';
 				this.model.document.cache.pressedPage = this.model.document.getPage();
+				this.model.document.cache.scaleOperator = '/';
+				this.model.document.cache.scaleFactor = 1.5;
 				try {
 					this.model.document.pattern.execute("scalePage");
 					this.main.init();
@@ -222,19 +224,12 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				this.model.document.cache.shiftOperator = '+';
 				this.model.document.cache.shiftFactor = 10;
 				try {
-					this.model.document.pattern.execute("shiftMargin");
+					this.model.document.pattern.execute("shiftImage");
 					this.main.init();
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
-//				Page page = this.model.document.getPage();
-//				page.setBufferedImage(null);
-//				Image image = (page != null) ? page.getImage() : null;
-//				if (image != null) {
-//					image.setMargin(image.position.margin + 10);
-//					page.setBufferedImage(null);
-//				}
-//				this.main.init();
+
 				break;
 			}
 			case KeyEvent.VK_UP: {
@@ -244,22 +239,14 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				this.model.document.cache.shiftOperator = '-';
 				this.model.document.cache.shiftFactor = 10;
 				try {
-					this.model.document.pattern.execute("shiftMargin");
+					this.model.document.pattern.execute("shiftImage");
 					this.main.init();
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
-//				Page page = this.model.document.getPage();
-//				page.setBufferedImage(null);
-//				Image image = (page != null) ? page.getImage() : null;
-//				if (image != null) {
-//					image.setMargin(image.position.margin - 10);
-//					page.setBufferedImage(null);
-//				}
-//				this.main.init();
 				break;
 			}
-			case KeyEvent.VK_LEFT: {//Shrink Image
+			case KeyEvent.VK_LEFT: {
 				logger.info("keyPressed(e) KeyEvent.VK_LEFT");
 				this.model.document.cache.scaleOperator = '/';
 				this.model.document.cache.scaleFactor = 1.01;
@@ -273,7 +260,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				}
 				break;
 			}
-			case KeyEvent.VK_RIGHT: {//Grow Image
+			case KeyEvent.VK_RIGHT: {
 				logger.info("keyPressed(e) KeyEvent.VK_RIGHT");
 				this.model.document.cache.scaleOperator = '*';
 				this.model.document.cache.scaleFactor = 1.01;
@@ -377,3 +364,11 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 	public void keyReleased(KeyEvent e) {
 	}
 }
+//Page page = this.model.document.getPage();
+//page.setBufferedImage(null);
+//Image image = (page != null) ? page.getImage() : null;
+//if (image != null) {
+//	image.setMargin(image.position.margin + 10);
+//	page.setBufferedImage(null);
+//}
+//this.main.init();

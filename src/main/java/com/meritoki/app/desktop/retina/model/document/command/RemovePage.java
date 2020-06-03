@@ -19,13 +19,14 @@ public class RemovePage extends Command {
 	@Override
 	public void execute() {
     	logger.info("execute()");
-    	this.user = this.document.cache.user;
-		this.document.removePage(this.document.cache.pressedPage.uuid);
+    	Page pressedPage = this.document.cache.pressedPage;
+    	//undo
 		Operation operation = new Operation();
-		operation.object = new Page(this.document.cache.pressedPage);
+		operation.object = new Page(pressedPage);
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
-		operation.uuid = this.document.cache.pressedPage.uuid;
 		this.operationList.push(operation);
+		//logic
+		this.document.removePage(pressedPage.uuid);
 	}
 }

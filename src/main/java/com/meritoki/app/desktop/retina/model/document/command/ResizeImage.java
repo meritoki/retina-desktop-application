@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Image;
+import com.meritoki.app.desktop.retina.model.document.Page;
 
 public class ResizeImage extends Command {
 	private static Logger logger = LogManager.getLogger(ResizeImage.class.getName());
@@ -18,23 +19,23 @@ public class ResizeImage extends Command {
     @Override // Command
     public void execute() {
     	logger.info("execute()");
-		//Undo Operation
+		//variable
+    	Page pressedPage = this.document.cache.pressedPage;
+    	Image pressedImage = this.document.cache.pressedImage;
+    	double scale = this.document.cache.scale;
+    	double scaleFactor = this.document.cache.scaleFactor;
+    	char scaleOperator = this.document.cache.scaleOperator;
+    	//undo
     	Operation operation = new Operation();
 		operation.object = new Image(this.document.cache.pressedImage);
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
-		operation.uuid = this.document.cache.pressedImage.uuid;
 		this.operationList.push(operation);
 		//Logic
-		this.document.cache.pressedPage.setBufferedImage(null);
-		this.document.cache.pressedImage.setBufferedImage(null);
-		//This LINE IS ESSENTIAL TO FIXING THE BUG
-		logger.info("execute() this.document.cache.pressedImage.position.relativeScale="+this.document.cache.pressedImage.position.relativeScale);
-		logger.info("execute() this.document.cache.scale="+this.document.cache.scale);
-		double relativeScale = (this.document.cache.scale == this.document.cache.pressedImage.position.relativeScale)?this.document.cache.scale/this.document.cache.pressedImage.position.relativeScale:this.document.cache.pressedImage.position.relativeScale;
-		logger.info("execute() relativeScale="+relativeScale);
-		double scaleFactor = this.document.cache.scaleFactor;
-		switch(this.document.cache.scaleOperator) {
+		pressedPage.setBufferedImage(null);
+		pressedImage.setBufferedImage(null);
+		double relativeScale = (scale == pressedImage.position.relativeScale)?scale/pressedImage.position.relativeScale:pressedImage.position.relativeScale;//This LINE IS ESSENTIAL TO FIXING THE BUG
+		switch(scaleOperator) {
 		case '*':{
 			relativeScale *= scaleFactor;
 			break;
@@ -44,13 +45,12 @@ public class ResizeImage extends Command {
 			break;
 		}
 		}
-		this.document.cache.pressedImage.setRelativeScale(relativeScale);
-		//Redo Operation
+		pressedImage.setRelativeScale(relativeScale);
+		//Redo
 		operation = new Operation();
 		operation.object = new Image(this.document.cache.pressedImage);
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
-		operation.uuid = this.document.cache.pressedImage.uuid;
 		this.operationList.push(operation);
     }
 }

@@ -7,8 +7,10 @@ import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.document.Position;
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Shape;
+import com.meritoki.app.desktop.retina.model.document.ShapeType;
 
 public class AddShape extends Command {
 
@@ -21,21 +23,26 @@ public class AddShape extends Command {
 	@Override
 	public void execute() throws Exception {
 		logger.info("execute()");
-		this.user = this.document.cache.user;
+		// variable
+		double scale = this.document.cache.scale;
+		ShapeType type = this.document.cache.type;
+		Point pressedPoint = this.document.cache.pressedPoint;
+		Point releasedPoint = this.document.cache.releasedPoint;
+		Image pressedImage = this.document.cache.pressedImage;
+
+		Shape shape = new Shape();
 //		if (this.minimumSize(this.document.cache.pressedPoint, this.document.cache.releasedPoint,
 //				this.document.cache.scale)) {
-			this.document.cache.pressedShape = new Shape();
-			this.document.cache.pressedShape.type = this.document.cache.type;
-			this.document.cache.pressedShape.position = new Position(new Point(this.document.cache.pressedPoint),
-					new Point(this.document.cache.releasedPoint), this.document.cache.pressedImage.position.relativeScale, this.document.cache.scale,
-					this.document.cache.pressedImage.position.offset, this.document.cache.pressedImage.position.margin);
-			this.document.addShape(this.document.cache.pressedShape);
-			Operation operation = new Operation();
-			operation.object = new Shape(this.document.cache.pressedShape,true);
-			operation.sign = 1;
-			operation.id = UUID.randomUUID().toString();
-			operation.uuid = this.document.cache.pressedShape.uuid;
-			this.operationList.push(operation);
+		shape.type = type;
+		shape.position = new Position(new Point(pressedPoint), new Point(releasedPoint),
+				pressedImage.position.relativeScale, scale, pressedImage.position.offset,
+				pressedImage.position.margin);
+		this.document.addShape(shape);
+		Operation operation = new Operation();
+		operation.object = new Shape(shape, true);
+		operation.sign = 1;
+		operation.id = UUID.randomUUID().toString();
+		this.operationList.push(operation);
 //		} else {
 //			throw new Exception("Shape too small");
 //		}

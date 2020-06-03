@@ -19,13 +19,15 @@ public class RemoveShape extends Command {
     @Override // Command
     public void execute() {
     	logger.info("execute()");
-    	this.user = this.document.cache.user;
-		this.document.getPage().removeShape(this.document.cache.pressedShape);
+    	//variables
+    	Shape pressedShape = this.document.cache.pressedShape;
+		//undo
 		Operation operation = new Operation();
-		operation.object = new Shape(this.document.cache.pressedShape,true);
+		operation.object = new Shape(pressedShape,true);
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
-		operation.uuid = this.document.cache.pressedShape.uuid;
 		this.operationList.push(operation);
+		//logic
+		this.document.getPage().removeShape(pressedShape);
     }
 }

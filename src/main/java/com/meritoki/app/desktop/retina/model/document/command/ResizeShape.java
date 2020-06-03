@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Point;
+import com.meritoki.app.desktop.retina.model.document.Selection;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 
 public class ResizeShape extends Command {
@@ -21,24 +22,23 @@ public class ResizeShape extends Command {
     @Override // Command
     public void execute() {
     	logger.info("execute()");
-    	//Undo
-    	this.user = this.document.cache.user;
-		Operation operation = new Operation();
-		operation.object = new Shape(this.document.cache.pressedShape,true);
-		operation.sign = 0;
-		operation.id = UUID.randomUUID().toString();
-		operation.uuid = this.document.cache.pressedShape.uuid;
-		this.operationList.push(operation);
-		//Logic
+    	//variable
 		Point releasedPoint = this.document.cache.releasedPoint;
 		Shape pressedShape = this.document.cache.pressedShape;
-		pressedShape.position.resize(new Point(releasedPoint), this.document.cache.selection);
+		Selection selection = this.document.cache.selection;
+    	//Undo
+		Operation operation = new Operation();
+		operation.object = new Shape(pressedShape,true);
+		operation.sign = 0;
+		operation.id = UUID.randomUUID().toString();
+		this.operationList.push(operation);
+		//Logic
+		pressedShape.position.resize(new Point(releasedPoint), selection);
 		//Redo
 		operation = new Operation();
-		operation.object = new Shape(this.document.cache.pressedShape,true);
+		operation.object = new Shape(pressedShape,true);
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
-		operation.uuid = this.document.cache.pressedShape.uuid;
 		this.operationList.push(operation);
     }
 }

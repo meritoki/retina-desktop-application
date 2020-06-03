@@ -18,20 +18,24 @@ public class ScalePage extends Command {
     @Override // Command
     public void execute() {
     	logger.info("execute()");
+    	//Variables
+		double scale = this.document.cache.pressedImage.position.scale;
+		double scaleFactor = this.document.cache.scaleFactor;
+		char scaleOperator = this.document.cache.scaleOperator;
+    	//Undo
     	Operation operation = new Operation();
-		operation.object = this.document.cache.scale;
+		operation.object = scale;
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);
-		double scale = this.document.cache.scale;
-		double factor = 1.5;
-		switch(this.document.cache.scaleOperator) {
+		//logic
+		switch(scaleOperator) {
 		case '*':{
-			scale *= factor;
+			scale *= scaleFactor;
 			break;
 		}
 		case '/':{
-			scale /= factor;
+			scale /= scaleFactor;
 			break;
 		}
 		}

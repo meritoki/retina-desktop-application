@@ -20,10 +20,14 @@ public class AddPage extends Command {
     @Override
     public void execute() {
     	logger.info("execute()");
-    	this.user = this.document.cache.user;
-    	Page page = null;
-    	for(File file: this.document.cache.fileArray) {
-    		page = new Page();
+//    	this.user = this.document.cache.user;
+    	File[] fileArray = this.document.cache.fileArray;
+    	Operation operation = new Operation();
+    	//save pagelist in operation as it is
+    	
+    	//logic
+    	for(File file: fileArray) {
+    		Page page = new Page();
 			page.imageList.add(new Image(file));
     		this.document.addPage(page);
     	}

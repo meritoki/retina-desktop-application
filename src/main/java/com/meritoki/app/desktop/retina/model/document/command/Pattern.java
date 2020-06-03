@@ -52,7 +52,7 @@ public class Pattern {
 		Command removePage = new RemovePage(this.document);
 		Command resizeImage = new ResizeImage(this.document);
 		Command scalePage = new ScalePage(this.document);
-		Command shiftMargin = new ShiftMargin(this.document);
+		Command shiftImage = new ShiftImage(this.document);
 		this.register("addPage", addPage);
 		this.register("setPage", setPage);
 		this.register("addShape", addShape);
@@ -64,7 +64,7 @@ public class Pattern {
 		this.register("removePage", removePage);
 		this.register("resizeImage", resizeImage);
 		this.register("scalePage", scalePage);
-		this.register("shiftMargin", shiftMargin);
+		this.register("shiftImage", shiftImage);
 	}
 
 	@JsonIgnore
