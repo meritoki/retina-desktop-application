@@ -165,7 +165,6 @@ public class Image {
 				return shape;
 			}
 		}
-		logger.info("getShape(" + point + ") shape=null");
 		return null;
 	}
 
@@ -245,7 +244,7 @@ public class Image {
 
 	@JsonIgnore
 	public void setBufferedImage(BufferedImage bufferedImage) {
-		logger.info("setBufferedImage(" + bufferedImage + ")");
+		logger.debug("setBufferedImage(" + bufferedImage + ")");
 		this.bufferedImage = bufferedImage;
 		if (this.bufferedImage != null) {
 			this.position.absoluteDimension.width = this.bufferedImage.getWidth();

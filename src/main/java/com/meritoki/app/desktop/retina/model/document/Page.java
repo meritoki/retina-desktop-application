@@ -165,6 +165,7 @@ public class Page {
 	 */
 	@JsonIgnore
 	public Shape getShape(Point point) {
+		logger.info("getShape("+point+")");
 		Shape s = null;
 		for (Image image : this.imageList) {
 			s = image.getShape(point);

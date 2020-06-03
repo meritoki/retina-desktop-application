@@ -185,7 +185,7 @@ public class Position {
 			point.x += this.offset*this.addScale;
 			point.y += this.margin*this.addScale;
 			Point absolutePoint = new Point(point);
-			logger.info("getAbsolutePoint("+point+") absolutePoint="+absolutePoint);
+			logger.debug("getAbsolutePoint("+point+") absolutePoint="+absolutePoint);
 			return absolutePoint;
 		}
 
@@ -224,8 +224,6 @@ public class Position {
 	public void move(Point point) {
 		Point startPoint = this.getStartPoint();
 		logger.info("move("+point+") A startPoint="+startPoint);
-		Point testPoint = this.getAbsolutePoint(new Point(startPoint));
-		logger.info(this.absolutePoint.equals(testPoint));
 		Point movePoint = new Point(startPoint.x + point.x, startPoint.y + point.y);
 		logger.info("move("+point+") B movePoint="+movePoint);
 		Point absolutePoint = this.getAbsolutePoint(new Point(movePoint));
@@ -233,9 +231,8 @@ public class Position {
 		this.absolutePoint = new Point(absolutePoint);
 		this.relativePoint = this.getRelativePoint();
 		this.scale();
-		logger.info("move("+point+") D movePoint="+movePoint);
-		logger.info("move("+point+") this.point="+this.point);
-		logger.info(this.point.equals(movePoint));
+		logger.info("move("+point+") D this.point="+this.point);
+		logger.info("move("+point+") (this.point==movePoint)="+this.point.equals(movePoint));
 	}
 	
 	@JsonIgnore
@@ -248,7 +245,7 @@ public class Position {
 	@JsonIgnore
 	public void setRelativeScale(double scale) {
 		this.relativeScale = (this.addRelativeScale > 0) ? scale / this.addRelativeScale : scale;
-		logger.debug("setRelativeScale(" + scale + ") this.relativeScale=" + this.relativeScale);
+		logger.info("setRelativeScale(" + scale + ") this.relativeScale=" + this.relativeScale);
 		this.scale();
 	}
 

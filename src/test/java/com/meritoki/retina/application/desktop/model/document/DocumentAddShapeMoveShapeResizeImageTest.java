@@ -196,7 +196,6 @@ public class DocumentAddShapeMoveShapeResizeImageTest {
 			logger.error("Exception " + e.getMessage());
 		}
 		Shape shape =document.getShape(new Point(x, y));
-		logger.info("shape="+shape);
 		assertNotNull(shape);
 	}
 //	
@@ -209,8 +208,6 @@ public class DocumentAddShapeMoveShapeResizeImageTest {
 		document.cache.pressedImage = document.getImage();
 		int x = (int) (document.cache.pressedImage.position.point.x+document.cache.pressedImage.position.dimension.width / 2);
 		int y = (int) (document.cache.pressedImage.position.point.y+document.cache.pressedImage.position.dimension.height / 2);
-		logger.info("document.cache.pressedImage="+document.cache.pressedImage);
-		Shape shape =document.getShape(new Point(x, y));
 		document.cache.scaleOperator = '/';
 		document.cache.scaleFactor = 1.01;
 		try {
@@ -225,9 +222,7 @@ public class DocumentAddShapeMoveShapeResizeImageTest {
 		}
 		x = (int) (document.cache.pressedImage.position.point.x+document.cache.pressedImage.position.dimension.width / 2);
 		y = (int) (document.cache.pressedImage.position.point.y+document.cache.pressedImage.position.dimension.height / 2);
-		logger.info("document.cache.pressedImage="+document.cache.pressedImage);
-		shape =document.getShape(new Point(x, y));
-		logger.info("shape="+shape);
+		Shape shape =document.getShape(new Point(x, y));
 		assertNotNull(shape);
 	}
 //	
