@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.meritoki.retina.application.desktop.model.document.DocumentAddShapeMoveShapeResizeImageTest;
 
 public class Position {
 	@JsonIgnore
@@ -84,6 +85,8 @@ public class Position {
 		this.absoluteDimension.height = Math.abs(stopPoint.y - this.absolutePoint.y);
 		this.relative = true;
 		this.relativePoint = this.getRelativePoint();
+		logger.info("Position(...) this.absolutePoint="+this.absolutePoint);
+		logger.info("Position(...) this.relativePoint="+this.relativePoint);
 		this.scale();
 	}
 
@@ -106,6 +109,7 @@ public class Position {
 		this.absoluteDimension = new Dimension(position.absoluteDimension);
 		this.scale = position.scale;
 		this.addScale = position.addScale;
+		this.addRelativeScale = position.addRelativeScale;//fix for defect DocumentAddShapeMoveShapeResizeImageTest
 		this.margin = position.margin;
 		this.offset = position.offset;
 		this.relative = position.relative;

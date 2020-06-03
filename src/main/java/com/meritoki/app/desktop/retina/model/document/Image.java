@@ -161,7 +161,7 @@ public class Image {
 	public Shape getShape(Point point) {
 		for (Shape shape : this.shapeList) {
 			if (shape.position.contains((point))) {
-				logger.info("getShape(" + point + ") shape=" + shape);
+				logger.trace("getShape(" + point + ") shape=" + shape);
 				return shape;
 			}
 		}

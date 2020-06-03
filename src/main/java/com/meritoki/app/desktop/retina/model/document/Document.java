@@ -78,6 +78,7 @@ public class Document {
 		if (this.getPage() != null) {
 			image = this.getPage().getImage();
 		}
+		logger.info("getImage() image="+image);
 		return image;
 	}
 
@@ -104,6 +105,7 @@ public class Document {
 		if (this.getPage() != null) {
 			shape = this.getPage().getShape(point);
 		}
+		logger.info("getShape("+point+") shape="+shape);
 		return shape;
 	}
 

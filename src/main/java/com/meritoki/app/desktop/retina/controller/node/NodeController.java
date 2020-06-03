@@ -87,7 +87,7 @@ public class NodeController {
 
 	@JsonIgnore
 	public static void saveJpg(File file, BufferedImage bufferedImage) {
-		logger.info("saveJpg("+file+", "+bufferedImage+")");
+		logger.debug("saveJpg("+file+", "+bufferedImage+")");
 		try {
 			ImageIO.write(bufferedImage, "jpg", file);
 			
