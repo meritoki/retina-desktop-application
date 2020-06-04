@@ -21,7 +21,7 @@ import com.meritoki.app.desktop.retina.model.document.Point;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DocumentResizeImageTest {
 
-	static Logger logger = LogManager.getLogger(DocumentMarginShiftMoveShapeTest.class.getName());
+	static Logger logger = LogManager.getLogger(DocumentShiftImageMoveShapeTest.class.getName());
 	static Document document = null;
 	static int dimension = 4;
 	
