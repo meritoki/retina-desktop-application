@@ -21,7 +21,7 @@ import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Position;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class DocumentRandomMoveShapeTest {
+public class DocumentMoveShapeTest {
 
 	static Logger logger = LogManager.getLogger(DocumentMoveShapeShiftImageTest.class.getName());
 	static Document document = null;
@@ -45,8 +45,8 @@ public class DocumentRandomMoveShapeTest {
 		assertEquals(document.setIndex(0), true);
 		assertEquals(document.getPage().setIndex(0), true);
 		document.cache.pressedImage = document.getImage();
-		int x = (int) (document.cache.pressedImage.position.dimension.width / 2 - dimension / 2);
-		int y = (int) (document.cache.pressedImage.position.dimension.height / 2 - dimension / 2);
+		double x = (int) (document.cache.pressedImage.position.center.x - dimension / 2);
+		double y = (int) (document.cache.pressedImage.position.center.y - dimension / 2);
 		int width = dimension;
 		int height = dimension;
 		document.cache.pressedPoint = new Point(x, y);
@@ -56,16 +56,16 @@ public class DocumentRandomMoveShapeTest {
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		}
-		assertNotNull(document.getShape(new Point(document.cache.pressedImage.position.dimension.width / 2, document.cache.pressedImage.position.dimension.height / 2)));
+		assertNotNull(document.getShape(new Point(document.cache.pressedImage.position.center.x, document.cache.pressedImage.position.center.y)));
 	}
 	
 	@Test
 	@Order(2)
-	public void randomMove() {
+	public void moveShape() {
 		assertEquals(document.setIndex(0), true);
 		Page page = document.getPage();
 		Position position = page.position;
-		Point startPoint = new Point(document.cache.pressedImage.position.dimension.width / 2, document.cache.pressedImage.position.dimension.height / 2);
+		Point startPoint = new Point(document.cache.pressedImage.position.center.x, document.cache.pressedImage.position.center.y);
 		Point previousPoint = startPoint;
 		Point newPoint;
 		int count = limit;
@@ -83,6 +83,17 @@ public class DocumentRandomMoveShapeTest {
 			previousPoint = newPoint;
 			count--;
 		}
+	}
+	
+	@Test
+	@Order(3)
+	public void undo() {
+		int count = limit;
+		while(count > 0) {
+			document.pattern.undo();
+			count--;
+		}
+		assertNotNull(document.getShape(new Point(document.cache.pressedImage.position.center.x, document.cache.pressedImage.position.center.y)));
 	}
 	
 	public static Point getRandomPoint(Position position) {

@@ -146,8 +146,6 @@ public class DocumentMoveShapeShiftImageTest {
 		y = (document.cache.pressedImage.position.center.y);
 		document.cache.pressedPoint = new Point(x, y);
 		document.cache.pressedShape = document.getPage().getShape(document.cache.pressedPoint);
-//		x = (document.cache.releasedImage.position.dimension.width / 2); Editing to fix test defect
-//		y = (document.cache.releasedImage.position.dimension.height / 2);
 		x = (document.cache.releasedImage.position.center.x); 
 		y = (document.cache.releasedImage.position.center.y);
 		document.cache.releasedPoint = new Point(x, y);
