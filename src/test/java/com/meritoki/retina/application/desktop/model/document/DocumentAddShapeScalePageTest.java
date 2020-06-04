@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import com.meritoki.app.desktop.retina.model.document.Dimension;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
@@ -20,11 +21,11 @@ import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class DocumentScaleTest {
-	static Logger logger = LogManager.getLogger(DocumentExecuteScriptTest.class.getName());
+public class DocumentAddShapeScalePageTest {
+	static Logger logger = LogManager.getLogger(DocumentAddShapeScalePageTest.class.getName());
 	static Document document = null;
 	static String pageZeroUUID = null;
-	
+	static Dimension origin = null;
 	static int dimension = 4;
 	
 	@BeforeAll
@@ -63,11 +64,10 @@ public class DocumentScaleTest {
 		assertEquals(document.setIndex(0), true);
 		assertEquals(document.getPage().setIndex(0), true);
 		document.cache.pressedImage = document.getImage();
+		origin = new Dimension(document.cache.pressedImage.position.dimension);
 		document.cache.scaleOperator = '*';
 		document.cache.scaleFactor = 1.5;
 		try {
-			document.pattern.execute("scalePage");
-			document.pattern.execute("scalePage");
 			document.pattern.execute("scalePage");
 			document.pattern.execute("scalePage");
 			document.pattern.execute("scalePage");
@@ -93,8 +93,6 @@ public class DocumentScaleTest {
 			document.pattern.execute("scalePage");
 			document.pattern.execute("scalePage");
 			document.pattern.execute("scalePage");
-			document.pattern.execute("scalePage");
-			document.pattern.execute("scalePage");
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		} 
@@ -104,5 +102,25 @@ public class DocumentScaleTest {
 		assertNotNull(shape);
 		assertEquals(shape.position.dimension.width,dimension);
 		assertEquals(shape.position.dimension.height,dimension);
+	}
+	
+	@Test
+	@Order(4)
+	public void undo() {
+		//scale down
+		document.pattern.undo();
+		document.pattern.undo();
+		document.pattern.undo();
+		document.pattern.undo();
+		//scale up
+		document.pattern.undo();
+		document.pattern.undo();
+		document.pattern.undo();
+		document.pattern.undo();
+		assertEquals(origin.width,document.cache.pressedImage.position.dimension.width);
+		assertEquals(origin.height,document.cache.pressedImage.position.dimension.height);
+		//undo add shape
+		document.pattern.undo();
+		assertEquals(document.getShapeList().size(),0);
 	}
 }
