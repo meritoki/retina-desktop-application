@@ -302,10 +302,10 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				this.model.document.cache.pressedShape = this.model.document.getPage().getShape();
 				try {
 					this.model.document.pattern.execute("removeShape");
+					this.main.init();
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
-				this.main.init();
 				break;
 			}
 			case KeyEvent.VK_LEFT: {

@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import com.meritoki.app.desktop.retina.model.document.Position;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Image;
+import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.ShapeType;
@@ -24,11 +25,12 @@ public class AddShape extends Command {
 	public void execute() throws Exception {
 		logger.info("execute()");
 		// variable
-		double scale = this.document.cache.scale;
+		Page page = this.document.getPage();
 		ShapeType type = this.document.cache.type;
 		Point pressedPoint = this.document.cache.pressedPoint;
 		Point releasedPoint = this.document.cache.releasedPoint;
 		Image pressedImage = this.document.cache.pressedImage;
+		double scale = page.position.scale;
 
 		Shape shape = new Shape();
 //		if (this.minimumSize(this.document.cache.pressedPoint, this.document.cache.releasedPoint,

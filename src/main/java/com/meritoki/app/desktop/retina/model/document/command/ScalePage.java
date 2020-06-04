@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Page;
 
 public class ScalePage extends Command {
 
@@ -19,6 +20,7 @@ public class ScalePage extends Command {
     public void execute() {
     	logger.info("execute()");
     	//Variables
+    	Page page = this.document.getPage();
 		double scale = this.document.cache.pressedImage.position.scale;
 		double scaleFactor = this.document.cache.scaleFactor;
 		char scaleOperator = this.document.cache.scaleOperator;
@@ -39,7 +41,6 @@ public class ScalePage extends Command {
 			break;
 		}
 		}
-		this.document.cache.scale = scale;
-		this.document.cache.pressedPage.setScale(this.document.cache.scale);
+		page.setScale(scale);
     }
 }

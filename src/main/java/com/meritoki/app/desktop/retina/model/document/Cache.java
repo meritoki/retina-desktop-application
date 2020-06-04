@@ -46,8 +46,8 @@ public class Cache {
 	public Point pressedPoint = new Point();
 	@JsonIgnore
 	public Point releasedPoint = new Point();
-	@JsonIgnore
-	public double scale = 1;
+//	@JsonIgnore
+//	public double scale = 1;
 	@JsonIgnore
 	public String script;
 	@JsonIgnore

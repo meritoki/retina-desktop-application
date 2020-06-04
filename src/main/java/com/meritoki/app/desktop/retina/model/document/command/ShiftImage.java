@@ -19,14 +19,14 @@ public class ShiftImage extends Command {
 	public void execute() {
 		logger.info("execute()");
 		//variables
-		Page pressedPage = this.document.cache.pressedPage;
+		Page page = this.document.getPage();
 		Image pressedImage = this.document.cache.pressedImage;
 		double margin = pressedImage.position.margin;
 		double shiftFactor = this.document.cache.shiftFactor;
 		char shiftOperator = this.document.cache.shiftOperator;
 		
 		//logic
-		pressedPage.setBufferedImage(null);
+		page.setBufferedImage(null);
 		switch(shiftOperator) {
 		case '+':{
 			margin += shiftFactor;

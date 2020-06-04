@@ -20,9 +20,9 @@ public class ResizeImage extends Command {
     public void execute() {
     	logger.info("execute()");
 		//variable
-    	Page pressedPage = this.document.cache.pressedPage;
+    	Page page = this.document.getPage();
     	Image pressedImage = this.document.cache.pressedImage;
-    	double scale = this.document.cache.scale;
+    	double scale = page.position.scale;
     	double scaleFactor = this.document.cache.scaleFactor;
     	char scaleOperator = this.document.cache.scaleOperator;
     	//undo
@@ -32,7 +32,7 @@ public class ResizeImage extends Command {
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);
 		//Logic
-		pressedPage.setBufferedImage(null);
+		page.setBufferedImage(null);
 		pressedImage.setBufferedImage(null);
 		double relativeScale = (scale == pressedImage.position.relativeScale)?scale/pressedImage.position.relativeScale:pressedImage.position.relativeScale;//This LINE IS ESSENTIAL TO FIXING THE BUG
 		switch(scaleOperator) {

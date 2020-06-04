@@ -145,36 +145,36 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 	@Override
 	public void keyReleased(KeyEvent ke) {
 		ke.consume();
-		if (ke.isControlDown()) {
-			switch (ke.getKeyCode()) {
-			case KeyEvent.VK_EQUALS: {
-				logger.info("keyPressed(e) KeyEvent.VK_EQUALS");
-				double scale = this.model.document.cache.scale;
-				scale = scale * 1.5;
-				this.model.document.cache.scale = scale;
-				this.repaint();
-				this.revalidate();
-				break;
-			}
-			case KeyEvent.VK_PLUS: {
-				logger.info("keyPressed(e) KeyEvent.VK_PLUS");
-				double scale = this.model.document.cache.scale;
-				scale = scale * 1.5;
-				this.model.document.cache.scale = scale;
-				this.repaint();
-				this.revalidate();
-				break;
-			}
-			case KeyEvent.VK_MINUS: {
-				logger.info("keyPressed(e) KeyEvent.VK_MINUS");
-				double scale = this.model.document.cache.scale;
-				scale = scale / 1.5;
-				this.model.document.cache.scale = scale;
-				this.repaint();
-				this.revalidate();
-				break;
-			}
-			}
-		}
+//		if (ke.isControlDown()) {
+//			switch (ke.getKeyCode()) {
+//			case KeyEvent.VK_EQUALS: {
+//				logger.info("keyPressed(e) KeyEvent.VK_EQUALS");
+//				double scale = this.model.document.cache.scale;
+//				scale = scale * 1.5;
+//				this.model.document.cache.scale = scale;
+//				this.repaint();
+//				this.revalidate();
+//				break;
+//			}
+//			case KeyEvent.VK_PLUS: {
+//				logger.info("keyPressed(e) KeyEvent.VK_PLUS");
+//				double scale = this.model.document.cache.scale;
+//				scale = scale * 1.5;
+//				this.model.document.cache.scale = scale;
+//				this.repaint();
+//				this.revalidate();
+//				break;
+//			}
+//			case KeyEvent.VK_MINUS: {
+//				logger.info("keyPressed(e) KeyEvent.VK_MINUS");
+//				double scale = this.model.document.cache.scale;
+//				scale = scale / 1.5;
+//				this.model.document.cache.scale = scale;
+//				this.repaint();
+//				this.revalidate();
+//				break;
+//			}
+//			}
+//		}
 	}
 }
