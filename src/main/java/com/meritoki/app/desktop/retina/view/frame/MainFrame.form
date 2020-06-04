@@ -91,6 +91,17 @@
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Microsoft"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="microsoftExportMenuItemActionPerformed"/>
+                  </Events>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="audioMenuItem">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Audio"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="audioMenuItemActionPerformed"/>
+                  </Events>
                 </MenuItem>
               </SubComponents>
             </Menu>
@@ -131,26 +142,26 @@
               <SubComponents>
                 <MenuItem class="javax.swing.JMenuItem" name="pageMenuItem">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Matrix"/>
+                    <Property name="text" type="java.lang.String" value="Page"/>
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pageMenuItemActionPerformed"/>
                   </Events>
                 </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="imageMenuItem">
+                <MenuItem class="javax.swing.JMenuItem" name="selectionMenuItem">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Image"/>
+                    <Property name="text" type="java.lang.String" value="Shape"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="imageMenuItemActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectionMenuItemActionPerformed"/>
                   </Events>
                 </MenuItem>
-                <MenuItem class="javax.swing.JMenuItem" name="rectangleMenuItem">
+                <MenuItem class="javax.swing.JMenuItem" name="commandMenuItem">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Selection"/>
+                    <Property name="text" type="java.lang.String" value="Command"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rectangleMenuItemActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="commandMenuItemActionPerformed"/>
                   </Events>
                 </MenuItem>
               </SubComponents>
@@ -200,15 +211,15 @@
         <Container class="javax.swing.JScrollPane" name="jScrollPane1">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Image">
-                <Property name="tabTitle" type="java.lang.String" value="Image"/>
+              <JTabbedPaneConstraints tabName="Page">
+                <Property name="tabTitle" type="java.lang.String" value="Page"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Container class="com.meritoki.app.desktop.retina.view.panel.ImagePanel" name="imagePanel">
+            <Container class="com.meritoki.app.desktop.retina.view.panel.PagePanel" name="pagePanel">
 
               <Layout>
                 <DimensionLayout dim="0">
@@ -218,7 +229,7 @@
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="632" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="562" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
@@ -241,12 +252,12 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="1030" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="1028" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="514" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="562" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
@@ -268,27 +279,20 @@
             </Component>
           </SubComponents>
         </Container>
-        <Container class="com.meritoki.app.desktop.retina.view.panel.DocumentPanel" name="documentPanel">
+        <Container class="javax.swing.JScrollPane" name="jScrollPane4">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Document">
-                <Property name="tabTitle" type="java.lang.String" value="Document"/>
+              <JTabbedPaneConstraints tabName="Archive">
+                <Property name="tabTitle" type="java.lang.String" value="Archive"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
 
-          <Layout>
-            <DimensionLayout dim="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="1030" max="32767" attributes="0"/>
-              </Group>
-            </DimensionLayout>
-            <DimensionLayout dim="1">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="514" max="32767" attributes="0"/>
-              </Group>
-            </DimensionLayout>
-          </Layout>
+          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+          <SubComponents>
+            <Component class="com.meritoki.app.desktop.retina.view.panel.ArchivePanel" name="archivePanel">
+            </Component>
+          </SubComponents>
         </Container>
       </SubComponents>
     </Container>

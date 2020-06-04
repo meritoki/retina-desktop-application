@@ -22,6 +22,7 @@ import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,10 +33,7 @@ import com.meritoki.app.desktop.retina.model.provider.Provider;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Credential;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Project;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Zooniverse;
-import com.meritoki.app.desktop.retina.model.provider.zooniverse.ZooniverseProvider;
 import com.meritoki.app.desktop.retina.view.dialog.LoadDialog;
-import com.meritoki.app.desktop.retina.view.frame.MainFrame;
-import javax.swing.SwingUtilities;
 
 /**
  *
@@ -49,7 +47,8 @@ public class ZooniverseImportDialog extends javax.swing.JDialog {
     private static final long serialVersionUID = 6833970920926871138L;
     private static Logger logger = LogManager.getLogger(ZooniverseImportDialog.class.getName());
     public Model model;
-        public LoadDialog loadDialog;
+    public Zooniverse zooniverse;
+    public LoadDialog loadDialog;
 
     /**
      * Instantiate neew Zooniverse Import Dialog
@@ -90,10 +89,9 @@ public class ZooniverseImportDialog extends javax.swing.JDialog {
     }
 
     public void initZooniverse() {
-        for (Provider provider : this.model.providerList) {
-            if (provider instanceof ZooniverseProvider) {
-                Zooniverse zooniverse = ((ZooniverseProvider) provider).zooniverse;
-                this.model.variable.zooniverse = zooniverse;
+        for (Provider provider : this.model.system.providerList) {
+            if (provider instanceof Zooniverse) {
+                this.zooniverse = ((Zooniverse) provider);
             }
         }
     }
@@ -241,12 +239,11 @@ public class ZooniverseImportDialog extends javax.swing.JDialog {
 
     private void findProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findProjectButtonActionPerformed
         String query = this.projectSearchTextField.getText().trim();
-        Zooniverse zooniverse = this.model.variable.zooniverse;
         if (zooniverse != null) {
             if (!query.isEmpty()) {
                 this.showLoad();
-                this.model.variable.projectList = zooniverse.getProjectList(query);
-                this.initSearchProjectComboBox(this.model.variable.projectList);
+                this.zooniverse.projectList = zooniverse.getProjectList(query);
+                this.initSearchProjectComboBox(this.zooniverse.projectList);
                 this.hideLoad();
             } else {
                 JOptionPane.showMessageDialog(this, "Search query is empty");
@@ -256,16 +253,15 @@ public class ZooniverseImportDialog extends javax.swing.JDialog {
 
     private void importButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importButtonActionPerformed
         String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-        Zooniverse zooniverse = this.model.variable.zooniverse;
         if (zooniverse != null) {
             String searchProjectName = (String) this.searchProjectComboBox.getSelectedItem();
-            if (this.model.variable.projectList != null) {
+            if (this.zooniverse.projectList != null) {
                 this.showLoad();
-                for (Project p : this.model.variable.projectList) {
+                for (Project p : this.zooniverse.projectList) {
                     if (p.name.equals(searchProjectName)) {
 //                        zooniverse.downloadClassification(p, "./"+timeStamp + ".csv");
                     	zooniverse.downloadClassification(p, this.getClassificationPath()+timeStamp + ".csv");
-                        if(!this.model.getDocument().importText(NodeController.openCsv(this.getClassificationPath()+timeStamp+".csv"))) {
+                        if(!this.model.document.importText(NodeController.openCsv(this.getClassificationPath()+timeStamp+".csv"))) {
                         	JOptionPane.showMessageDialog(this, "No shape uuid matches");
                         }
                         break;
@@ -280,7 +276,6 @@ public class ZooniverseImportDialog extends javax.swing.JDialog {
         Credential credential = new Credential();
         credential.password = this.passwordTextField.getText();
         credential.userName = this.userNameTextField.getText();
-        Zooniverse zooniverse = this.model.variable.zooniverse;
         if (zooniverse != null) {
             zooniverse.setCredential(credential);
             zooniverse.setConfig();

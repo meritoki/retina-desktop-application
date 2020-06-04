@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.meritoki.app.desktop.retina.controller.user.UserController;
 import com.meritoki.app.desktop.retina.model.Model;
 
 /**
@@ -119,20 +120,18 @@ public class UserLoginDialog extends javax.swing.JDialog {
                         .addComponent(jLabel1)
                         .addGap(135, 135, 135))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel2))
-                            .addComponent(skipButton, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(userNameTextField)
-                            .addComponent(userPasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
+                            .addComponent(userPasswordField)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(registerButton)
+                                .addComponent(registerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(skipButton, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(loginButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -149,11 +148,12 @@ public class UserLoginDialog extends javax.swing.JDialog {
                     .addComponent(userPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(skipButton)
-                    .addComponent(loginButton)
-                    .addComponent(registerButton))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addComponent(loginButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(registerButton)
+                    .addComponent(skipButton))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         pack();
@@ -163,7 +163,8 @@ public class UserLoginDialog extends javax.swing.JDialog {
         String userName = this.userNameTextField.getText();
         String password = new String(this.userPasswordField.getPassword());
 //        User user = new User();
-        if(this.model.loginUser(userName, password)) {
+        UserController userController = new UserController(this.model);
+        if(userController.loginUser(userName, password)) {
         	JOptionPane.showMessageDialog(this, "Welcome");
         	this.setVisible(false);
         } else {
@@ -176,14 +177,8 @@ public class UserLoginDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_registerButtonActionPerformed
 
     private void skipButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_skipButtonActionPerformed
-        String userName = "anonymous";
-        String password = "anonymous";
-        if(this.model.loginUser(userName, password)) {
-        	JOptionPane.showMessageDialog(this, "Welcome");
-        	this.setVisible(false);
-        } else {
-        	JOptionPane.showMessageDialog(this, "Username or Password Incorrect");
-        }
+    	JOptionPane.showMessageDialog(this, "Welcome");
+    	this.setVisible(false);
     }//GEN-LAST:event_skipButtonActionPerformed
 
     /**

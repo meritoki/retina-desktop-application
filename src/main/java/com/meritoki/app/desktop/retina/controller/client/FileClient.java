@@ -40,8 +40,9 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meritoki.app.desktop.retina.controller.client.json.File;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
+import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.system.System;
 
 public class FileClient {
 
@@ -49,8 +50,8 @@ public class FileClient {
 	private String url = null;
 	private Properties properties = null;
 
-	public FileClient() {
-		this.properties = NodeController.openProperties("./retina-desktop.properties");
+	public FileClient(Model model) {
+		this.properties = model.system.properties;
 		boolean gateway = Boolean.parseBoolean((String) this.properties.get("gateway"));
 		if(gateway) {
 			this.url = this.properties.getProperty("service.web.gateway.url")+"/file";
@@ -104,7 +105,6 @@ public class FileClient {
 			headers.set("Authorization", "Bearer " + token);
 			HttpEntity<String> entity = new HttpEntity<String>(fileJson, headers);
 			String returns = restTemplate.postForObject(uri, entity, String.class);
-			System.out.println(returns);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		} catch (ResourceAccessException e) {
@@ -249,16 +249,16 @@ public class FileClient {
 		}
 	}
 
-	public static void main(String args[]) {
-		FileClient fileClient = new FileClient();
-		fileClient.checkHealth();
-		fileClient.registerFile("123");
-		fileClient.checkFile("123");
-		fileClient.markFile("123");
-		fileClient.unmarkFile("123");
-		fileClient.uploadFile("./data/image/","01.jpg");
-		fileClient.downloadFile(NodeController.getImageCache()+NodeController.getSeperator(),"01.jpg");
-	}
+//	public static void main(String args[]) {
+//		FileClient fileClient = new FileClient(new System());
+//		fileClient.checkHealth();
+//		fileClient.registerFile("123");
+//		fileClient.checkFile("123");
+//		fileClient.markFile("123");
+//		fileClient.unmarkFile("123");
+//		fileClient.uploadFile("./data/image/","01.jpg");
+//		fileClient.downloadFile(NodeController.getImageCache()+NodeController.getSeperator(),"01.jpg");
+//	}
 }
 
 //public void registerFile(String uuid) {

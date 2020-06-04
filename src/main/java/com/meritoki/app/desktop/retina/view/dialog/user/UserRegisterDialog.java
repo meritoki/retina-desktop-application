@@ -17,9 +17,10 @@ package com.meritoki.app.desktop.retina.view.dialog.user;
 
 import javax.swing.JOptionPane;
 
-import com.meritoki.app.desktop.retina.controller.security.BCryptController;
+import com.meritoki.app.desktop.retina.controller.security.SecurityController;
+import com.meritoki.app.desktop.retina.controller.user.UserController;
 import com.meritoki.app.desktop.retina.model.Model;
-import com.meritoki.app.desktop.retina.model.User;
+import com.meritoki.app.desktop.retina.model.document.user.User;
 
 /**
  *
@@ -69,7 +70,7 @@ public class UserRegisterDialog extends javax.swing.JDialog {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        cancelButton = new javax.swing.JButton();
+        skipButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -96,10 +97,10 @@ public class UserRegisterDialog extends javax.swing.JDialog {
 
         jLabel5.setText("Email:");
 
-        cancelButton.setText("Cancel");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+        skipButton.setText("Skip");
+        skipButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonActionPerformed(evt);
+                skipButtonActionPerformed(evt);
             }
         });
 
@@ -116,19 +117,18 @@ public class UserRegisterDialog extends javax.swing.JDialog {
                     .addComponent(jLabel4)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(userNameTextField)
-                    .addComponent(inputPasswordField)
-                    .addComponent(confirmPasswordField)
-                    .addComponent(nameTextField)
-                    .addComponent(emailTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(51, 51, 51)
-                .addComponent(cancelButton, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(registerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(48, 48, 48))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(skipButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(registerButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(userNameTextField)
+                            .addComponent(inputPasswordField)
+                            .addComponent(confirmPasswordField)
+                            .addComponent(nameTextField)
+                            .addComponent(emailTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -154,9 +154,9 @@ public class UserRegisterDialog extends javax.swing.JDialog {
                     .addComponent(emailTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(registerButton)
-                    .addComponent(cancelButton))
+                .addComponent(registerButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(skipButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -212,7 +212,7 @@ public class UserRegisterDialog extends javax.swing.JDialog {
         }
         
         if(password.equals(confirmPassword)) {
-        	String hash = BCryptController.hash(confirmPassword, 11);
+        	String hash = SecurityController.hash(confirmPassword, 11);
         	user.hash = hash;
         }else {
         	message += "Passwords do not match\n";
@@ -220,7 +220,8 @@ public class UserRegisterDialog extends javax.swing.JDialog {
         }
         
         if(success) {
-        	this.model.registerUser(user);
+        	UserController userController = new UserController(this.model);
+        	userController.registerUser(user);
         	this.setVisible(false);
         	this.login.setVisible(true);
         }else {
@@ -228,14 +229,14 @@ public class UserRegisterDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_registerButtonActionPerformed
 
-    private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+    private void skipButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_skipButtonActionPerformed
         this.userNameTextField.setText("");
         this.inputPasswordField.setText("");
         this.confirmPasswordField.setText("");
         this.nameTextField.setText("");
         this.emailTextField.setText("");
     	this.setVisible(false);
-    }//GEN-LAST:event_cancelButtonActionPerformed
+    }//GEN-LAST:event_skipButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -281,7 +282,6 @@ public class UserRegisterDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton cancelButton;
     private javax.swing.JPasswordField confirmPasswordField;
     private javax.swing.JTextField emailTextField;
     private javax.swing.JPasswordField inputPasswordField;
@@ -292,6 +292,7 @@ public class UserRegisterDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JTextField nameTextField;
     private javax.swing.JButton registerButton;
+    private javax.swing.JButton skipButton;
     private javax.swing.JTextField userNameTextField;
     // End of variables declaration//GEN-END:variables
 }

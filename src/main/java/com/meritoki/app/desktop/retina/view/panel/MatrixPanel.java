@@ -18,16 +18,12 @@ package com.meritoki.app.desktop.retina.view.panel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -37,12 +33,8 @@ import org.apache.logging.log4j.Logger;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Data;
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Matrix;
 import com.meritoki.app.desktop.retina.model.document.Page;
-import com.meritoki.app.desktop.retina.model.document.Project;
-import com.meritoki.app.desktop.retina.model.document.Shape;
-import com.meritoki.app.desktop.retina.model.document.Text;
-import com.meritoki.app.desktop.retina.model.document.Unit;
-import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 /**
  *
@@ -51,8 +43,7 @@ import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 public class MatrixPanel extends JPanel implements MouseListener, MouseWheelListener, KeyListener {
 
 	private static final long serialVersionUID = 6483831845668642285L;
-	private static Logger logger = LogManager.getLogger(Data.class.getName());
-	private MainFrame main = null;
+	private static Logger logger = LogManager.getLogger(MatrixPanel.class.getName());
 	private Model model = null;
 
 	/**
@@ -60,18 +51,10 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 	 */
 	public MatrixPanel() {
 		super();
-		this.setOpaque(true);
 		this.setBackground(Color.white);
-
-	}
-
-	/**
-	 * Set the parent component Main
-	 * 
-	 * @param main
-	 */
-	public void setMain(MainFrame main) {
-		this.main = main;
+		this.addMouseListener(this);
+		this.addMouseWheelListener(this);
+		this.addKeyListener(this);
 	}
 
 	/**
@@ -80,147 +63,118 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 	 * @param model
 	 */
 	public void setModel(Model model) {
-		logger.debug("setModel(" + model + ")");
 		this.model = model;
+		this.init();
 	}
-	
+
+	public void init() {
+		logger.debug("init()");
+		this.repaint();
+		this.revalidate();
+	}
 
 	@Override
 	public Dimension getPreferredSize() {
 		Dimension dimension = new Dimension(1028, 512);
-		Document document = (this.model != null) ? this.model.getDocument() : null;
-		Project project = (document != null) ? document.getProject() : null;
-		Page page = (project != null) ? project.getPage() : null;
-		BufferedImage bufferedImage = (page != null) ? page.getBufferedImage() : null;
-		if (bufferedImage != null) {
-			dimension.setSize(bufferedImage.getWidth(), bufferedImage.getHeight());
+		Document document = (this.model != null) ? this.model.document : null;
+		Page page = (document != null) ? document.getPage() : null;
+		Matrix matrix = (page != null) ? page.getMatrix() : null;
+		if (matrix != null) {
+//			matrix.setScale(this.model.document.cache.scale);
+			dimension.setSize(matrix.position.dimension.width, matrix.position.dimension.height);
 		}
 		return dimension;
 	}
 
 	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D) g;
+	public void paint(Graphics graphics) {
+		super.paint(graphics);
+		graphics.setColor(Color.white);
+		graphics.fillRect(0, 0, this.getWidth(), this.getHeight());
 		if (this.model != null) {
-			Document document = (this.model != null) ? this.model.getDocument() : null;
-			Project project = (document != null) ? document.project : null;
-			Page page = (project != null) ? project.getPage() : null;
-			List<ArrayList<Shape>> dataMatrix = (page != null) ? page.getShapeMatrix() : null;
-			int width = 0;
-			int height = 0;
-			int heightIndex = 0;
-			int widthIndex = 0;
-			int maxColumn = 0;
-			if (dataMatrix != null) {
-				int w = getWidth();
-				int h = getHeight();
-				int boxWidth = (int) (w * 0.05);
-				int boxHeight = (int) (h * 0.05);
-				height = dataMatrix.size() * boxHeight;
-				Data data;
-				for (int i = 0; i < dataMatrix.size(); i++) {
-					if (dataMatrix.get(i).size() > maxColumn) {
-						maxColumn = dataMatrix.get(i).size();
-					}
-					widthIndex = 0;
-					heightIndex += boxHeight;
-					g2.setColor(Color.BLACK);
-					g2.drawString("" + i, widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-					for (int j = 0; j < dataMatrix.get(i).size(); j++) {
-						widthIndex += boxWidth;
-						g2.setColor(Color.BLACK);
-						g2.drawRect(widthIndex, heightIndex, boxWidth, boxHeight);
-
-						data = dataMatrix.get(i).get(j).data;
-						if (data != null) {
-							Text text = data.text;
-							String unitType = data.unit.type;
-							switch (unitType) {
-							case Unit.DATA: {
-								g2.setColor(Color.BLACK);
-								g2.drawString("D", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-								break;
-							}
-							case Unit.TIME: {
-								g2.drawString("T", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-								break;
-							}
-							case Unit.SPACE: {
-								g2.drawString("S", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-								break;
-							}
-							case Unit.ENERGY: {
-								
-								g2.drawString("E", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-						
-								break;
-							}
-							}
-						}
-					}
-				}
-				heightIndex = 0;
-				widthIndex = 0;
-				for (int i = 0; i < maxColumn; i++) {
-					widthIndex += boxWidth;
-					g2.drawString("" + i, widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-				}
+			Document document = (this.model != null) ? this.model.document : null;
+			Page page = (document != null) ? document.getPage() : null;
+			Matrix matrix = (page != null) ? page.getMatrix() : null;
+			if (matrix != null) {
+//				matrix.setScale(this.model.document.cache.scale);
+				matrix.paint(graphics);
 			}
 		}
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
-																		// Tools | Templates.
+		this.requestFocus();
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
-																		// Tools | Templates.
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
-																		// Tools | Templates.
+
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
-																		// Tools | Templates.
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
-																		// Tools | Templates.
+
 	}
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
-																		// Tools | Templates.
+
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
-																		// Tools | Templates.
+
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
-																		// Tools | Templates.
+
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
-		throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
-																		// Tools | Templates.
+	public void keyReleased(KeyEvent ke) {
+		ke.consume();
+//		if (ke.isControlDown()) {
+//			switch (ke.getKeyCode()) {
+//			case KeyEvent.VK_EQUALS: {
+//				logger.info("keyPressed(e) KeyEvent.VK_EQUALS");
+//				double scale = this.model.document.cache.scale;
+//				scale = scale * 1.5;
+//				this.model.document.cache.scale = scale;
+//				this.repaint();
+//				this.revalidate();
+//				break;
+//			}
+//			case KeyEvent.VK_PLUS: {
+//				logger.info("keyPressed(e) KeyEvent.VK_PLUS");
+//				double scale = this.model.document.cache.scale;
+//				scale = scale * 1.5;
+//				this.model.document.cache.scale = scale;
+//				this.repaint();
+//				this.revalidate();
+//				break;
+//			}
+//			case KeyEvent.VK_MINUS: {
+//				logger.info("keyPressed(e) KeyEvent.VK_MINUS");
+//				double scale = this.model.document.cache.scale;
+//				scale = scale / 1.5;
+//				this.model.document.cache.scale = scale;
+//				this.repaint();
+//				this.revalidate();
+//				break;
+//			}
+//			}
+//		}
 	}
 }

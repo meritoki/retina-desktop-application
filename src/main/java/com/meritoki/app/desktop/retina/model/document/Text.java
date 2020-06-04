@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Joaquin Osvaldo Rodriguez
+ * Copyright 2020 Joaquin Osvaldo Rodriguez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,21 +15,28 @@
  */
 package com.meritoki.app.desktop.retina.model.document;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 public class Text {
 	
+	@JsonProperty
 	public String value = "";
 	
 	public Text() {
 		
 	}
 	
+	public Text(String value) {
+		this.value = value;
+	}
+	
 	public Text(Text text) {
 		this.value = text.value;
 	}
 
-	@JsonProperty
+	@JsonIgnore
 	public void setValue(String value) {
 		this.value = value;
 	}

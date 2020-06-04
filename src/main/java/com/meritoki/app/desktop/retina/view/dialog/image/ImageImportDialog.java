@@ -31,6 +31,10 @@ import com.meritoki.app.desktop.retina.view.frame.MainFrame;
  */
 public class ImageImportDialog extends javax.swing.JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3779061389380871856L;
 	private static Logger logger = LogManager.getLogger(ImageImportDialog.class.getName());
 
 	/**
@@ -49,8 +53,13 @@ public class ImageImportDialog extends javax.swing.JDialog {
 			File[] files = this.imageFileChooser.getSelectedFiles();
 			Model model = ((MainFrame) this.getParent()).model;
 			if (model != null) {
-				model.variable.files = files;
-				model.getDocument().execute("addPage");
+				model.document.cache.fileArray = files;
+				try {
+					model.document.pattern.execute("addPage");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				((MainFrame) this.getParent()).init();
 				((MainFrame) this.getParent()).repaint();
 			}

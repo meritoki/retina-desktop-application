@@ -23,19 +23,20 @@ import javax.imageio.ImageIO;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonMethod;
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jackson.type.TypeReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationConfig;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
-import com.meritoki.app.desktop.retina.model.User;
+import com.meritoki.app.desktop.retina.model.document.user.User;
 
 public class NodeController {
 	private static Logger logger = LogManager.getLogger(NodeController.class.getName());
@@ -65,7 +66,7 @@ public class NodeController {
 	}
 	
 	public static BufferedImage openBufferedImage(String filePath, String fileName) {
-		logger.info("openBufferedImage(" + filePath + ", " + fileName + ")");
+		logger.debug("openBufferedImage(" + filePath + ", " + fileName + ")");
 		return openBufferedImage(new java.io.File(filePath + getSeperator() + fileName));
 	}
 
@@ -73,9 +74,8 @@ public class NodeController {
 		BufferedImage bufferedImage = null;
 		try {
 			bufferedImage = ImageIO.read(file);
-			logger.info("opened...");
 		} catch (IOException ex) {
-			logger.error(ex);
+			logger.error("IOException "+ex.getMessage());
 		}
 		return bufferedImage;
 	}
@@ -87,10 +87,10 @@ public class NodeController {
 
 	@JsonIgnore
 	public static void saveJpg(File file, BufferedImage bufferedImage) {
-		logger.info("saveJpg("+file+", "+bufferedImage+")");
+		logger.debug("saveJpg("+file+", "+bufferedImage+")");
 		try {
 			ImageIO.write(bufferedImage, "jpg", file);
-			logger.info("saved...");
+			
 		} catch (IOException ex) {
 			logger.error(ex);
 		}
@@ -101,10 +101,10 @@ public class NodeController {
 		logger.info("openJson(" + file + ", " + className + ")");
 		Object object = null;
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
+//		mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
 		try {
 			object = mapper.readValue(file, className);
-			logger.info("opened...");
+			
 		} catch (JsonGenerationException e) {
 			logger.error(e);
 		} catch (JsonMappingException e) {
@@ -119,10 +119,10 @@ public class NodeController {
 		logger.info("openJson(" + file + ", " + typeReference + ")");
 		Object object = null;
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
+//		mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
 		try {
 			object = mapper.readValue(file, typeReference);
-			logger.info("opened...");
+			
 		} catch (JsonGenerationException e) {
 			logger.error(e);
 		} catch (JsonMappingException e) {
@@ -170,11 +170,9 @@ public class NodeController {
 	public static void saveJson(File file, Object object) {
 		logger.info("saveJson("+file.getAbsolutePath()+",object)");
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.setVisibility(JsonMethod.FIELD, JsonAutoDetect.Visibility.ANY);
-		mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
+		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		try {
 			mapper.writeValue(file, object);
-			logger.info("saved...");
 		} catch (IOException ex) {
 			logger.error(ex);
 		}
@@ -213,7 +211,7 @@ public class NodeController {
 		try (PrintWriter writer = new PrintWriter(new File(filePath + getSeperator() + fileName))) {
 			if (object instanceof StringBuilder)
 				writer.write(((StringBuilder) object).toString());
-			System.out.println("saved...");
+			
 		} catch (FileNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
@@ -260,5 +258,28 @@ public class NodeController {
 
 		}
 		return stringList;
+	}
+	
+	@JsonIgnore
+	public static Object toJson(String string, Class className) {
+		logger.info("toJson(" + string + ", " + className + ")");
+		Object object = null;
+		ObjectMapper mapper = new ObjectMapper();
+//		mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
+		try {
+			object = mapper.readValue(string, className);
+			
+		} catch (JsonGenerationException e) {
+			logger.error(e);
+		} catch (JsonMappingException e) {
+			logger.error(e);
+		} catch (IOException e) {
+			logger.error(e);
+		}
+		return object;
+	}
+	
+	public static void deleteDirectory(File directory) {
+		directory.delete();
 	}
 }

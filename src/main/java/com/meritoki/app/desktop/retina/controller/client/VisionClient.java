@@ -42,10 +42,9 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meritoki.app.desktop.retina.controller.client.json.File;
-import com.meritoki.app.desktop.retina.controller.client.json.Network;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
-import com.meritoki.app.desktop.retina.model.User;
+import com.meritoki.app.desktop.retina.model.system.System;
+import com.meritoki.app.desktop.retina.model.document.user.User;
 
 public class VisionClient {
 
@@ -53,8 +52,8 @@ public class VisionClient {
 	private String url = null;
 	private Properties properties = null;
 
-	public VisionClient() {
-		this.properties = NodeController.openProperties("./retina-desktop.properties");
+	public VisionClient(System system) {
+		this.properties = system.properties;
 		boolean gateway = Boolean.parseBoolean((String) this.properties.get("gateway"));
 		if (gateway) {
 			this.url = this.properties.getProperty("service.web.gateway.url") + "/vision";
@@ -271,26 +270,28 @@ public class VisionClient {
 		}
 	}
 
-	public static void main(String args[]) {
-		VisionClient visionClient = new VisionClient();
-		UserClient userClient = new UserClient();
-		User user = new User();
-		user.name = "javainuse";
-		user.password = "password";
-		if (userClient.checkHealth()) {
-			if (userClient.login(user)) {
-				String uuid = UUID.randomUUID().toString();
-				visionClient.newNetwork(uuid);
-				visionClient.saveNetwork(uuid);
-				visionClient.loadNetwork(uuid);
-				
-				visionClient.uploadFile("./data/image/", "01.jpg");
-//				visionClient.downloadFile(NodeController.getImageCache() + NodeController.getSeperator(), "01.jpg");
-				visionClient.trainNetwork("01.jpg", 1, 0, 0, "test");
-				visionClient.inferNetwork("01.jpg", 1, 0, 0);
-			}
-		}
-	}
+	
+//	public static void main(String args[]) {
+//		System model = new System();
+//		VisionClient visionClient = new VisionClient(model);
+//		UserClient userClient = new UserClient(model);
+//		User user = new User();
+//		user.name = "javainuse";
+//		user.password = "password";
+//		if (userClient.checkHealth()) {
+//			if (userClient.login(user)) {
+//				String uuid = UUID.randomUUID().toString();
+//				visionClient.newNetwork(uuid);
+//				visionClient.saveNetwork(uuid);
+//				visionClient.loadNetwork(uuid);
+//				
+//				visionClient.uploadFile("./data/image/", "01.jpg");
+////				visionClient.downloadFile(NodeController.getImageCache() + NodeController.getSeperator(), "01.jpg");
+//				visionClient.trainNetwork("01.jpg", 1, 0, 0, "test");
+//				visionClient.inferNetwork("01.jpg", 1, 0, 0);
+//			}
+//		}
+//	}
 }
 
 //public void registerFile(String uuid) {

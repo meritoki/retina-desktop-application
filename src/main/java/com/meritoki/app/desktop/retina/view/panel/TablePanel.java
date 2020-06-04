@@ -17,17 +17,15 @@ package com.meritoki.app.desktop.retina.view.panel;
 
 import java.awt.Graphics;
 
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.controller.parser.Parser;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Page;
-import com.meritoki.app.desktop.retina.model.document.Project;
+import com.meritoki.app.desktop.retina.model.document.Table;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 /**
@@ -36,6 +34,10 @@ import com.meritoki.app.desktop.retina.view.frame.MainFrame;
  */
 public class TablePanel extends javax.swing.JPanel {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4834508823328218806L;
 	private static Logger logger = LogManager.getLogger(TablePanel.class.getName());
 	private Model model = null;
 	private MainFrame main = null;
@@ -46,47 +48,29 @@ public class TablePanel extends javax.swing.JPanel {
 	public TablePanel() {
 		initComponents();
 	}
-	
-	public void setMain(MainFrame main) {
-		this.main = main;
-	}
 
 	public void setModel(Model model) {
-		logger.debug("setModel(" + model + ")");
 		this.model = model;
 		this.init();
 	}
 
 	public void init() {
+		logger.debug("init()");
 		this.initDataTable();
 	}
 
 	public void initDataTable() {
-		logger.info("initDataTable()");
-		Parser parser = new Parser();
-		Document document = (this.model != null) ? this.model.getDocument() : null;
-		Project project = (document != null) ? document.getProject() : null;
-		Page page = (project != null) ? project.getPage() : null;
-		if (page != null) {
-			logger.info("initDataTable() page");
-//			Object[][] objectMatrix = parser.parseData(page.getShapeMatrixShapeList());
-//			Object[] stringArray = parser.parseColumn(page.getShapeMatrixShapeList());
-			Object[] modelArray = parser.getModel(page.getShapeMatrixShapeList());
-			DefaultTableModel model = new javax.swing.table.DefaultTableModel((Object[][])modelArray[1], (Object[])modelArray[0]);
-			this.dataTable.setModel(model);
-//                        this.dataTable.getColumnModel().getColumn(4).setPreferredWidth(30);
-//                        this.dataTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-//                        this.dataTable = new JTable(objectMatrix,stringArray);
-//			this.repaint();
+		logger.debug("initDataTable()");
+		Document document = (this.model != null) ? this.model.document : null;
+		Page page = (document != null) ? document.getPage() : null;
+		Table table = (page != null)? page.getTable(): null;
+		if (table != null) {
+			this.dataTable.setModel(table.getDefaultTableMode());
+		} else {
+			this.dataTable.setModel(new javax.swing.table.DefaultTableModel(new Object[0][0], new Object[0]));
 		}
-	}
+	}	
 	
-
-	@Override
-	public void paintComponent(Graphics g) {
-		this.initDataTable();
-	}
-
 	/**
 	 * This method is called from within the constructor to initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is always
@@ -136,3 +120,22 @@ public class TablePanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }
+//
+//public void initDataTable() {
+//	logger.debug("initDataTable()");
+//	Document document = (this.model != null) ? this.model.document : null;
+//	Page page = (document != null) ? document.getPage() : null;
+//	Table table = page.getTable();
+//	if (page != null) {
+//		
+////		Object[][] objectMatrix = parser.parseData(page.getShapeMatrixShapeList());
+////		Object[] stringArray = parser.parseColumn(page.getShapeMatrixShapeList());
+//		Object[] objectArray = table.getObjectArray();
+//		DefaultTableModel model = new javax.swing.table.DefaultTableModel((Object[][])objectArray[1], (Object[])objectArray[0]);
+//		this.dataTable.setModel(model);
+////                    this.dataTable.getColumnModel().getColumn(4).setPreferredWidth(30);
+////                    this.dataTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+////                    this.dataTable = new JTable(objectMatrix,stringArray);
+////		this.repaint();
+//	}
+//}

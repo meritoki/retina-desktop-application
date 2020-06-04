@@ -27,6 +27,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
+import com.meritoki.app.desktop.retina.model.Model;
 
 /**
  *
@@ -38,8 +39,8 @@ public class MachineClient {
 	private String url = null;
 	private Properties properties;
 	
-	public MachineClient() {
-		this.properties = NodeController.openProperties("./retina-desktop.properties");
+	public MachineClient(Model model) {
+		this.properties = model.system.properties;
 		boolean gateway = Boolean.parseBoolean((String) this.properties.get("gateway"));
 		if(gateway) {
 			this.url = this.properties.getProperty("service.web.gateway.url")+"/machine";

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Joaquin Osvaldo Rodriguez
+ * Copyright 2020 Joaquin Osvaldo Rodriguez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,20 +15,19 @@
  */
 package com.meritoki.app.desktop.retina.model.document;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  *
  * @author osvaldo.rodriguez
  */
 public class Unit {
-    public static final String DATA = "data";
-    public static final String TIME = "time";
-    public static final String SPACE = "space";
-    public static final String ENERGY = "energy";
-    public String type = DATA;
+	@JsonProperty
+    public UnitType type = UnitType.DATA;
+    @JsonProperty
     public String value;
     
     public Unit() {
-    	
     }
     
     public Unit(Unit unit) {

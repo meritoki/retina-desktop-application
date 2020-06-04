@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 osvaldo.rodriguez.
+ * Copyright 2020 Joaquin Osvaldo Rodriguez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,14 +15,12 @@
  */
 package com.meritoki.app.desktop.retina.model.document;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 /**
  *
@@ -31,6 +29,6 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 public class Script {
 	@JsonIgnore
 	static Logger logger = LogManager.getLogger(Script.class.getName());
-//        public List<String> instructionList = new ArrayList<>();
-        public String value = "";
+	
+	public String value = "";
 }
