@@ -106,7 +106,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 		point.x = me.getX();
 		point.y = me.getY();
 		this.model.document.cache.pressedPoint = point;
-		logger.info("mousePressed(me) point="+point);
+		logger.trace("mousePressed(me) point="+point);
 		this.model.document.cache.pressedImage = this.model.document.getImage(point);
 		if (this.model.document.cache.pressedImage != null) {
 			this.model.document.setImage(this.model.document.cache.pressedImage.uuid);
@@ -180,7 +180,6 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			switch (ke.getKeyCode()) {
 			case KeyEvent.VK_EQUALS: {
 				logger.debug("keyPressed(e) KeyEvent.VK_EQUALS");
-				this.model.document.cache.pressedPage = this.model.document.getPage();
 				this.model.document.cache.scaleOperator = '*';
 				this.model.document.cache.scaleFactor = 1.5;
 				try {
@@ -193,7 +192,6 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_PLUS: {
 				logger.debug("keyPressed(e) KeyEvent.VK_PLUS");
-				this.model.document.cache.pressedPage = this.model.document.getPage();
 				this.model.document.cache.scaleOperator = '*';
 				this.model.document.cache.scaleFactor = 1.5;
 				try {
@@ -206,7 +204,6 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_MINUS: {
 				logger.debug("keyPressed(e) KeyEvent.VK_MINUS");
-				this.model.document.cache.pressedPage = this.model.document.getPage();
 				this.model.document.cache.scaleOperator = '/';
 				this.model.document.cache.scaleFactor = 1.5;
 				try {
@@ -218,8 +215,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				break;
 			}
 			case KeyEvent.VK_DOWN: {
-				logger.debug("keyPressed(e) KeyEvent.VK_DOWN");
-				this.model.document.cache.pressedPage = this.model.document.getPage(); 
+				logger.debug("keyPressed(e) KeyEvent.VK_DOWN"); 
 				this.model.document.cache.pressedImage = this.model.document.getImage();
 				this.model.document.cache.shiftOperator = '+';
 				this.model.document.cache.shiftFactor = 10;
@@ -234,7 +230,6 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_UP: {
 				logger.debug("keyPressed(e) KeyEvent.VK_UP");
-				this.model.document.cache.pressedPage = this.model.document.getPage(); 
 				this.model.document.cache.pressedImage = this.model.document.getImage();
 				this.model.document.cache.shiftOperator = '-';
 				this.model.document.cache.shiftFactor = 10;
@@ -248,10 +243,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_LEFT: {
 				logger.info("keyPressed(e) KeyEvent.VK_LEFT");
+				this.model.document.cache.pressedImage = this.model.document.getPage().getImage();
 				this.model.document.cache.scaleOperator = '/';
 				this.model.document.cache.scaleFactor = 1.01;
-				this.model.document.cache.pressedPage = this.model.document.getPage();
-				this.model.document.cache.pressedImage = this.model.document.getPage().getImage();
 				try {
 					this.model.document.pattern.execute("resizeImage");
 					this.main.init();
@@ -262,10 +256,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_RIGHT: {
 				logger.info("keyPressed(e) KeyEvent.VK_RIGHT");
+				this.model.document.cache.pressedImage = this.model.document.getPage().getImage();
 				this.model.document.cache.scaleOperator = '*';
 				this.model.document.cache.scaleFactor = 1.01;
-				this.model.document.cache.pressedPage = this.model.document.getPage();
-				this.model.document.cache.pressedImage = this.model.document.getPage().getImage();
 				try {
 					this.model.document.pattern.execute("resizeImage");
 					this.main.init();
@@ -364,11 +357,3 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 	public void keyReleased(KeyEvent e) {
 	}
 }
-//Page page = this.model.document.getPage();
-//page.setBufferedImage(null);
-//Image image = (page != null) ? page.getImage() : null;
-//if (image != null) {
-//	image.setMargin(image.position.margin + 10);
-//	page.setBufferedImage(null);
-//}
-//this.main.init();
