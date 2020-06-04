@@ -2,9 +2,7 @@ package com.meritoki.retina.application.desktop.model.document;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
-import java.awt.Graphics;
 import java.io.File;
 
 import org.apache.logging.log4j.LogManager;
@@ -19,6 +17,7 @@ import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
+import com.meritoki.app.desktop.retina.model.document.Shape;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DocumentScaleTest {
@@ -26,7 +25,7 @@ public class DocumentScaleTest {
 	static Document document = null;
 	static String pageZeroUUID = null;
 	
-	static int dimension = 256;
+	static int dimension = 4;
 	
 	@BeforeAll
 	public static void initialize() {
@@ -60,47 +59,50 @@ public class DocumentScaleTest {
 	
 	@Test
 	@Order(2)
-	public void scaleGrow() {
+	public void scaleUp() {
 		assertEquals(document.setIndex(0), true);
 		assertEquals(document.getPage().setIndex(0), true);
 		document.cache.pressedImage = document.getImage();
-		double scale = document.getPage().position.scale;
-		scale *= 1.5;
-		document.getPage().setScale(scale);
-		int x = (int) (document.cache.pressedImage.position.dimension.width / 2);
-		int y = (int) (document.cache.pressedImage.position.dimension.height / 2);
-		assertNotNull(document.getPage().getShape(new Point(x,y)));
-		double shapeScale = 256*1.5;
-		x = (int) (document.cache.pressedImage.position.dimension.width / 2 - shapeScale/2);
-		y = (int) (document.cache.pressedImage.position.dimension.height / 2 - shapeScale/2);
-		assertNotNull(document.getPage().getShape(new Point(x,y)));
-		assertNull(document.getPage().getShape(new Point(x-1,y-1)));
-		x = (int) (document.cache.pressedImage.position.dimension.width / 2 + shapeScale/2);
-		y = (int) (document.cache.pressedImage.position.dimension.height / 2 + shapeScale/2);
-		assertNotNull(document.getPage().getShape(new Point(x,y)));
-		assertNull(document.getPage().getShape(new Point(x+1,y+1)));
+		document.cache.scaleOperator = '*';
+		document.cache.scaleFactor = 1.5;
+		try {
+			document.pattern.execute("scalePage");
+			document.pattern.execute("scalePage");
+			document.pattern.execute("scalePage");
+			document.pattern.execute("scalePage");
+			document.pattern.execute("scalePage");
+			document.pattern.execute("scalePage");
+		} catch (Exception e) {
+			logger.error("Exception " + e.getMessage());
+		} 
+		double x = document.cache.pressedImage.position.center.x;
+		double y = document.cache.pressedImage.position.center.y;
+		assertNotNull(document.getShape(new Point(x,y)));
 	}
 	
 	@Test
-	@Order(3) 
-	public void scaleShrink() {
+	@Order(3)
+	public void scaleDown() {
 		assertEquals(document.setIndex(0), true);
 		assertEquals(document.getPage().setIndex(0), true);
 		document.cache.pressedImage = document.getImage();
-		double scale = document.getPage().position.scale;
-		scale /= 1.5;
-		document.getPage().setScale(scale);
-		int x = (int) (document.cache.pressedImage.position.dimension.width / 2);
-		int y = (int) (document.cache.pressedImage.position.dimension.height / 2);
-		assertNotNull(document.getPage().getShape(new Point(x,y)));
-		double shapeScale = 256;
-		x = (int) (document.cache.pressedImage.position.dimension.width / 2 - shapeScale/2);
-		y = (int) (document.cache.pressedImage.position.dimension.height / 2 - shapeScale/2);
-		assertNotNull(document.getPage().getShape(new Point(x,y)));
-		assertNull(document.getPage().getShape(new Point(x-1,y-1)));
-		x = (int) (document.cache.pressedImage.position.dimension.width / 2 + shapeScale/2);
-		y = (int) (document.cache.pressedImage.position.dimension.height / 2 + shapeScale/2);
-		assertNotNull(document.getPage().getShape(new Point(x,y)));
-		assertNull(document.getPage().getShape(new Point(x+1,y+1)));
+		document.cache.scaleOperator = '/';
+		document.cache.scaleFactor = 1.5;
+		try {
+			document.pattern.execute("scalePage");
+			document.pattern.execute("scalePage");
+			document.pattern.execute("scalePage");
+			document.pattern.execute("scalePage");
+			document.pattern.execute("scalePage");
+			document.pattern.execute("scalePage");
+		} catch (Exception e) {
+			logger.error("Exception " + e.getMessage());
+		} 
+		double x = document.cache.pressedImage.position.center.x;
+		double y = document.cache.pressedImage.position.center.y;
+		Shape shape = document.getShape(new Point(x,y));
+		assertNotNull(shape);
+		assertEquals(shape.position.dimension.width,dimension);
+		assertEquals(shape.position.dimension.height,dimension);
 	}
 }
