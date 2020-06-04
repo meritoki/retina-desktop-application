@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.File;
 
+import javax.swing.JOptionPane;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeAll;
@@ -42,8 +44,8 @@ public class DocumentMarginShiftMoveShapeTest {
 		//add right
 		assertEquals(document.getPage().setIndex(1), true);
 		document.cache.pressedImage = document.getImage();
-		int x = (int) (document.cache.pressedImage.position.point.x+document.cache.pressedImage.position.dimension.width / 2 - dimension / 2);
-		int y = (int) (document.cache.pressedImage.position.point.y+document.cache.pressedImage.position.dimension.height / 2 - dimension / 2);
+		double x = (document.cache.pressedImage.position.center.x - dimension / 2);
+		double y = (document.cache.pressedImage.position.center.y - dimension / 2);
 		int width = dimension;
 		int height = dimension;
 		document.cache.pressedPoint = new Point(x, y);
@@ -53,8 +55,8 @@ public class DocumentMarginShiftMoveShapeTest {
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		}
-		x = (int) (document.cache.pressedImage.position.point.x+document.cache.pressedImage.position.dimension.width / 2);
-		y = (int) (document.cache.pressedImage.position.point.y+document.cache.pressedImage.position.dimension.height / 2);
+		x = (document.cache.pressedImage.position.center.x);
+		y = (document.cache.pressedImage.position.center.y);
 		assertNotNull(document.getShape(new Point(x,y)));
 	}
 	
@@ -62,12 +64,23 @@ public class DocumentMarginShiftMoveShapeTest {
 	@Order(2)
 	public void marginShift() {
 		assertEquals(document.setIndex(0), true);
-		//shift right
 		assertEquals(document.getPage().setIndex(1), true);
 		document.cache.pressedImage = document.getImage();
-		document.cache.pressedImage.setMargin(100);
-		int x = (int) (document.cache.pressedImage.position.point.x+document.cache.pressedImage.position.dimension.width / 2);
-		int y = (int) (document.cache.pressedImage.position.point.y+document.cache.pressedImage.position.dimension.height / 2);
+		document.cache.shiftOperator = '+';
+		document.cache.shiftFactor = 10;
+		try {
+			document.pattern.execute("shiftImage");
+			document.pattern.execute("shiftImage");
+			document.pattern.execute("shiftImage");
+			document.pattern.execute("shiftImage");
+			document.pattern.execute("shiftImage");
+			document.pattern.execute("shiftImage");
+			document.pattern.execute("shiftImage");
+		} catch (Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+		double x = (document.cache.pressedImage.position.center.x);
+		double y = (document.cache.pressedImage.position.center.y);
 		assertNotNull(document.getShape(new Point(x,y)));
 	}
 	
@@ -79,21 +92,18 @@ public class DocumentMarginShiftMoveShapeTest {
 		document.cache.pressedImage = document.getPage().getImage();
 		assertEquals(document.getPage().setIndex(0), true);
 		document.cache.releasedImage = document.getPage().getImage();
-		int x = (int) (document.cache.pressedImage.position.point.x+document.cache.pressedImage.position.dimension.width / 2);
-		int y = (int) (document.cache.pressedImage.position.point.y+document.cache.pressedImage.position.dimension.height / 2);
+		double x = (document.cache.pressedImage.position.center.x);
+		double y = (document.cache.pressedImage.position.center.y);
 		document.cache.pressedPoint = new Point(x, y);
 		document.cache.pressedShape = document.getPage().getShape(document.cache.pressedPoint);
-		x = (int) (document.cache.releasedImage.position.point.x+document.cache.releasedImage.position.dimension.width / 2);
-		y = (int) (document.cache.releasedImage.position.point.y+document.cache.releasedImage.position.dimension.height / 2);
+		x = (int) (document.cache.releasedImage.position.center.x);
+		y = (int) (document.cache.releasedImage.position.center.y);
 		document.cache.releasedPoint = new Point(x, y);
 		try {
 			document.pattern.execute("moveShape");
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		}
-		logger.info("releasedPoint="+document.cache.releasedPoint);
-		logger.info("releasedImage="+document.cache.releasedImage);
-		logger.info("shapeList="+document.getShapeList());
 		assertNotNull(document.getPage().getShape(new Point(x,y)));
 	}
 }
