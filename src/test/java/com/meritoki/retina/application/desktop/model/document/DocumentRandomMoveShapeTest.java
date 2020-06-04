@@ -23,7 +23,7 @@ import com.meritoki.app.desktop.retina.model.document.Position;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DocumentRandomMoveShapeTest {
 
-	static Logger logger = LogManager.getLogger(DocumentMoveShapeTest.class.getName());
+	static Logger logger = LogManager.getLogger(DocumentMoveShapeShiftImageTest.class.getName());
 	static Document document = null;
 	static int dimension = 2;
 	static int limit = 10000;
