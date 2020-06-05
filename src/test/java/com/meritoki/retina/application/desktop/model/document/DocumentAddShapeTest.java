@@ -20,7 +20,7 @@ import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Position;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class DocumentManyShapeTest {
+public class DocumentAddShapeTest {
 	static Logger logger = LogManager.getLogger(DocumentResizeShapeTest.class.getName());
 	static Document document = null;
 	static String pageZeroUUID = null;

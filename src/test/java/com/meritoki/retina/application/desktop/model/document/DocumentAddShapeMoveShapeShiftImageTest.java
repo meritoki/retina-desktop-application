@@ -20,9 +20,9 @@ import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class DocumentMoveShapeShiftImageTest {
+public class DocumentAddShapeMoveShapeShiftImageTest {
 
-	static Logger logger = LogManager.getLogger(DocumentMoveShapeShiftImageTest.class.getName());
+	static Logger logger = LogManager.getLogger(DocumentAddShapeMoveShapeShiftImageTest.class.getName());
 	static Document document = null;
 	static String pageZeroUUID = null;
 	static String pageOneUUID = null;

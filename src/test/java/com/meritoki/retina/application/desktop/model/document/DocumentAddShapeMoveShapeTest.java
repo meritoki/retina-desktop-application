@@ -21,9 +21,9 @@ import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Position;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class DocumentMoveShapeTest {
+public class DocumentAddShapeMoveShapeTest {
 
-	static Logger logger = LogManager.getLogger(DocumentMoveShapeShiftImageTest.class.getName());
+	static Logger logger = LogManager.getLogger(DocumentAddShapeMoveShapeShiftImageTest.class.getName());
 	static Document document = null;
 	static int dimension = 2;
 	static int limit = 10000;

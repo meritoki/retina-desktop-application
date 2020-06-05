@@ -53,6 +53,7 @@ public class Pattern {
 		Command resizeImage = new ResizeImage(this.document);
 		Command scalePage = new ScalePage(this.document);
 		Command shiftImage = new ShiftImage(this.document);
+		Command setImage = new SetImage(this.document);
 		this.register("addPage", addPage);
 		this.register("setPage", setPage);
 		this.register("addShape", addShape);
@@ -65,6 +66,7 @@ public class Pattern {
 		this.register("resizeImage", resizeImage);
 		this.register("scalePage", scalePage);
 		this.register("shiftImage", shiftImage);
+		this.register("setImage", setImage);
 	}
 
 	@JsonIgnore
@@ -207,11 +209,28 @@ public class Pattern {
 				}
 				break;
 			}
+			case "setImage": {
+				for(Operation o: command.operationList) {
+					if(o.sign == 0) {
+						if(o.object instanceof Double) {
+							this.document.setImage((String)o.object);
+						}
+					}
+				}
+				break;
+			}
 			case "resizeImage":{
-				
+				for(Operation o: command.operationList) {
+					if(o.sign == 0) {
+						if(o.object instanceof Double) {
+							this.document.getImage().setRelativeScale((double)o.object);
+						}
+					}
+				}
+				break;
 			}
 			default: {
-
+				logger.error("undo() default");
 			}
 			}
 			this.redoStack.push(command);
