@@ -95,6 +95,7 @@ public class Document {
 
 	@JsonIgnore
 	public void setImage(String uuid) {
+		logger.info("setImage("+uuid+")");
 		if (this.getPage() != null) {
 			this.getPage().setImage(uuid);
 		}
@@ -136,6 +137,14 @@ public class Document {
 	public Page getPage() {
 		int size = this.pageList.size();
 		return (this.index < size && size > 0) ? this.pageList.get(this.index) : null;
+	}
+	
+	@JsonIgnore
+	public Page getPage(int index) {
+		if(this.setIndex(index)) {
+			return this.getPage();
+		}
+		return null;
 	}
 
 	/**

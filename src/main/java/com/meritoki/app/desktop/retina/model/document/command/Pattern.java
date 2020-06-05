@@ -212,7 +212,7 @@ public class Pattern {
 			case "setImage": {
 				for(Operation o: command.operationList) {
 					if(o.sign == 0) {
-						if(o.object instanceof Double) {
+						if(o.object instanceof String) {
 							this.document.setImage((String)o.object);
 						}
 					}
@@ -241,6 +241,7 @@ public class Pattern {
 	public void redo() {
 		if (this.redoStack.size() > 0) {
 			Command command = this.redoStack.pop();
+			logger.info("redo() command.name=" + command.name);
 			Operation operation = null;
 			switch (command.name) {
 			case "setShape": {
@@ -323,6 +324,16 @@ public class Pattern {
 							this.document.pageList = (List<Page>)o.object;
 						}
 					} 
+				}
+				break;
+			}
+			case "setImage": {
+				for(Operation o: command.operationList) {
+					if(o.sign == 1) {
+						if(o.object instanceof String) {
+							this.document.setImage((String)o.object);
+						}
+					}
 				}
 				break;
 			}

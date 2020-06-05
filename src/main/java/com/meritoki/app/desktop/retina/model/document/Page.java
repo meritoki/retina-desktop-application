@@ -132,6 +132,14 @@ public class Page {
 		logger.debug("getImage() image="+image);
 		return image;
 	}
+	
+	@JsonIgnore
+	public Image getImage(int index) {
+		if(this.setIndex(index)) {
+			return this.getImage();
+		}
+		return null;
+	}
 
 	/**
 	 * Function returns Image that contains the Point

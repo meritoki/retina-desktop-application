@@ -38,13 +38,13 @@ public class DocumentAddShapeMoveShapeShiftImageTest {
 		pageZeroUUID = page.uuid;
 		document.addPage(page);
 		page = new Page();
+		page.addImage(new Image(new File("./data/image/01.jpg")));
 		page.addImage(new Image(new File("./data/image/02.jpg")));
-		page.addImage(new Image(new File("./data/image/03.jpg")));
 		pageOneUUID = page.uuid;
 		document.addPage(page);
 		page = new Page();
-		page.addImage(new Image(new File("./data/image/04.jpg")));
-		page.addImage(new Image(new File("./data/image/05.jpg")));
+		page.addImage(new Image(new File("./data/image/01.jpg")));
+		page.addImage(new Image(new File("./data/image/02.jpg")));
 		pageTwoUUID = page.uuid;
 		document.addPage(page);
 		assertEquals(document.pageList.size(), 3);
@@ -52,7 +52,7 @@ public class DocumentAddShapeMoveShapeShiftImageTest {
 
 	@Test
 	@Order(1)
-	public void addShapes() {
+	public void addShape() {
 		//Page Zero
 		assertEquals(document.setIndex(0), true);
 		assertEquals(document.getPage().setIndex(0), true);
@@ -110,15 +110,15 @@ public class DocumentAddShapeMoveShapeShiftImageTest {
 		assertNotNull(document.getShape(new Point(x,y)));
 	}
 	
-	@Test
-	@Order(2)
-	public void save() {
-		DocumentController.save(new java.io.File("./test/document-move-shape-test-a.json"), document);
-	}
+//	@Test
+//	@Order(2)
+//	public void save() {
+//		DocumentController.save(new java.io.File("./test/document-move-shape-test-a.json"), document);
+//	}
 
 	@Test
-	@Order(3)
-	public void moveShapes() {
+	@Order(2)
+	public void moveShape() {
 		logger.info("single page");
 		assertEquals(document.setIndex(0), true);
 		assertEquals(document.getPage().setIndex(0), true);
@@ -176,14 +176,14 @@ public class DocumentAddShapeMoveShapeShiftImageTest {
 		assertNotNull(document.getPage().getShape(new Point(x,y)));
 	}
 	
-	@Test
-	@Order(4)
-	public void saveMove() {
-		DocumentController.save(new java.io.File("./test/document-move-shape-test-b.json"), document);
-	}
+//	@Test
+//	@Order(4)
+//	public void saveMove() {
+//		DocumentController.save(new java.io.File("./test/document-move-shape-test-b.json"), document);
+//	}
 	
 	@Test
-	@Order(5)
+	@Order(3)
 	public void shiftImage() {
 		logger.info("single page");
 		assertEquals(document.setIndex(0), true);
@@ -192,6 +192,7 @@ public class DocumentAddShapeMoveShapeShiftImageTest {
 		document.cache.shiftOperator = '+';
 		document.cache.shiftFactor = 10;
 		try {
+			document.pattern.execute("shiftImage");
 			document.pattern.execute("shiftImage");
 			document.pattern.execute("shiftImage");
 			document.pattern.execute("shiftImage");
@@ -219,6 +220,7 @@ public class DocumentAddShapeMoveShapeShiftImageTest {
 			document.pattern.execute("shiftImage");
 			document.pattern.execute("shiftImage");
 			document.pattern.execute("shiftImage");
+			document.pattern.execute("shiftImage");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
@@ -239,6 +241,7 @@ public class DocumentAddShapeMoveShapeShiftImageTest {
 			document.pattern.execute("shiftImage");
 			document.pattern.execute("shiftImage");
 			document.pattern.execute("shiftImage");
+			document.pattern.execute("shiftImage");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
@@ -247,12 +250,23 @@ public class DocumentAddShapeMoveShapeShiftImageTest {
 		assertNotNull(document.cache.pressedImage.getShape(new Point(x,y)));
 	}
 	
+	@Test
+	@Order(4)
+	public void undo() {
+		
+	}
 	
 	@Test
-	@Order(6)
-	public void saveShift() {
-		DocumentController.save(new java.io.File("./test/document-move-shape-test-c.json"), document);
+	@Order(5)
+	public void redo() {
+		
 	}
+	
+//	@Test
+//	@Order(6)
+//	public void saveShift() {
+//		DocumentController.save(new java.io.File("./test/document-move-shape-test-c.json"), document);
+//	}
 	
 	
 	

@@ -24,7 +24,7 @@ public class SetImage extends Command {
 		Point pressedPoint = document.cache.pressedPoint;
     	//undo
 		Operation operation = new Operation();
-		operation.object = pressedImage.uuid;
+		operation.object = (pressedImage != null)?pressedImage.uuid:null;
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);

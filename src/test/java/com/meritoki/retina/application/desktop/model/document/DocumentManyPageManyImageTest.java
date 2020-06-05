@@ -23,7 +23,7 @@ public class DocumentManyPageManyImageTest {
 	static Logger logger = LogManager.getLogger(DocumentResizeShapeTest.class.getName());
 	static Document document = null;
 	int pageLimit = 8;
-	int imageLimit = 4;
+	int imageLimit = 3;
 	
 	@BeforeAll
 	public static void initialize() {
