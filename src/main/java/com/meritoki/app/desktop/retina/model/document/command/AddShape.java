@@ -31,23 +31,21 @@ public class AddShape extends Command {
 		Point releasedPoint = this.document.cache.releasedPoint;
 		Image pressedImage = this.document.cache.pressedImage;
 		double scale = page.position.scale;
-
 		Shape shape = new Shape();
-//		if (this.minimumSize(this.document.cache.pressedPoint, this.document.cache.releasedPoint,
-//				this.document.cache.scale)) {
-		shape.type = type;
-		shape.position = new Position(new Point(pressedPoint), new Point(releasedPoint),
-				pressedImage.position.relativeScale, scale, pressedImage.position.offset,
-				pressedImage.position.margin);
-		this.document.addShape(shape);
-		Operation operation = new Operation();
-		operation.object = new Shape(shape, true);
-		operation.sign = 1;
-		operation.id = UUID.randomUUID().toString();
-		this.operationList.push(operation);
-//		} else {
-//			throw new Exception("Shape too small");
-//		}
+		if (this.minimumSize(pressedPoint, releasedPoint, scale)) {
+			shape.type = type;
+			shape.position = new Position(new Point(pressedPoint), new Point(releasedPoint),
+					pressedImage.position.relativeScale, scale, pressedImage.position.offset,
+					pressedImage.position.margin);
+			this.document.addShape(shape);
+			Operation operation = new Operation();
+			operation.object = new Shape(shape, true);
+			operation.sign = 1;
+			operation.id = UUID.randomUUID().toString();
+			this.operationList.push(operation);
+		} else {
+			throw new Exception("Shape too small");
+		}
 	}
 
 	public boolean minimumSize(Point a, Point b, double scale) {

@@ -394,7 +394,7 @@ public final class MainFrame extends JFrame {
 	}// GEN-LAST:event_saveAsMenuItemActionPerformed
 
 	private void importImageMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_importImageMenuItemActionPerformed
-		this.imageImportDialog = new com.meritoki.app.desktop.retina.view.dialog.image.ImageImportDialog(this, false);
+		this.imageImportDialog = new com.meritoki.app.desktop.retina.view.dialog.image.ImageImportDialog(this, false, this.model);
 //        this.imageImportDialog.setModel(this.model);
 	}// GEN-LAST:event_importImageMenuItemActionPerformed
 
