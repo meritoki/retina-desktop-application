@@ -27,7 +27,7 @@ public class ResizeImage extends Command {
     	char scaleOperator = this.document.cache.scaleOperator;
     	//undo
     	Operation operation = new Operation();
-		operation.object = new Image(this.document.cache.pressedImage);
+		operation.object = this.document.cache.pressedImage.position.relativeScale;//new Image(this.document.cache.pressedImage);
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);
@@ -48,7 +48,7 @@ public class ResizeImage extends Command {
 		pressedImage.setRelativeScale(relativeScale);
 		//Redo
 		operation = new Operation();
-		operation.object = new Image(this.document.cache.pressedImage);
+		operation.object = pressedImage.position.relativeScale;//new Image(pressedImage);
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);

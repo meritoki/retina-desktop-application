@@ -42,5 +42,10 @@ public class ScalePage extends Command {
 		}
 		}
 		page.setScale(scale);
+    	operation = new Operation();
+		operation.object = scale;
+		operation.sign = 1;
+		operation.id = UUID.randomUUID().toString();
+		this.operationList.add(operation);
     }
 }

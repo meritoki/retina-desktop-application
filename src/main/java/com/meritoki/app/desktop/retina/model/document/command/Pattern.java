@@ -223,6 +223,8 @@ public class Pattern {
 				for(Operation o: command.operationList) {
 					if(o.sign == 0) {
 						if(o.object instanceof Double) {
+							this.document.getPage().setBufferedImage(null);
+							this.document.getImage().setBufferedImage(null);
 							this.document.getImage().setRelativeScale((double)o.object);
 						}
 					}
@@ -316,7 +318,6 @@ public class Pattern {
 				break;
 			}
 			case "executeScript" : {
-				
 				Collections.reverse(command.operationList);
 				for(Operation o: command.operationList) {
 					if(o.sign == 1) {
@@ -332,6 +333,28 @@ public class Pattern {
 					if(o.sign == 1) {
 						if(o.object instanceof String) {
 							this.document.setImage((String)o.object);
+						}
+					}
+				}
+				break;
+			}
+			case "resizeImage":{
+				for(Operation o: command.operationList) {
+					if(o.sign == 1) {
+						if(o.object instanceof Double) {
+							this.document.getPage().setBufferedImage(null);
+							this.document.getImage().setBufferedImage(null);
+							this.document.getImage().setRelativeScale((double)o.object);
+						}
+					}
+				}
+				break;
+			}
+			case "scalePage":{
+				for(Operation o: command.operationList) {
+					if(o.sign == 1) {
+						if(o.object instanceof Double) {
+							this.document.getPage().setScale((double)o.object);
 						}
 					}
 				}
