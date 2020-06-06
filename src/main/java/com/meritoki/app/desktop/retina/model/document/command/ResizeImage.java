@@ -21,7 +21,7 @@ public class ResizeImage extends Command {
     	logger.info("execute()");
 		//variable
     	Page page = this.document.getPage();
-    	Image pressedImage = this.document.cache.pressedImage;
+    	Image pressedImage = new Image(this.document.cache.pressedImage);
     	double scale = page.position.scale;
     	double scaleFactor = this.document.cache.scaleFactor;
     	char scaleOperator = this.document.cache.scaleOperator;
