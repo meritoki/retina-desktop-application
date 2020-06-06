@@ -141,10 +141,10 @@ public class Document {
 	
 	@JsonIgnore
 	public Page getPage(int index) {
-		if(this.setIndex(index)) {
-			return this.getPage();
-		}
-		return null;
+		int size = this.pageList.size();
+		Page page = (index < size && size > 0) ? this.pageList.get(index) : null;
+		logger.debug("getPage("+index+") page="+page);
+		return page;
 	}
 
 	/**

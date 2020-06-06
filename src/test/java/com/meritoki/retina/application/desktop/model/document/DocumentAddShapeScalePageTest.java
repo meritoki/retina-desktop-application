@@ -123,4 +123,10 @@ public class DocumentAddShapeScalePageTest {
 		document.pattern.undo();
 		assertEquals(document.getShapeList().size(),0);
 	}
+	
+	@Test
+	@Order(5)
+	public void redo() {
+		
+	}
 }

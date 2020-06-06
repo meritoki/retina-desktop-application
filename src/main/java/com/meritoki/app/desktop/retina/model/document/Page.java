@@ -135,10 +135,10 @@ public class Page {
 	
 	@JsonIgnore
 	public Image getImage(int index) {
-		if(this.setIndex(index)) {
-			return this.getImage();
-		}
-		return null;
+		int size = this.imageList.size();
+		Image image = (index < size && size > 0) ? this.imageList.get(index) : null;
+		logger.debug("getImage() image="+image);
+		return image;
 	}
 
 	/**
