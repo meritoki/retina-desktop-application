@@ -337,6 +337,16 @@ public class Pattern {
 				}
 				break;
 			}
+			case "setPage":{
+				for(Operation o: command.operationList) {
+					if(o.sign == 1) {
+						if(o.object instanceof Integer) {
+							this.document.setIndex((int)o.object);
+						}
+					}
+				}
+				break;
+			}
 			default: {
 
 			}

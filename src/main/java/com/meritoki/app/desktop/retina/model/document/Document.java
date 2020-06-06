@@ -176,7 +176,6 @@ public class Document {
 				page = this.pageList.get(i);
 				if (page.uuid.equals(uuid)) {
 					this.setIndex(i);
-					;
 					break;
 				}
 			}

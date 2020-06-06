@@ -38,28 +38,96 @@ public class DocumentSetPageTest {
 		pageZero = document.getPage(0);
 		pageOne = document.getPage(1);
 		pageTwo = document.getPage(2);
-		assertEquals(document.pageList.size(),1);
+		assertEquals(document.pageList.size(),3);
 	}
 	
 	@Test
 	@Order(1)
 	public void setPage() {
+		document.cache.pageIndex = 0;
+		try {
+			document.pattern.execute("setPage");
+		} catch(Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+		assertEquals(document.getPage().uuid,pageZero.uuid);
 		
+		document.cache.pageIndex = 1;
+		try {
+			document.pattern.execute("setPage");
+		} catch(Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+		assertEquals(document.getPage().uuid,pageOne.uuid);
+		
+		document.cache.pageIndex = 2;
+		try {
+			document.pattern.execute("setPage");
+		} catch(Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+		assertEquals(document.getPage().uuid,pageTwo.uuid);
+		
+		document.cache.pageIndex = -1;
+		document.cache.pageUUID = pageZero.uuid;
+		try {
+			document.pattern.execute("setPage");
+		} catch(Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+		assertEquals(document.getPage().uuid,pageZero.uuid);
+		
+		document.cache.pageIndex = -1;
+		document.cache.pageUUID = pageOne.uuid;
+		try {
+			document.pattern.execute("setPage");
+		} catch(Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+		assertEquals(document.getPage().uuid,pageOne.uuid);
+		
+		document.cache.pageIndex = -1;
+		document.cache.pageUUID = pageTwo.uuid;
+		try {
+			document.pattern.execute("setPage");
+		} catch(Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+		assertEquals(document.getPage().uuid,pageTwo.uuid);
 	}
-	
+
 	@Test
 	@Order(2)
 	public void undo() {
+		assertEquals(document.getPage().uuid,pageTwo.uuid);
 		document.pattern.undo();
+		assertEquals(document.getPage().uuid,pageOne.uuid);
 		document.pattern.undo();
+		assertEquals(document.getPage().uuid,pageZero.uuid);
 		document.pattern.undo();
+		assertEquals(document.getPage().uuid,pageTwo.uuid);
+		document.pattern.undo();
+		assertEquals(document.getPage().uuid,pageOne.uuid);
+		document.pattern.undo();
+		assertEquals(document.getPage().uuid,pageZero.uuid);
+		document.pattern.undo();
+		
 	}
 	
 	@Test
 	@Order(3)
 	public void redo() {
 		document.pattern.redo();
+		assertEquals(document.getPage().uuid,pageZero.uuid);
 		document.pattern.redo();
+		assertEquals(document.getPage().uuid,pageOne.uuid);
 		document.pattern.redo();
+		assertEquals(document.getPage().uuid,pageTwo.uuid);
+		document.pattern.redo();
+		assertEquals(document.getPage().uuid,pageZero.uuid);
+		document.pattern.redo();
+		assertEquals(document.getPage().uuid,pageOne.uuid);
+		document.pattern.redo();
+		assertEquals(document.getPage().uuid,pageTwo.uuid);
 	}
 }

@@ -29,5 +29,10 @@ public class SetPage extends Command {
     	} else if (document.cache.pageUUID != null) {
     		document.setPage(document.cache.pageUUID);
     	}
+    	operation = new Operation();
+		operation.object = document.getIndex();
+		operation.sign = 1;
+		operation.id = UUID.randomUUID().toString();
+		this.operationList.add(operation);
     }
 }

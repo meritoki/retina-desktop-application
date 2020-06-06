@@ -27,7 +27,6 @@ public class DocumentScalePageTest {
 	static String pageZeroUUID = null;
 	static Dimension source = null;
 	static Dimension sink = null;
-	static int dimension = 4;
 	
 	@BeforeAll
 	public static void initialize() {
