@@ -228,15 +228,14 @@ public class NodeController {
 		ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", command).redirectError(new File("error"))
 				.redirectOutput(new File("output"));
 
-		Process process;
-		int seconds = 120;
+		Process process = null;
 		String output = null;
 		String error = null;
 		List<String> stringList = new ArrayList<>();
 		String string;
 		try {
 			process = processBuilder.start();
-			if (!process.waitFor(seconds, TimeUnit.SECONDS)) {
+			if (!process.waitFor(timeout, TimeUnit.SECONDS)) {
 				process.destroy();
 				logger.info("executeCommand(...) exitValue=" + process.exitValue());
 			}
@@ -252,11 +251,14 @@ public class NodeController {
 					stringList.add(s);
 				}
 			}
-		} catch (IOException ex) {
-
-		} catch (InterruptedException ex) {
-
 		}
+		catch (Exception e) {
+			logger.error("executeCommand(...) Exception "+e.getMessage());
+		} 
+		finally {
+			logger.info("executeCommand(...) process.exitValue=" + process.exitValue());
+		}
+
 		return stringList;
 	}
 	
