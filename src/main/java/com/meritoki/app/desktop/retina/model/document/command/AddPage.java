@@ -1,6 +1,7 @@
 package com.meritoki.app.desktop.retina.model.document.command;
 
 import java.io.File;
+import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,16 +21,24 @@ public class AddPage extends Command {
     @Override
     public void execute() {
     	logger.info("execute()");
-//    	this.user = this.document.cache.user;
-    	File[] fileArray = this.document.cache.fileArray;
+    	//undo
     	Operation operation = new Operation();
-    	//save pagelist in operation as it is
-    	
+    	operation.object = this.document.pageList;
+    	operation.id = UUID.randomUUID().toString();
+    	operation.sign = 0;
+    	this.operationList.push(operation);	
     	//logic
+    	File[] fileArray = this.document.cache.fileArray;
     	for(File file: fileArray) {
     		Page page = new Page();
 			page.imageList.add(new Image(file));
     		this.document.addPage(page);
     	}
+    	//redo
+    	operation = new Operation();
+    	operation.object = this.document.pageList;
+    	operation.id = UUID.randomUUID().toString();
+    	operation.sign = 1;
+    	this.operationList.push(operation);
     }
 }

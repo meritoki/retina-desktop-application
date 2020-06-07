@@ -96,6 +96,17 @@ public class Pattern {
 			logger.info("undo() command.name=" + command.name);
 			Operation operation = null;
 			switch (command.name) {
+			case "addPage": {
+				for (int i = 0; i < command.operationList.size(); i++) {
+					operation = command.operationList.get(i);
+					if (operation.sign == 0) {
+						if (operation.object instanceof List) {
+							this.document.pageList = (List<Page>)operation.object;
+						}
+					}
+				}
+				break;
+			}
 			case "setShape": {
 				for (int i = 0; i < command.operationList.size(); i++) {
 					operation = command.operationList.get(i);
@@ -231,6 +242,14 @@ public class Pattern {
 				}
 				break;
 			}
+			case "shiftImage": {
+				for(Operation o: command.operationList) {
+					if(o.sign == 0) {
+
+					}
+				}
+				break;
+			}
 			default: {
 				logger.error("undo() default");
 			}
@@ -246,6 +265,17 @@ public class Pattern {
 			logger.info("redo() command.name=" + command.name);
 			Operation operation = null;
 			switch (command.name) {
+			case "addPage": {
+				for (int i = 0; i < command.operationList.size(); i++) {
+					operation = command.operationList.get(i);
+					if (operation.sign == 1) {
+						if (operation.object instanceof List) {
+							this.document.pageList = (List<Page>)operation.object;
+						}
+					}
+				}
+				break;
+			}
 			case "setShape": {
 				for (int i = 0; i < command.operationList.size(); i++) {
 					operation = command.operationList.get(i);
@@ -283,6 +313,15 @@ public class Pattern {
 						if (operation.object instanceof Shape) {
 							this.document.getPage().getImage().removeShape((Shape) operation.object);
 						}
+					}
+				}
+				break;
+			}
+			//Does not function
+			case "removePage": {
+				for(Operation o: command.operationList) {
+					if(o.sign == 1) {
+
 					}
 				}
 				break;
@@ -366,6 +405,14 @@ public class Pattern {
 						if(o.object instanceof Integer) {
 							this.document.setIndex((int)o.object);
 						}
+					}
+				}
+				break;
+			}
+			case "shiftImage": {
+				for(Operation o: command.operationList) {
+					if(o.sign == 1) {
+
 					}
 				}
 				break;
