@@ -107,7 +107,6 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 		point.y = me.getY();
 		this.model.document.cache.pressedPoint = point;
 		logger.trace("mousePressed(me) point="+point);
-		
 		//time to update this code, two seperate things are happening, setting the image and setting the shape
 		try {
 			this.model.document.pattern.execute("setImage");

@@ -21,7 +21,7 @@ public class ScalePage extends Command {
     	logger.info("execute()");
     	//Variables
     	Page page = this.document.getPage();
-		double scale = this.document.cache.pressedImage.position.scale;
+		double scale = page.position.scale;
 		double scaleFactor = this.document.cache.scaleFactor;
 		char scaleOperator = this.document.cache.scaleOperator;
     	//Undo

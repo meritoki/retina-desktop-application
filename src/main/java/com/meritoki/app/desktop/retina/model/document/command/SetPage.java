@@ -21,20 +21,21 @@ public class SetPage extends Command {
     public void execute() {
     	logger.info("execute()");
     	//variables
-    	Point pressedPoint = document.cache.pressedPoint;
     	int pageIndex = document.cache.pageIndex;
     	String pageUUID = document.cache.pageUUID;
-    	
+    	//undo
     	Operation operation = new Operation();
 		operation.object = document.getIndex();
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);
+		//logic
     	if(pageIndex > -1) {
     		document.setIndex(pageIndex);
     	} else if (pageUUID != null) {
     		document.setPage(pageUUID);
     	}
+    	//redo
     	operation = new Operation();
 		operation.object = document.getIndex();
 		operation.sign = 1;

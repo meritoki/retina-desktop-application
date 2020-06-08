@@ -84,6 +84,7 @@ public class PageDialog extends javax.swing.JDialog {
 				switch (keyCode) {
 				case KeyEvent.VK_LEFT: {
 					logger.debug("keyEvent.VK_LEFT");
+					document.cache.pageUUID = null;
 					document.cache.pageIndex = --index;
 					try {
 						document.pattern.execute("setPage");
@@ -96,6 +97,7 @@ public class PageDialog extends javax.swing.JDialog {
 				}
 				case KeyEvent.VK_RIGHT: {
 					logger.debug("keyEvent.VK_RIGHT");
+					document.cache.pageUUID = null;
 					document.cache.pageIndex = ++index;
 					try {
 						document.pattern.execute("setPage");
@@ -109,16 +111,6 @@ public class PageDialog extends javax.swing.JDialog {
 				}
 			}
 
-			@Override
-			public void keyReleased(KeyEvent e) {
-				String uuid = pageList.getSelectedValue();
-				Document document = (model != null) ? model.document : null;
-				Page page = document.getPage();
-				if (page != null && uuid != null && !uuid.equals(page.uuid)) {
-					document.setPage(uuid);
-					main.init();
-				}
-			}
 		});
 	}
 
@@ -126,9 +118,9 @@ public class PageDialog extends javax.swing.JDialog {
 		this.pageList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent me) {
-				String uuid = pageList.getSelectedValue();
 				Document document = (model != null) ? model.document : null;
-				document.cache.pageUUID = uuid;
+				document.cache.pageIndex = -1;
+				document.cache.pageUUID = pageList.getSelectedValue();
 				try {
 					document.pattern.execute("setPage");
 					main.init();
@@ -150,6 +142,8 @@ public class PageDialog extends javax.swing.JDialog {
 				switch (keyCode) {
 				case KeyEvent.VK_LEFT: {
 					logger.debug("keyEvent.VK_LEFT");
+					document.cache.pressedPoint = null;
+					document.cache.imageUUID = null;
 					document.cache.imageIndex = --index;
 					try {
 						document.pattern.execute("setImage");
@@ -162,6 +156,8 @@ public class PageDialog extends javax.swing.JDialog {
 				}
 				case KeyEvent.VK_RIGHT: {
 					logger.debug("keyEvent.VK_RIGHT");
+					document.cache.pressedPoint = null;
+					document.cache.imageUUID = null;
 					document.cache.imageIndex = ++index;
 					try {
 						document.pattern.execute("setImage");
@@ -174,18 +170,6 @@ public class PageDialog extends javax.swing.JDialog {
 				}
 				}
 			}
-
-			@Override
-			public void keyReleased(KeyEvent e) {
-				String uuid = imageList.getSelectedValue();
-				Document document = (model != null) ? model.document : null;
-				Page page = document.getPage();
-				Image image = (page != null)? page.getImage():null;
-				if (image != null && uuid != null && !uuid.equals(image.uuid)) {
-					document.setImage(uuid);
-					main.init();
-				}
-			}
 		});
 	}
 
@@ -193,9 +177,10 @@ public class PageDialog extends javax.swing.JDialog {
 		this.imageList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent me) {
-				String uuid = imageList.getSelectedValue();
 				Document document = (model != null) ? model.document : null;
-				document.cache.imageUUID = uuid;
+				document.cache.pressedPoint = null;
+				document.cache.imageIndex = -1;
+				document.cache.imageUUID = imageList.getSelectedValue();
 				try {
 					document.pattern.execute("setImage");
 					main.init();
@@ -760,4 +745,28 @@ public class PageDialog extends javax.swing.JDialog {
 //int width = (bufferedPage != null)?bufferedPage.getWidth():0;
 //int height = (bufferedPage != null)?bufferedPage.getHeight():0;
 //this.sizeValueLabel.setText(width+"p x "+height+"p");
+//}
+
+
+//@Override
+//public void keyReleased(KeyEvent e) {
+//	String uuid = pageList.getSelectedValue();
+//	Document document = (model != null) ? model.document : null;
+//	Page page = document.getPage();
+//	if (page != null && uuid != null && !uuid.equals(page.uuid)) {
+//		document.setPage(uuid);
+//		main.init();
+//	}
+//}
+
+//@Override
+//public void keyReleased(KeyEvent e) {
+//	String uuid = imageList.getSelectedValue();
+//	Document document = (model != null) ? model.document : null;
+//	Page page = document.getPage();
+//	Image image = (page != null)? page.getImage():null;
+//	if (image != null && uuid != null && !uuid.equals(image.uuid)) {
+//		document.setImage(uuid);
+//		main.init();
+//	}
 //}

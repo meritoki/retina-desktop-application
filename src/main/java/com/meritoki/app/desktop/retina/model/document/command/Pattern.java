@@ -223,8 +223,8 @@ public class Pattern {
 			case "setImage": {
 				for(Operation o: command.operationList) {
 					if(o.sign == 0) {
-						if(o.object instanceof String) {
-							this.document.setImage((String)o.object);
+						if(o.object instanceof Integer) {
+							this.document.setImage((int)o.object);
 						}
 					}
 				}
@@ -370,8 +370,8 @@ public class Pattern {
 			case "setImage": {
 				for(Operation o: command.operationList) {
 					if(o.sign == 1) {
-						if(o.object instanceof String) {
-							this.document.setImage((String)o.object);
+						if(o.object instanceof Integer) {
+							this.document.setImage((int)o.object);
 						}
 					}
 				}

@@ -20,7 +20,6 @@ public class SetImage extends Command {
 	public void execute() {
 		logger.info("execute()");
 		//variables
-		Image pressedImage = document.cache.pressedImage;
 		Point pressedPoint = document.cache.pressedPoint;
 		int imageIndex = document.cache.imageIndex;
     	String imageUUID = document.cache.imageUUID;
