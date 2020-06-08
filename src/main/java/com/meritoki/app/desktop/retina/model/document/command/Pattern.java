@@ -54,6 +54,7 @@ public class Pattern {
 		Command scalePage = new ScalePage(this.document);
 		Command shiftImage = new ShiftImage(this.document);
 		Command setImage = new SetImage(this.document);
+		Command removeImage = new RemoveImage(this.document);
 		this.register("addPage", addPage);
 		this.register("setPage", setPage);
 		this.register("addShape", addShape);
@@ -67,6 +68,7 @@ public class Pattern {
 		this.register("scalePage", scalePage);
 		this.register("shiftImage", shiftImage);
 		this.register("setImage", setImage);
+		this.register("removeImage", removeImage);
 	}
 
 	@JsonIgnore

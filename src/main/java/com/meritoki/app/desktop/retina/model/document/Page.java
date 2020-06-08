@@ -199,7 +199,7 @@ public class Page {
 		List<Shape> shapeList = new ArrayList<>();
 		for (Image image : this.imageList) {
 			for (Shape shape : image.getShapeList()) {
-				shape.bufferedImage = this.getShapeBufferedImage(shape);
+				//shape.bufferedImage = this.getShapeBufferedImage(shape);
 				shapeList.add(shape);
 			}
 		}
@@ -217,6 +217,11 @@ public class Page {
 			}
 		}
 		return bufferedImage;
+	}
+	
+	@JsonIgnore
+	public List<Shape> getMatrixShapeList() {
+		return new Matrix(this.getShapeList(),null).getShapeList();
 	}
 
 	@JsonIgnore
@@ -241,10 +246,11 @@ public class Page {
 	 */
 	@JsonIgnore
 	public BufferedImage getBufferedImage() {
-//		logger.info("getBufferedImage()");
 		if (this.bufferedImage == null) {
 			this.bufferedImage = this.joinImages(this.getImageList());
-			this.position.setAbsoluteDimension(new Dimension(this.bufferedImage.getWidth(),this.bufferedImage.getHeight()));
+			if(this.bufferedImage != null) {
+				this.position.setAbsoluteDimension(new Dimension(this.bufferedImage.getWidth(),this.bufferedImage.getHeight()));
+			}
 		}
 		return this.bufferedImage;
 	}
@@ -461,7 +467,7 @@ public class Page {
 			}
 
 		}
-		List<Shape> shapeList = this.getMatrix().getShapeList();
+		List<Shape> shapeList = this.getMatrixShapeList();//this.getMatrix().getShapeList();
 		Shape shape = this.getShape();
 		Shape previousShape = null;
 		if (shapeList != null) {

@@ -596,38 +596,38 @@ public class PageDialog extends javax.swing.JDialog {
 																// which it why the shapes do not appear after a join.
 			try {
 				document.pattern.execute("executeScript");
-//		        this.initPageList(document.cache.pageList);
-//		        this.main.repaint();
 				this.main.init();
 			} catch (Exception e) {
-				logger.error("Exception " + e.getMessage());
-				/// TODO add dialog that shows error;
+				JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}// GEN-LAST:event_executeImageScriptButtonActionPerformed
 
 	private void removeScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_removeScriptButtonActionPerformed
-		// TODO add your handling code here:
+		this.pageScriptTextArea.setText("");
 	}// GEN-LAST:event_removeScriptButtonActionPerformed
 
 	private void removePageButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_removePageButtonActionPerformed
 		Document document = (this.model != null) ? this.model.document : null;
-		if (document != null) {
-			String selectedItem = this.pageList.getSelectedValue();
-			document.setPage(selectedItem);
-			document.cache.pressedPage = document.getPage();
-			try {
-				document.pattern.execute("removePage");
-				this.init();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		document.cache.pressedPage = (document != null)?document.getPage():null;
+		try {
+			document.pattern.execute("removePage");
+			this.main.init();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}// GEN-LAST:event_removePageButtonActionPerformed
 
 	private void removeImageButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_removeImageButtonActionPerformed
-		// TODO add your handling code here:
+		Document document = (this.model != null) ? this.model.document : null;
+		Page page = (document != null)?document.getPage():null;
+		document.cache.pressedImage = (page != null)?page.getImage():null;
+		try {
+			document.pattern.execute("removeImage");
+			this.main.init();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}// GEN-LAST:event_removeImageButtonActionPerformed
 
 	/**
