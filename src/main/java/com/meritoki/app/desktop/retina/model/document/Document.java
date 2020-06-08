@@ -100,6 +100,14 @@ public class Document {
 			this.getPage().setImage(uuid);
 		}
 	}
+	
+	@JsonIgnore
+	public void setImage(int index) {
+		logger.info("setImage("+index+")");
+		if (this.getPage() != null) {
+			this.getPage().setIndex(index);
+		}
+	}
 
 	@JsonIgnore
 	public Shape getShape(Point point) {

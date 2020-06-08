@@ -22,18 +22,26 @@ public class SetImage extends Command {
 		//variables
 		Image pressedImage = document.cache.pressedImage;
 		Point pressedPoint = document.cache.pressedPoint;
+		int imageIndex = document.cache.imageIndex;
+    	String imageUUID = document.cache.imageUUID;
     	//undo
 		Operation operation = new Operation();
-		operation.object = (pressedImage != null)?pressedImage.uuid:null;
+		operation.object = document.getPage().getIndex();//(pressedImage != null)?pressedImage.uuid:null;
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);
 		//logic
-		document.cache.pressedImage = document.getImage(pressedPoint);
-		document.setImage(document.cache.pressedImage.uuid);
+		if(pressedPoint != null) {
+			document.cache.pressedImage = document.getImage(pressedPoint);
+			document.setImage(document.cache.pressedImage.uuid);
+		} else if(imageIndex > -1) {
+			document.setImage(imageIndex);
+		} else if(imageUUID != null) {
+			document.setImage(imageUUID);
+		}
 		//redo
 		operation = new Operation();
-		operation.object = document.cache.pressedImage.uuid;
+		operation.object = document.getPage().getIndex();//document.cache.pressedImage.uuid;
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);

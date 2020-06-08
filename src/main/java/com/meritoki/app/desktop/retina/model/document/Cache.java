@@ -43,9 +43,9 @@ public class Cache {
 	@JsonIgnore
 	public List<Shape> shapeList = null;
 	@JsonIgnore
-	public Point pressedPoint = new Point();
+	public Point pressedPoint = null;
 	@JsonIgnore
-	public Point releasedPoint = new Point();
+	public Point releasedPoint = null;
 //	@JsonIgnore
 //	public double scale = 1;
 	@JsonIgnore
@@ -53,7 +53,11 @@ public class Cache {
 	@JsonIgnore
 	public int pageIndex = -1;
 	@JsonIgnore
+	public int imageIndex = -1;
+	@JsonIgnore
 	public String pageUUID = null;
+	@JsonIgnore
+	public String imageUUID = null;
 	@JsonIgnore
 	public char scaleOperator = ' ';
 	@JsonIgnore
