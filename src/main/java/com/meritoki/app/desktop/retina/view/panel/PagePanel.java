@@ -114,12 +114,6 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
-		
-//		this.model.document.cache.pressedImage = this.model.document.getImage(point);
-//		if (this.model.document.cache.pressedImage != null) {
-//			this.model.document.setImage(this.model.document.cache.pressedImage.uuid);
-//			this.model.document.cache.pressedShape = this.model.document.getShape(point);
-//		}
 	}
 
 	/**
@@ -127,7 +121,6 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 	 */
 	@Override
 	public void mouseReleased(MouseEvent me) {
-//		e.consume();
 		this.model.document.cache.releasedPoint = new Point(me.getX(), me.getY());
 		if (this.model.document.cache.pressedPoint.equals(this.model.document.cache.releasedPoint)) {
 			if (this.model.document.cache.pressedShape != null)
@@ -295,7 +288,6 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			}
 		} else {
-			ke.consume();
 			int keyCode = ke.getKeyCode();
 			int index = this.model.document.getIndex();
 			switch (keyCode) {
@@ -365,3 +357,10 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 	public void keyReleased(KeyEvent e) {
 	}
 }
+
+
+//this.model.document.cache.pressedImage = this.model.document.getImage(point);
+//if (this.model.document.cache.pressedImage != null) {
+//	this.model.document.setImage(this.model.document.cache.pressedImage.uuid);
+//	this.model.document.cache.pressedShape = this.model.document.getShape(point);
+//}

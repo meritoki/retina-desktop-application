@@ -78,36 +78,54 @@ public class PageDialog extends javax.swing.JDialog {
 		this.pageList.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent ke) {
-				int keyCode = ke.getKeyCode();
-				Document document = (model != null) ? model.document : null;
-				int index = document.getIndex();
-				switch (keyCode) {
-				case KeyEvent.VK_LEFT: {
-					logger.debug("keyEvent.VK_LEFT");
-					document.cache.pageUUID = null;
-					document.cache.pageIndex = --index;
-					try {
-						document.pattern.execute("setPage");
-						setPageListSelectedIndex(index);
+				ke.consume();
+				if (ke.isControlDown()) {
+					switch (ke.getKeyCode()) {
+					case KeyEvent.VK_Z: {
+						logger.debug("keyPressed(e) KeyEvent.VK_Z");
+						model.document.pattern.undo();
 						main.init();
-					} catch (Exception e) {
-						JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+						break;
 					}
-					break;
-				}
-				case KeyEvent.VK_RIGHT: {
-					logger.debug("keyEvent.VK_RIGHT");
-					document.cache.pageUUID = null;
-					document.cache.pageIndex = ++index;
-					try {
-						document.pattern.execute("setPage");
-						setPageListSelectedIndex(index);
+					case KeyEvent.VK_Y: {
+						logger.debug("keyPressed(e) KeyEvent.VK_Y");
+						model.document.pattern.redo();
 						main.init();
-					} catch (Exception e) {
-						JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+						break;
 					}
-					break;
-				}
+					}
+				} else {
+					int keyCode = ke.getKeyCode();
+					Document document = (model != null) ? model.document : null;
+					int index = document.getIndex();
+					switch (keyCode) {
+					case KeyEvent.VK_LEFT: {
+						logger.debug("keyEvent.VK_LEFT");
+						document.cache.pageUUID = null;
+						document.cache.pageIndex = --index;
+						try {
+							document.pattern.execute("setPage");
+							setPageListSelectedIndex(index);
+							main.init();
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+						}
+						break;
+					}
+					case KeyEvent.VK_RIGHT: {
+						logger.debug("keyEvent.VK_RIGHT");
+						document.cache.pageUUID = null;
+						document.cache.pageIndex = ++index;
+						try {
+							document.pattern.execute("setPage");
+							setPageListSelectedIndex(index);
+							main.init();
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+						}
+						break;
+					}
+					}
 				}
 			}
 
@@ -130,44 +148,62 @@ public class PageDialog extends javax.swing.JDialog {
 			}
 		});
 	}
-	
+
 	public void imageListAddKeyListener() {
 		this.imageList.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent ke) {
-				int keyCode = ke.getKeyCode();
-				Document document = (model != null) ? model.document : null;
-				Page page = (document != null)? document.getPage():null;
-				int index = (page != null)?page.getIndex():0;
-				switch (keyCode) {
-				case KeyEvent.VK_LEFT: {
-					logger.debug("keyEvent.VK_LEFT");
-					document.cache.pressedPoint = null;
-					document.cache.imageUUID = null;
-					document.cache.imageIndex = --index;
-					try {
-						document.pattern.execute("setImage");
-						setImageListSelectedIndex(index);
+				ke.consume();
+				if (ke.isControlDown()) {
+					switch (ke.getKeyCode()) {
+					case KeyEvent.VK_Z: {
+						logger.debug("keyPressed(e) KeyEvent.VK_Z");
+						model.document.pattern.undo();
 						main.init();
-					} catch (Exception e) {
-						JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+						break;
 					}
-					break;
-				}
-				case KeyEvent.VK_RIGHT: {
-					logger.debug("keyEvent.VK_RIGHT");
-					document.cache.pressedPoint = null;
-					document.cache.imageUUID = null;
-					document.cache.imageIndex = ++index;
-					try {
-						document.pattern.execute("setImage");
-						setImageListSelectedIndex(index);
+					case KeyEvent.VK_Y: {
+						logger.debug("keyPressed(e) KeyEvent.VK_Y");
+						model.document.pattern.redo();
 						main.init();
-					} catch (Exception e) {
-						JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+						break;
 					}
-					break;
-				}
+					}
+				} else {
+					int keyCode = ke.getKeyCode();
+					Document document = (model != null) ? model.document : null;
+					Page page = (document != null) ? document.getPage() : null;
+					int index = (page != null) ? page.getIndex() : 0;
+					switch (keyCode) {
+					case KeyEvent.VK_LEFT: {
+						logger.debug("keyEvent.VK_LEFT");
+						document.cache.pressedPoint = null;
+						document.cache.imageUUID = null;
+						document.cache.imageIndex = --index;
+						try {
+							document.pattern.execute("setImage");
+							setImageListSelectedIndex(index);
+							main.init();
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+						}
+						break;
+					}
+					case KeyEvent.VK_RIGHT: {
+						logger.debug("keyEvent.VK_RIGHT");
+						document.cache.pressedPoint = null;
+						document.cache.imageUUID = null;
+						document.cache.imageIndex = ++index;
+						try {
+							document.pattern.execute("setImage");
+							setImageListSelectedIndex(index);
+							main.init();
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+						}
+						break;
+					}
+					}
 				}
 			}
 		});
@@ -746,7 +782,6 @@ public class PageDialog extends javax.swing.JDialog {
 //int height = (bufferedPage != null)?bufferedPage.getHeight():0;
 //this.sizeValueLabel.setText(width+"p x "+height+"p");
 //}
-
 
 //@Override
 //public void keyReleased(KeyEvent e) {

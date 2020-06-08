@@ -42,6 +42,7 @@ public class ScalePage extends Command {
 		}
 		}
 		page.setScale(scale);
+		//redo
     	operation = new Operation();
 		operation.object = scale;
 		operation.sign = 1;
