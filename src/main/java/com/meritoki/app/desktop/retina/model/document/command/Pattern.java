@@ -113,8 +113,8 @@ public class Pattern {
 				for (int i = 0; i < command.operationList.size(); i++) {
 					operation = command.operationList.get(i);
 					if (operation.sign == 0) {
-						if (operation.object instanceof Shape) {
-							this.document.getPage().getImage().setShape(((Shape) operation.object).uuid);
+						if (operation.object instanceof String) {
+							this.document.getPage().getImage().setShape((String) operation.object);
 						}
 					}
 				}
@@ -252,6 +252,13 @@ public class Pattern {
 				}
 				break;
 			}
+			case "removeImage": {
+				for(Operation o: command.operationList) {
+					if(o.sign == 0) {
+						
+					}
+				}
+			}
 			default: {
 				logger.error("undo() default");
 			}
@@ -282,8 +289,8 @@ public class Pattern {
 				for (int i = 0; i < command.operationList.size(); i++) {
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
-						if (operation.object instanceof Shape) {
-							this.document.getPage().getImage().setShape(((Shape) operation.object).uuid);
+						if (operation.object instanceof String) {
+							this.document.getPage().getImage().setShape((String) operation.object);
 						}
 					}
 				}
@@ -418,6 +425,13 @@ public class Pattern {
 					}
 				}
 				break;
+			}
+			case "removeImage": {
+				for(Operation o: command.operationList) {
+					if(o.sign == 1) {
+						
+					}
+				}
 			}
 			default: {
 

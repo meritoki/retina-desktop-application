@@ -103,7 +103,7 @@ public class Document {
 	
 	@JsonIgnore
 	public void setImage(int index) {
-		logger.info("setImage("+index+")");
+		logger.debug("setImage("+index+")");
 		if (this.getPage() != null) {
 			this.getPage().setIndex(index);
 		}
