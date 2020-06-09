@@ -17,11 +17,8 @@ package com.meritoki.app.desktop.retina.view.dialog;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -590,16 +587,13 @@ public class PageDialog extends javax.swing.JDialog {
 
 	private void executeImageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_executeImageScriptButtonActionPerformed
 		Document document = (this.model != null) ? this.model.document : null;
-		if (document != null) {
-			document.cache.script = this.pageScriptTextArea.getText();
-			document.cache.pageList = document.getPageList();// BUG 201912212221 this step is stripping the fileList,
-																// which it why the shapes do not appear after a join.
-			try {
-				document.pattern.execute("executeScript");
-				this.main.init();
-			} catch (Exception e) {
-				JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-			}
+		document.cache.script = this.pageScriptTextArea.getText();
+		document.cache.pageList = (document != null) ? document.getPageList() : null;
+		try {
+			document.pattern.execute("executeScript");
+			this.main.init();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}// GEN-LAST:event_executeImageScriptButtonActionPerformed
 
@@ -609,7 +603,7 @@ public class PageDialog extends javax.swing.JDialog {
 
 	private void removePageButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_removePageButtonActionPerformed
 		Document document = (this.model != null) ? this.model.document : null;
-		document.cache.pressedPage = (document != null)?document.getPage():null;
+		document.cache.pressedPage = (document != null) ? document.getPage() : null;
 		try {
 			document.pattern.execute("removePage");
 			this.main.init();
@@ -620,8 +614,8 @@ public class PageDialog extends javax.swing.JDialog {
 
 	private void removeImageButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_removeImageButtonActionPerformed
 		Document document = (this.model != null) ? this.model.document : null;
-		Page page = (document != null)?document.getPage():null;
-		document.cache.pressedImage = (page != null)?page.getImage():null;
+		Page page = (document != null) ? document.getPage() : null;
+		document.cache.pressedImage = (page != null) ? page.getImage() : null;
 		try {
 			document.pattern.execute("removeImage");
 			this.main.init();
