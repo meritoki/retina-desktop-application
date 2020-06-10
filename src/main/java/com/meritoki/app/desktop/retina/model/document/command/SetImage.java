@@ -20,7 +20,7 @@ public class SetImage extends Command {
 	public void execute() {
 		logger.info("execute()");
 		//variables
-		Point pressedPoint = document.cache.pressedPoint;
+//		Point pressedPoint = document.cache.pressedPoint;
 		int imageIndex = document.cache.imageIndex;
     	String imageUUID = document.cache.imageUUID;
     	//undo
@@ -30,10 +30,12 @@ public class SetImage extends Command {
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);
 		//logic
-		if(pressedPoint != null) {
-			document.cache.pressedImage = document.getImage(pressedPoint);
-			document.setImage(document.cache.pressedImage.uuid);
-		} else if(imageIndex > -1) {
+//		if(pressedPoint != null) {
+//			document.cache.pressedImage = document.getImage(pressedPoint);
+//			document.setImage(document.cache.pressedImage.uuid);
+//		} else 
+			
+		if(imageIndex > -1) {
 			document.setImage(imageIndex);
 		} else if(imageUUID != null) {
 			document.setImage(imageUUID);

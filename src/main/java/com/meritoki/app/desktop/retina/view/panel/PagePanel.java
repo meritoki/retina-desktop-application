@@ -108,12 +108,17 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 		this.model.document.cache.pressedPoint = point;
 		logger.trace("mousePressed(me) point="+point);
 		//time to update this code, two seperate things are happening, setting the image and setting the shape
-		try {
-			this.model.document.pattern.execute("setImage");
-			this.model.document.cache.pressedShape = this.model.document.getShape(point);
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		
+		this.model.document.cache.pressedImage = this.model.document.getImage(point);
+		if(!this.model.document.getImage().equals(this.model.document.cache.pressedImage)) {
+			try {
+				this.model.document.pattern.execute("setImage");
+				
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			}
 		}
+		this.model.document.cache.pressedShape = this.model.document.getShape(point);
 	}
 
 	/**
