@@ -249,7 +249,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_LEFT: {
 				logger.info("keyPressed(e) KeyEvent.VK_LEFT");
-				this.model.document.cache.pressedImage = this.model.document.getPage().getImage();
+				this.model.document.cache.pressedImage = this.model.document.getImage();
 				this.model.document.cache.scaleOperator = '/';
 				this.model.document.cache.scaleFactor = 1.01;
 				try {
@@ -262,7 +262,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_RIGHT: {
 				logger.info("keyPressed(e) KeyEvent.VK_RIGHT");
-				this.model.document.cache.pressedImage = this.model.document.getPage().getImage();
+				this.model.document.cache.pressedImage = this.model.document.getImage();
 				this.model.document.cache.scaleOperator = '*';
 				this.model.document.cache.scaleFactor = 1.01;
 				try {
