@@ -53,6 +53,8 @@ public class Pattern {
 		Command resizeImage = new ResizeImage(this.document);
 		Command scalePage = new ScalePage(this.document);
 		Command shiftImage = new ShiftImage(this.document);
+		Command setImage = new SetImage(this.document);
+		Command removeImage = new RemoveImage(this.document);
 		this.register("addPage", addPage);
 		this.register("setPage", setPage);
 		this.register("addShape", addShape);
@@ -65,6 +67,8 @@ public class Pattern {
 		this.register("resizeImage", resizeImage);
 		this.register("scalePage", scalePage);
 		this.register("shiftImage", shiftImage);
+		this.register("setImage", setImage);
+		this.register("removeImage", removeImage);
 	}
 
 	@JsonIgnore
@@ -94,12 +98,23 @@ public class Pattern {
 			logger.info("undo() command.name=" + command.name);
 			Operation operation = null;
 			switch (command.name) {
+			case "addPage": {
+				for (int i = 0; i < command.operationList.size(); i++) {
+					operation = command.operationList.get(i);
+					if (operation.sign == 0) {
+						if (operation.object instanceof List) {
+							this.document.pageList = (List<Page>)operation.object;
+						}
+					}
+				}
+				break;
+			}
 			case "setShape": {
 				for (int i = 0; i < command.operationList.size(); i++) {
 					operation = command.operationList.get(i);
 					if (operation.sign == 0) {
-						if (operation.object instanceof Shape) {
-							this.document.getPage().getImage().setShape(((Shape) operation.object).uuid);
+						if (operation.object instanceof String) {
+							this.document.getPage().getImage().setShape((String) operation.object);
 						}
 					}
 				}
@@ -207,11 +222,45 @@ public class Pattern {
 				}
 				break;
 			}
+			case "setImage": {
+				for(Operation o: command.operationList) {
+					if(o.sign == 0) {
+						if(o.object instanceof Integer) {
+							this.document.setImage((int)o.object);
+						}
+					}
+				}
+				break;
+			}
 			case "resizeImage":{
-				
+				for(Operation o: command.operationList) {
+					if(o.sign == 0) {
+						if(o.object instanceof Double) {
+							this.document.getPage().setBufferedImage(null);
+							this.document.getImage().setBufferedImage(null);
+							this.document.getImage().setRelativeScale((double)o.object);
+						}
+					}
+				}
+				break;
+			}
+			case "shiftImage": {
+				for(Operation o: command.operationList) {
+					if(o.sign == 0) {
+
+					}
+				}
+				break;
+			}
+			case "removeImage": {
+				for(Operation o: command.operationList) {
+					if(o.sign == 0) {
+						
+					}
+				}
 			}
 			default: {
-
+				logger.error("undo() default");
 			}
 			}
 			this.redoStack.push(command);
@@ -222,14 +271,26 @@ public class Pattern {
 	public void redo() {
 		if (this.redoStack.size() > 0) {
 			Command command = this.redoStack.pop();
+			logger.info("redo() command.name=" + command.name);
 			Operation operation = null;
 			switch (command.name) {
+			case "addPage": {
+				for (int i = 0; i < command.operationList.size(); i++) {
+					operation = command.operationList.get(i);
+					if (operation.sign == 1) {
+						if (operation.object instanceof List) {
+							this.document.pageList = (List<Page>)operation.object;
+						}
+					}
+				}
+				break;
+			}
 			case "setShape": {
 				for (int i = 0; i < command.operationList.size(); i++) {
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
-						if (operation.object instanceof Shape) {
-							this.document.getPage().getImage().setShape(((Shape) operation.object).uuid);
+						if (operation.object instanceof String) {
+							this.document.getPage().getImage().setShape((String) operation.object);
 						}
 					}
 				}
@@ -265,6 +326,15 @@ public class Pattern {
 				}
 				break;
 			}
+			//Does not function
+			case "removePage": {
+				for(Operation o: command.operationList) {
+					if(o.sign == 1) {
+
+					}
+				}
+				break;
+			}
 			case "resizeShape": {
 				for (int i = 0; i < command.operationList.size(); i++) {
 					operation = command.operationList.get(i);
@@ -296,7 +366,6 @@ public class Pattern {
 				break;
 			}
 			case "executeScript" : {
-				
 				Collections.reverse(command.operationList);
 				for(Operation o: command.operationList) {
 					if(o.sign == 1) {
@@ -306,6 +375,63 @@ public class Pattern {
 					} 
 				}
 				break;
+			}
+			case "setImage": {
+				for(Operation o: command.operationList) {
+					if(o.sign == 1) {
+						if(o.object instanceof Integer) {
+							this.document.setImage((int)o.object);
+						}
+					}
+				}
+				break;
+			}
+			case "resizeImage":{
+				for(Operation o: command.operationList) {
+					if(o.sign == 1) {
+						if(o.object instanceof Double) {
+							this.document.getPage().setBufferedImage(null);
+							this.document.getImage().setBufferedImage(null);
+							this.document.getImage().setRelativeScale((double)o.object);
+						}
+					}
+				}
+				break;
+			}
+			case "scalePage":{
+				for(Operation o: command.operationList) {
+					if(o.sign == 1) {
+						if(o.object instanceof Double) {
+							this.document.getPage().setScale((double)o.object);
+						}
+					}
+				}
+				break;
+			}
+			case "setPage":{
+				for(Operation o: command.operationList) {
+					if(o.sign == 1) {
+						if(o.object instanceof Integer) {
+							this.document.setIndex((int)o.object);
+						}
+					}
+				}
+				break;
+			}
+			case "shiftImage": {
+				for(Operation o: command.operationList) {
+					if(o.sign == 1) {
+
+					}
+				}
+				break;
+			}
+			case "removeImage": {
+				for(Operation o: command.operationList) {
+					if(o.sign == 1) {
+						
+					}
+				}
 			}
 			default: {
 

@@ -36,12 +36,14 @@ public class ImageImportDialog extends javax.swing.JDialog {
 	 */
 	private static final long serialVersionUID = 3779061389380871856L;
 	private static Logger logger = LogManager.getLogger(ImageImportDialog.class.getName());
+	private Model model;
 
 	/**
 	 * Creates new form Import
 	 */
-	public ImageImportDialog(java.awt.Frame parent, boolean modal) {
-		super(parent, modal);
+	public ImageImportDialog(java.awt.Frame parent, boolean flag, Model model) {
+		super(parent, flag);
+		this.model = model;
 		this.initComponents();
 		this.result();
 	}
@@ -51,7 +53,6 @@ public class ImageImportDialog extends javax.swing.JDialog {
 		int result = this.imageFileChooser.showOpenDialog(null);
 		if (result == JFileChooser.APPROVE_OPTION) {
 			File[] files = this.imageFileChooser.getSelectedFiles();
-			Model model = ((MainFrame) this.getParent()).model;
 			if (model != null) {
 				model.document.cache.fileArray = files;
 				try {
@@ -136,7 +137,7 @@ public class ImageImportDialog extends javax.swing.JDialog {
 		/* Create and display the dialog */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				ImageImportDialog dialog = new ImageImportDialog(new javax.swing.JFrame(), true);
+				ImageImportDialog dialog = new ImageImportDialog(new javax.swing.JFrame(), true, new Model());
 				dialog.addWindowListener(new java.awt.event.WindowAdapter() {
 					@Override
 					public void windowClosing(java.awt.event.WindowEvent e) {

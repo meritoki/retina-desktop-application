@@ -21,7 +21,7 @@ public class ScalePage extends Command {
     	logger.info("execute()");
     	//Variables
     	Page page = this.document.getPage();
-		double scale = this.document.cache.pressedImage.position.scale;
+		double scale = page.position.scale;
 		double scaleFactor = this.document.cache.scaleFactor;
 		char scaleOperator = this.document.cache.scaleOperator;
     	//Undo
@@ -42,5 +42,11 @@ public class ScalePage extends Command {
 		}
 		}
 		page.setScale(scale);
+		//redo
+    	operation = new Operation();
+		operation.object = scale;
+		operation.sign = 1;
+		operation.id = UUID.randomUUID().toString();
+		this.operationList.add(operation);
     }
 }

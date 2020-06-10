@@ -107,11 +107,18 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 		point.y = me.getY();
 		this.model.document.cache.pressedPoint = point;
 		logger.trace("mousePressed(me) point="+point);
+		//time to update this code, two seperate things are happening, setting the image and setting the shape
+		
 		this.model.document.cache.pressedImage = this.model.document.getImage(point);
-		if (this.model.document.cache.pressedImage != null) {
-			this.model.document.setImage(this.model.document.cache.pressedImage.uuid);
-			this.model.document.cache.pressedShape = this.model.document.getShape(point);
+		if(!this.model.document.getImage().equals(this.model.document.cache.pressedImage)) {
+			try {
+				this.model.document.cache.imageUUID = this.model.document.cache.pressedImage.uuid;
+				this.model.document.pattern.execute("setImage");
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			}
 		}
+		this.model.document.cache.pressedShape = this.model.document.getShape(point);
 	}
 
 	/**
@@ -119,7 +126,6 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 	 */
 	@Override
 	public void mouseReleased(MouseEvent me) {
-//		e.consume();
 		this.model.document.cache.releasedPoint = new Point(me.getX(), me.getY());
 		if (this.model.document.cache.pressedPoint.equals(this.model.document.cache.releasedPoint)) {
 			if (this.model.document.cache.pressedShape != null)
@@ -243,7 +249,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_LEFT: {
 				logger.info("keyPressed(e) KeyEvent.VK_LEFT");
-				this.model.document.cache.pressedImage = this.model.document.getPage().getImage();
+				this.model.document.cache.pressedImage = this.model.document.getImage();
 				this.model.document.cache.scaleOperator = '/';
 				this.model.document.cache.scaleFactor = 1.01;
 				try {
@@ -256,7 +262,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_RIGHT: {
 				logger.info("keyPressed(e) KeyEvent.VK_RIGHT");
-				this.model.document.cache.pressedImage = this.model.document.getPage().getImage();
+				this.model.document.cache.pressedImage = this.model.document.getImage();
 				this.model.document.cache.scaleOperator = '*';
 				this.model.document.cache.scaleFactor = 1.01;
 				try {
@@ -287,7 +293,6 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			}
 		} else {
-			ke.consume();
 			int keyCode = ke.getKeyCode();
 			int index = this.model.document.getIndex();
 			switch (keyCode) {
@@ -357,3 +362,10 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 	public void keyReleased(KeyEvent e) {
 	}
 }
+
+
+//this.model.document.cache.pressedImage = this.model.document.getImage(point);
+//if (this.model.document.cache.pressedImage != null) {
+//	this.model.document.setImage(this.model.document.cache.pressedImage.uuid);
+//	this.model.document.cache.pressedShape = this.model.document.getShape(point);
+//}

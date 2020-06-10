@@ -58,7 +58,7 @@ public class Document {
 	public Document() {
 		this.uuid = UUID.randomUUID().toString();
 		this.pattern = new Pattern(this);
-//		this.test();
+		this.test();
 	}
 
 	@JsonIgnore
@@ -95,8 +95,17 @@ public class Document {
 
 	@JsonIgnore
 	public void setImage(String uuid) {
+		logger.info("setImage("+uuid+")");
 		if (this.getPage() != null) {
 			this.getPage().setImage(uuid);
+		}
+	}
+	
+	@JsonIgnore
+	public void setImage(int index) {
+		logger.debug("setImage("+index+")");
+		if (this.getPage() != null) {
+			this.getPage().setIndex(index);
 		}
 	}
 
@@ -137,6 +146,14 @@ public class Document {
 		int size = this.pageList.size();
 		return (this.index < size && size > 0) ? this.pageList.get(this.index) : null;
 	}
+	
+	@JsonIgnore
+	public Page getPage(int index) {
+		int size = this.pageList.size();
+		Page page = (index < size && size > 0) ? this.pageList.get(index) : null;
+		logger.debug("getPage("+index+") page="+page);
+		return page;
+	}
 
 	/**
 	 * Function get reference to Page List
@@ -167,7 +184,6 @@ public class Document {
 				page = this.pageList.get(i);
 				if (page.uuid.equals(uuid)) {
 					this.setIndex(i);
-					;
 					break;
 				}
 			}

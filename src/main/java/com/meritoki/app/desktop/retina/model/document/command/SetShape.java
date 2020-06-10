@@ -10,31 +10,38 @@ import com.meritoki.app.desktop.retina.model.document.Shape;
 
 public class SetShape extends Command {
 	private static Logger logger = LogManager.getLogger(SetShape.class.getName());
-	
+
 	public SetShape(Document document) {
 		super(document, "setShape");
 	}
-	
-    @Override // Command
-    public void execute() {
-    	logger.info("execute()");
-    	this.user = this.document.cache.user;
 
-//		Operation operation = new Operation();
-//		operation.object = new Shape(this.model.getDocument().getProject().getPage().getShape());
-//		operation.sign = 0;
-//		operation.id = UUID.randomUUID().toString();
-//		operation.uuid = this.document.state.pressedShape.uuid;
-//		this.operationList.add(operation);
-	
-    	if(this.document.cache.pressedShape != null) {
-	    	this.document.getPage().setShape(this.document.cache.pressedShape.uuid);
-			Operation operation = new Operation();
-			operation.object = new Shape(this.document.getPage().getShape(),true);
-			operation.sign = 0;
-			operation.id = UUID.randomUUID().toString();
-			operation.uuid = this.document.cache.pressedShape.uuid;
-			this.operationList.add(operation);
-    	}
-    }
+	@Override // Command
+	public void execute() {
+		logger.info("execute()");
+		// variables
+		Shape pressedShape = this.document.cache.pressedShape;
+		Shape currentShape = this.document.getPage().getShape();
+		String shapeUUID = document.cache.shapeUUID;
+		//undo
+		Operation operation = new Operation();
+		operation.object = (currentShape != null)?currentShape.uuid:null;
+		operation.sign = 0;
+		operation.id = UUID.randomUUID().toString();
+		this.operationList.add(operation);
+		//logic
+		String uuid = null;
+		if(pressedShape != null) {
+			uuid = pressedShape.uuid;
+			this.document.getPage().setShape(uuid);
+		} else if(shapeUUID != null) {
+			uuid = shapeUUID;
+			this.document.getPage().setShape(uuid);
+		}
+		//redo
+		operation = new Operation();
+		operation.object = uuid;
+		operation.sign = 1;
+		operation.id = UUID.randomUUID().toString();
+		this.operationList.add(operation);
+	}
 }
