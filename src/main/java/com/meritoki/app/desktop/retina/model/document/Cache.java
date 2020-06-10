@@ -55,9 +55,13 @@ public class Cache {
 	@JsonIgnore
 	public int imageIndex = -1;
 	@JsonIgnore
+	public int shapeIndex = -1;
+	@JsonIgnore
 	public String pageUUID = null;
 	@JsonIgnore
 	public String imageUUID = null;
+	@JsonIgnore
+	public String shapeUUID = null;
 	@JsonIgnore
 	public char scaleOperator = ' ';
 	@JsonIgnore

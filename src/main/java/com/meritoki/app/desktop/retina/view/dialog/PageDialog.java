@@ -17,6 +17,7 @@ package com.meritoki.app.desktop.retina.view.dialog;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -37,7 +38,7 @@ import com.meritoki.app.desktop.retina.view.frame.MainFrame;
  *
  * @author osvaldo.rodriguez
  */
-public class PageDialog extends javax.swing.JDialog {
+public class PageDialog extends javax.swing.JDialog implements KeyListener {
 
 	/**
 	 * Serial Version UID
@@ -52,7 +53,7 @@ public class PageDialog extends javax.swing.JDialog {
 	 */
 	private Model model;
 
-	private MainFrame main;
+	private MainFrame mainFrame;
 
 	/**
 	 * Image dialog class.
@@ -63,7 +64,7 @@ public class PageDialog extends javax.swing.JDialog {
 	public PageDialog(java.awt.Frame parent, boolean flag) {
 		super(parent, flag);
 		this.setTitle("Page");
-		this.main = (MainFrame) this.getParent();
+		this.mainFrame = (MainFrame) this.getParent();
 		this.initComponents();
 		this.pageListAddKeyListener();
 		this.pageListAddMouseListener();
@@ -81,13 +82,13 @@ public class PageDialog extends javax.swing.JDialog {
 					case KeyEvent.VK_Z: {
 						logger.debug("keyPressed(e) KeyEvent.VK_Z");
 						model.document.pattern.undo();
-						main.init();
+						mainFrame.init();
 						break;
 					}
 					case KeyEvent.VK_Y: {
 						logger.debug("keyPressed(e) KeyEvent.VK_Y");
 						model.document.pattern.redo();
-						main.init();
+						mainFrame.init();
 						break;
 					}
 					}
@@ -103,9 +104,9 @@ public class PageDialog extends javax.swing.JDialog {
 						try {
 							document.pattern.execute("setPage");
 							setPageListSelectedIndex(index);
-							main.init();
+							mainFrame.init();
 						} catch (Exception e) {
-							JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 						}
 						break;
 					}
@@ -116,9 +117,9 @@ public class PageDialog extends javax.swing.JDialog {
 						try {
 							document.pattern.execute("setPage");
 							setPageListSelectedIndex(index);
-							main.init();
+							mainFrame.init();
 						} catch (Exception e) {
-							JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 						}
 						break;
 					}
@@ -138,9 +139,9 @@ public class PageDialog extends javax.swing.JDialog {
 				document.cache.pageUUID = pageList.getSelectedValue();
 				try {
 					document.pattern.execute("setPage");
-					main.init();
+					mainFrame.init();
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -156,13 +157,13 @@ public class PageDialog extends javax.swing.JDialog {
 					case KeyEvent.VK_Z: {
 						logger.debug("keyPressed(e) KeyEvent.VK_Z");
 						model.document.pattern.undo();
-						main.init();
+						mainFrame.init();
 						break;
 					}
 					case KeyEvent.VK_Y: {
 						logger.debug("keyPressed(e) KeyEvent.VK_Y");
 						model.document.pattern.redo();
-						main.init();
+						mainFrame.init();
 						break;
 					}
 					}
@@ -180,9 +181,9 @@ public class PageDialog extends javax.swing.JDialog {
 						try {
 							document.pattern.execute("setImage");
 							setImageListSelectedIndex(index);
-							main.init();
+							mainFrame.init();
 						} catch (Exception e) {
-							JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 						}
 						break;
 					}
@@ -194,9 +195,9 @@ public class PageDialog extends javax.swing.JDialog {
 						try {
 							document.pattern.execute("setImage");
 							setImageListSelectedIndex(index);
-							main.init();
+							mainFrame.init();
 						} catch (Exception e) {
-							JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 						}
 						break;
 					}
@@ -216,9 +217,9 @@ public class PageDialog extends javax.swing.JDialog {
 				document.cache.imageUUID = imageList.getSelectedValue();
 				try {
 					document.pattern.execute("setImage");
-					main.init();
+					mainFrame.init();
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -591,9 +592,9 @@ public class PageDialog extends javax.swing.JDialog {
 		document.cache.pageList = (document != null) ? document.getPageList() : null;
 		try {
 			document.pattern.execute("executeScript");
-			this.main.init();
+			this.mainFrame.init();
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}// GEN-LAST:event_executeImageScriptButtonActionPerformed
 
@@ -606,9 +607,9 @@ public class PageDialog extends javax.swing.JDialog {
 		document.cache.pressedPage = (document != null) ? document.getPage() : null;
 		try {
 			document.pattern.execute("removePage");
-			this.main.init();
+			this.mainFrame.init();
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}// GEN-LAST:event_removePageButtonActionPerformed
 
@@ -618,9 +619,9 @@ public class PageDialog extends javax.swing.JDialog {
 		document.cache.pressedImage = (page != null) ? page.getImage() : null;
 		try {
 			document.pattern.execute("removeImage");
-			this.main.init();
+			this.mainFrame.init();
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}// GEN-LAST:event_removeImageButtonActionPerformed
 
@@ -709,6 +710,39 @@ public class PageDialog extends javax.swing.JDialog {
 	private javax.swing.JButton removeScriptButton;
 	private javax.swing.JLabel uuidLabel;
 	// End of variables declaration//GEN-END:variables
+
+	@Override
+	public void keyPressed(KeyEvent ke) {
+		ke.consume();
+		if (ke.isControlDown()) {
+			switch (ke.getKeyCode()) {
+			case KeyEvent.VK_Z: {
+				logger.debug("keyPressed(e) KeyEvent.VK_Z");
+				this.model.document.pattern.undo();
+				this.mainFrame.init();
+				break;
+			}
+			case KeyEvent.VK_Y: {
+				logger.debug("keyPressed(e) KeyEvent.VK_Y");
+				this.model.document.pattern.redo();
+				this.mainFrame.init();
+				break;
+			}
+			}
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
 
