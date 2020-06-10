@@ -220,7 +220,7 @@ public class Page {
 	}
 	
 	@JsonIgnore
-	public List<Shape> getMatrixShapeList() {
+	public List<Shape> getSortedShapeList() {
 		return new Matrix(this.getShapeList(),null).getShapeList();
 	}
 
@@ -467,7 +467,7 @@ public class Page {
 			}
 
 		}
-		List<Shape> shapeList = this.getMatrixShapeList();//this.getMatrix().getShapeList();
+		List<Shape> shapeList = this.getSortedShapeList();//this.getMatrix().getShapeList();
 		Shape shape = this.getShape();
 		Shape previousShape = null;
 		if (shapeList != null) {

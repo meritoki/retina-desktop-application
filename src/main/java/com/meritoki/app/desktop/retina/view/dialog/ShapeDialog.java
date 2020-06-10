@@ -83,76 +83,6 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener {
 		
 	}
 	
-	public void shapeListAddKeyListener() {
-		this.shapeList.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent ke) {
-				ke.consume();
-				if (ke.isControlDown()) {
-					switch (ke.getKeyCode()) {
-					case KeyEvent.VK_Z: {
-						logger.debug("keyPressed(e) KeyEvent.VK_Z");
-						model.document.pattern.undo();
-						mainFrame.init();
-						break;
-					}
-					case KeyEvent.VK_Y: {
-						logger.debug("keyPressed(e) KeyEvent.VK_Y");
-						model.document.pattern.redo();
-						mainFrame.init();
-						break;
-					}
-					}
-				} else {
-					int keyCode = ke.getKeyCode();
-					Document document = (model != null) ? model.document : null;
-					int index = document.getIndex();
-					switch (keyCode) {
-					case KeyEvent.VK_LEFT: {
-						logger.debug("keyEvent.VK_LEFT");
-						//Precondition
-						try {
-							document.pattern.execute("setShape");
-							mainFrame.init();
-						} catch (Exception e) {
-							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-						}
-						break;
-					}
-					case KeyEvent.VK_RIGHT: {
-						logger.debug("keyEvent.VK_RIGHT");
-						//Precondition
-						try {
-							document.pattern.execute("setShape");
-							mainFrame.init();
-						} catch (Exception e) {
-							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-						}
-						break;
-					}
-					}
-				}
-			}
-		});
-	}
-	
-	public void shapeListAddMouseListener() {
-		this.shapeList.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent me) {
-				Document document = (model != null) ? model.document : null;
-				document.cache.shapeIndex = -1;
-				document.cache.shapeUUID = (String)shapeList.getSelectedValue();
-				try {
-					document.pattern.execute("setShape");
-					mainFrame.init();
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		});
-	}
-
 	public void setModel(Model model) {
 		this.model = model;
 		this.init();
@@ -176,10 +106,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener {
 	public void initList() {
 		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
-		List<Shape> shapeList = (page != null) ? page.getShapeList() : null;
-		if (shapeList == null) {
-			shapeList = (page != null) ? page.getShapeList() : null;
-		}
+		List<Shape> shapeList = (page != null) ? page.getSortedShapeList() : null;
 		this.initShapeList(shapeList);
 		Shape shape = (page != null) ? page.getShape() : null;
 		if (shape != null) {
@@ -319,8 +246,86 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener {
 	public void setShapeListSelectedUUID(String uuid) {
 		this.shapeList.setSelectedValue(uuid, true);
 	}
+	
+	public void setShapeListSelectedIndex(int index) {
+		logger.debug("setPageListSelectedIndex(" + index + ")");
+		this.shapeList.setSelectedIndex(index);
+	}
 
+	public void shapeListAddMouseListener() {
+		this.shapeList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent me) {
+				Document document = (model != null) ? model.document : null;
+				document.cache.pressedShape = null;
+				document.cache.shapeIndex = -1;
+				document.cache.shapeUUID = (String)shapeList.getSelectedValue();
+				try {
+					document.pattern.execute("setShape");
+					mainFrame.init();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+	}
 
+	public void shapeListAddKeyListener() {
+		this.shapeList.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent ke) {
+				ke.consume();
+				if (ke.isControlDown()) {
+					switch (ke.getKeyCode()) {
+					case KeyEvent.VK_Z: {
+						logger.debug("keyPressed(e) KeyEvent.VK_Z");
+						model.document.pattern.undo();
+						mainFrame.init();
+						break;
+					}
+					case KeyEvent.VK_Y: {
+						logger.debug("keyPressed(e) KeyEvent.VK_Y");
+						model.document.pattern.redo();
+						mainFrame.init();
+						break;
+					}
+					}
+				} else {
+					int keyCode = ke.getKeyCode();
+					Document document = (model != null) ? model.document : null;
+					int index = shapeList.getSelectedIndex();
+					switch (keyCode) {
+					case KeyEvent.VK_LEFT: {
+						logger.debug("keyEvent.VK_LEFT");
+						document.cache.pressedShape = null;
+						setShapeListSelectedIndex(--index);
+						document.cache.shapeUUID = (String)shapeList.getSelectedValue();
+						try {
+							document.pattern.execute("setShape");
+							mainFrame.init();
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+						}
+						break;
+					}
+					case KeyEvent.VK_RIGHT: {
+						logger.debug("keyEvent.VK_RIGHT");
+						document.cache.pressedShape = null;
+						setShapeListSelectedIndex(++index);
+						document.cache.shapeUUID = (String)shapeList.getSelectedValue();
+						try {
+							document.pattern.execute("setShape");
+							mainFrame.init();
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+						}
+						break;
+					}
+					}
+				}
+			}
+		});
+	}
 
 	/**
 	 * Function response to keyPressed Event.
