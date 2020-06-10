@@ -112,8 +112,8 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 		this.model.document.cache.pressedImage = this.model.document.getImage(point);
 		if(!this.model.document.getImage().equals(this.model.document.cache.pressedImage)) {
 			try {
+				this.model.document.cache.imageUUID = this.model.document.cache.pressedImage.uuid;
 				this.model.document.pattern.execute("setImage");
-				
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
