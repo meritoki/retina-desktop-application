@@ -94,16 +94,14 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener {
 					}
 				} else {
 					int keyCode = ke.getKeyCode();
-					Document document = (model != null) ? model.document : null;
-					int index = document.getIndex();
+					int index = pageList.getSelectedIndex();
 					switch (keyCode) {
 					case KeyEvent.VK_LEFT: {
 						logger.debug("keyEvent.VK_LEFT");
-						document.cache.pageUUID = null;
-						document.cache.pageIndex = --index;
+						setPageListSelectedIndex(--index);
+						model.document.cache.pageUUID = (String)pageList.getSelectedValue();
 						try {
-							document.pattern.execute("setPage");
-							setPageListSelectedIndex(index);
+							model.document.pattern.execute("setPage");
 							mainFrame.init();
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -112,11 +110,10 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener {
 					}
 					case KeyEvent.VK_RIGHT: {
 						logger.debug("keyEvent.VK_RIGHT");
-						document.cache.pageUUID = null;
-						document.cache.pageIndex = ++index;
+						setPageListSelectedIndex(++index);
+						model.document.cache.pageUUID = (String)pageList.getSelectedValue();
 						try {
-							document.pattern.execute("setPage");
-							setPageListSelectedIndex(index);
+							model.document.pattern.execute("setPage");
 							mainFrame.init();
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -135,7 +132,6 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener {
 			@Override
 			public void mouseClicked(MouseEvent me) {
 				Document document = (model != null) ? model.document : null;
-				document.cache.pageIndex = -1;
 				document.cache.pageUUID = pageList.getSelectedValue();
 				try {
 					document.pattern.execute("setPage");
@@ -169,18 +165,14 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener {
 					}
 				} else {
 					int keyCode = ke.getKeyCode();
-					Document document = (model != null) ? model.document : null;
-					Page page = (document != null) ? document.getPage() : null;
-					int index = (page != null) ? page.getIndex() : 0;
+					int index = imageList.getSelectedIndex();
 					switch (keyCode) {
 					case KeyEvent.VK_LEFT: {
 						logger.debug("keyEvent.VK_LEFT");
-						document.cache.pressedPoint = null;
-						document.cache.imageUUID = null;
-						document.cache.imageIndex = --index;
+						setImageListSelectedIndex(--index);
+						model.document.cache.imageUUID = imageList.getSelectedValue();
 						try {
-							document.pattern.execute("setImage");
-							setImageListSelectedIndex(index);
+							model.document.pattern.execute("setImage");
 							mainFrame.init();
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -189,12 +181,10 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener {
 					}
 					case KeyEvent.VK_RIGHT: {
 						logger.debug("keyEvent.VK_RIGHT");
-						document.cache.pressedPoint = null;
-						document.cache.imageUUID = null;
-						document.cache.imageIndex = ++index;
+						setImageListSelectedIndex(++index);
+						model.document.cache.imageUUID = imageList.getSelectedValue();
 						try {
-							document.pattern.execute("setImage");
-							setImageListSelectedIndex(index);
+							model.document.pattern.execute("setImage");
 							mainFrame.init();
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -212,8 +202,6 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener {
 			@Override
 			public void mouseClicked(MouseEvent me) {
 				Document document = (model != null) ? model.document : null;
-				document.cache.pressedPoint = null;
-				document.cache.imageIndex = -1;
 				document.cache.imageUUID = imageList.getSelectedValue();
 				try {
 					document.pattern.execute("setImage");
@@ -287,11 +275,6 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener {
 		this.pageList.setModel(defaultListModel);
 	}
 
-	public void setPageListSelectedIndex(int index) {
-		logger.debug("setPageListSelectedIndex(" + index + ")");
-		this.pageList.setSelectedIndex(index);
-	}
-
 	public void initImageList(List<Image> imageList) {
 		logger.debug("initImageList(...)");
 		DefaultListModel<String> defaultListModel = new DefaultListModel<>();
@@ -303,9 +286,63 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener {
 		this.imageList.setModel(defaultListModel);
 	}
 
+	public void setPageListSelectedIndex(int index) {
+		logger.debug("setPageListSelectedIndex(" + index + ")");
+		this.pageList.setSelectedIndex(index);
+	}
+
 	public void setImageListSelectedIndex(int index) {
 		logger.debug("setImageListSelectedIndex(" + index + ")");
 		this.imageList.setSelectedIndex(index);
+	}
+
+	public void setPageListSelectedUUID(String uuid) {
+		this.pageList.setSelectedValue(uuid, true);
+	}
+	
+	public void setImageListSelectedUUID(String uuid) {
+		this.imageList.setSelectedValue(uuid, true);
+	}
+	
+	
+
+	// End of variables declaration//GEN-END:variables
+	
+	@Override
+	public void keyPressed(KeyEvent ke) {
+		ke.consume();
+		if (ke.isControlDown()) {
+			switch (ke.getKeyCode()) {
+			case KeyEvent.VK_Z: {
+				logger.debug("keyPressed(e) KeyEvent.VK_Z");
+				this.model.document.pattern.undo();
+				this.mainFrame.init();
+				break;
+			}
+			case KeyEvent.VK_Y: {
+				logger.debug("keyPressed(e) KeyEvent.VK_Y");
+				this.model.document.pattern.redo();
+				this.mainFrame.init();
+				break;
+			}
+			}
+		}
+	}
+
+	// End of variables declaration//GEN-END:variables
+	
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	// End of variables declaration//GEN-END:variables
+	
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	/**
@@ -711,125 +748,4 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener {
 	private javax.swing.JLabel uuidLabel;
 	// End of variables declaration//GEN-END:variables
 
-	@Override
-	public void keyPressed(KeyEvent ke) {
-		ke.consume();
-		if (ke.isControlDown()) {
-			switch (ke.getKeyCode()) {
-			case KeyEvent.VK_Z: {
-				logger.debug("keyPressed(e) KeyEvent.VK_Z");
-				this.model.document.pattern.undo();
-				this.mainFrame.init();
-				break;
-			}
-			case KeyEvent.VK_Y: {
-				logger.debug("keyPressed(e) KeyEvent.VK_Y");
-				this.model.document.pattern.redo();
-				this.mainFrame.init();
-				break;
-			}
-			}
-		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
-
-//@Override
-//public void keyPressed(KeyEvent e) {
-//    int keyCode = e.getKeyCode();
-//    Document document = (this.model != null) ? this.model.document: null;
-//    int index = document.getIndex();
-//    switch(keyCode) {
-//        case KeyEvent.VK_LEFT:{
-//            logger.debug("keyPressed LEFT");
-//            document.cache.pageIndex = index-1;
-//            try {
-//				document.pattern.execute("setPage");
-//                this.initLabel();
-//                this.setPageListSelectedIndex(index);
-//                this.main.repaint();
-//                this.main.init();
-//			} catch (Exception e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
-////            document.setIndex(index);
-//
-//            break;
-//        }
-//        case KeyEvent.VK_RIGHT:{
-//            logger.debug("keyPressed RIGHT");
-//            index = document.getIndex();
-//            index=index+1;
-//            document.setIndex(index);
-//            this.initLabel();
-//            this.setPageListSelectedIndex(index);
-//            this.main.repaint();
-//            this.main.init();
-//            break;
-//        }
-//
-//    }
-//}
-//public void initLabel(){
-//Document document = (this.model != null) ? this.model.document: null;
-//Page page = (document != null)? document.getPage():null;
-//BufferedImage bufferedPage = (page != null)?page.getBufferedImage():null;
-//int pageIndex = (document != null)? document.getIndex():0;
-//List<Page> pageList = (document != null)? document.getPageList():null;
-//this.pageIndexValueLabel.setText(pageIndex+"");
-//if(page!=null){
-//	if(page.imageList.size() == 1) {
-//      this.nameValueLabel.setText(page.imageList.get(0).file.getName());
-//      this.pathValueLabel.setText(page.imageList.get(0).file.getParent());
-//	} else {
-//		this.nameValueLabel.setText("NA");
-//      this.pathValueLabel.setText("NA");
-//	}
-//  this.pageUUIDValueLabel.setText(page.uuid);
-//}else{
-//  this.nameValueLabel.setText("null");
-//  this.pathValueLabel.setText("null");
-//  this.pageUUIDValueLabel.setText("null");
-//}
-//int size = (pageList != null)?pageList.size():0;
-//this.listSizeValueLabel.setText(size+"");
-//int width = (bufferedPage != null)?bufferedPage.getWidth():0;
-//int height = (bufferedPage != null)?bufferedPage.getHeight():0;
-//this.sizeValueLabel.setText(width+"p x "+height+"p");
-//}
-
-//@Override
-//public void keyReleased(KeyEvent e) {
-//	String uuid = pageList.getSelectedValue();
-//	Document document = (model != null) ? model.document : null;
-//	Page page = document.getPage();
-//	if (page != null && uuid != null && !uuid.equals(page.uuid)) {
-//		document.setPage(uuid);
-//		main.init();
-//	}
-//}
-
-//@Override
-//public void keyReleased(KeyEvent e) {
-//	String uuid = imageList.getSelectedValue();
-//	Document document = (model != null) ? model.document : null;
-//	Page page = document.getPage();
-//	Image image = (page != null)? page.getImage():null;
-//	if (image != null && uuid != null && !uuid.equals(image.uuid)) {
-//		document.setImage(uuid);
-//		main.init();
-//	}
-//}

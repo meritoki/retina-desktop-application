@@ -130,6 +130,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 		if (this.model.document.cache.pressedPoint.equals(this.model.document.cache.releasedPoint)) {
 			if (this.model.document.cache.pressedShape != null)
 				try {
+					this.model.document.cache.shapeUUID = this.model.document.cache.pressedShape.uuid;
 					this.model.document.pattern.execute("setShape");
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

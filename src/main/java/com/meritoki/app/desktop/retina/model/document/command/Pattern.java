@@ -114,7 +114,7 @@ public class Pattern {
 					operation = command.operationList.get(i);
 					if (operation.sign == 0) {
 						if (operation.object instanceof String) {
-							this.document.getPage().getImage().setShape((String) operation.object);
+							this.document.getPage().setShape((String) operation.object);
 						}
 					}
 				}
@@ -205,8 +205,8 @@ public class Pattern {
 			case "setPage":{
 				for(Operation o: command.operationList) {
 					if(o.sign == 0) {
-						if(o.object instanceof Integer) {
-							this.document.setIndex((int)o.object);
+						if(o.object instanceof String) {
+							this.document.setPage((String)o.object);
 						}
 					}
 				}
@@ -225,8 +225,8 @@ public class Pattern {
 			case "setImage": {
 				for(Operation o: command.operationList) {
 					if(o.sign == 0) {
-						if(o.object instanceof Integer) {
-							this.document.setImage((int)o.object);
+						if(o.object instanceof String) {
+							this.document.setImage((String)o.object);
 						}
 					}
 				}
@@ -290,7 +290,7 @@ public class Pattern {
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
 						if (operation.object instanceof String) {
-							this.document.getPage().getImage().setShape((String) operation.object);
+							this.document.getPage().setShape((String) operation.object);
 						}
 					}
 				}
@@ -379,8 +379,8 @@ public class Pattern {
 			case "setImage": {
 				for(Operation o: command.operationList) {
 					if(o.sign == 1) {
-						if(o.object instanceof Integer) {
-							this.document.setImage((int)o.object);
+						if(o.object instanceof String) {
+							this.document.setImage((String)o.object);
 						}
 					}
 				}
@@ -411,8 +411,8 @@ public class Pattern {
 			case "setPage":{
 				for(Operation o: command.operationList) {
 					if(o.sign == 1) {
-						if(o.object instanceof Integer) {
-							this.document.setIndex((int)o.object);
+						if(o.object instanceof String) {
+							this.document.setPage((String)o.object);
 						}
 					}
 				}

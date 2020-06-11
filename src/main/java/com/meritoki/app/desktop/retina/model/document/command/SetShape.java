@@ -29,17 +29,12 @@ public class SetShape extends Command {
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);
 		//logic
-		String uuid = null;
-		if(pressedShape != null) {
-			uuid = pressedShape.uuid;
-			this.document.getPage().setShape(uuid);
-		} else if(shapeUUID != null) {
-			uuid = shapeUUID;
-			this.document.getPage().setShape(uuid);
+		if(shapeUUID != null) {
+			this.document.getPage().setShape(shapeUUID);
 		}
 		//redo
 		operation = new Operation();
-		operation.object = uuid;
+		operation.object = shapeUUID;
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);
