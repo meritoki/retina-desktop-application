@@ -83,7 +83,7 @@ public class Page {
 	 * Script applied to Matrix
 	 */
 	@JsonProperty
-	public Script script;
+	public Script script = new Script();
 	/**
 	 * Class constructor
 	 */
