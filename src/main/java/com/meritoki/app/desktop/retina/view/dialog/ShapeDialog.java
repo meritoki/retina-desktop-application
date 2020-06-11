@@ -92,13 +92,23 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener {
 		this.initLabel();
 		this.initList();
 		this.initComboBox();
+		this.initTextArea();
+	}
+	
+	public void initTextArea() {
+		Document document = (this.model != null) ? this.model.document : null;
+		Page page = (document != null) ? document.getPage() : null;
+		Script script = (page != null) ? page.script:null;
+		if(script != null) {
+			this.scriptTextArea.setText(script.value);
+		}
 	}
 
 	public void initLabel() {
 		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
-		Image file = (page != null) ? page.getImage() : null;
-		Shape shape = (file != null) ? file.getShape() : null;
+		Image image = (page != null) ? page.getImage() : null;
+		Shape shape = (image != null) ? image.getShape() : null;
 		List<Text> textList = (shape != null) ? shape.getTextList() : null;
 	}
 
