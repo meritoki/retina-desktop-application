@@ -250,6 +250,8 @@ public class Page {
 			this.bufferedImage = this.joinImages(this.getImageList());
 			if(this.bufferedImage != null) {
 				this.position.setAbsoluteDimension(new Dimension(this.bufferedImage.getWidth(),this.bufferedImage.getHeight()));
+			} else {
+				this.position.setAbsoluteDimension(new Dimension(0,0));
 			}
 		}
 		return this.bufferedImage;
