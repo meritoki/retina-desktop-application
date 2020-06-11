@@ -247,7 +247,10 @@ public class Pattern {
 			case "shiftImage": {
 				for(Operation o: command.operationList) {
 					if(o.sign == 0) {
-
+						if(o.object instanceof Double) {
+							this.document.getPage().setBufferedImage(null);
+							this.document.getPage().getImage().setMargin((double)o.object);
+						}
 					}
 				}
 				break;
@@ -421,7 +424,10 @@ public class Pattern {
 			case "shiftImage": {
 				for(Operation o: command.operationList) {
 					if(o.sign == 1) {
-
+						if(o.object instanceof Double) {
+							this.document.getPage().setBufferedImage(null);
+							this.document.getPage().getImage().setMargin((double)o.object);
+						}
 					}
 				}
 				break;

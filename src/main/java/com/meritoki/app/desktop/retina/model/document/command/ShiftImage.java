@@ -1,5 +1,7 @@
 package com.meritoki.app.desktop.retina.model.document.command;
 
+import java.util.UUID;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,7 +26,12 @@ public class ShiftImage extends Command {
 		double margin = pressedImage.position.margin;
 		double shiftFactor = this.document.cache.shiftFactor;
 		char shiftOperator = this.document.cache.shiftOperator;
-		
+		//undo
+		Operation operation = new Operation();
+		operation.object = margin;
+		operation.sign = 0;
+		operation.id = UUID.randomUUID().toString();
+		this.operationList.add(operation);
 		//logic
 		page.setBufferedImage(null);
 		switch(shiftOperator) {
@@ -38,5 +45,11 @@ public class ShiftImage extends Command {
 		}
 		}
 		pressedImage.setMargin(margin);
+		//redo
+		operation = new Operation();
+		operation.object = margin;
+		operation.sign = 1;
+		operation.id = UUID.randomUUID().toString();
+		this.operationList.add(operation);
 	}
 }

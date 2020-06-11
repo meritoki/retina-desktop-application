@@ -32,7 +32,7 @@ public class SetPage extends Command {
 		this.operationList.add(operation);
 		//logic
     	if (pageUUID != null) {
-    		document.setPage(pageUUID);
+    		this.document.setPage(pageUUID);
     	}
     	//redo
     	operation = new Operation();
