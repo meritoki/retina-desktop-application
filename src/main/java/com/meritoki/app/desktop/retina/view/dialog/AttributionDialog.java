@@ -15,10 +15,17 @@
  */
 package com.meritoki.app.desktop.retina.view.dialog;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.command.Command;
+import com.meritoki.app.desktop.retina.model.document.command.Pattern;
 
 /**
  *
@@ -38,16 +45,52 @@ public class AttributionDialog extends javax.swing.JDialog {
 	 * Reference to Model class.
 	 */
     private Model model;
+    
+    public Map<String,Integer> userCountMap = new HashMap<>();
 	/**
      * Creates new form AttributionDialog
      */
     public AttributionDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.attributionTextArea.setEditable(false);
     }
     
     public void setModel(Model model){
         this.model = model;
+        this.init();
+    }
+    
+    public void init() {
+    	this.initTextArea();
+    }
+    
+    public void initTextArea() {
+    	
+    	Document document = (this.model != null)?this.model.document:null;
+    	Pattern pattern = (document != null)?document.pattern:null;
+    	List<Command> stack;
+    	if(pattern != null) {
+    		stack = pattern.undoStack;
+    		userCountMap = new HashMap<>();
+    		String userName;
+    		Integer count;
+    		for(Command c: stack) {
+    			userName = c.user.name;
+    			count = userCountMap.get(userName);
+    			if(count == null) {
+    				count = 1;
+    			} else {
+    				count++;
+    			}
+    			userCountMap.put(userName,count);
+    		}
+    		int total = stack.size();
+    		this.attributionTextArea.setText("");
+    		for (Map.Entry<String,Integer> entry : userCountMap.entrySet())  {
+    			this.attributionTextArea.append(entry.getKey()+" - "+(double)entry.getValue()/(double)total*100+"% \n");
+    		}
+    	}
     }
 
     /**

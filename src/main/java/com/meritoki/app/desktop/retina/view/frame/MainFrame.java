@@ -130,6 +130,7 @@ public final class MainFrame extends JFrame {
 		this.pageDialog.init();
 		this.shapeDialog.init();
 		this.commandDialog.init();
+		this.attributionDialog.init();
 	}
 
 	/**
