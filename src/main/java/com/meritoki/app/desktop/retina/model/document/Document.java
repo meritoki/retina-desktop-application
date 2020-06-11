@@ -66,6 +66,7 @@ public class Document {
 		Page page = new Page();
 		page.addImage(new Image(new File("./data/image/01.jpg")));
 		page.addImage(new Image(new File("./data/image/02.jpg")));
+		page.addImage(new Image(new File("./data/image/03.jpg")));
 		this.addPage(page);
 		page = new Page(new Image(new File("./data/image/03.jpg")));
 		this.addPage(page);

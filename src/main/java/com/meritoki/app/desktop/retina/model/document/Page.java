@@ -410,6 +410,7 @@ public class Page {
 		for (int i = 0; i < imageList.size(); i++) {
 			Image a = imageList.get(i);
 			if (bufferedImage == null) {
+				a.setOffset(offset);
 				int width = a.getBufferedImage().getWidth();
 				int height = (int) (a.getBufferedImage().getHeight() + a.position.margin);
 				bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);

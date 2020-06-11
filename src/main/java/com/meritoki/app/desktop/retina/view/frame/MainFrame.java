@@ -117,6 +117,7 @@ public final class MainFrame extends JFrame {
 			this.loginDialog.setVisible(true);
 		}
 		this.shapeDialog.setVisible(true);
+		this.pageDialog.setVisible(true);
 	}
 
 	public void init() {
