@@ -23,6 +23,7 @@ public class SetPage extends Command {
     	logger.info("execute()");
     	//variables
     	String pageUUID = document.cache.pageUUID;
+    	int pageIndex = document.cache.pageIndex;
     	Page page = document.getPage();
     	//undo
     	Operation operation = new Operation();
@@ -33,6 +34,9 @@ public class SetPage extends Command {
 		//logic
     	if (pageUUID != null) {
     		this.document.setPage(pageUUID);
+    	} else if(pageIndex >  -1) {
+    		this.document.setIndex(pageIndex);
+    		pageUUID = this.document.getPage().uuid;
     	}
     	//redo
     	operation = new Operation();

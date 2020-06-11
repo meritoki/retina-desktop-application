@@ -131,10 +131,9 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener {
 		this.pageList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent me) {
-				Document document = (model != null) ? model.document : null;
-				document.cache.pageUUID = pageList.getSelectedValue();
+				model.document.cache.pageUUID = pageList.getSelectedValue();
 				try {
-					document.pattern.execute("setPage");
+					model.document.pattern.execute("setPage");
 					mainFrame.init();
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -201,10 +200,9 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener {
 		this.imageList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent me) {
-				Document document = (model != null) ? model.document : null;
-				document.cache.imageUUID = imageList.getSelectedValue();
+				model.document.cache.imageUUID = imageList.getSelectedValue();
 				try {
-					document.pattern.execute("setImage");
+					model.document.pattern.execute("setImage");
 					mainFrame.init();
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

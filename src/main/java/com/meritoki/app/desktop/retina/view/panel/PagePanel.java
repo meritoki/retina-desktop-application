@@ -107,12 +107,10 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 		point.y = me.getY();
 		this.model.document.cache.pressedPoint = point;
 		logger.trace("mousePressed(me) point="+point);
-		//time to update this code, two seperate things are happening, setting the image and setting the shape
-		
 		this.model.document.cache.pressedImage = this.model.document.getImage(point);
 		if(!this.model.document.getImage().equals(this.model.document.cache.pressedImage)) {
+			this.model.document.cache.imageUUID = this.model.document.cache.pressedImage.uuid;
 			try {
-				this.model.document.cache.imageUUID = this.model.document.cache.pressedImage.uuid;
 				this.model.document.pattern.execute("setImage");
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -128,9 +126,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 	public void mouseReleased(MouseEvent me) {
 		this.model.document.cache.releasedPoint = new Point(me.getX(), me.getY());
 		if (this.model.document.cache.pressedPoint.equals(this.model.document.cache.releasedPoint)) {
+			this.model.document.cache.shapeUUID = this.model.document.cache.pressedShape.uuid;
 			if (this.model.document.cache.pressedShape != null)
 				try {
-					this.model.document.cache.shapeUUID = this.model.document.cache.pressedShape.uuid;
 					this.model.document.pattern.execute("setShape");
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -147,8 +145,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 							JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 						}
 					} else {
-						this.model.document.cache.releasedImage = this.model.document
-								.getImage(this.model.document.cache.releasedPoint);
+						this.model.document.cache.releasedImage = this.model.document.getImage(this.model.document.cache.releasedPoint);
 						try {
 							this.model.document.pattern.execute("moveShape");
 						} catch (Exception e) {
@@ -363,10 +360,3 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 	public void keyReleased(KeyEvent e) {
 	}
 }
-
-
-//this.model.document.cache.pressedImage = this.model.document.getImage(point);
-//if (this.model.document.cache.pressedImage != null) {
-//	this.model.document.setImage(this.model.document.cache.pressedImage.uuid);
-//	this.model.document.cache.pressedShape = this.model.document.getShape(point);
-//}
