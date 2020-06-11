@@ -108,7 +108,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 		this.model.document.cache.pressedPoint = point;
 		logger.trace("mousePressed(me) point="+point);
 		this.model.document.cache.pressedImage = this.model.document.getImage(point);
-		if(!this.model.document.getImage().equals(this.model.document.cache.pressedImage)) {
+		if(this.model.document.cache.pressedImage != null && this.model.document.getImage() != null && !this.model.document.getImage().equals(this.model.document.cache.pressedImage)) {
 			this.model.document.cache.imageUUID = this.model.document.cache.pressedImage.uuid;
 			try {
 				this.model.document.pattern.execute("setImage");
