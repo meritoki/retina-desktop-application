@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Page;
@@ -31,12 +31,20 @@ public class Pattern {
 	private final HashMap<String, Command> commandMap = new HashMap<>();
 	
 	public Pattern() {
-		//Default constructor for loading from JSON;
 	}
 	
-	public Pattern(Document document) {
+	public void setDocument(Document document) {
+		logger.info("setDocument("+document+")");
 		this.document = document;
 		this.register();
+		this.undoStackSetDocument(this.document);
+	}
+	
+	public void undoStackSetDocument(Document document) {
+		logger.info("undoStackSetDocument("+document+")");
+		for(Command c: this.undoStack) {
+			c.document = this.document;
+		}
 	}
 	
 	@JsonIgnore
@@ -73,7 +81,7 @@ public class Pattern {
 
 	@JsonIgnore
 	public void register(String commandName, Command command) {
-		commandMap.put(commandName, command);
+		this.commandMap.put(commandName, command);
 	}
 
 	@JsonIgnore

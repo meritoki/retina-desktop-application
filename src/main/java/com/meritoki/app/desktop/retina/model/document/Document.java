@@ -18,20 +18,18 @@ package com.meritoki.app.desktop.retina.model.document;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-
 import com.meritoki.app.desktop.retina.model.document.command.Pattern;
-import com.meritoki.app.desktop.retina.model.document.user.User;
 
 /**
  * Document
@@ -43,22 +41,24 @@ public class Document {
 	@JsonIgnore
 	static Logger logger = LogManager.getLogger(Document.class.getName());
 	@JsonProperty
-	public String uuid = null;
+	public String uuid;
 	@JsonIgnore
 	public int index = 0;
 	@JsonProperty
 	public List<Page> pageList = new ArrayList<>();
 	@JsonProperty
-	public List<User> userList = new LinkedList<>();
-	@JsonIgnore
-	public Pattern pattern;
+	public Pattern pattern = new Pattern();
 	@JsonIgnore
 	public Cache cache = new Cache();
 
 	public Document() {
 		this.uuid = UUID.randomUUID().toString();
-		this.pattern = new Pattern(this);
-		this.test();
+		this.init();
+//		this.test();
+	}
+	
+	public void init() {
+		this.pattern.setDocument(this);
 	}
 
 	@JsonIgnore
@@ -247,36 +247,36 @@ public class Document {
 		return flag;
 	}
 
-	@JsonIgnore
-	public void addUser(User user) {
-		this.userList.add(user);
-	}
-
-	@JsonIgnore
-	public boolean containsUser(User user) {
-		boolean flag = false;
-		for (User u : this.userList) {
-			if (u.uuid.equals(user.uuid)) {
-				flag = true;
-				break;
-			}
-		}
-		return flag;
-	}
-
-	@JsonIgnore
-	public boolean removeUser(User user) {
-		boolean flag = false;
-		for (int i = 0; i < this.userList.size(); i++) {
-			User u = this.userList.get(i);
-			if (u.uuid.equals(user.uuid)) {
-				flag = true;
-				this.userList.remove(i);
-				break;
-			}
-		}
-		return flag;
-	}
+//	@JsonIgnore
+//	public void addUser(User user) {
+//		this.userList.add(user);
+//	}
+//
+//	@JsonIgnore
+//	public boolean containsUser(User user) {
+//		boolean flag = false;
+//		for (User u : this.userList) {
+//			if (u.uuid.equals(user.uuid)) {
+//				flag = true;
+//				break;
+//			}
+//		}
+//		return flag;
+//	}
+//
+//	@JsonIgnore
+//	public boolean removeUser(User user) {
+//		boolean flag = false;
+//		for (int i = 0; i < this.userList.size(); i++) {
+//			User u = this.userList.get(i);
+//			if (u.uuid.equals(user.uuid)) {
+//				flag = true;
+//				this.userList.remove(i);
+//				break;
+//			}
+//		}
+//		return flag;
+//	}
 
 	@JsonIgnore
 	public Page removePage(String uuid) {
@@ -291,16 +291,16 @@ public class Document {
 		return null;
 	}
 
-	@JsonIgnore
-	@Override
-	public String toString() {
-		String string = "";
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		try {
-			string = ow.writeValueAsString(this);
-		} catch (IOException ex) {
-			logger.error("IOException " + ex.getMessage());
-		}
-		return string;
-	}
+//	@JsonIgnore
+//	@Override
+//	public String toString() {
+//		String string = "";
+//		ObjectWriter ow = new ObjectMapper().writer();//.withDefaultPrettyPrinter();
+//		try {
+//			string = ow.writeValueAsString(this);
+//		} catch (IOException ex) {
+//			logger.error("IOException " + ex.getMessage());
+//		}
+//		return string;
+//	}
 }

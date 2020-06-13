@@ -4,10 +4,9 @@ import java.util.LinkedList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
 
-import com.meritoki.app.desktop.retina.model.Model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 
@@ -23,7 +22,6 @@ public class Command implements CommandInterface {
     public LinkedList<Operation> operationList = new LinkedList<>();
 	
 	public Command() {
-		
 	}
 
 	public Command(Document document, String name) {
@@ -33,7 +31,6 @@ public class Command implements CommandInterface {
 	
 	@Override
 	public void execute() throws Exception {
-		
 	}
 	
 	public void reset() {

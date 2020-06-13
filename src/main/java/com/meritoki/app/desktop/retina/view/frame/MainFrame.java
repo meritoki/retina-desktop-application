@@ -396,6 +396,8 @@ public final class MainFrame extends JFrame {
 	private void newMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newMenuItemActionPerformed
 		this.model.document = (new Document());
 		this.model.system.newDocument = true;
+		this.model.document.pattern.user = this.model.system.user;
+		this.init();
 	}// GEN-LAST:event_newMenuItemActionPerformed
 
 	private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_saveMenuItemActionPerformed
