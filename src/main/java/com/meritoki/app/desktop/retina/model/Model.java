@@ -34,11 +34,10 @@ public class Model {
 		}
 		this.system.user = userController.getAnonymousUser();
 		this.document.pattern.user = this.system.user;
-		
 		if (this.userList.size() == 0) {
-			this.system.newUser = false;
+			this.system.newUser = true;
 		} else {
-			this.system.loginUser = false;
+			this.system.loginUser = true;
 		}
 	}
 }
