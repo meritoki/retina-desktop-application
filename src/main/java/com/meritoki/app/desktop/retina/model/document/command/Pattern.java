@@ -450,9 +450,13 @@ public class Pattern {
 			case "removeImage": {
 				for(Operation o: command.operationList) {
 					if(o.sign == 1) {
-						
+						if(o.object instanceof String) {
+							this.document.getPage().setBufferedImage(null);
+							this.document.getPage().removeImage((String)o.object);
+						}
 					}
 				}
+				break;
 			}
 			default: {
 
