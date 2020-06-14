@@ -24,7 +24,7 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 
 	static Logger logger = LogManager.getLogger(DocumentAddShapeMoveShapeResizeImageTest.class.getName());
 	static Document document = null;
-	static int dimension = 4;
+	static int dimension = 16;
 
 	@BeforeAll
 	public static void initialize() {
@@ -42,8 +42,8 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 		assertEquals(document.setIndex(0), true);
 		assertEquals(document.getPage().setIndex(0), true);
 		document.cache.pressedImage = document.getImage();
-		int x = (int) (document.cache.pressedImage.position.dimension.width / 2 - dimension / 2);
-		int y = (int) (document.cache.pressedImage.position.dimension.height / 2 - dimension / 2);
+		double x = (document.cache.pressedImage.position.center.x - dimension / 2);
+		double y = (document.cache.pressedImage.position.center.y - dimension / 2);
 		int width = dimension;
 		int height = dimension;
 		document.cache.pressedPoint = new Point(x, y);
@@ -53,8 +53,8 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		}
-		x = (int) (document.cache.pressedImage.position.dimension.width / 2);
-		y = (int) (document.cache.pressedImage.position.dimension.height / 2);
+		x = (document.cache.pressedImage.position.center.x);
+		y = (document.cache.pressedImage.position.center.y);
 		Shape shape =document.getShape(new Point(x, y));
 		logger.info("shape="+shape);
 		assertNotNull(shape);
@@ -80,10 +80,10 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
-		int x = (int) (document.cache.pressedImage.position.point.x+document.cache.pressedImage.position.dimension.width / 2);
-		int y = (int) (document.cache.pressedImage.position.point.y+document.cache.pressedImage.position.dimension.height / 2);
+		double x = (document.cache.pressedImage.position.center.x);
+		double y = (document.cache.pressedImage.position.center.y);
 		logger.info("shapeList="+document.getShapeList());
-		Shape shape =document.getShape(new Point(x, y));
+		Shape shape = document.getShape(new Point(x, y));
 		logger.info("shapeList="+document.getShapeList());
 		logger.info("shape="+shape);
 		assertNotNull(shape);
@@ -97,16 +97,16 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 		document.cache.pressedImage = document.getPage().getImage();
 		assertEquals(document.getPage().setIndex(1), true);
 		document.cache.releasedImage = document.getPage().getImage();
-		int x = (int) (document.cache.pressedImage.position.dimension.width / 2);
-		int y = (int) (document.cache.pressedImage.position.dimension.height / 2);
+		double x = (document.cache.pressedImage.position.center.x);
+		double y = (document.cache.pressedImage.position.center.y);
 		document.cache.pressedPoint = new Point(x, y);
 		logger.info("pressedImage="+document.cache.pressedImage);
 		logger.info("pressedPoint="+document.cache.pressedPoint);
 		document.cache.pressedShape = document.getPage().getShape(document.cache.pressedPoint);
 		logger.info("pressedShape="+document.cache.pressedShape);
 		assertNotNull(document.cache.pressedShape);
-		x = (int) (document.cache.releasedImage.position.point.x+document.cache.releasedImage.position.dimension.width / 2);
-		y = (int) (document.cache.releasedImage.position.point.y+document.cache.releasedImage.position.dimension.height / 2);
+		x = (document.cache.releasedImage.position.center.x);
+		y = (document.cache.releasedImage.position.center.y);
 		document.cache.releasedPoint = new Point(x, y);
 		logger.info("releasedImage="+document.cache.releasedImage);
 		logger.info("releasedPoint="+document.cache.releasedPoint);

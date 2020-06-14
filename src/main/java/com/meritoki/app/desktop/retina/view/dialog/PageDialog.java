@@ -20,6 +20,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -38,7 +39,7 @@ import com.meritoki.app.desktop.retina.view.frame.MainFrame;
  *
  * @author osvaldo.rodriguez
  */
-public class PageDialog extends javax.swing.JDialog implements KeyListener {
+public class PageDialog extends javax.swing.JDialog implements KeyListener, MouseListener {
 
 	/**
 	 * Serial Version UID
@@ -67,6 +68,7 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener {
 		this.mainFrame = (MainFrame) parent;
 		this.initComponents();
 		this.addKeyListener(this);
+		this.addMouseListener(this);
 		this.pageListAddKeyListener();
 		this.pageListAddMouseListener();
 		this.imageListAddKeyListener();
@@ -632,6 +634,7 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener {
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
+		this.requestFocus();
 	}// GEN-LAST:event_executeImageScriptButtonActionPerformed
 
 	private void removeScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_removeScriptButtonActionPerformed
@@ -647,6 +650,7 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener {
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
+		this.requestFocus();
 	}// GEN-LAST:event_removePageButtonActionPerformed
 
 	private void removeImageButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_removeImageButtonActionPerformed
@@ -659,6 +663,7 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener {
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
+		this.requestFocus();
 	}// GEN-LAST:event_removeImageButtonActionPerformed
 
 	/**
@@ -746,5 +751,35 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener {
 	private javax.swing.JButton removeScriptButton;
 	private javax.swing.JLabel uuidLabel;
 	// End of variables declaration//GEN-END:variables
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		this.requestFocus();
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

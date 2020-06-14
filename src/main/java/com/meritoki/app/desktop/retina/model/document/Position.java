@@ -211,6 +211,8 @@ public class Position {
 			this.point.y = this.absolutePoint.y + this.margin;
 			this.dimension.width = this.absoluteDimension.width;
 			this.dimension.height = this.absoluteDimension.height;
+//			this.dimension.width *= this.relativeScale;
+//			this.dimension.height *= this.relativeScale;
 		}
 		this.point.x *= this.scale;
 		this.point.y *= this.scale;

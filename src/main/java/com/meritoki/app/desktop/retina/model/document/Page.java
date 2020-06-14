@@ -205,13 +205,16 @@ public class Page {
 
 	@JsonIgnore
 	public List<Shape> getShapeList() {
+		double scale = this.position.scale;
+		this.position.setScale(1);
 		List<Shape> shapeList = new ArrayList<>();
 		for (Image image : this.imageList) {
 			for (Shape shape : image.getShapeList()) {
-				//shape.bufferedImage = this.getShapeBufferedImage(shape);
+				shape.bufferedImage = this.getShapeBufferedImage(shape);
 				shapeList.add(shape);
 			}
 		}
+		this.position.setScale(scale);
 		return shapeList;
 	}
 

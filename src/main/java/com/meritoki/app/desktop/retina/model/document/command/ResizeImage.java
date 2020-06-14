@@ -46,6 +46,7 @@ public class ResizeImage extends Command {
 		}
 		}
 		pressedImage.setRelativeScale(relativeScale);
+		page.getBufferedImage();
 		//Redo
 		operation = new Operation();
 		operation.object = pressedImage.position.relativeScale;

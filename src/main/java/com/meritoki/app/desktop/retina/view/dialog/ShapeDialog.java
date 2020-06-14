@@ -22,6 +22,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +47,7 @@ import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 /**
  * Class is used to interact with Shapes on a Page.
  */
-public class ShapeDialog extends javax.swing.JDialog implements KeyListener {
+public class ShapeDialog extends javax.swing.JDialog implements KeyListener, MouseListener {
 
 	/**
 	 * Serial Version UID
@@ -77,6 +78,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener {
 		this.mainFrame = (MainFrame) this.getParent();
 		this.initComponents();
 		this.addKeyListener(this);
+		this.addMouseListener(this);
 		this.shapeListAddKeyListener();
 		this.shapeListAddMouseListener();
 		
@@ -705,13 +707,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener {
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
-		
-		//		int index = this.shapeList.getSelectedIndex();
-//		Document document = (this.model != null) ? this.model.document : null;
-//		Page page = (document != null) ? document.getPage() : null;
-//		page.getShapeList().remove(index);
-////		this.mainFrame.repaint();
-//		this.mainFrame.init();
+		this.requestFocus();
 	}// GEN-LAST:event_deleteRectangleButtonActionPerformed
 
 	private void applyUnitButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_applyUnitButtonActionPerformed
@@ -907,5 +903,34 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener {
     private javax.swing.JLabel unitValueLabel;
     private javax.swing.JLabel valueLabel;
     // End of variables declaration//GEN-END:variables
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		this.requestFocus();
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }
 
