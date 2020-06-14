@@ -1,5 +1,6 @@
 package com.meritoki.app.desktop.retina.model.document.command;
 
+import java.util.Date;
 import java.util.LinkedList;
 
 import org.apache.logging.log4j.LogManager;
@@ -15,6 +16,8 @@ public class Command implements CommandInterface {
 	@JsonIgnore
 	public Document document;
 	@JsonProperty
+	public Date date;
+	@JsonProperty
 	public String name;
 	@JsonProperty
 	public User user;
@@ -26,6 +29,7 @@ public class Command implements CommandInterface {
 
 	public Command(Document document, String name) {
 		this.document = document;
+		this.date = new Date();
 		this.name = name;
 	}
 	

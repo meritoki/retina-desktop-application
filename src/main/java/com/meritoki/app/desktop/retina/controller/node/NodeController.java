@@ -166,7 +166,7 @@ public class NodeController {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		try {
-			mapper.writeValue(file, object);
+			mapper.writerWithDefaultPrettyPrinter().writeValue(file, object);
 		} catch (IOException ex) {
 			logger.error(ex);
 		}

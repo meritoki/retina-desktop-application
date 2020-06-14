@@ -25,7 +25,7 @@ public class Pattern {
 	public User user;
 	@JsonProperty
 	public LinkedList<Command> logStack = new LinkedList<>();
-	@JsonProperty
+	@JsonIgnore
 	public LinkedList<Command> undoStack = new LinkedList<>();
 	@JsonIgnore
 	public LinkedList<Command> redoStack = new LinkedList<>();

@@ -92,12 +92,10 @@ public final class MainFrame extends JFrame {
 	public void setModel(Model model) {
 		logger.debug("setModel(" + model + ")");
 		this.model = model;
-		// Panel
 		this.pagePanel.setModel(this.model);
 		this.matrixPanel.setModel(this.model);
 		this.tablePanel.setModel(this.model);
 		this.archivePanel.setModel(this.model);
-		// Dialog
 		this.attributionDialog.setModel(this.model);
 		this.commandDialog.setModel(this.model);
 		this.pageDialog.setModel(this.model);
@@ -406,6 +404,7 @@ public final class MainFrame extends JFrame {
 		} else {
 			this.model.document.save();
 			DocumentController.save(model.system.file, this.model.document);
+			this.init();
 		}
 
 	}// GEN-LAST:event_saveMenuItemActionPerformed
