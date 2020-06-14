@@ -66,16 +66,16 @@ public class AttributionDialog extends javax.swing.JDialog {
     }
     
     public void initTextArea() {
-    	
     	Document document = (this.model != null)?this.model.document:null;
     	Pattern pattern = (document != null)?document.pattern:null;
-    	List<Command> stack;
+    	List<Command> undoStack;
+    	List<Command> logStack;
     	if(pattern != null) {
-    		stack = pattern.undoStack;
     		userCountMap = new HashMap<>();
     		String userName;
     		Integer count;
-    		for(Command c: stack) {
+       		logStack = pattern.logStack;
+    		for(Command c: logStack) {
     			userName = c.user.name;
     			count = userCountMap.get(userName);
     			if(count == null) {
@@ -85,7 +85,18 @@ public class AttributionDialog extends javax.swing.JDialog {
     			}
     			userCountMap.put(userName,count);
     		}
-    		int total = stack.size();
+       		undoStack = pattern.undoStack;
+    		for(Command c: undoStack) {
+    			userName = c.user.name;
+    			count = userCountMap.get(userName);
+    			if(count == null) {
+    				count = 1;
+    			} else {
+    				count++;
+    			}
+    			userCountMap.put(userName,count);
+    		}
+    		int total = logStack.size()+undoStack.size();
     		this.attributionTextArea.setText("");
     		for (Map.Entry<String,Integer> entry : userCountMap.entrySet())  {
     			this.attributionTextArea.append(entry.getKey()+" - "+(double)entry.getValue()/(double)total*100+"% \n");

@@ -57,6 +57,10 @@ public class Document {
 //		this.test();
 	}
 	
+	public void save() {
+		this.pattern.save();
+	}
+	
 	public void init() {
 		this.pattern.setDocument(this);
 	}

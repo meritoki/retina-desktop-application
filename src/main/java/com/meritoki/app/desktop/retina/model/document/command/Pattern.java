@@ -24,6 +24,8 @@ public class Pattern {
 	@JsonIgnore
 	public User user;
 	@JsonProperty
+	public LinkedList<Command> logStack = new LinkedList<>();
+	@JsonProperty
 	public LinkedList<Command> undoStack = new LinkedList<>();
 	@JsonIgnore
 	public LinkedList<Command> redoStack = new LinkedList<>();
@@ -31,20 +33,18 @@ public class Pattern {
 	private final HashMap<String, Command> commandMap = new HashMap<>();
 	
 	public Pattern() {
+		
+	}
+	
+	public void save() {
+		this.logStack.addAll(0, this.undoStack);
+		this.undoStack = new LinkedList<>();
 	}
 	
 	public void setDocument(Document document) {
 		logger.info("setDocument("+document+")");
 		this.document = document;
 		this.register();
-		this.undoStackSetDocument(this.document);
-	}
-	
-	public void undoStackSetDocument(Document document) {
-		logger.info("undoStackSetDocument("+document+")");
-		for(Command c: this.undoStack) {
-			c.document = this.document;
-		}
 	}
 	
 	@JsonIgnore

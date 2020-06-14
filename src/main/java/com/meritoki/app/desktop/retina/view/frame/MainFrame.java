@@ -404,6 +404,7 @@ public final class MainFrame extends JFrame {
 		if (this.model.system.newDocument) {
 			this.saveAsDialog = new com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog(this, false, this.model);
 		} else {
+			this.model.document.save();
 			DocumentController.save(model.system.file, this.model.document);
 		}
 
