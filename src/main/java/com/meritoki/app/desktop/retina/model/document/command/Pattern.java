@@ -204,8 +204,11 @@ public class Pattern {
 			case "removePage": {
 				for(Operation o: command.operationList) {
 					if(o.sign == 0) {
-						if(o.object instanceof List) {
-							this.document.addPage((Page) o.object);
+						if(o.object instanceof Object[]) {
+							Object[] objectArray = (Object[])o.object;
+							int index = (int)objectArray[0];
+							Page image = (Page)objectArray[1];
+							this.document.pageList.add(index, image);
 						}
 					}
 				}
@@ -348,7 +351,9 @@ public class Pattern {
 			case "removePage": {
 				for(Operation o: command.operationList) {
 					if(o.sign == 1) {
-
+						if(o.object instanceof String) {
+							this.document.removePage((String)o.object);
+						}
 					}
 				}
 				break;

@@ -140,6 +140,20 @@ public class Document {
 	public int getIndex() {
 		return this.index;
 	}
+	
+	@JsonIgnore
+	public int getIndex(String uuid) {
+		int index = 0;
+		Page page;
+		for(int i = 0; i< this.pageList.size();i++) {
+			page = this.pageList.get(i);
+			if(page.uuid.equals(uuid)) {
+				index = i;
+				break;
+			}
+		}
+		return index;
+	}
 
 	/**
 	 * Functions gets Page object at current index from Page List
