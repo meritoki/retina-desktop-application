@@ -712,12 +712,20 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener {
 	}// GEN-LAST:event_unitTypeComboBoxActionPerformed
 
 	private void deleteRectangleButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_deleteRectangleButtonActionPerformed
-		int index = this.shapeList.getSelectedIndex();
-		Document document = (this.model != null) ? this.model.document : null;
-		Page page = (document != null) ? document.getPage() : null;
-		page.getShapeList().remove(index);
-//		this.mainFrame.repaint();
-		this.mainFrame.init();
+		this.model.document.cache.pressedShape = this.model.document.getPage().getShape();
+		try {
+			this.model.document.pattern.execute("removeShape");
+			this.mainFrame.init();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		//		int index = this.shapeList.getSelectedIndex();
+//		Document document = (this.model != null) ? this.model.document : null;
+//		Page page = (document != null) ? document.getPage() : null;
+//		page.getShapeList().remove(index);
+////		this.mainFrame.repaint();
+//		this.mainFrame.init();
 	}// GEN-LAST:event_deleteRectangleButtonActionPerformed
 
 	private void applyUnitButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_applyUnitButtonActionPerformed
