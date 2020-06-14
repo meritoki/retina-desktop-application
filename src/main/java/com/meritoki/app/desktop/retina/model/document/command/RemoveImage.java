@@ -13,9 +13,13 @@ public class RemoveImage extends Command {
 	
 	public void execute() {
     	Image pressedImage = this.document.cache.pressedImage;
+    	int imageIndex = this.document.getPage().getIndex(pressedImage.uuid);
+    	Object[] objectArray = new Object[2];
+    	objectArray[0] = imageIndex;
+    	objectArray[1] = new Image(pressedImage);
     	//undo
 		Operation operation = new Operation();
-		operation.object = new Image(pressedImage);
+		operation.object = objectArray;
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);

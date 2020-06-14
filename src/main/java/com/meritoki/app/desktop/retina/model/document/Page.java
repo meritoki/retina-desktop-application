@@ -115,6 +115,20 @@ public class Page {
 	public int getIndex() {
 		return this.index;
 	}
+	
+	@JsonIgnore
+	public int getIndex(String uuid) {
+		int index = 0;
+		Image image;
+		for(int i = 0; i< this.imageList.size();i++) {
+			image = this.imageList.get(i);
+			if(image.uuid.equals(uuid)) {
+				index = i;
+				break;
+			}
+		}
+		return index;
+	}
 	/**
 	 * Function returns Image using index
 	 *

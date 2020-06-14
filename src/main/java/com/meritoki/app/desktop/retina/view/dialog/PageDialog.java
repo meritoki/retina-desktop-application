@@ -66,6 +66,7 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener {
 		this.setTitle("Page");
 		this.mainFrame = (MainFrame) parent;
 		this.initComponents();
+		this.addKeyListener(this);
 		this.pageListAddKeyListener();
 		this.pageListAddMouseListener();
 		this.imageListAddKeyListener();

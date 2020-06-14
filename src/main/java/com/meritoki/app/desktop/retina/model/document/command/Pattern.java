@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.user.User;
@@ -266,7 +267,13 @@ public class Pattern {
 			case "removeImage": {
 				for(Operation o: command.operationList) {
 					if(o.sign == 0) {
-						
+						if(o.object instanceof Object[]) {
+							Object[] objectArray = (Object[])o.object;
+							int index = (int)objectArray[0];
+							Image image = (Image)objectArray[1];
+							this.document.getPage().setBufferedImage(null);
+							this.document.getPage().imageList.add(index, image);
+						}
 					}
 				}
 			}
