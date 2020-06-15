@@ -30,11 +30,6 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-//import org.codehaus.jackson.annotate.JsonIgnore;
-//import org.codehaus.jackson.annotate.JsonProperty;
-//import org.codehaus.jackson.map.ObjectMapper;
-//import org.codehaus.jackson.map.ObjectWriter;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -83,7 +78,7 @@ public class Page {
 	 * Script applied to Matrix
 	 */
 	@JsonProperty
-	public Script script;
+	public Script script = new Script();
 	/**
 	 * Class constructor
 	 */
@@ -119,6 +114,20 @@ public class Page {
 	@JsonIgnore
 	public int getIndex() {
 		return this.index;
+	}
+	
+	@JsonIgnore
+	public int getIndex(String uuid) {
+		int index = 0;
+		Image image;
+		for(int i = 0; i< this.imageList.size();i++) {
+			image = this.imageList.get(i);
+			if(image.uuid.equals(uuid)) {
+				index = i;
+				break;
+			}
+		}
+		return index;
 	}
 	/**
 	 * Function returns Image using index
@@ -196,13 +205,16 @@ public class Page {
 
 	@JsonIgnore
 	public List<Shape> getShapeList() {
+		double scale = this.position.scale;
+		this.position.setScale(1);
 		List<Shape> shapeList = new ArrayList<>();
 		for (Image image : this.imageList) {
 			for (Shape shape : image.getShapeList()) {
-				//shape.bufferedImage = this.getShapeBufferedImage(shape);
+				shape.bufferedImage = this.getShapeBufferedImage(shape);
 				shapeList.add(shape);
 			}
 		}
+		this.position.setScale(scale);
 		return shapeList;
 	}
 
@@ -250,6 +262,8 @@ public class Page {
 			this.bufferedImage = this.joinImages(this.getImageList());
 			if(this.bufferedImage != null) {
 				this.position.setAbsoluteDimension(new Dimension(this.bufferedImage.getWidth(),this.bufferedImage.getHeight()));
+			} else {
+				this.position.setAbsoluteDimension(new Dimension(0,0));
 			}
 		}
 		return this.bufferedImage;
@@ -410,6 +424,7 @@ public class Page {
 		for (int i = 0; i < imageList.size(); i++) {
 			Image a = imageList.get(i);
 			if (bufferedImage == null) {
+				a.setOffset(offset);
 				int width = a.getBufferedImage().getWidth();
 				int height = (int) (a.getBufferedImage().getHeight() + a.position.margin);
 				bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);

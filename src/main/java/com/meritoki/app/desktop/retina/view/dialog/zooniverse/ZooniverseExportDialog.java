@@ -40,6 +40,7 @@ import com.meritoki.app.desktop.retina.model.provider.zooniverse.SubjectSet;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Workflow;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Zooniverse;
 import com.meritoki.app.desktop.retina.view.dialog.LoadDialog;
+import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 /**
  *
@@ -50,6 +51,7 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
     private static final long serialVersionUID = 3200033012988617201L;
     private static Logger logger = LogManager.getLogger(ZooniverseExportDialog.class.getName());
     public Model model;
+    private MainFrame mainFrame;
     public LoadDialog loadDialog;
     public Zooniverse zooniverse;
 
@@ -59,6 +61,7 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
     public ZooniverseExportDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         this.initComponents();
+        this.mainFrame = (MainFrame)parent;
         this.loadDialog = new LoadDialog(parent, true);
     }
 
@@ -523,8 +526,12 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
         String description = this.projectDescriptionTextField.getText();
         if (zooniverse != null) {
             Project project = new Project(title, description);
-            zooniverse.createProject(project);
-            this.initProjectComboBox(zooniverse.getProjectList());
+            try {
+	            zooniverse.createProject(project);
+	            this.initProjectComboBox(zooniverse.getProjectList());
+            } catch (Exception e) {
+            	JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_addNewProjectActionPerformed
 
@@ -534,7 +541,11 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
         credential.userName = this.userNameTextField.getText();
         if (zooniverse != null) {
             zooniverse.setCredential(credential);
-            zooniverse.setConfig();
+            try {
+            	zooniverse.setConfig();
+            } catch (Exception e) {
+            	JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_setCredentialActionPerformed
 
@@ -542,10 +553,12 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
         String query = this.projectSearchTextField.getText().trim();
         if (zooniverse != null) {
             if (!query.isEmpty()) {
-                this.showLoad();
-               	this.zooniverse.projectList = zooniverse.getProjectList(query);
-                this.initSearchProjectComboBox(this.zooniverse.projectList);
-                this.hideLoad();
+            	try {
+	               	this.zooniverse.projectList = zooniverse.getProjectList(query);
+	                this.initSearchProjectComboBox(this.zooniverse.projectList);
+            	} catch (Exception e) {
+            		JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            	}
             } else {
                 JOptionPane.showMessageDialog(this, "Search query is empty");
             }
@@ -578,9 +591,13 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
             String projectName = (String) this.projectComboBox.getSelectedItem();
             for (Project p : zooniverse.getProjectList()) {
                 if (p.name.equals(projectName)) {
-                    zooniverse.updateProjectWorkflowList(p);
-                    this.initProjectWorkflowComboBox(p.getWorkflowList());
-                    break;
+                	try {
+	                    zooniverse.updateProjectWorkflowList(p);
+	                    this.initProjectWorkflowComboBox(p.getWorkflowList());
+                	} catch (Exception e) {
+                		JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                	}
+	                break;
                 }
             }
             this.hideLoad();
@@ -658,16 +675,18 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
 	        SubjectSet subjectSet = new SubjectSet();
 	        subjectSet.title = subjectSetTitle;
 	        if (zooniverse != null) {
-//	            this.showLoad();
 	            zooniverse.generateManifest(this.getSubjectSetPath() + timeStamp, shapeList);
 	            Project project = zooniverse.getProject(projectName);
 	            if (project != null) {
 	                Workflow workflow = project.getWorkflow(workflowTitle);
-	                zooniverse.createSubjectSet(project.getId(), subjectSet);
-	                zooniverse.uploadSubjectSet(subjectSet, this.getSubjectSetPath() + timeStamp, "manifest.csv");
-	                zooniverse.workflowUploadSubjectSet(workflow, subjectSet);
+	                try {
+		                zooniverse.createSubjectSet(project.getId(), subjectSet);
+		                zooniverse.uploadSubjectSet(subjectSet, this.getSubjectSetPath() + timeStamp, "manifest.csv");
+		                zooniverse.workflowUploadSubjectSet(workflow, subjectSet);
+	                } catch (Exception e) {
+	                	JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	                }
 	            }
-//	            this.hideLoad();
 	        }
         }
     }//GEN-LAST:event_uploadButtonActionPerformed

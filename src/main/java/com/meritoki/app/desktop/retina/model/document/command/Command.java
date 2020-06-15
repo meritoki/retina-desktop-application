@@ -1,13 +1,13 @@
 package com.meritoki.app.desktop.retina.model.document.command;
 
+import java.util.Date;
 import java.util.LinkedList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
 
-import com.meritoki.app.desktop.retina.model.Model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 
@@ -16,6 +16,8 @@ public class Command implements CommandInterface {
 	@JsonIgnore
 	public Document document;
 	@JsonProperty
+	public Date date;
+	@JsonProperty
 	public String name;
 	@JsonProperty
 	public User user;
@@ -23,17 +25,16 @@ public class Command implements CommandInterface {
     public LinkedList<Operation> operationList = new LinkedList<>();
 	
 	public Command() {
-		
 	}
 
 	public Command(Document document, String name) {
 		this.document = document;
+		this.date = new Date();
 		this.name = name;
 	}
 	
 	@Override
 	public void execute() throws Exception {
-		
 	}
 	
 	public void reset() {

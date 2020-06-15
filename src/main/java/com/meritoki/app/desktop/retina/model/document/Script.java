@@ -17,10 +17,9 @@ package com.meritoki.app.desktop.retina.model.document;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 
 /**
  *
@@ -29,6 +28,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 public class Script {
 	@JsonIgnore
 	static Logger logger = LogManager.getLogger(Script.class.getName());
-	
+	@JsonProperty
 	public String value = "";
 }

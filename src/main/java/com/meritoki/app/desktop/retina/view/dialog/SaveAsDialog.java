@@ -38,12 +38,14 @@ public class SaveAsDialog extends javax.swing.JDialog {
 	private static final long serialVersionUID = -2182272398201780677L;
 	private static Logger logger = LogManager.getLogger(SaveAsDialog.class.getName());
 	private Model model = null;
+	private MainFrame mainFrame;
 
 	/**
 	 * Creates new form Save
 	 */
 	public SaveAsDialog(java.awt.Frame parent, boolean flag, Model model) {
 		super(parent, flag);
+		this.mainFrame = (MainFrame)parent;
 		this.model = model;
 		this.initComponents();
 		this.saveFileChooser.setSelectedFile(new File(this.model.system.defaultFileName));
@@ -54,9 +56,9 @@ public class SaveAsDialog extends javax.swing.JDialog {
 		int result = this.saveFileChooser.showSaveDialog(null);
 		if (result == JFileChooser.APPROVE_OPTION) {
 			this.model.system.file = this.saveFileChooser.getSelectedFile();
+			model.document.save();
 			DocumentController.save(this.model.system.file, model.document);
-			((MainFrame) this.getParent()).init();
-			((MainFrame) this.getParent()).repaint();
+			mainFrame.init();
 			this.model.system.newDocument = false;
 			this.setVisible(false);
 		} else if (result == JFileChooser.CANCEL_OPTION) {

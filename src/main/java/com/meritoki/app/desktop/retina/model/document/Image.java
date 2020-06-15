@@ -86,7 +86,7 @@ public class Image {
 		this.filePath = image.filePath;
 		this.fileName = image.fileName;
 		this.bufferedImage = image.getBufferedImage();
-		this.position = image.position;
+		this.position = new Position(image.position);
 		this.index = image.index;
 		for (Shape shape : image.shapeList) {
 			this.shapeList.add(new Shape(shape, true));

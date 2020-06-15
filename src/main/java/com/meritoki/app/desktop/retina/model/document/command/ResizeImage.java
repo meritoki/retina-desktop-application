@@ -21,7 +21,7 @@ public class ResizeImage extends Command {
     	logger.info("execute()");
 		//variable
     	Page page = this.document.getPage();
-    	Image pressedImage = new Image(this.document.cache.pressedImage);
+    	Image pressedImage = this.document.cache.pressedImage;//new Image(this.document.cache.pressedImage);
     	double scale = page.position.scale;
     	double scaleFactor = this.document.cache.scaleFactor;
     	char scaleOperator = this.document.cache.scaleOperator;
@@ -46,9 +46,10 @@ public class ResizeImage extends Command {
 		}
 		}
 		pressedImage.setRelativeScale(relativeScale);
+		page.getBufferedImage();
 		//Redo
 		operation = new Operation();
-		operation.object = pressedImage.position.relativeScale;//new Image(pressedImage);
+		operation.object = pressedImage.position.relativeScale;
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);

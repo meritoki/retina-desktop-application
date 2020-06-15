@@ -49,7 +49,7 @@ public class OpenDialog extends javax.swing.JDialog {
 	public OpenDialog(java.awt.Frame parent, boolean flag, Model model) {
 		super(parent, flag);
 		this.model = model;
-		this.mainFrame = ((MainFrame) this.getParent());
+		this.mainFrame = (MainFrame)parent;
 		this.initComponents();
 		this.result();
 		this.loadDialog = new LoadDialog(parent, true);
@@ -60,14 +60,9 @@ public class OpenDialog extends javax.swing.JDialog {
 		if (result == JFileChooser.APPROVE_OPTION) {
 			this.model.system.file = this.openFileChooser.getSelectedFile();
 			this.model.document = (DocumentController.open(model.system.file));
-			if(this.model.document.userList != null && this.model.system.user != null) { 
-				if(!this.model.document.userList.contains(this.model.system.user)) { 
-					this.model.document.userList.add(this.model.system.user);
-				}
-				this.model.document.pattern.user = this.model.system.user;
-			}
+			this.model.document.pattern.user = this.model.system.user;
+			this.model.system.newDocument = false;
 			this.mainFrame.init();
-			this.mainFrame.repaint();
 			this.setVisible(false);
 		} else if (result == JFileChooser.CANCEL_OPTION) {
 			logger.info("Cancel");

@@ -53,7 +53,7 @@ public class Zooniverse extends Provider {
     }
 
     @JsonIgnore
-    public List<Project> getProjectList(String query) {
+    public List<Project> getProjectList(String query) throws Exception {
         logger.info("searchProject(" + query + ")");
         List<String> stringList = NodeController.executeCommand("panoptes project ls | grep " + query, 60);
         List<Project> projectList = new ArrayList<>();
@@ -124,7 +124,7 @@ public class Zooniverse extends Provider {
     }
 
     @JsonIgnore
-    public void setConfig() {
+    public void setConfig() throws Exception {
         this.setConfig(this.credential);
     }
     
@@ -133,7 +133,7 @@ public class Zooniverse extends Provider {
     }
 
     @JsonIgnore
-    public void setConfig(Credential credential) {
+    public void setConfig(Credential credential) throws Exception {
         if (credential != null) {
             Map<Object, Object> data = new HashMap<>();
             data.put("username", credential.userName);
@@ -149,7 +149,7 @@ public class Zooniverse extends Provider {
     }
 
     @JsonIgnore
-    public void createProject(Project project) {
+    public void createProject(Project project) throws Exception {
         List<String> stringList = NodeController.executeCommand("panoptes project create " + project.getTitle() + " " + project.getDescription());
         if (stringList.size() > 0 && !stringList.get(0).equals("error")) {
             String string = stringList.get(0);
@@ -162,7 +162,7 @@ public class Zooniverse extends Provider {
     }
 
     @JsonIgnore
-    public void updateProjectWorkflowList(Project project) {
+    public void updateProjectWorkflowList(Project project) throws Exception {
         List<String> stringList = NodeController.executeCommand("panoptes workflow ls -p " + project.getId(), 60);
         if (stringList.size() > 0 && !stringList.get(0).equals("error")) {
             String string = stringList.get(0);
@@ -175,7 +175,7 @@ public class Zooniverse extends Provider {
     }
 
     @JsonIgnore
-    public void createSubjectSet(String projectId, SubjectSet subjectSet) {
+    public void createSubjectSet(String projectId, SubjectSet subjectSet) throws Exception {
         List<String> stringList = NodeController.executeCommand("panoptes subject-set create " + projectId + " " + subjectSet.getTitle());
         if (stringList.size() > 0 && !stringList.get(0).equals("error")) {
             String string = stringList.get(0);
@@ -187,16 +187,16 @@ public class Zooniverse extends Provider {
     }
     
     @JsonIgnore
-    public void uploadSubjectSet(SubjectSet subjectSet, String filePath, String fileName) {
+    public void uploadSubjectSet(SubjectSet subjectSet, String filePath, String fileName) throws Exception {
         List<String> stringList = NodeController.executeCommand("panoptes subject-set upload-subjects " + subjectSet.getId() + " " + filePath+"/"+fileName);
     }
     
     @JsonIgnore
-    public void workflowUploadSubjectSet(Workflow workflow, SubjectSet subjectSet) {
+    public void workflowUploadSubjectSet(Workflow workflow, SubjectSet subjectSet) throws Exception {
         List<String> stringList = NodeController.executeCommand("panoptes workflow add-subject-sets " + workflow.getId() + " " + subjectSet.getId());
     }
     
-    public void downloadClassification(Project project, String fileName) {
+    public void downloadClassification(Project project, String fileName) throws Exception {
     	List<String> stringList = NodeController.executeCommand("panoptes project download --generate "+project.id+" "+fileName, 60*10);
     }
     

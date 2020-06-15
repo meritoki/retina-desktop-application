@@ -92,12 +92,10 @@ public final class MainFrame extends JFrame {
 	public void setModel(Model model) {
 		logger.debug("setModel(" + model + ")");
 		this.model = model;
-		// Panel
 		this.pagePanel.setModel(this.model);
 		this.matrixPanel.setModel(this.model);
 		this.tablePanel.setModel(this.model);
 		this.archivePanel.setModel(this.model);
-		// Dialog
 		this.attributionDialog.setModel(this.model);
 		this.commandDialog.setModel(this.model);
 		this.pageDialog.setModel(this.model);
@@ -111,12 +109,12 @@ public final class MainFrame extends JFrame {
 		this.loginDialog.setModel(this.model);
 		this.loginDialog.setRegisterDialog(this.registerDialog);
 		if (this.model.system.newUser) {
-			logger.info("New User");
 			this.registerDialog.setVisible(true);
 		} else if (this.model.system.loginUser) {
 			this.loginDialog.setVisible(true);
 		}
 		this.shapeDialog.setVisible(true);
+		this.pageDialog.setVisible(true);
 	}
 
 	public void init() {
@@ -129,6 +127,12 @@ public final class MainFrame extends JFrame {
 		this.pageDialog.init();
 		this.shapeDialog.init();
 		this.commandDialog.init();
+		this.attributionDialog.init();
+		if(this.model.system.loggedIn) {
+			this.logInOutMenuItem.setText("Logout");
+		} else {
+			this.logInOutMenuItem.setText("Login");
+		}
 	}
 
 	/**
@@ -153,7 +157,7 @@ public final class MainFrame extends JFrame {
         archivePanel = new com.meritoki.app.desktop.retina.view.panel.ArchivePanel();
         mainMenuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
-        loginMenuItem = new javax.swing.JMenuItem();
+        logInOutMenuItem = new javax.swing.JMenuItem();
         newMenuItem = new javax.swing.JMenuItem();
         openMenuItem = new javax.swing.JMenuItem();
         saveMenuItem = new javax.swing.JMenuItem();
@@ -217,13 +221,13 @@ public final class MainFrame extends JFrame {
 
         fileMenu.setText("File");
 
-        loginMenuItem.setText("Login");
-        loginMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        logInOutMenuItem.setText("Login");
+        logInOutMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loginMenuItemActionPerformed(evt);
+                logInOutMenuItemActionPerformed(evt);
             }
         });
-        fileMenu.add(loginMenuItem);
+        fileMenu.add(logInOutMenuItem);
 
         newMenuItem.setText("New");
         newMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -390,13 +394,17 @@ public final class MainFrame extends JFrame {
 	private void newMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newMenuItemActionPerformed
 		this.model.document = (new Document());
 		this.model.system.newDocument = true;
+		this.model.document.pattern.user = this.model.system.user;
+		this.init();
 	}// GEN-LAST:event_newMenuItemActionPerformed
 
 	private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_saveMenuItemActionPerformed
 		if (this.model.system.newDocument) {
 			this.saveAsDialog = new com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog(this, false, this.model);
 		} else {
+			this.model.document.save();
 			DocumentController.save(model.system.file, this.model.document);
+			this.init();
 		}
 
 	}// GEN-LAST:event_saveMenuItemActionPerformed
@@ -426,8 +434,14 @@ public final class MainFrame extends JFrame {
 //        this.imageImportDialog.setModel(this.model);
 	}// GEN-LAST:event_importImageMenuItemActionPerformed
 
-	private void loginMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_loginMenuItemActionPerformed
-		this.loginDialog.setVisible(true);
+	private void logInOutMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_loginMenuItemActionPerformed
+		if(!this.model.system.loggedIn) {
+			this.loginDialog.setVisible(true);
+		} else {
+			this.model.system.loggedIn = false;
+			this.model.initUsers();
+			this.init();
+		}
 	}// GEN-LAST:event_loginMenuItemActionPerformed
 
 	private void undoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_undoMenuItemActionPerformed
@@ -509,7 +523,7 @@ public final class MainFrame extends JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JMenuItem loginMenuItem;
+    private javax.swing.JMenuItem logInOutMenuItem;
     private javax.swing.JMenuBar mainMenuBar;
     private com.meritoki.app.desktop.retina.view.panel.MatrixPanel matrixPanel;
     private javax.swing.JMenuItem microsoftExportMenuItem;

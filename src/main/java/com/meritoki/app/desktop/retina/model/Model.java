@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.annotate.JsonIgnore;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.meritoki.app.desktop.retina.controller.security.SecurityController;
 import com.meritoki.app.desktop.retina.controller.user.UserController;
 import com.meritoki.app.desktop.retina.model.document.Document;
@@ -34,11 +36,10 @@ public class Model {
 		}
 		this.system.user = userController.getAnonymousUser();
 		this.document.pattern.user = this.system.user;
-		
 		if (this.userList.size() == 0) {
-			this.system.newUser = false;
+			this.system.newUser = true;
 		} else {
-			this.system.loginUser = false;
+			this.system.loginUser = true;
 		}
 	}
 }

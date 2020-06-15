@@ -23,19 +23,15 @@ import javax.imageio.ImageIO;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationConfig;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.SerializationFeature;
-
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 
 public class NodeController {
@@ -101,10 +97,8 @@ public class NodeController {
 		logger.info("openJson(" + file + ", " + className + ")");
 		Object object = null;
 		ObjectMapper mapper = new ObjectMapper();
-//		mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
 		try {
 			object = mapper.readValue(file, className);
-			
 		} catch (JsonGenerationException e) {
 			logger.error(e);
 		} catch (JsonMappingException e) {
@@ -172,7 +166,7 @@ public class NodeController {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		try {
-			mapper.writeValue(file, object);
+			mapper.writerWithDefaultPrettyPrinter().writeValue(file, object);
 		} catch (IOException ex) {
 			logger.error(ex);
 		}
@@ -218,12 +212,12 @@ public class NodeController {
 	}
 
 	@JsonIgnore
-	public static List<String> executeCommand(String command) {
+	public static List<String> executeCommand(String command) throws Exception {
 		return executeCommand(command, 120);
 	}
 
 	@JsonIgnore
-	public static List<String> executeCommand(String command, int timeout) {
+	public static List<String> executeCommand(String command, int timeout) throws Exception {
 		logger.info("executeCommand(" + command + ", " + timeout + ")");
 		ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", command).redirectError(new File("error"))
 				.redirectOutput(new File("output"));
@@ -254,11 +248,11 @@ public class NodeController {
 		}
 		catch (Exception e) {
 			logger.error("executeCommand(...) Exception "+e.getMessage());
+			throw new Exception("process timed out");
 		} 
 		finally {
 			logger.info("executeCommand(...) process.exitValue=" + process.exitValue());
 		}
-
 		return stringList;
 	}
 	

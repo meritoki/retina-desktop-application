@@ -22,6 +22,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.controller.user.UserController;
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 /**
  *
@@ -32,12 +33,14 @@ public class UserLoginDialog extends javax.swing.JDialog {
     
     private Model model;
     private UserRegisterDialog registerDialog;
+    private MainFrame mainFrame;
     /**
      * Creates new form Login
      */
     public UserLoginDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.mainFrame = (MainFrame) parent;
     }
     
         /**
@@ -166,6 +169,8 @@ public class UserLoginDialog extends javax.swing.JDialog {
         UserController userController = new UserController(this.model);
         if(userController.loginUser(userName, password)) {
         	JOptionPane.showMessageDialog(this, "Welcome");
+        	this.model.system.loggedIn = true;
+        	this.mainFrame.init();
         	this.setVisible(false);
         } else {
         	JOptionPane.showMessageDialog(this, "Username or Password Incorrect");

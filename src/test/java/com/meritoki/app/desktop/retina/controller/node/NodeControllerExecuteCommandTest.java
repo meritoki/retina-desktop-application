@@ -1,4 +1,4 @@
-package com.meritoki.retina.application.desktop.model.document;
+package com.meritoki.app.desktop.retina.controller.node;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -15,22 +15,31 @@ import com.meritoki.app.desktop.retina.controller.node.NodeController;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class NodeControllerExecuteCommandTest {
-	
+
 	static Logger logger = LogManager.getLogger(NodeControllerExecuteCommandTest.class.getName());
+
 	@Test
 	@Order(1)
 	public void output() {
-		List<String> stringList = NodeController.executeCommand("ifconfig");
-		for(String s: stringList) {
-			logger.info(s);
+		try {
+			List<String> stringList = NodeController.executeCommand("ifconfig");
+			for (String s : stringList) {
+				logger.info(s);
+			}
+		} catch (Exception e) {
+			logger.error("Exception " + e.getMessage());
 		}
 	}
-	
+
 	@Test
 	@Order(2)
 	public void error() {
-		List<String> stringList = NodeController.executeCommand("swesr");
-		assertEquals(stringList.size(),1);
-		assertEquals(stringList.get(0),"error");
+		try {
+			List<String> stringList = NodeController.executeCommand("swesr");
+			assertEquals(stringList.size(), 1);
+			assertEquals(stringList.get(0), "error");
+		} catch (Exception e) {
+			logger.error("Exception " + e.getMessage());
+		}
 	}
 }

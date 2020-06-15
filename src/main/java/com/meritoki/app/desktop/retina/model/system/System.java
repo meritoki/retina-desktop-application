@@ -41,6 +41,8 @@ public class System {
 	@JsonIgnore
 	public boolean loginUser = false;
 	@JsonIgnore
+	public boolean loggedIn = false;
+	@JsonIgnore
 	public boolean newDocument = true;
 
 	public System() {

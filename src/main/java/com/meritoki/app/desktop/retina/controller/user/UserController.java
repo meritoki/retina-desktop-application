@@ -66,11 +66,11 @@ public class UserController extends Controller {
 	public boolean loginUser(String userName, String password) {
 		logger.info("loginUser(" + userName + ", " + password + ")");
 		boolean flag = false;
-		for (User u : model.userList) {
-			if (u.name.equals(userName)) {
-				if (SecurityController.verifyHash(password, u.hash)) {
+		for (User user : model.userList) {
+			if (user.name.equals(userName)) {
+				if (SecurityController.verifyHash(password, user.hash)) {
 					flag = true;
-					this.model.system.user = u;
+					this.model.system.user = user;
 					this.model.document.pattern.user = this.model.system.user;
 				}
 			}

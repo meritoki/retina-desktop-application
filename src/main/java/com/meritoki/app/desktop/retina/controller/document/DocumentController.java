@@ -27,15 +27,18 @@ public class DocumentController {
 
 	@JsonIgnore
 	public static Document open(String filePath, String fileName) {
-		logger.info("open(" + filePath+", "+fileName + ")");
+		
 		Document document = (Document) NodeController.openJson(new java.io.File(filePath+"/"+fileName), Document.class);
+		logger.info("open(" + filePath+", "+fileName + ") document="+document);
 		return document;
 	}
 	
 	@JsonIgnore
 	public static Document open(File file) {
-		logger.info("open(" + file + ")");
+		
 		Document document = (Document) NodeController.openJson(file, Document.class);
+		document.init();
+		logger.info("open(" + file + ") document="+document);
 		return document;
 	}
 	

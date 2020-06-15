@@ -363,7 +363,6 @@ public class Matrix {
 		int j = Integer.parseInt(coordinateOne[1]);
 		if (x >= 0 && x < shapeMatrix.size() && i >= 0 && i < shapeMatrix.size()) {
 			if (y >= 0 && y < shapeMatrix.get(x).size() && j >= 0 && j < shapeMatrix.get(i).size()) {
-
 				if (x == i) {
 					Collections.swap(shapeMatrix.get(x), y, j);
 				} else {
@@ -407,6 +406,7 @@ public class Matrix {
 		int heightIndex = 0;
 		graphics.setFont(new Font("default", Font.BOLD, (int) (8 * this.position.scale)));
 		Data data;
+		Shape shape;
 		for (int i = 0; i < rowList.size(); i++) {
 			shapeList = rowList.get(i);
 			heightIndex = (int) (i * height);
@@ -414,7 +414,8 @@ public class Matrix {
 				graphics.setColor(Color.BLACK);
 				widthIndex = (int) (j * width);
 				graphics.drawRect(widthIndex, heightIndex, width, height);
-				data = shapeList.get(j).data;
+				shape = shapeList.get(j);
+				data = shape.data;
 				if (data != null) {
 					Text text = data.text;
 					switch (data.unit.type) {
@@ -436,76 +437,11 @@ public class Matrix {
 						break;
 					}
 					}
+					String id = shape.uuid.substring(0,7);
+					int z = graphics.getFontMetrics().stringWidth(id);
+					graphics.drawString(id, widthIndex + (width/2) - (z / 2), heightIndex + (height*3/4));
 				}
 			}
 		}
-//		heightIndex = 0;
-//		widthIndex = 0;
-//		for (int i = 0; i < maxColumn; i++) {
-//			widthIndex += boxWidth;
-//			graphics.drawString("" + i, widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-//		}
 	}
-
-//	public void paint(Graphics graphics) {
-//		graphics.setColor(Color.black);
-//		List<ArrayList<Shape>> rowList = this.getRowList();
-//		int heightIndex = 0;
-//		int widthIndex = 0;
-//		int maxColumn = this.getShapeListMax();
-//		int boxWidth = 64;
-//		int boxHeight = 32;
-//		Data data;
-//		for (int i = 0; i < rowList.size(); i++) {
-//			widthIndex = 0;
-//			heightIndex += boxHeight;
-//			graphics.setColor(Color.BLACK);
-//			graphics.drawString("" + i, widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-//			for (int j = 0; j < rowList.get(i).size(); j++) {
-//				widthIndex += boxWidth;
-//				graphics.setColor(Color.BLACK);
-//				graphics.drawRect(widthIndex, heightIndex, boxWidth, boxHeight);
-//
-//				data = rowList.get(i).get(j).data;
-//				if (data != null) {
-//					Text text = data.text;
-//					String unitType = data.unit.type;
-//					switch (unitType) {
-//					case Unit.DATA: {
-//						graphics.setColor(Color.BLACK);
-//						graphics.drawString("D", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-//						break;
-//					}
-//					case Unit.TIME: {
-//						graphics.drawString("T", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-//						break;
-//					}
-//					case Unit.SPACE: {
-//						graphics.drawString("S", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-//						break;
-//					}
-//					case Unit.ENERGY: {
-//
-//						graphics.drawString("E", widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-//
-//						break;
-//					}
-//					}
-//				}
-//			}
-//		}
-////		heightIndex = 0;
-////		widthIndex = 0;
-//		for (int i = 0; i < maxColumn; i++) {
-//			widthIndex += boxWidth;
-//			graphics.drawString("" + i, widthIndex + (boxWidth / 2), heightIndex + (boxHeight / 2));
-//		}
-//	}
-
-	//
-//	public  void insert(List<Page> pageList, int index, int a, int b, int x, int y) {
-//		Page page = pageList.get(index);
-//		Shape data = page.getMatrix().init().get(a).remove(b);
-//		page.getMatrix().init().get(x).add(y, data);
-//	}
 }

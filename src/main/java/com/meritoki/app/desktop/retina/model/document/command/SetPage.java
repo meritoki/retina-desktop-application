@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 
@@ -21,23 +22,25 @@ public class SetPage extends Command {
     public void execute() {
     	logger.info("execute()");
     	//variables
-    	int pageIndex = document.cache.pageIndex;
     	String pageUUID = document.cache.pageUUID;
+    	int pageIndex = document.cache.pageIndex;
+    	Page page = document.getPage();
     	//undo
     	Operation operation = new Operation();
-		operation.object = document.getIndex();
+		operation.object = (page != null)?page.uuid:null;
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);
 		//logic
-    	if(pageIndex > -1) {
-    		document.setIndex(pageIndex);
-    	} else if (pageUUID != null) {
-    		document.setPage(pageUUID);
+    	if (pageUUID != null) {
+    		this.document.setPage(pageUUID);
+    	} else if(pageIndex >  -1) {
+    		this.document.setIndex(pageIndex);
+    		pageUUID = this.document.getPage().uuid;
     	}
     	//redo
     	operation = new Operation();
-		operation.object = document.getIndex();
+		operation.object = pageUUID;
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);

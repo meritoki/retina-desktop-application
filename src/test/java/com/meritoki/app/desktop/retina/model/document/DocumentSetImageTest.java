@@ -1,4 +1,4 @@
-package com.meritoki.retina.application.desktop.model.document;
+package com.meritoki.app.desktop.retina.model.document;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -45,42 +45,48 @@ public class DocumentSetImageTest {
 	@Test
 	@Order(1)
 	public void setImage() {
-		document.cache.pressedPoint = new Point(imageZero.position.center.x,imageZero.position.center.y);
+		document.cache.imageUUID = imageZero.uuid;
 		try {
 			document.pattern.execute("setImage");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
-		assertEquals(document.cache.pressedImage.uuid, imageZero.uuid);
-		document.cache.pressedPoint = new Point(imageOne.position.center.x,imageOne.position.center.y);
+		assertEquals(document.getImage().uuid, imageZero.uuid);
+		document.cache.imageUUID = imageOne.uuid;
 		try {
 			document.pattern.execute("setImage");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
-		assertEquals(document.cache.pressedImage.uuid, imageOne.uuid);
-		document.cache.pressedPoint = new Point(imageTwo.position.center.x,imageTwo.position.center.y);
+		assertEquals(document.getImage().uuid, imageOne.uuid);
+		document.cache.imageUUID = imageTwo.uuid;
 		try {
 			document.pattern.execute("setImage");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
-		assertEquals(document.cache.pressedImage.uuid, imageTwo.uuid);
+		assertEquals(document.getImage().uuid, imageTwo.uuid);
 	}
 	
 	@Test
 	@Order(2)
 	public void undo() {
 		document.pattern.undo();
+		assertEquals(document.getImage().uuid, imageOne.uuid);
 		document.pattern.undo();
+		assertEquals(document.getImage().uuid, imageZero.uuid);
 		document.pattern.undo();
+		assertEquals(document.getImage().uuid, imageZero.uuid);
 	}
 	
 	@Test
 	@Order(3)
 	public void redo() {
 		document.pattern.redo();
+		assertEquals(document.getImage().uuid, imageZero.uuid);
 		document.pattern.redo();
+		assertEquals(document.getImage().uuid, imageOne.uuid);
 		document.pattern.redo();
+		assertEquals(document.getImage().uuid, imageTwo.uuid);
 	}
 }
