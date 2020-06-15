@@ -1,6 +1,8 @@
 package com.meritoki.app.desktop.retina.model.module;
 
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.provider.Provider;
+import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.module.library.model.Data;
 import com.meritoki.module.library.model.Module;
 import com.meritoki.module.library.model.Node;
@@ -10,6 +12,7 @@ public class Inference extends Node {
 	public static final int WAIT = 1;
 	public static final int SCAN = 2;
 	private Model model;
+	private Meritoki meritoki;
 
 	public Inference(int intValue, Module module, Model model) {
 		super(intValue, module);
@@ -18,6 +21,11 @@ public class Inference extends Node {
 	
 	public void initialize() {
 		super.initialize();
+        for (Provider provider : this.model.system.providerList) {
+            if (provider instanceof Meritoki) {
+                this.meritoki = (Meritoki) provider;
+            }
+        }
 		this.stateMap.put(WAIT,"WAIT");
 		this.stateMap.put(SCAN,"SCAN");
 		this.setState(WAIT);

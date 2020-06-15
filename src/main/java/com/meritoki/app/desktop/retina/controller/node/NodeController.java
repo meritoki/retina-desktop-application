@@ -61,6 +61,10 @@ public class NodeController {
 		return getUserHome()+getSeperator()+".panoptes";
 	}
 	
+	public static String getProviderHome() {
+		return getRetinaHome()+getSeperator()+"provider";
+	}
+	
 	public static BufferedImage openBufferedImage(String filePath, String fileName) {
 		logger.debug("openBufferedImage(" + filePath + ", " + fileName + ")");
 		return openBufferedImage(new java.io.File(filePath + getSeperator() + fileName));

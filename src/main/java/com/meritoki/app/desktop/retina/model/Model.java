@@ -1,18 +1,9 @@
 package com.meritoki.app.desktop.retina.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.meritoki.app.desktop.retina.controller.security.SecurityController;
-import com.meritoki.app.desktop.retina.controller.user.UserController;
+
 import com.meritoki.app.desktop.retina.model.document.Document;
-import com.meritoki.app.desktop.retina.model.document.user.User;
 import com.meritoki.app.desktop.retina.model.resource.Resource;
 import com.meritoki.app.desktop.retina.model.system.System;
 

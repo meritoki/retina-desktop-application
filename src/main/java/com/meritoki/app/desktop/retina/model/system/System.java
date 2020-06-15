@@ -2,7 +2,6 @@ package com.meritoki.app.desktop.retina.model.system;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -12,11 +11,10 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
-import com.meritoki.app.desktop.retina.controller.security.SecurityController;
 import com.meritoki.app.desktop.retina.controller.user.UserController;
-import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
+import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Zooniverse;
 import com.meritoki.app.desktop.retina.model.vendor.Vendor;
 import com.meritoki.app.desktop.retina.model.vendor.microsoft.Microsoft;
@@ -64,12 +62,10 @@ public class System {
 	}
 	
 	public void initUsers() {
-		logger.info("initUsers()");
 		if(UserController.exists()) {
 			this.userList = UserController.open();
 		}
 		this.user = UserController.getAnonymousUser();
-//		this.document.pattern.user = this.system.user;
 		if (this.userList.size() == 0) {
 			this.newUser = true;
 		} else {
@@ -83,6 +79,7 @@ public class System {
 	
 	public void initProviders() {
 		this.providerList.add(new Zooniverse());
+		this.providerList.add(new Meritoki());
 	}
 	
 	public void initVendors() {

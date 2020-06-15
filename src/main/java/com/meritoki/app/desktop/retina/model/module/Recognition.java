@@ -5,6 +5,9 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.provider.Provider;
+import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
+import com.meritoki.app.desktop.retina.model.provider.zooniverse.Zooniverse;
 import com.meritoki.module.library.model.Data;
 import com.meritoki.module.library.model.Module;
 import com.meritoki.module.library.model.Node;
@@ -15,6 +18,7 @@ public class Recognition extends Node {
 	public String vendor = "Meritoki";
 	public String year = "2020";
 	public Model model;
+	private Meritoki meritoki;
 	
 	public Recognition(int id, Model model) {
 		super(id);
@@ -25,7 +29,12 @@ public class Recognition extends Node {
 	@Override
 	public void initialize() {
 		super.initialize();
-		
+        for (Provider provider : this.model.system.providerList) {
+            if (provider instanceof Meritoki) {
+                this.meritoki = (Meritoki) provider;
+                this.meritoki.open(this.model.document.uuid);
+            }
+        }
 	}
 
 	public String about() {
