@@ -16,7 +16,6 @@
 package com.meritoki.app.desktop.retina.model.document;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -27,8 +26,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.meritoki.app.desktop.retina.model.document.command.Pattern;
 
 /**
@@ -264,37 +261,6 @@ public class Document {
 		}
 		return flag;
 	}
-
-//	@JsonIgnore
-//	public void addUser(User user) {
-//		this.userList.add(user);
-//	}
-//
-//	@JsonIgnore
-//	public boolean containsUser(User user) {
-//		boolean flag = false;
-//		for (User u : this.userList) {
-//			if (u.uuid.equals(user.uuid)) {
-//				flag = true;
-//				break;
-//			}
-//		}
-//		return flag;
-//	}
-//
-//	@JsonIgnore
-//	public boolean removeUser(User user) {
-//		boolean flag = false;
-//		for (int i = 0; i < this.userList.size(); i++) {
-//			User u = this.userList.get(i);
-//			if (u.uuid.equals(user.uuid)) {
-//				flag = true;
-//				this.userList.remove(i);
-//				break;
-//			}
-//		}
-//		return flag;
-//	}
 
 	@JsonIgnore
 	public Page removePage(String uuid) {

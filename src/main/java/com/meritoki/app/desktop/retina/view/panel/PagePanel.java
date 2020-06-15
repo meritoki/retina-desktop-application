@@ -32,7 +32,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 
 	private static final long serialVersionUID = 3989576625299550361L;
 	private static Logger logger = LogManager.getLogger(PagePanel.class.getName());
-	private MainFrame main = null;
+	private MainFrame mainFrame = null;
 	private Model model = null;
 
 	public PagePanel() {
@@ -43,7 +43,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 	}
 
 	public void setMainFrame(MainFrame main) {
-		this.main = main;
+		this.mainFrame = main;
 	}
 
 	public void setModel(Model model) {
@@ -113,7 +113,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			try {
 				this.model.document.pattern.execute("setImage");
 			} catch (Exception e) {
-				JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		this.model.document.cache.pressedShape = this.model.document.getShape(point);
@@ -131,7 +131,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				try {
 					this.model.document.pattern.execute("setShape");
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 		} else {
 			Page page = this.model.document.getPage();
@@ -142,26 +142,26 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 						try {
 							this.model.document.pattern.execute("resizeShape");
 						} catch (Exception e) {
-							JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 						}
 					} else {
 						this.model.document.cache.releasedImage = this.model.document.getImage(this.model.document.cache.releasedPoint);
 						try {
 							this.model.document.pattern.execute("moveShape");
 						} catch (Exception e) {
-							JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 						}
 					}
 				} else {
 					try {
 						this.model.document.pattern.execute("addShape");
 					} catch (Exception e) {
-						JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
 		}
-		this.main.init();
+		this.mainFrame.init();
 	}
 
 	@Override
@@ -188,9 +188,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				this.model.document.cache.scaleFactor = 1.5;
 				try {
 					this.model.document.pattern.execute("scalePage");
-					this.main.init();
+					this.mainFrame.init();
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
 			}
@@ -200,9 +200,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				this.model.document.cache.scaleFactor = 1.5;
 				try {
 					this.model.document.pattern.execute("scalePage");
-					this.main.init();
+					this.mainFrame.init();
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}	
 				break;
 			}
@@ -212,9 +212,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				this.model.document.cache.scaleFactor = 1.5;
 				try {
 					this.model.document.pattern.execute("scalePage");
-					this.main.init();
+					this.mainFrame.init();
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
 			}
@@ -225,9 +225,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				this.model.document.cache.shiftFactor = 10;
 				try {
 					this.model.document.pattern.execute("shiftImage");
-					this.main.init();
+					this.mainFrame.init();
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 
 				break;
@@ -239,9 +239,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				this.model.document.cache.shiftFactor = 10;
 				try {
 					this.model.document.pattern.execute("shiftImage");
-					this.main.init();
+					this.mainFrame.init();
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
 			}
@@ -252,9 +252,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				this.model.document.cache.scaleFactor = 1.01;
 				try {
 					this.model.document.pattern.execute("resizeImage");
-					this.main.init();
+					this.mainFrame.init();
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
 			}
@@ -265,22 +265,22 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				this.model.document.cache.scaleFactor = 1.01;
 				try {
 					this.model.document.pattern.execute("resizeImage");
-					this.main.init();
+					this.mainFrame.init();
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
 			}
 			case KeyEvent.VK_Z: {
 				logger.debug("keyPressed(e) KeyEvent.VK_Z");
 				this.model.document.pattern.undo();
-				this.main.init();
+				this.mainFrame.init();
 				break;
 			}
 			case KeyEvent.VK_Y: {
 				logger.debug("keyPressed(e) KeyEvent.VK_Y");
 				this.model.document.pattern.redo();
-				this.main.init();
+				this.mainFrame.init();
 				break;
 
 			}
@@ -298,9 +298,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				this.model.document.cache.pressedShape = this.model.document.getPage().getShape();
 				try {
 					this.model.document.pattern.execute("removeShape");
-					this.main.init();
+					this.mainFrame.init();
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
 			}
@@ -309,9 +309,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				this.model.document.cache.pageIndex = --index;
 				try {
 					this.model.document.pattern.execute("setPage");
-					this.main.init();
+					this.mainFrame.init();
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
 			}
@@ -320,9 +320,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				this.model.document.cache.pageIndex = ++index;
 				try {
 					this.model.document.pattern.execute("setPage");
-					this.main.init();
+					this.mainFrame.init();
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
 			}
@@ -331,9 +331,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				this.model.document.cache.pageIndex = --index;
 				try {
 					this.model.document.pattern.execute("setPage");
-					this.main.init();
+					this.mainFrame.init();
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
 			}
@@ -342,9 +342,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				this.model.document.cache.pageIndex = ++index;
 				try {
 					this.model.document.pattern.execute("setPage");
-					this.main.init();
+					this.mainFrame.init();
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(main, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
 			}

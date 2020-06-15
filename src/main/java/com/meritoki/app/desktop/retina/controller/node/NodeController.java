@@ -212,12 +212,12 @@ public class NodeController {
 	}
 
 	@JsonIgnore
-	public static List<String> executeCommand(String command) {
+	public static List<String> executeCommand(String command) throws Exception {
 		return executeCommand(command, 120);
 	}
 
 	@JsonIgnore
-	public static List<String> executeCommand(String command, int timeout) {
+	public static List<String> executeCommand(String command, int timeout) throws Exception {
 		logger.info("executeCommand(" + command + ", " + timeout + ")");
 		ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", command).redirectError(new File("error"))
 				.redirectOutput(new File("output"));
@@ -248,11 +248,11 @@ public class NodeController {
 		}
 		catch (Exception e) {
 			logger.error("executeCommand(...) Exception "+e.getMessage());
+			throw new Exception("process timed out");
 		} 
 		finally {
 			logger.info("executeCommand(...) process.exitValue=" + process.exitValue());
 		}
-
 		return stringList;
 	}
 	
