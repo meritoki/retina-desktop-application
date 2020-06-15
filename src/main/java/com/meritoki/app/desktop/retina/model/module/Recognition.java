@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
+import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.module.library.model.Module;
 import com.meritoki.module.library.model.Node;
 
@@ -12,6 +13,7 @@ public class Recognition extends Node {
 	public String version = "0.1.202005";
 	public String vendor = "Meritoki";
 	public String copyright = "(c)2020";
+	public Model model;
 	
 	public Recognition(int id) {
 		super(id);
@@ -47,6 +49,10 @@ public class Recognition extends Node {
 
 		}
 		return object;
+	}
+	
+	public void setModel(Model model) {
+		
 	}
 
 	@Override

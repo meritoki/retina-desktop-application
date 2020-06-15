@@ -22,8 +22,9 @@ public class ModuleController extends Controller {
 	Recognition recognition = new Recognition(0);
 	
 
-	public ModuleController(Model system) {
-		super(system);
+	public ModuleController(Model model) {
+		super(model);
+		this.recognition.setModel(this.model);
 	}
 	
 	public void start() {
