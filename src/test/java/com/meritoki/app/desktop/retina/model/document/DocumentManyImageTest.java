@@ -1,4 +1,4 @@
-package com.meritoki.retina.application.desktop.model.document;
+package com.meritoki.app.desktop.retina.model.document;
 
 import java.io.File;
 

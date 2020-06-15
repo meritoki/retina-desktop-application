@@ -1,4 +1,4 @@
-package com.meritoki.retina.application.desktop.model.document;
+package com.meritoki.app.desktop.retina.model.provider.zooniverse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -14,18 +14,16 @@ import org.junit.jupiter.api.TestMethodOrder;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class NodeControllerExecuteCommandTest {
+public class ZooniverseExecuteCommandTest {
 
-	static Logger logger = LogManager.getLogger(NodeControllerExecuteCommandTest.class.getName());
+	static Logger logger = LogManager.getLogger(ZooniverseExecuteCommandTest.class.getName());
 
 	@Test
 	@Order(1)
-	public void output() {
+	public void failure() {
 		try {
-			List<String> stringList = NodeController.executeCommand("ifconfig");
-			for (String s : stringList) {
-				logger.info(s);
-			}
+			List<String> stringList = NodeController.executeCommand("panoptes project ls | grep retina", 10);
+			assertEquals(stringList.size(), 0);
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		}
@@ -33,11 +31,12 @@ public class NodeControllerExecuteCommandTest {
 
 	@Test
 	@Order(2)
-	public void error() {
+	public void success() {
 		try {
-			List<String> stringList = NodeController.executeCommand("swesr");
-			assertEquals(stringList.size(), 1);
-			assertEquals(stringList.get(0), "error");
+			List<String> stringList = NodeController.executeCommand("panoptes project ls | grep retina", 360);
+			for (String s : stringList) {
+				logger.info(s);
+			}
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		}
