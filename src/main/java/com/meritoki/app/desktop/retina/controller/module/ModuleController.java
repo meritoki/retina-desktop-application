@@ -19,10 +19,11 @@ public class ModuleController extends Controller {
 //		moduleController.stop();
 	}
 
+	private Model model;
 	private Recognition recognition;
 
 	public ModuleController(Model model) {
-		super(model);
+		this.model = model;
 		this.recognition = new Recognition(0,this.model);
 	}
 

@@ -48,6 +48,7 @@ public class System {
 
 	public System() {
 		this.initDirectories();
+		this.initUsers();
 		this.initProviders();
 		this.initVendors();
 		this.initProperties();
@@ -62,6 +63,20 @@ public class System {
 		}
 	}
 	
+	public void initUsers() {
+		logger.info("initUsers()");
+		if(UserController.exists()) {
+			this.userList = UserController.open();
+		}
+		this.user = UserController.getAnonymousUser();
+//		this.document.pattern.user = this.system.user;
+		if (this.userList.size() == 0) {
+			this.newUser = true;
+		} else {
+			this.loginUser = true;
+		}
+	}
+	
 	public void initProperties() {
 		this.properties = NodeController.openProperties("./retina.properties");
 	}
@@ -73,6 +88,4 @@ public class System {
 	public void initVendors() {
 		this.vendorList.add(new Microsoft());
 	}
-	
-
 }

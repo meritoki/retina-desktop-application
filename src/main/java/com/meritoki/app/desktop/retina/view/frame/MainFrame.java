@@ -493,7 +493,8 @@ public final class MainFrame extends JFrame {
 			this.loginDialog.setVisible(true);
 		} else {
 			this.model.system.loggedIn = false;
-			this.model.initUsers();
+			this.model.system.initUsers();
+			this.model.document.pattern.user = this.model.system.user;
 			this.init();
 		}
 	}// GEN-LAST:event_loginMenuItemActionPerformed

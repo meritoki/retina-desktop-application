@@ -24,21 +24,6 @@ public class Model {
 	public Document document = new Document();
 	
 	public Model() {
-		this.initUsers();
-	}
-	
-	public void initUsers() {
-		logger.info("initUsers()");
-		UserController userController = new UserController(this);
-		if(userController.exists()) {
-			this.system.userList = userController.open();
-		}
-		this.system.user = userController.getAnonymousUser();
-		this.document.pattern.user = this.system.user;
-		if (this.system.userList.size() == 0) {
-			this.system.newUser = true;
-		} else {
-			this.system.loginUser = true;
-		}
+		
 	}
 }
