@@ -25,6 +25,7 @@ public class Recognition extends Node {
 	@Override
 	public void initialize() {
 		super.initialize();
+		
 	}
 
 	public String about() {

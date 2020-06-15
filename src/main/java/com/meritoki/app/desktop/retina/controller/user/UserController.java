@@ -66,7 +66,7 @@ public class UserController extends Controller {
 	public boolean loginUser(String userName, String password) {
 		logger.info("loginUser(" + userName + ", " + password + ")");
 		boolean flag = false;
-		for (User user : model.userList) {
+		for (User user : model.system.userList) {
 			if (user.name.equals(userName)) {
 				if (SecurityController.verifyHash(password, user.hash)) {
 					flag = true;
@@ -79,8 +79,8 @@ public class UserController extends Controller {
 	}
 
 	public void registerUser(User user) {
-		this.model.userList.add(user);
-		UserController.save(this.model.userList);
+		this.model.system.userList.add(user);
+		UserController.save(this.model.system.userList);
 	}
 	
 	public static User getAnonymousUser() {

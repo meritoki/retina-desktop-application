@@ -8,7 +8,6 @@ import com.meritoki.module.library.model.Node;
 public class Train extends Node {
 	public static final int SEARCH = 1;
 	public static final int SCAN = 2;
-	public static final int NOTIFY = 3;
 	private Model model;
 
 	public Train(int intValue, Module module, Model model) {
@@ -20,7 +19,6 @@ public class Train extends Node {
 		super.initialize();
 		this.stateMap.put(SEARCH, "SEARCH");
 		this.stateMap.put(SCAN, "SCAN");
-		this.stateMap.put(NOTIFY, "NOTIFY");
 		this.setState(SEARCH);
 	}
 
@@ -34,29 +32,29 @@ public class Train extends Node {
 			this.scan(object);
 			break;
 		}
-		case NOTIFY: {
-			this.notify();
-			break;
-		}
 		}
 		super.machine(state, object);
 	}
 
 	private void search(Object object) {
-		if (object instanceof Data) {
-			Data data = (Data) object;
-		}
+//		if (object instanceof Data) {
+//			Data data = (Data) object;
+//		}
+		
+		//load shapes it has already trained
+		//get document shape list
+		//filter all shapes with Data Text
+		//create list of shapes to scan;
+		//set state to scan;
+		
 	}
 
 	private void scan(Object object) {
-		if (object instanceof Data) {
-			Data data = (Data) object;
-		}
-	}
-
-	private void notify(Object object) {
-		if (object instanceof Data) {
-			Data data = (Data) object;
-		}
+//		if (object instanceof Data) {
+//			Data data = (Data) object;
+//		}
+		//for each shape in ths scan list, train the Vision algorithm with the Data Text as the concept
+		//when complete, send notification to Inference Module and return to search State.
+		
 	}
 }

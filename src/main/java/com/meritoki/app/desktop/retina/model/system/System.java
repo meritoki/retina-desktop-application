@@ -29,7 +29,8 @@ public class System {
 	public List<Provider> providerList = new ArrayList<>();
 	@JsonProperty
 	public List<Vendor> vendorList = new ArrayList<>();
-
+	@JsonIgnore
+	public List<User> userList = new ArrayList<User>();
 	@JsonIgnore
 	public User user = null;//When a user is logged in the User is retained in this variable
 	@JsonIgnore

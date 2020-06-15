@@ -40,6 +40,12 @@ public class Inference extends Node {
 	private void wait(Object object) {
 		if(object instanceof Data) {
 			Data data = (Data)object;
+			switch(data.getType()) {
+			case Data.UNBLOCK:{
+				this.setState(SCAN);
+				break;
+			}
+			}
 		}
 	}
 	
