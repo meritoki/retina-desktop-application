@@ -58,9 +58,7 @@ public class UserController extends Controller {
 	public static List<User> open() {
 		logger.info("open()");
 		List<User> userList = null;
-		userList = (List<User>) NodeController.openJson(new java.io.File(filePath + "/" + fileName),
-				new TypeReference<List<User>>() {
-				});
+		userList = (List<User>) NodeController.openJson(new java.io.File(filePath + "/" + fileName), new TypeReference<List<User>>() {});
 		return userList;
 	}
 
@@ -72,7 +70,6 @@ public class UserController extends Controller {
 				if (SecurityController.verifyHash(password, user.hash)) {
 					flag = true;
 					this.system.user = user;
-//					this.model.document.pattern.user = this.model.system.user;
 				}
 			}
 		}

@@ -9,6 +9,7 @@ import com.meritoki.app.desktop.retina.model.provider.meritoki.Document;
 public class Meritoki extends Provider {
 	
 	public Document document;
+	public File file;
 
 	public Meritoki() {
 		super("meritoki");
@@ -16,14 +17,18 @@ public class Meritoki extends Provider {
 	
 	public void open(String documentUUID) {
 		File directory = new File(NodeController.getProviderHome()+NodeController.getSeperator()+"meritoki");
-		File file = new File(directory+NodeController.getSeperator()+documentUUID+".json");
-		if(file.exists()) {
-			this.document = (Document)NodeController.openJson(file, Document.class);
+		this.file = new File(directory+NodeController.getSeperator()+documentUUID+".json");
+		if(this.file.exists()) {
+			this.document = (Document)NodeController.openJson(this.file, Document.class);
 		} else {
 			this.document = new Document();
 			directory.mkdirs();
-			NodeController.saveJson(file, this.document);
+			NodeController.saveJson(this.file, this.document);
 		}
 		document.group.load();
+	}
+	
+	public void save() {
+		NodeController.saveJson(this.file, this.document);
 	}
 }

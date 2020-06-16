@@ -1,13 +1,19 @@
 package com.meritoki.app.desktop.retina.model.module;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.document.Shape;
+import com.meritoki.app.desktop.retina.model.document.user.User;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
+import com.meritoki.app.desktop.retina.model.provider.meritoki.Input;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.cortex.library.model.Concept;
 import com.meritoki.module.library.model.Module;
@@ -18,6 +24,7 @@ public class Train extends Node {
 	public static final int SCAN = 2;
 	private Model model;
 	private Meritoki meritoki;
+	private List<Input> inputList = new ArrayList<>();
 
 	public Train(int intValue, Module module, Model model) {
 		super(intValue, module);
@@ -63,9 +70,22 @@ public class Train extends Node {
 		//create list of shapes to scan;
 		//set state to scan;
 		if(this.delayExpired()) {
-			
+			List<Input> trainList = this.loadInputList();
+			List<Shape> shapeList = this.model.document.getShapeList();
+			for(Shape s:shapeList) {
+				if(s.data.text.value != null) {
+					
+				}
+			}
 			this.setDelay(this.newDelay(this.inputDelay));
 		}
+	}
+	
+	private List<Input> loadInputList() {
+		List<Input> inputList = null;
+		File file = new File(NodeController.getProviderHome()+NodeController.getSeperator()+"meritoki"+NodeController.getSeperator()+this.model.document.uuid);
+		inputList = (List<Input>) NodeController.openJson(file, new TypeReference<List<Input>>() {});
+		return inputList;
 	}
 
 	private void scan(Object object) {

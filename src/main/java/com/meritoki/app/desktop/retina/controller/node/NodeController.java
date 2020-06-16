@@ -112,12 +112,29 @@ public class NodeController {
 		}
 		return object;
 	}
+	
+//	public static Object openJson(File file, TypeReference<List<Input>> typeReference) {
+//		logger.info("openJson(" + file + ", " + typeReference + ")");
+//		Object object = null;
+//		ObjectMapper mapper = new ObjectMapper();
+////		mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
+//		try {
+//			object = mapper.readValue(file, typeReference);
+//			
+//		} catch (JsonGenerationException e) {
+//			logger.error(e);
+//		} catch (JsonMappingException e) {
+//			logger.error(e);
+//		} catch (IOException e) {
+//			logger.error(e);
+//		}
+//		return object;
+//	}
 
-	public static Object openJson(File file, TypeReference<List<User>> typeReference) {
+	public static <T> Object openJson(File file, TypeReference<List<T>> typeReference) {
 		logger.info("openJson(" + file + ", " + typeReference + ")");
 		Object object = null;
 		ObjectMapper mapper = new ObjectMapper();
-//		mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
 		try {
 			object = mapper.readValue(file, typeReference);
 			

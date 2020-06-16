@@ -7,8 +7,6 @@ import java.util.concurrent.CountDownLatch;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
-import com.meritoki.app.desktop.retina.model.provider.zooniverse.Zooniverse;
-import com.meritoki.module.library.model.Data;
 import com.meritoki.module.library.model.Module;
 import com.meritoki.module.library.model.Node;
 
@@ -105,5 +103,10 @@ public class Recognition extends Node {
 
 	public String getVendor() {
 		return this.vendor;
+	}
+	
+	@Override
+	public void destroy() {
+		this.meritoki.save();
 	}
 }
