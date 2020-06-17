@@ -10,8 +10,8 @@ import java.util.Map;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.document.Data;
 import com.meritoki.app.desktop.retina.model.document.Shape;
-import com.meritoki.app.desktop.retina.model.document.user.User;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Input;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
@@ -58,26 +58,40 @@ public class Train extends Node {
 	}
 
 	private void search(Object object) {
-		
-
-//		if (object instanceof Data) {
-//			Data data = (Data) object;
-//		}
-		
-		//load shapes it has already trained
-		//get document shape list
-		//filter all shapes with Data Text
-		//create list of shapes to scan;
-		//set state to scan;
+		if (object instanceof Data) {
+			Data data = (Data) object;
+		}
 		if(this.delayExpired()) {
-			List<Input> trainList = this.loadInputList();
+			List<Input> inputList = this.loadInputList();
 			List<Shape> shapeList = this.model.document.getShapeList();
+			boolean flag;
 			for(Shape s:shapeList) {
 				if(s.data.text.value != null) {
-					
+					flag = true;
+					for(Input i:inputList) {
+						if(i.shape.uuid.equals(s.uuid)) {
+							flag = false;
+							if(!i.flag) {
+								i.shape.bufferedImage = s.bufferedImage;
+								i.concept = s.data.text.value;
+								this.inputList.add(i);
+							}
+						}
+					}
+					if(flag) {
+						Input input = new Input();
+						input.shape = s;
+						input.concept = s.data.text.value;
+						input.flag = false;
+						this.inputList.add(input);
+					}
 				}
 			}
-			this.setDelay(this.newDelay(this.inputDelay));
+			if(this.inputList.size()>0) {
+				this.setState(SCAN);
+			} else {
+				this.setDelay(this.newDelay(this.inputDelay));
+			}
 		}
 	}
 	
@@ -87,17 +101,25 @@ public class Train extends Node {
 		inputList = (List<Input>) NodeController.openJson(file, new TypeReference<List<Input>>() {});
 		return inputList;
 	}
+	
+	private void saveInputList(List<Input> inputList) {
+		
+	}
 
 	private void scan(Object object) {
 //		if (object instanceof Data) {
 //			Data data = (Data) object;
 //		}
-		//for each shape in ths scan list, train the Vision algorithm with the Data Text as the concept
+		//for each shape in ths input list, train the Vision algorithm with the Data Text as the concept
 		//when complete, send notification to Inference Module and return to search State.
-		
+		if(this.delayExpired()) {
+			for(Input i: this.inputList) {
+				this.scan(i.shape.bufferedImage,i.concept);
+			}
+		}
 	}
 	
-	public List<String> scan(BufferedImage bufferedImage, Concept concept) {
+	public void scan(BufferedImage bufferedImage, String concept) {
 //		System.out.println("scan");
 		List<String> phrase = new ArrayList<String>();
 		if (bufferedImage != null) {
@@ -135,6 +157,5 @@ public class Train extends Node {
 //				}
 //			}
 		}
-		return phrase;
 	}
 }
