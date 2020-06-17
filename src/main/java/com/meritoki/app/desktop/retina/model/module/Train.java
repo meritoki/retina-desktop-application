@@ -10,12 +10,13 @@ import java.util.Map;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.Model;
-import com.meritoki.app.desktop.retina.model.document.Data;
+//import com.meritoki.app.desktop.retina.model.document.Data;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Input;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.cortex.library.model.Concept;
+import com.meritoki.module.library.model.Data;
 import com.meritoki.module.library.model.Module;
 import com.meritoki.module.library.model.Node;
 
@@ -62,7 +63,7 @@ public class Train extends Node {
 			Data data = (Data) object;
 		}
 		if(this.delayExpired()) {
-			List<Input> inputList = this.loadInputList();
+			List<Input> inputList = this.meritoki.openInput(this.model.document.uuid);
 			List<Shape> shapeList = this.model.document.getShapeList();
 			boolean flag;
 			for(Shape s:shapeList) {
@@ -95,67 +96,59 @@ public class Train extends Node {
 		}
 	}
 	
-	private List<Input> loadInputList() {
-		List<Input> inputList = null;
-		File file = new File(NodeController.getProviderHome()+NodeController.getSeperator()+"meritoki"+NodeController.getSeperator()+this.model.document.uuid);
-		inputList = (List<Input>) NodeController.openJson(file, new TypeReference<List<Input>>() {});
-		return inputList;
-	}
-	
-	private void saveInputList(List<Input> inputList) {
-		
-	}
+
 
 	private void scan(Object object) {
-//		if (object instanceof Data) {
-//			Data data = (Data) object;
-//		}
-		//for each shape in ths input list, train the Vision algorithm with the Data Text as the concept
-		//when complete, send notification to Inference Module and return to search State.
 		if(this.delayExpired()) {
 			for(Input i: this.inputList) {
 				this.scan(i.shape.bufferedImage,i.concept);
+				i.flag = true;
 			}
+			this.rootAdd(new Data(2,this.id, Data.UNBLOCK,0,null,this.objectList));
+			this.setState(SEARCH);
 		}
 	}
 	
 	public void scan(BufferedImage bufferedImage, String concept) {
-//		System.out.println("scan");
-		List<String> phrase = new ArrayList<String>();
-		if (bufferedImage != null) {
-//			System.out.println("scan not null ");
-			double scale = 1;
-			int width = bufferedImage.getWidth();
-			int height = bufferedImage.getHeight();
-			Concept inference = null;
-			List<Concept> conceptList = null;
-			Map<String, Integer> conceptMap = new HashMap<>();
-			int diameter = 10;//(2 * this.size) * (this.radius * 2);
-			int radius = diameter / 2;
-//			int w = width / 2;
-			int hInterval = 10;// height / diameter;
-			int wInterval = 20;//width / diameter;
-			for (int w = 0; w < width; w += wInterval) {
-				for (int h = 0; h < height; h += hInterval) {
-					this.meritoki.document.group.setOrigin(w+radius, h+radius);
-					this.meritoki.document.group.update();
-//				if(concept != null)
-//					this.meritoki.document.group.process(bufferedImage, scale, concept);
-//					conceptList = this.network.process(bufferedImage, scale, concept);
-//				System.out.println(conceptList);
-//					for (Concept c : conceptList) {
-//						Integer integer = conceptMap.get(c.toString());
-//						integer = (integer == null) ? 0 : integer;
-//						conceptMap.put(c.toString(), integer + 1);
-//					}
-				}
-			}
-//			inference = new Concept(this.getMaxConcept(conceptMap, 0.50));
-//			if (inference != null) {
-//				if (!phrase.contains(inference.toString())) {
-//					phrase.add(inference.toString());
-//				}
-//			}
-		}
+		logger.info("scan("+bufferedImage+", "+concept+")");
 	}
 }
+//
+//public void scan(BufferedImage bufferedImage, String concept) {
+////	System.out.println("scan");
+//	List<String> phrase = new ArrayList<String>();
+//	if (bufferedImage != null) {
+////		System.out.println("scan not null ");
+//		double scale = 1;
+//		int width = bufferedImage.getWidth();
+//		int height = bufferedImage.getHeight();
+//		Concept inference = null;
+//		List<Concept> conceptList = null;
+//		Map<String, Integer> conceptMap = new HashMap<>();
+//		int diameter = 10;//(2 * this.size) * (this.radius * 2);
+//		int radius = diameter / 2;
+////		int w = width / 2;
+//		int hInterval = 10;// height / diameter;
+//		int wInterval = 20;//width / diameter;
+//		for (int w = 0; w < width; w += wInterval) {
+//			for (int h = 0; h < height; h += hInterval) {
+//				this.meritoki.document.group.setOrigin(w+radius, h+radius);
+//				this.meritoki.document.group.update();
+////			if(concept != null)
+////				this.meritoki.document.group.process(bufferedImage, scale, concept);
+////				conceptList = this.network.process(bufferedImage, scale, concept);
+////			System.out.println(conceptList);
+////				for (Concept c : conceptList) {
+////					Integer integer = conceptMap.get(c.toString());
+////					integer = (integer == null) ? 0 : integer;
+////					conceptMap.put(c.toString(), integer + 1);
+////				}
+//			}
+//		}
+////		inference = new Concept(this.getMaxConcept(conceptMap, 0.50));
+////		if (inference != null) {
+////			if (!phrase.contains(inference.toString())) {
+////				phrase.add(inference.toString());
+////			}
+////		}
+//	}

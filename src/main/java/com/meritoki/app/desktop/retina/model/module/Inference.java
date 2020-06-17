@@ -1,7 +1,10 @@
 package com.meritoki.app.desktop.retina.model.module;
 
+import java.awt.image.BufferedImage;
+
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
+import com.meritoki.app.desktop.retina.model.provider.meritoki.Input;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.module.library.model.Data;
 import com.meritoki.module.library.model.Module;
@@ -61,5 +64,12 @@ public class Inference extends Node {
 		if(object instanceof Data) {
 			Data data = (Data)object;
 		}
+		if(this.delayExpired()) {
+			this.setState(WAIT);
+		}
+	}
+	
+	public void scan(BufferedImage bufferedImage, String concept) {
+		logger.info("scan("+bufferedImage+", "+concept+")");
 	}
 }

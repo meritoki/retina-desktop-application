@@ -30,7 +30,7 @@ public class Recognition extends Node {
         for (Provider provider : this.model.system.providerList) {
             if (provider instanceof Meritoki) {
                 this.meritoki = (Meritoki) provider;
-                this.meritoki.open(this.model.document.uuid);
+                this.meritoki.openCortex(this.model.document.uuid);
             }
         }
 	}
@@ -107,6 +107,6 @@ public class Recognition extends Node {
 	
 	@Override
 	public void destroy() {
-		this.meritoki.save();
+		this.meritoki.saveCortex();
 	}
 }
