@@ -1,8 +1,7 @@
 package com.meritoki.app.desktop.retina.model.provider.meritoki;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.meritoki.cortex.library.model.Group;
 
 public class Document {

@@ -2,10 +2,8 @@ package com.meritoki.app.desktop.retina.model.document.user;
 
 import java.util.UUID;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.meritoki.app.desktop.retina.model.document.Image;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class User {
 	@JsonProperty

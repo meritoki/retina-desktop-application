@@ -434,7 +434,8 @@ public final class MainFrame extends JFrame {
     }//GEN-LAST:event_attributionMenuItemActionPerformed
 
     private void recognitionStartMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recognitionStartMenuItemActionPerformed
-        this.moduleController.start();
+        this.moduleController = new ModuleController(this.model);
+    	this.moduleController.start();
     }//GEN-LAST:event_recognitionStartMenuItemActionPerformed
 
     private void recognitionStopMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recognitionStopMenuItemActionPerformed

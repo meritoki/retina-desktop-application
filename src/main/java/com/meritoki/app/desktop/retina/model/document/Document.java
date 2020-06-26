@@ -51,7 +51,7 @@ public class Document {
 	public Document() {
 		this.uuid = UUID.randomUUID().toString();
 		this.init();
-//		this.test();
+		this.test();
 	}
 	
 	public void save() {

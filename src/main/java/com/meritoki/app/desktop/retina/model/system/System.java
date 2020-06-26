@@ -22,9 +22,9 @@ import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.controller.user.UserController;
 import com.meritoki.app.desktop.retina.model.document.user.User;

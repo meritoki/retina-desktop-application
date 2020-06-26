@@ -107,6 +107,7 @@ public class Recognition extends Node {
 	
 	@Override
 	public void destroy() {
+		super.destroy();
 		this.meritoki.saveCortex();
 	}
 }

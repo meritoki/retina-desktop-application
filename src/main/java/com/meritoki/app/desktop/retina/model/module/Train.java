@@ -25,7 +25,7 @@ public class Train extends Node {
 	public static final int SCAN = 2;
 	private Model model;
 	private Meritoki meritoki;
-	private List<Input> inputList = new ArrayList<>();
+	private boolean scan = false;
 
 	public Train(int intValue, Module module, Model model) {
 		super(intValue, module);
@@ -63,36 +63,38 @@ public class Train extends Node {
 			Data data = (Data) object;
 		}
 		if(this.delayExpired()) {
-			List<Input> inputList = this.meritoki.openInput(this.model.document.uuid);
+			this.meritoki.openInput(this.model.document.uuid);
 			List<Shape> shapeList = this.model.document.getShapeList();
 			boolean flag;
+			scan = false;
 			for(Shape s:shapeList) {
 				if(s.data.text.value != null) {
 					flag = true;
-					for(Input i:inputList) {
+					for(Input i:this.meritoki.inputList) {
 						if(i.shape.uuid.equals(s.uuid)) {
 							flag = false;
 							if(!i.flag) {
+								scan = true;
 								i.shape.bufferedImage = s.bufferedImage;
 								i.concept = s.data.text.value;
-								this.inputList.add(i);
+								this.meritoki.inputList.add(i);
 							}
 						}
 					}
 					if(flag) {
+						scan = true;
 						Input input = new Input();
 						input.shape = s;
 						input.concept = s.data.text.value;
 						input.flag = false;
-						this.inputList.add(input);
+						this.meritoki.inputList.add(input);
 					}
 				}
 			}
-			if(this.inputList.size()>0) {
+			if(scan) {
 				this.setState(SCAN);
-			} else {
-				this.setDelay(this.newDelay(this.inputDelay));
-			}
+			} 
+			this.setDelay(this.newDelay(this.inputDelay));
 		}
 	}
 	
@@ -100,11 +102,15 @@ public class Train extends Node {
 
 	private void scan(Object object) {
 		if(this.delayExpired()) {
-			for(Input i: this.inputList) {
-				this.scan(i.shape.bufferedImage,i.concept);
-				i.flag = true;
+			for(Input i: this.meritoki.inputList) {
+				if(!i.flag) {
+					this.scan(i.shape.bufferedImage,i.concept);
+					i.flag = true;
+				}
 			}
+			this.meritoki.saveInput();
 			this.rootAdd(new Data(2,this.id, Data.UNBLOCK,0,null,this.objectList));
+			this.setDelay(this.newDelay(this.inputDelay));
 			this.setState(SEARCH);
 		}
 	}

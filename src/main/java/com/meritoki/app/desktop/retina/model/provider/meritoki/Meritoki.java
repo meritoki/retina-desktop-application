@@ -44,6 +44,7 @@ public class Meritoki extends Provider {
 		File directory = new File(getMeritokiHome()+NodeController.getSeperator()+documentUUID);
 		this.cortexFile = new File(directory+NodeController.getSeperator()+"cortex.json");
 		if(this.cortexFile.exists()) {
+			//not functional
 			this.document = (Document)NodeController.openJson(this.cortexFile, Document.class);
 		} else {
 			this.document = new Document();
@@ -59,7 +60,7 @@ public class Meritoki extends Provider {
 	
 	public List<Input> openInput(String documentUUID) {
 		File directory = new File(getMeritokiHome()+NodeController.getSeperator()+documentUUID);
-		this.inputFile = new File(directory+NodeController.getSeperator()+documentUUID+NodeController.getSeperator()+"input.json");
+		this.inputFile = new File(directory+NodeController.getSeperator()+NodeController.getSeperator()+"input.json");
 		if(this.inputFile.exists()) {
 			inputList = (List<Input>) NodeController.openJson(this.inputFile, new TypeReference<List<Input>>() {});
 		} else {

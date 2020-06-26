@@ -54,6 +54,7 @@ public class Inference extends Node {
 			switch(data.getType()) {
 			case Data.UNBLOCK:{
 				this.setState(SCAN);
+				this.setDelay(this.newDelay(this.inputDelay));
 				break;
 			}
 			}
@@ -65,6 +66,7 @@ public class Inference extends Node {
 			Data data = (Data)object;
 		}
 		if(this.delayExpired()) {
+			logger.info("scan(...)");
 			this.setState(WAIT);
 		}
 	}
