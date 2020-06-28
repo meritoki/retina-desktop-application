@@ -21,8 +21,10 @@ public class Meritoki extends Provider {
 	
 	public Document document;
 	public List<Input> inputList;
+	public List<Output> outputList;
 	public File cortexFile;
 	public File inputFile;
+	public File outputFile;
 
 	public Meritoki() {
 		super("meritoki");
@@ -73,5 +75,22 @@ public class Meritoki extends Provider {
 	
 	public void saveInput() {
 		NodeController.saveJson(this.inputFile, this.inputList);
+	}
+	
+	public List<Output> openOutput(String documentUUID) {
+		File directory = new File(getMeritokiHome()+NodeController.getSeperator()+documentUUID);
+		this.outputFile = new File(directory+NodeController.getSeperator()+NodeController.getSeperator()+"output.json");
+		if(this.outputFile.exists()) {
+			this.outputList = (List<Output>) NodeController.openJson(this.outputFile, new TypeReference<List<Output>>() {});
+		} else {
+			this.outputList = new ArrayList<>();
+			directory.mkdirs();
+			NodeController.saveJson(this.outputFile, this.outputList);
+		}
+		return outputList;
+	}
+	
+	public void saveOutput() {
+		NodeController.saveJson(this.outputFile, this.outputList);
 	}
 }

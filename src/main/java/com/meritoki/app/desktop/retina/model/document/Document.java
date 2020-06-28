@@ -27,6 +27,7 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.meritoki.app.desktop.retina.model.document.command.Pattern;
+import com.meritoki.app.desktop.retina.model.provider.meritoki.Output;
 
 /**
  * Document
@@ -51,7 +52,7 @@ public class Document {
 	public Document() {
 		this.uuid = UUID.randomUUID().toString();
 		this.init();
-		this.test();
+//		this.test();
 	}
 	
 	public void save() {
@@ -260,6 +261,17 @@ public class Document {
 			}
 		}
 		return flag;
+	}
+	
+	@JsonIgnore
+	public void importOutputList(List<Output> outputList) {
+		for(Shape s: this.getShapeList()) {
+			for(Output o: outputList) {
+				if(s.uuid.equals(o.shape.uuid)) {
+					s.textList.add(new Text(o.concept));
+				}
+			}
+		}
 	}
 
 	@JsonIgnore

@@ -33,6 +33,7 @@ public class Recognition extends Node {
                 this.meritoki.openCortex(this.model.document.uuid);
             }
         }
+        this.filter = false;
 	}
 
 	public String about() {

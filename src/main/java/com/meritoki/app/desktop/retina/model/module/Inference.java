@@ -1,11 +1,16 @@
 package com.meritoki.app.desktop.retina.model.module;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
-import com.meritoki.app.desktop.retina.model.provider.meritoki.Input;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
+import com.meritoki.app.desktop.retina.model.provider.meritoki.Output;
+import com.meritoki.library.cortex.model.Concept;
 import com.meritoki.module.library.model.Data;
 import com.meritoki.module.library.model.Module;
 import com.meritoki.module.library.model.Node;
@@ -13,9 +18,11 @@ import com.meritoki.module.library.model.Node;
 public class Inference extends Node {
 	
 	public static final int WAIT = 1;
-	public static final int SCAN = 2;
+	public static final int SEARCH = 2;
+	public static final int SCAN = 3;
 	private Model model;
 	private Meritoki meritoki;
+	private boolean scan = false;
 
 	public Inference(int intValue, Module module, Model model) {
 		super(intValue, module);
@@ -30,6 +37,7 @@ public class Inference extends Node {
             }
         }
 		this.stateMap.put(WAIT,"WAIT");
+		this.stateMap.put(SEARCH, "SEARCH");
 		this.stateMap.put(SCAN,"SCAN");
 		this.setState(WAIT);
 	}
@@ -38,6 +46,10 @@ public class Inference extends Node {
 		switch(state) {
 		case WAIT: {
 			this.wait(object);
+			break;
+		}
+		case SEARCH: {
+			this.search(object);
 			break;
 		}
 		case SCAN: {
@@ -53,7 +65,7 @@ public class Inference extends Node {
 			Data data = (Data)object;
 			switch(data.getType()) {
 			case Data.UNBLOCK:{
-				this.setState(SCAN);
+				this.setState(SEARCH);
 				this.setDelay(this.newDelay(this.inputDelay));
 				break;
 			}
@@ -61,17 +73,108 @@ public class Inference extends Node {
 		}
 	}
 	
-	private void scan(Object object) {
-		if(object instanceof Data) {
-			Data data = (Data)object;
+	private void search(Object object) {
+		if (object instanceof Data) {
+			Data data = (Data) object;
 		}
 		if(this.delayExpired()) {
-			logger.info("scan(...)");
+			this.meritoki.openOutput(this.model.document.uuid);
+			List<Shape> shapeList = this.model.document.getShapeList();
+			boolean flag;
+			scan = false;
+			for(Shape s:shapeList) {
+				if(s.data.text.value == null) {
+//					flag = true;
+//					for(Output output:this.meritoki.outputList) {
+//						if(output.shape.uuid.equals(s.uuid)) {
+//							flag = false;
+//							if(!output.flag) {
+//								scan = true;
+//								output.shape.bufferedImage = s.bufferedImage;
+//								this.meritoki.outputList.add(output);
+//							}
+//						}
+//					}
+//					if(flag) {
+						scan = true;
+						Output output = new Output();
+						output.shape = s;
+						output.flag = false;
+						this.meritoki.outputList.add(output);
+//					}
+				}
+			}
+			if(this.scan) {
+				this.setState(SCAN);
+			} else {
+				this.rootAdd(new Data(1,this.id, Data.UNBLOCK,0,null,this.objectList));
+				this.setDelay(this.newDelay(this.inputDelay));
+				this.setState(WAIT);
+			}
+			this.setDelay(this.newDelay(this.inputDelay));
+		}
+	}
+	
+	private void scan(Object object) {
+		if(this.delayExpired()) {
+			for(Output output: this.meritoki.outputList) {
+				output.concept = this.scan(output.shape.bufferedImage);
+			}
+			this.meritoki.saveOutput();
+			this.model.document.importOutputList(this.meritoki.outputList);
+			this.rootAdd(new Data(1,this.id, Data.UNBLOCK,0,null,this.objectList));
+			this.setDelay(this.newDelay(this.inputDelay));
 			this.setState(WAIT);
 		}
 	}
 	
-	public void scan(BufferedImage bufferedImage, String concept) {
-		logger.info("scan("+bufferedImage+", "+concept+")");
+	public String scan(BufferedImage bufferedImage) {
+		logger.info("scan("+bufferedImage+")");
+		List<Concept> conceptList = null;
+		Concept concept = null;
+		if (bufferedImage != null) {
+			double scale = 1;
+			int width = bufferedImage.getWidth();
+			int height = bufferedImage.getHeight();
+			int diameter = this.meritoki.document.group.size;
+			int hInterval = height / diameter;
+			int wInterval = width / diameter;
+			Map<String, Integer> conceptMap = new HashMap<>();
+			for (int w = 0; w < width; w += wInterval) {
+				for (int h = 0; h < height; h += hInterval) {
+					this.meritoki.document.group.setOrigin(w, h);
+					this.meritoki.document.group.update();
+					conceptList = this.meritoki.document.group.process(bufferedImage, scale, null);
+					for (Concept c : conceptList) {
+						Integer integer = conceptMap.get(c.toString());
+						integer = (integer == null) ? 0 : integer;
+						conceptMap.put(c.toString(), integer + 1);
+					}
+					concept = new Concept(this.getMaxConcept(conceptMap, 0.50));
+				}
+			}
+		}
+		return (concept != null)?concept.value:null;
+	}
+	
+	public String getMaxConcept(Map<String, Integer> conceptMap, double threshold) {
+		String concept = null;
+		double max = 0;
+		double sum = 0;
+		for (Map.Entry<String, Integer> entry : conceptMap.entrySet()) {
+			String key = entry.getKey();
+			Integer value = entry.getValue();
+			sum += value;
+			if (key != null && !key.equals("null") && value > max) {
+				max = value;
+				concept = key;
+			}
+		}
+		double quotient = (max > 0 && sum > 0) ? max / sum : 0;
+//		logger.info(quotient + " " + concept);
+		if (quotient < threshold) {
+			concept = null;
+		}
+		return concept;
 	}
 }

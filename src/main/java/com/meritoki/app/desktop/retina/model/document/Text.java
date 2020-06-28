@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Text {
 	
 	@JsonProperty
-	public String value = "";
+	public String value = null;
 	
 	public Text() {
 		
