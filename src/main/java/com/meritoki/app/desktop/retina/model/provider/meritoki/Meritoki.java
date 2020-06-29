@@ -7,7 +7,6 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
-import com.meritoki.app.desktop.retina.model.provider.meritoki.Document;
 
 /**
  * As a provider there are several things that need to be stored in the provider folder for a particular document
@@ -53,7 +52,7 @@ public class Meritoki extends Provider {
 			directory.mkdirs();
 			NodeController.saveJson(this.cortexFile, this.document);
 		}
-		document.group.load();
+		document.cortex.load();
 	}
 	
 	public void saveCortex() {

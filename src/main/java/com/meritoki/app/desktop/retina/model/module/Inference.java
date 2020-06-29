@@ -1,5 +1,7 @@
 package com.meritoki.app.desktop.retina.model.module;
 
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.List;
@@ -133,18 +135,21 @@ public class Inference extends Node {
 		List<Concept> conceptList = null;
 		Concept concept = null;
 		if (bufferedImage != null) {
-			double scale = 1;
-			int width = bufferedImage.getWidth();
-			int height = bufferedImage.getHeight();
-			int diameter = this.meritoki.document.group.size;
-			int hInterval = height / diameter;
-			int wInterval = width / diameter;
+//			bufferedImage = this.scaleBufferedImage(bufferedImage, 0.25);
+//			logger.info("scan(...) bufferedImaged="+bufferedImage);
+			double width = bufferedImage.getWidth();
+			double height = bufferedImage.getHeight();
+			double diameter = this.meritoki.document.cortex.size;
+			int wInterval = (int)(width/(width/diameter/2));
+			int hInterval = (int)(height/(height/diameter/2));
+			logger.info("scan(...) hInterval="+hInterval);
+			logger.info("scan(...) wInterval="+wInterval);
 			Map<String, Integer> conceptMap = new HashMap<>();
 			for (int w = 0; w < width; w += wInterval) {
 				for (int h = 0; h < height; h += hInterval) {
-					this.meritoki.document.group.setOrigin(w, h);
-					this.meritoki.document.group.update();
-					conceptList = this.meritoki.document.group.process(bufferedImage, scale, null);
+					this.meritoki.document.cortex.setOrigin(w, h);
+					this.meritoki.document.cortex.update();
+					conceptList = this.meritoki.document.cortex.process(bufferedImage, null);
 					for (Concept c : conceptList) {
 						Integer integer = conceptMap.get(c.toString());
 						integer = (integer == null) ? 0 : integer;
@@ -154,6 +159,7 @@ public class Inference extends Node {
 				}
 			}
 		}
+		logger.info("scan(...) concept.value="+concept);
 		return (concept != null)?concept.value:null;
 	}
 	
@@ -176,5 +182,17 @@ public class Inference extends Node {
 			concept = null;
 		}
 		return concept;
+	}
+	
+	public BufferedImage scaleBufferedImage(BufferedImage bufferedImage, double scale) {
+		BufferedImage before = bufferedImage;
+		int w = before.getWidth();
+		int h = before.getHeight();
+		BufferedImage after = new BufferedImage((int)(w*scale), (int)(h*scale), BufferedImage.TYPE_INT_ARGB);
+		AffineTransform at = new AffineTransform();
+		at.scale(scale, scale);
+		AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+		after = scaleOp.filter(before, after);
+		return after;
 	}
 }

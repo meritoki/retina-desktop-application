@@ -1,20 +1,15 @@
 package com.meritoki.app.desktop.retina.model.provider.meritoki;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.meritoki.library.cortex.model.Group;
+import com.meritoki.library.cortex.model.Cortex;
+import com.meritoki.library.cortex.model.hexagon.Hexagonal;
 
 public class Document {
 
 	@JsonProperty
-	public Group group = null;
+	public Cortex cortex;
 	
 	public Document() {
-		this.group = new Group(Group.HEXAGONAL);
-	}
-	
-	@JsonIgnore
-	public Group getGroup() {
-		return this.group;
+		this.cortex = new Hexagonal(Hexagonal.BRIGHTNESS, 0, 0, 27, 1, 0);
 	}
 }

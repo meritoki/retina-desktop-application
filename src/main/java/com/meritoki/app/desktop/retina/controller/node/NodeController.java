@@ -98,7 +98,7 @@ public class NodeController {
 
 	@JsonIgnore
 	public static Object openJson(java.io.File file, Class className) {
-		logger.info("openJson(" + file + ", " + className + ")");
+		logger.debug("openJson(" + file + ", " + className + ")");
 		Object object = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -132,7 +132,7 @@ public class NodeController {
 //	}
 
 	public static <T> Object openJson(File file, TypeReference<List<T>> typeReference) {
-		logger.info("openJson(" + file + ", " + typeReference + ")");
+		logger.debug("openJson(" + file + ", " + typeReference + ")");
 		Object object = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -177,13 +177,13 @@ public class NodeController {
 
 	@JsonIgnore
 	public static void saveJson(String path, String name, Object object) {
-		logger.info("saveJson("+path+","+name+", object)");
+		logger.debug("saveJson("+path+","+name+", object)");
 		saveJson(new java.io.File(path+getSeperator()+name), object);
 	}
 
 	@JsonIgnore
 	public static void saveJson(File file, Object object) {
-		logger.info("saveJson("+file.getAbsolutePath()+",object)");
+		logger.debug("saveJson("+file.getAbsolutePath()+",object)");
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		try {

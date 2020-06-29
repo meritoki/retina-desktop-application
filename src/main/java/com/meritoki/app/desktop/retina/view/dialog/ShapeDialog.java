@@ -128,11 +128,12 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 	public void initComboBox() {
 		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
-		Image file = (page != null) ? page.getImage() : null;
-		Shape shape = (file != null) ? file.getShape() : null;
+		Image image = (page != null) ? page.getImage() : null;
+		Shape shape = (image != null) ? image.getShape() : null;
 		Data data = (shape != null) ? shape.data : null;
+		String value = (shape != null)? shape.data.text.value: null;
 		List<Text> textList = (shape != null) ? shape.getTextList() : null;
-		this.initTextValueComboBox(textList);
+		this.initTextValueComboBox(textList, value);
 		List<String> unitTypeList = new ArrayList<>();
 		unitTypeList.add("data");
 		unitTypeList.add("time");
@@ -173,7 +174,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 	 *
 	 * @param textList
 	 */
-	public void initTextValueComboBox(List<Text> textList) {
+	public void initTextValueComboBox(List<Text> textList, String value) {
 		String[] array = new String[0];
 		if (textList != null) {
 			array = new String[textList.size()];
@@ -182,14 +183,18 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 			}
 		}
 		this.textValueComboBox.setModel(new DefaultComboBoxModel(array));
-		boolean flag = this.textValueDefaultCheckBox.isSelected();
-		if (flag) {
-			Document document = (this.model != null) ? this.model.document : null;
-			Page page = (document != null) ? document.getPage() : null;
-			Shape shape = (page != null) ? page.getImage().getShape() : null;
-			Data data = (shape != null) ? shape.getData() : null;
-			if (data != null) {
-				this.textValueComboBox.setSelectedItem(shape.getDefaultText().value);
+		if(value != null) {
+			this.textValueComboBox.setSelectedItem(value);
+		} else {
+			boolean flag = this.textValueDefaultCheckBox.isSelected();
+			if (flag) {
+				Document document = (this.model != null) ? this.model.document : null;
+				Page page = (document != null) ? document.getPage() : null;
+				Shape shape = (page != null) ? page.getImage().getShape() : null;
+				Data data = (shape != null) ? shape.getData() : null;
+				if (data != null) {
+					this.textValueComboBox.setSelectedItem(shape.getDefaultText().value);
+				}
 			}
 		}
 	}

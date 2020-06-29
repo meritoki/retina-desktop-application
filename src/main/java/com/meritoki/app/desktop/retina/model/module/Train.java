@@ -1,11 +1,14 @@
 package com.meritoki.app.desktop.retina.model.module;
 
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
@@ -96,7 +99,7 @@ public class Train extends Node {
 								scan = true;
 								input.shape.bufferedImage = s.bufferedImage;
 								input.concept = s.data.text.value;
-								this.meritoki.inputList.add(input);
+//								this.meritoki.inputList.add(input);
 							}
 						}
 					}
@@ -112,12 +115,7 @@ public class Train extends Node {
 			}
 			if (this.scan) {
 				this.setState(SCAN);
-			} 
-//			else {
-//				this.rootAdd(new Data(2, this.id, Data.UNBLOCK, 0, null, this.objectList));
-//				this.setDelay(this.newDelay(this.inputDelay));
-//				this.setState(WAIT);
-//			}
+			}
 			this.setDelay(this.newDelay(this.inputDelay));
 		}
 	}
@@ -138,24 +136,70 @@ public class Train extends Node {
 		}
 	}
 
-	public void scan(BufferedImage bufferedImage, String concept) {
-		logger.info("scan(" + bufferedImage + ", " + concept + ")");
+	public void scan(BufferedImage bufferedImage, String value) {
+		logger.info("scan(" + bufferedImage + ", " + value + ")");
+		Concept concept = null;
 		if (bufferedImage != null) {
-			double scale = 1;
-			int width = bufferedImage.getWidth();
-			int height = bufferedImage.getHeight();
-			int diameter = this.meritoki.document.group.size;
-			int hInterval = height / diameter;
-			int wInterval = width / diameter;
+//			bufferedImage = this.scaleBufferedImage(bufferedImage, 0.25);
+//			logger.info("scan(...) bufferedImaged="+bufferedImage);
+//			NodeController.saveJpg("./test", UUID.randomUUID().toString()+".jpeg", bufferedImage);
+			double width = bufferedImage.getWidth();
+			double height = bufferedImage.getHeight();
+			double diameter = this.meritoki.document.cortex.size;
+			int wInterval = (int)(width/(width/diameter/2));
+			int hInterval = (int)(height/(height/diameter/2));
+			logger.info("scan(...) hInterval="+hInterval);
+			logger.info("scan(...) wInterval="+wInterval);
+			Map<String, Integer> conceptMap = new HashMap<>();
 			for (int w = 0; w < width; w += wInterval) {
 				for (int h = 0; h < height; h += hInterval) {
-					this.meritoki.document.group.setOrigin(w, h);
-					this.meritoki.document.group.update();
-					if (concept != null) {
-						this.meritoki.document.group.process(bufferedImage, scale, new Concept(concept));
+					this.meritoki.document.cortex.setOrigin(w, h);
+					this.meritoki.document.cortex.update();
+					if (value != null) {
+						List<Concept> conceptList = this.meritoki.document.cortex.process(bufferedImage, new Concept(value));
+						for (Concept c : conceptList) {
+							Integer integer = conceptMap.get(c.toString());
+							integer = (integer == null) ? 0 : integer;
+							conceptMap.put(c.toString(), integer + 1);
+						}
+						concept = new Concept(this.getMaxConcept(conceptMap, 0.50));
 					}
 				}
 			}
 		}
+		logger.info("scan(...) concept.value="+concept);
+	}
+	
+	public String getMaxConcept(Map<String, Integer> conceptMap, double threshold) {
+		String concept = null;
+		double max = 0;
+		double sum = 0;
+		for (Map.Entry<String, Integer> entry : conceptMap.entrySet()) {
+			String key = entry.getKey();
+			Integer value = entry.getValue();
+			sum += value;
+			if (key != null && !key.equals("null") && value > max) {
+				max = value;
+				concept = key;
+			}
+		}
+		double quotient = (max > 0 && sum > 0) ? max / sum : 0;
+//		logger.info(quotient + " " + concept);
+		if (quotient < threshold) {
+			concept = null;
+		}
+		return concept;
+	}
+	
+	public BufferedImage scaleBufferedImage(BufferedImage bufferedImage, double scale) {
+		BufferedImage before = bufferedImage;
+		int w = before.getWidth();
+		int h = before.getHeight();
+		BufferedImage after = new BufferedImage((int)(w*scale), (int)(h*scale), BufferedImage.TYPE_INT_ARGB);
+		AffineTransform at = new AffineTransform();
+		at.scale(scale, scale);
+		AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+		after = scaleOp.filter(before, after);
+		return after;
 	}
 }
