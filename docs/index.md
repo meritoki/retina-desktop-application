@@ -2,10 +2,9 @@
 ## Implementation
 ### Guide
 #### Installation
-| Requirement | 
-| -----------|
-| Ubuntu 16.04 - 18.04 |
-| Python 2 |
-| Java 8 Runtime Environment |
-| 4 - 8 GB Memory |
+##### Requirements 
+1. Ubuntu 16.04 - 18.04 
+2. Python 2
+3. Java 8 Runtime Environment
+4. 4 - 8 GB Memory
 
