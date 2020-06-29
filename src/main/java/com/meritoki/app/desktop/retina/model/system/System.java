@@ -1,22 +1,35 @@
+/*
+ * Copyright 2020 Joaquin Osvaldo Rodriguez
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.meritoki.app.desktop.retina.model.system;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
-import com.meritoki.app.desktop.retina.controller.security.SecurityController;
 import com.meritoki.app.desktop.retina.controller.user.UserController;
-import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
+import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Zooniverse;
 import com.meritoki.app.desktop.retina.model.vendor.Vendor;
 import com.meritoki.app.desktop.retina.model.vendor.microsoft.Microsoft;
@@ -29,7 +42,8 @@ public class System {
 	public List<Provider> providerList = new ArrayList<>();
 	@JsonProperty
 	public List<Vendor> vendorList = new ArrayList<>();
-
+	@JsonIgnore
+	public List<User> userList = new ArrayList<User>();
 	@JsonIgnore
 	public User user = null;//When a user is logged in the User is retained in this variable
 	@JsonIgnore
@@ -47,6 +61,7 @@ public class System {
 
 	public System() {
 		this.initDirectories();
+		this.initUsers();
 		this.initProviders();
 		this.initVendors();
 		this.initProperties();
@@ -61,17 +76,28 @@ public class System {
 		}
 	}
 	
+	public void initUsers() {
+		if(UserController.exists()) {
+			this.userList = UserController.open();
+		}
+		this.user = UserController.getAnonymousUser();
+		if (this.userList.size() == 0) {
+			this.newUser = true;
+		} else {
+			this.loginUser = true;
+		}
+	}
+	
 	public void initProperties() {
 		this.properties = NodeController.openProperties("./retina.properties");
 	}
 	
 	public void initProviders() {
 		this.providerList.add(new Zooniverse());
+		this.providerList.add(new Meritoki());
 	}
 	
 	public void initVendors() {
 		this.vendorList.add(new Microsoft());
 	}
-	
-
 }

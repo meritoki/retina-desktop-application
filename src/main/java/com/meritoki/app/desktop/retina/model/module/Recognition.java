@@ -4,28 +4,41 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
+import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.provider.Provider;
+import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.module.library.model.Module;
 import com.meritoki.module.library.model.Node;
 
 public class Recognition extends Node {
 	public String name = "Recognition";
-	public String version = "0.1.202005";
+	public String version = "0.1.202006";
 	public String vendor = "Meritoki";
-	public String copyright = "(c)2020";
+	public String year = "2020";
+	public Model model;
+	private Meritoki meritoki;
 	
-	public Recognition(int id) {
+	public Recognition(int id, Model model) {
 		super(id);
 		this.about();
+		this.model = model;
 	}
 
 	@Override
 	public void initialize() {
 		super.initialize();
+        for (Provider provider : this.model.system.providerList) {
+            if (provider instanceof Meritoki) {
+                this.meritoki = (Meritoki) provider;
+                this.meritoki.openCortex(this.model.document.uuid);
+            }
+        }
+        this.filter = false;
 	}
 
 	public String about() {
-		String about = this.name + " Version " + this.version + " Copyright " + this.getVendor() + " " + this.copyright;
-		System.out.println(about);
+		String about = this.name + " Version " + this.version + " Copyright " + this.getVendor() + " " + this.year;
+		logger.info(about);
 		return about;
 	}
 
@@ -35,10 +48,10 @@ public class Recognition extends Node {
 		if (object instanceof String) {
 			string = (String) object;
 			if (string.equals(Train.class.getCanonicalName())) {
-				object = new Train(id.intValue(), this);
+				object = new Train(id.intValue(), this, this.model);
 			} 
 			else if (string.equals(Inference.class.getCanonicalName())) {
-				object = new Inference(id.intValue(), this);
+				object = new Inference(id.intValue(), this, this.model);
 			}
 			else {
 				logger.warn("load(" + id + ", " + object + ")");
@@ -70,7 +83,7 @@ public class Recognition extends Node {
 						}
 					}
 				}
-				moduleMapStart(this.moduleMap);
+				this.moduleMapStart(this.moduleMap);
 				try {
 					if (logger.isDebugEnabled())
 						logger.debug("defaultState(" + object + ") (countDownLatch.await())");
@@ -91,5 +104,11 @@ public class Recognition extends Node {
 
 	public String getVendor() {
 		return this.vendor;
+	}
+	
+	@Override
+	public void destroy() {
+		super.destroy();
+		this.meritoki.saveCortex();
 	}
 }

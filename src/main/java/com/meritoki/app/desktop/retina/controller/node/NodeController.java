@@ -61,6 +61,10 @@ public class NodeController {
 		return getUserHome()+getSeperator()+".panoptes";
 	}
 	
+	public static String getProviderHome() {
+		return getRetinaHome()+getSeperator()+"provider";
+	}
+	
 	public static BufferedImage openBufferedImage(String filePath, String fileName) {
 		logger.debug("openBufferedImage(" + filePath + ", " + fileName + ")");
 		return openBufferedImage(new java.io.File(filePath + getSeperator() + fileName));
@@ -94,7 +98,7 @@ public class NodeController {
 
 	@JsonIgnore
 	public static Object openJson(java.io.File file, Class className) {
-		logger.info("openJson(" + file + ", " + className + ")");
+		logger.debug("openJson(" + file + ", " + className + ")");
 		Object object = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -108,12 +112,29 @@ public class NodeController {
 		}
 		return object;
 	}
+	
+//	public static Object openJson(File file, TypeReference<List<Input>> typeReference) {
+//		logger.info("openJson(" + file + ", " + typeReference + ")");
+//		Object object = null;
+//		ObjectMapper mapper = new ObjectMapper();
+////		mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
+//		try {
+//			object = mapper.readValue(file, typeReference);
+//			
+//		} catch (JsonGenerationException e) {
+//			logger.error(e);
+//		} catch (JsonMappingException e) {
+//			logger.error(e);
+//		} catch (IOException e) {
+//			logger.error(e);
+//		}
+//		return object;
+//	}
 
-	public static Object openJson(File file, TypeReference<List<User>> typeReference) {
-		logger.info("openJson(" + file + ", " + typeReference + ")");
+	public static <T> Object openJson(File file, TypeReference<List<T>> typeReference) {
+		logger.debug("openJson(" + file + ", " + typeReference + ")");
 		Object object = null;
 		ObjectMapper mapper = new ObjectMapper();
-//		mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
 		try {
 			object = mapper.readValue(file, typeReference);
 			
@@ -156,13 +177,13 @@ public class NodeController {
 
 	@JsonIgnore
 	public static void saveJson(String path, String name, Object object) {
-		logger.info("saveJson("+path+","+name+", object)");
+		logger.debug("saveJson("+path+","+name+", object)");
 		saveJson(new java.io.File(path+getSeperator()+name), object);
 	}
 
 	@JsonIgnore
 	public static void saveJson(File file, Object object) {
-		logger.info("saveJson("+file.getAbsolutePath()+",object)");
+		logger.debug("saveJson("+file.getAbsolutePath()+",object)");
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		try {

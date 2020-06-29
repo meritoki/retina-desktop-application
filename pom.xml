@@ -5,7 +5,7 @@
 	<name>retina-desktop-application</name>
 	<groupId>com.meritoki.app.desktop</groupId>
 	<artifactId>retina</artifactId>
-	<version>0.9.202006</version>
+	<version>0.10.202006</version>
 	<packaging>jar</packaging>
 	<properties>
 		<cayenne.version>4.0.1</cayenne.version>
@@ -22,13 +22,14 @@
 		<dependency>
 			<groupId>com.meritoki.library</groupId>
 			<artifactId>cortex</artifactId>
-			<version>0.3.202005</version>
+			<version>0.4.202006</version>
 		</dependency>
 		<dependency>
 			<groupId>com.meritoki.library</groupId>
 			<artifactId>module</artifactId>
 			<version>0.4.202005</version>
 		</dependency>
+		<!-- logging -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
@@ -49,7 +50,7 @@
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.6.4</version>
 		</dependency>
-
+		<!-- yaml-->
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
@@ -80,8 +81,6 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.9.8</version>
 		</dependency>
-		<!-- <dependency> <groupId>com.fasterxml.jackson.core</groupId> <artifactId>jackson-databind</artifactId> 
-			<version>2.6.0</version> </dependency> -->
 		<dependency>
 			<groupId>org.apache.cayenne</groupId>
 			<artifactId>cayenne-server</artifactId>
@@ -107,6 +106,7 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.0</version>
 		</dependency>
+		<!-- junit -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
@@ -130,8 +130,6 @@
 			<artifactId>junit-platform-commons</artifactId>
 			<version>1.4.0</version>
 		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-launcher -->
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-launcher</artifactId>

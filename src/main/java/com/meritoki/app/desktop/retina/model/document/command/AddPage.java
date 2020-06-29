@@ -1,6 +1,7 @@
 package com.meritoki.app.desktop.retina.model.document.command;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
@@ -23,7 +24,7 @@ public class AddPage extends Command {
     	logger.info("execute()");
     	//undo
     	Operation operation = new Operation();
-    	operation.object = this.document.pageList;
+    	operation.object = new ArrayList<Page>(this.document.pageList);
     	operation.id = UUID.randomUUID().toString();
     	operation.sign = 0;
     	this.operationList.push(operation);	

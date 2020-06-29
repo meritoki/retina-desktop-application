@@ -39,9 +39,10 @@ public class UserController extends Controller {
 	private static Logger logger = LogManager.getLogger(UserController.class.getName());
 	public static String filePath = NodeController.getRetinaHome() + NodeController.getSeperator();
 	public static String fileName = "users.json";
+	private System system;
 
-	public UserController(Model model) {
-		super(model);
+	public UserController(System system) {
+		this.system = system;
 	}
 
 	public static void save(Object object) {
@@ -57,21 +58,18 @@ public class UserController extends Controller {
 	public static List<User> open() {
 		logger.info("open()");
 		List<User> userList = null;
-		userList = (List<User>) NodeController.openJson(new java.io.File(filePath + "/" + fileName),
-				new TypeReference<List<User>>() {
-				});
+		userList = (List<User>) NodeController.openJson(new java.io.File(filePath + "/" + fileName), new TypeReference<List<User>>() {});
 		return userList;
 	}
 
 	public boolean loginUser(String userName, String password) {
 		logger.info("loginUser(" + userName + ", " + password + ")");
 		boolean flag = false;
-		for (User user : model.userList) {
+		for (User user : this.system.userList) {
 			if (user.name.equals(userName)) {
 				if (SecurityController.verifyHash(password, user.hash)) {
 					flag = true;
-					this.model.system.user = user;
-					this.model.document.pattern.user = this.model.system.user;
+					this.system.user = user;
 				}
 			}
 		}
@@ -79,8 +77,8 @@ public class UserController extends Controller {
 	}
 
 	public void registerUser(User user) {
-		this.model.userList.add(user);
-		UserController.save(this.model.userList);
+		this.system.userList.add(user);
+		UserController.save(this.system.userList);
 	}
 	
 	public static User getAnonymousUser() {

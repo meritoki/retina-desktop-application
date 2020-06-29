@@ -72,6 +72,15 @@ public class Shape {
 		}
 	}
 	
+	@JsonIgnore
+	public boolean equals(Shape shape) {
+		boolean flag = false;
+		if(this.uuid.equals(shape.uuid)) {
+			flag = true;
+		}
+		return flag;
+	}
+	
 	public void setScale(double scale) {
 		logger.info("setScale("+scale+")");
 		this.position.setScale(scale);

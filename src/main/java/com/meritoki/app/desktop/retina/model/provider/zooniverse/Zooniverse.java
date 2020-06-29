@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
-import org.codehaus.jackson.annotate.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
