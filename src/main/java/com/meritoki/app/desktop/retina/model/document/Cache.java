@@ -70,4 +70,8 @@ public class Cache {
 	public double scaleFactor = 1;
 	@JsonIgnore
 	public double shiftFactor = 1;
+	@JsonIgnore
+	public int row = 1;
+	@JsonIgnore
+	public int column = 1;
 }

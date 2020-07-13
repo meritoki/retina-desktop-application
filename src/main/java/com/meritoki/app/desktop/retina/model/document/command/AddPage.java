@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.meritoki.app.desktop.retina.controller.pdf.PDFController;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
@@ -31,9 +32,18 @@ public class AddPage extends Command {
     	//logic
     	File[] fileArray = this.document.cache.fileArray;
     	for(File file: fileArray) {
-    		Page page = new Page();
-			page.imageList.add(new Image(file));
-    		this.document.addPage(page);
+    		if(file.getName().contains(".pdf")) {
+    			File[] pageArray = PDFController.openPDF(file);
+    			for(File p:pageArray) {
+    				Page page = new Page();
+    				page.imageList.add(new Image(p));
+    	    		this.document.addPage(page);
+    			}
+    		} else {
+	    		Page page = new Page();
+				page.imageList.add(new Image(file));
+	    		this.document.addPage(page);
+    		}
     	}
     	//redo
     	operation = new Operation();

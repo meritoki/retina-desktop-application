@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.document.Position;
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Grid;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
@@ -54,9 +55,15 @@ public class MoveShape extends Command {
 				newShape = new Shape(newShape, true);
 				pressedImage.removeShape(newShape.uuid);
 				releasedImage.addShape(newShape);
+				if(newShape instanceof Grid) {
+					((Grid)newShape).updateMatrix();
+				}
 			} else {
 				pressedShape.position.move(movedPoint);
 				newShape = pressedShape;
+				if(newShape instanceof Grid) {
+					((Grid)newShape).updateMatrix();
+				}
 			}
 		} else {
 			throw new Exception("Release Point Invalid");

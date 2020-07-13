@@ -52,7 +52,7 @@ public class Document {
 	public Document() {
 		this.uuid = UUID.randomUUID().toString();
 		this.init();
-//		this.test();
+		this.test();
 	}
 	
 	public void save() {
@@ -67,13 +67,13 @@ public class Document {
 	public void test() {
 		Page page = new Page();
 		page.addImage(new Image(new File("./data/image/01.jpg")));
-		page.addImage(new Image(new File("./data/image/02.jpg")));
-		page.addImage(new Image(new File("./data/image/03.jpg")));
+//		page.addImage(new Image(new File("./data/image/02.jpg")));
+//		page.addImage(new Image(new File("./data/image/03.jpg")));
 		this.addPage(page);
-		page = new Page(new Image(new File("./data/image/03.jpg")));
-		this.addPage(page);
-		page = new Page(new Image(new File("./data/image/04.jpg")));
-		this.addPage(page);
+//		page = new Page(new Image(new File("./data/image/03.jpg")));
+//		this.addPage(page);
+//		page = new Page(new Image(new File("./data/image/04.jpg")));
+//		this.addPage(page);
 	}
 
 	@JsonIgnore
@@ -201,7 +201,11 @@ public class Document {
 				page = this.pageList.get(i);
 				if (page.uuid.equals(uuid)) {
 					this.setIndex(i);
-					break;
+				} else {
+					page.setBufferedImage(null);
+					for(Image image: page.imageList) {
+						image.setBufferedImage(null);
+					}
 				}
 			}
 		}

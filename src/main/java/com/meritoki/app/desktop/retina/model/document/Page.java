@@ -502,6 +502,15 @@ public class Page {
 				case RECTANGLE: {
 					Rectangle2D.Double rectangle = new Rectangle2D.Double(position.point.x, position.point.y, position.dimension.width, position.dimension.height);
 					graphics2D.draw(rectangle);
+					if(s instanceof Grid) {
+						Shape[][] matrix = ((Grid) s).matrix;
+						for(int i=0;i<matrix.length;i++) {
+							for(int j=0;j<matrix[i].length;j++) {
+								rectangle = new Rectangle2D.Double(matrix[i][j].position.point.x, matrix[i][j].position.point.y, matrix[i][j].position.dimension.width, matrix[i][j].position.dimension.height);
+								graphics2D.draw(rectangle);
+							}
+						}
+					}
 					break;
 				}
 				}

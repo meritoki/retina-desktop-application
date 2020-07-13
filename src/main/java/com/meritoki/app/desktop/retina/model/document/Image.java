@@ -175,6 +175,14 @@ public class Image {
 	 */
 	@JsonIgnore
 	public List<Shape> getShapeList() {
+		List<Shape> shapeList = new ArrayList<>();
+		for(Shape s: this.shapeList) {
+			if(s instanceof Grid) {
+				shapeList.addAll(((Grid) s).getShapeList());
+			} else {
+				shapeList.add(s);
+			}
+		}
 		return this.shapeList;
 	}
 
