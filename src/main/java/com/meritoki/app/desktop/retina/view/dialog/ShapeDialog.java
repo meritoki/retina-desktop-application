@@ -333,6 +333,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 				document.cache.pressedShape = null;
 				document.cache.shapeIndex = -1;
 				document.cache.shapeUUID = (String)shapeList.getSelectedValue();
+				logger.info("shapeListAddMouseListener() document.cache.shapeUUID="+document.cache.shapeUUID);
 				try {
 					document.pattern.execute("setShape");
 					mainFrame.init();

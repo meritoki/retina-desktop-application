@@ -60,6 +60,7 @@ public class Shape {
 
 	public Shape() {
 		this.uuid = UUID.randomUUID().toString();
+		this.type = ShapeType.RECTANGLE;
 	}
 
 	/**

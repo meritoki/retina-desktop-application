@@ -3,12 +3,20 @@ package com.meritoki.app.desktop.retina.model.document;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Grid extends Shape {
 	
+	@JsonIgnore
+	static Logger logger = LogManager.getLogger(Grid.class.getName());
 	public Dimension dimension;
-	public int row = 8;
-	public int column = 8;
+	public int row = 1;
+	public int column = 1;
 	public Shape[][] matrix = new Shape[row][column];
+	public int index = 0;
 	
 	public Grid() {
 		super();
@@ -21,6 +29,7 @@ public class Grid extends Shape {
 	}
 	
 	public List<Shape> getShapeList() {
+		
 		List<Shape> shapeList = new ArrayList<Shape>();
 		for(int i=0;i<matrix.length;i++) {
 			for(int j=0;j<matrix[i].length;j++) {
@@ -51,6 +60,7 @@ public class Grid extends Shape {
 				matrix[i][j].position.point.y = point.y+(i*height);
 				matrix[i][j].position.dimension.width = width;
 				matrix[i][j].position.dimension.height = height;
+				matrix[i][j].position.center = new Point(matrix[i][j].position.point.x + (matrix[i][j].position.dimension.width / 2),matrix[i][j].position.point.y + (matrix[i][j].position.dimension.height / 2));
 			}
 		}
 	}
@@ -63,11 +73,27 @@ public class Grid extends Shape {
 		this.column = column;
 	}
 	
-	public void setHeight(double height) {
-		this.dimension.height = height;
+	@JsonIgnore
+	public boolean setShape(String uuid) {
+		logger.info("setShape(" + uuid + ")");
+		boolean flag = false;
+		Shape shape = null;
+		for (int i = 0; i < this.getShapeList().size(); i++) {
+			shape = this.getShapeList().get(i);
+			if (shape.uuid.equals(uuid)) {
+				flag = true;
+				this.index = i;
+				break;
+			}
+		}
+		return flag;
 	}
-	
-	public void setWidth(double width) {
-		this.dimension.width = width;
+	@JsonIgnore
+	public Shape getShape() {
+		Shape shape = null;
+		if (this.index >= 0 && this.index < this.getShapeList().size()) {
+			shape = this.getShapeList().get(this.index);
+		}
+		return shape;
 	}
 }
