@@ -156,12 +156,18 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 				this.inputAddButton.setEnabled(false);
 				this.textValueComboBox.setEnabled(false);
 				this.textValueDefaultCheckBox.setEnabled(false);
+				this.textValueComboBox.setEnabled(false);
+				this.textValueDefaultCheckBox.setEnabled(false);
+				this.setTextButton.setEnabled(false);
 			} else {
 				this.noInputCheckBox.setSelected(false);
 				this.textInputTextArea.setEnabled(true);
 				this.inputAddButton.setEnabled(true);
 				this.textValueComboBox.setEnabled(true);
 				this.textValueDefaultCheckBox.setEnabled(true);
+				this.textValueComboBox.setEnabled(true);
+				this.textValueDefaultCheckBox.setEnabled(true);
+				this.setTextButton.setEnabled(true);
 			}
 		}
 		
@@ -971,6 +977,9 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 			this.inputAddButton.setEnabled(false);
 			this.textValueComboBox.setEnabled(false);
 			this.textValueDefaultCheckBox.setEnabled(false);
+			this.textValueComboBox.setEnabled(false);
+			this.textValueDefaultCheckBox.setEnabled(false);
+			this.setTextButton.setEnabled(false);
 			Document document = (this.model != null) ? this.model.document : null;
 			Page page = (document != null) ? document.getPage() : null;
 			Shape shape = (page != null) ? page.getShape() : null;
@@ -982,6 +991,9 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 			this.inputAddButton.setEnabled(true);
 			this.textValueComboBox.setEnabled(true);
 			this.textValueDefaultCheckBox.setEnabled(true);
+			this.textValueComboBox.setEnabled(true);
+			this.textValueDefaultCheckBox.setEnabled(true);
+			this.setTextButton.setEnabled(true);
 			Document document = (this.model != null) ? this.model.document : null;
 			Page page = (document != null) ? document.getPage() : null;
 			Shape shape = (page != null) ? page.getShape() : null;
