@@ -202,6 +202,16 @@ public class Page {
 		Shape shape = (image != null) ? image.getShape() : null;
 		return shape;
 	}
+	
+	@JsonIgnore
+	public Shape getGridShape() {
+		Shape shape = this.getShape();
+		if(shape instanceof Grid) {
+			Grid grid = (Grid)shape;
+			shape = grid.getShape();
+		}
+		return shape;
+	}
 
 	@JsonIgnore
 	public List<Shape> getShapeList() {
@@ -210,6 +220,21 @@ public class Page {
 		List<Shape> shapeList = new ArrayList<>();
 		for (Image image : this.imageList) {
 			for (Shape shape : image.getShapeList()) {
+				shape.bufferedImage = this.getShapeBufferedImage(shape);
+				shapeList.add(shape);
+			}
+		}
+		this.position.setScale(scale);
+		return shapeList;
+	}
+	
+	@JsonIgnore
+	public List<Shape> getCompleteShapeList() {
+		double scale = this.position.scale;
+		this.position.setScale(1);
+		List<Shape> shapeList = new ArrayList<>();
+		for (Image image : this.imageList) {
+			for (Shape shape : image.getCompleteShapeList()) {
 				shape.bufferedImage = this.getShapeBufferedImage(shape);
 				shapeList.add(shape);
 			}
@@ -238,7 +263,7 @@ public class Page {
 
 	@JsonIgnore
 	public Matrix getMatrix() {
-		return new Matrix(this.getShapeList(), this.script);
+		return new Matrix(this.getCompleteShapeList(), this.script);
 	}
 	
 	@JsonIgnore
@@ -326,6 +351,16 @@ public class Page {
 	public void setShape(String uuid) {
 		for (Image image : this.getImageList()) {
 			if (image.setShape(uuid)) {
+				this.setImage(image.uuid);
+				break;
+			}
+		}
+	}
+	
+	@JsonIgnore
+	public void setGridShape(String uuid) {
+		for (Image image : this.getImageList()) {
+			if (image.setGridShape(uuid)) {
 				this.setImage(image.uuid);
 				break;
 			}
@@ -484,6 +519,7 @@ public class Page {
 		}
 		List<Shape> shapeList = this.getSortedShapeList();//this.getMatrix().getShapeList();
 		Shape shape = this.getShape();
+		Shape gridShape = this.getGridShape();
 		Shape previousShape = null;
 		if (shapeList != null) {
 			for (Shape s : shapeList) {
@@ -502,15 +538,25 @@ public class Page {
 				case RECTANGLE: {
 					Rectangle2D.Double rectangle = new Rectangle2D.Double(position.point.x, position.point.y, position.dimension.width, position.dimension.height);
 					graphics2D.draw(rectangle);
-//					if(s instanceof Grid) {
-//						Shape[][] matrix = ((Grid) s).matrix;
-//						for(int i=0;i<matrix.length;i++) {
-//							for(int j=0;j<matrix[i].length;j++) {
-//								rectangle = new Rectangle2D.Double(matrix[i][j].position.point.x, matrix[i][j].position.point.y, matrix[i][j].position.dimension.width, matrix[i][j].position.dimension.height);
-//								graphics2D.draw(rectangle);
-//							}
-//						}
-//					}
+					if(s instanceof Grid) {
+						Shape[][] matrix = ((Grid) s).matrix;
+						for(int i=0;i<matrix.length;i++) {
+							for(int j=0;j<matrix[i].length;j++) {
+								Shape gs = matrix[i][j];
+								if (gridShape != null && gs.uuid.equals(gridShape.uuid)) {
+									graphics2D.setColor(Color.YELLOW);
+								} else {
+									if (shape != null && s.uuid.equals(shape.uuid)) {
+										graphics2D.setColor(Color.RED);
+									} else {
+										graphics2D.setColor(Color.BLUE);
+									}
+								}
+								rectangle = new Rectangle2D.Double(gs.position.point.x, gs.position.point.y, gs.position.dimension.width, gs.position.dimension.height);
+								graphics2D.draw(rectangle);
+							}
+						}
+					}
 					break;
 				}
 				}

@@ -147,10 +147,10 @@ public class Image {
 		Shape shape = null;
 		if (this.index >= 0 && this.index < this.shapeList.size()) {
 			shape = this.shapeList.get(this.index);
-			if(shape instanceof Grid) {
-				Grid grid = (Grid) shape;
-				shape = grid.getShape();
-			}
+//			if(shape instanceof Grid) {
+//				Grid grid = (Grid) shape;
+//				shape = grid.getShape();
+//			}
 		}
 		return shape;
 	}
@@ -181,8 +181,16 @@ public class Image {
 	public List<Shape> getShapeList() {
 		List<Shape> shapeList = new ArrayList<>();
 		for(Shape s: this.shapeList) {
+			shapeList.add(s);
+		}
+		return shapeList;
+	}
+	
+	@JsonIgnore
+	public List<Shape> getCompleteShapeList() {
+		List<Shape> shapeList = new ArrayList<>();
+		for(Shape s: this.shapeList) {
 			if(s instanceof Grid) {
-				shapeList.add(s);
 				shapeList.addAll(((Grid) s).getShapeList());
 			} else {
 				shapeList.add(s);
@@ -299,18 +307,22 @@ public class Image {
 		Shape shape = null;
 		for (int i = 0; i < this.shapeList.size(); i++) {
 			shape = this.shapeList.get(i);
-			if(shape instanceof Grid) {
-				Grid grid = (Grid) shape;
-				flag = grid.setShape(uuid);
-				if(flag) {
-					this.index = i;
-					break;
-				}
-			} else if (shape.uuid.equals(uuid)) {
+			if (shape.uuid.equals(uuid)) {
 				this.index = i;
 				flag = true;
 				break;
 			}
+		}
+		return flag;
+	}
+	
+	@JsonIgnore
+	public boolean setGridShape(String uuid) {
+		boolean flag = false;
+		Shape shape = this.getShape();
+		if(shape instanceof Grid) {
+			Grid grid = (Grid) shape;
+			flag = grid.setShape(uuid);
 		}
 		return flag;
 	}

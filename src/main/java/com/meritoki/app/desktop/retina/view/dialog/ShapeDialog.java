@@ -36,6 +36,7 @@ import org.apache.logging.log4j.Logger;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Data;
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Grid;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Script;
@@ -81,9 +82,11 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 		this.addMouseListener(this);
 		this.shapeListAddKeyListener();
 		this.shapeListAddMouseListener();
-		
+		this.gridShapeListAddMouseListener();
+		this.gridShapeListAddKeyListener();
+
 	}
-	
+
 	public void setModel(Model model) {
 		this.model = model;
 		this.init();
@@ -97,12 +100,12 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 		this.initComboBox();
 		this.initTextArea();
 	}
-	
+
 	public void initTextArea() {
 		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
-		Script script = (page != null) ? page.script:null;
-		if(script != null) {
+		Script script = (page != null) ? page.script : null;
+		if (script != null) {
 			this.scriptTextArea.setText(script.value);
 		}
 	}
@@ -116,6 +119,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 	}
 
 	public void initList() {
+		logger.info("initList()");
 		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
 		List<Shape> shapeList = (page != null) ? page.getSortedShapeList() : null;
@@ -123,6 +127,18 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 		Shape shape = (page != null) ? page.getShape() : null;
 		if (shape != null) {
 			this.setShapeListSelectedUUID(shape.uuid);
+			if (shape instanceof Grid) {
+				Grid grid = (Grid) shape;
+				this.initGridShapeList(grid.getShapeList());
+				shape = grid.getShape();
+				if(shape != null) 
+					this.setGridShapeListSelectedUUID(shape.uuid);
+				else 
+					this.setGridShapeListSelectedIndex(0);
+				
+			} else {
+				this.initGridShapeList(new ArrayList<>());
+			}
 		}
 	}
 
@@ -132,7 +148,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 		Image image = (page != null) ? page.getImage() : null;
 		Shape shape = (image != null) ? image.getShape() : null;
 		Data data = (shape != null) ? shape.data : null;
-		String value = (shape != null)? shape.data.text.value: null;
+		String value = (shape != null) ? shape.data.text.value : null;
 		List<Text> textList = (shape != null) ? shape.getTextList() : null;
 		this.initTextValueComboBox(textList, value);
 		List<String> unitTypeList = new ArrayList<>();
@@ -184,7 +200,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 			}
 		}
 		this.textValueComboBox.setModel(new DefaultComboBoxModel(array));
-		if(value != null) {
+		if (value != null) {
 			this.textValueComboBox.setSelectedItem(value);
 		} else {
 			boolean flag = this.textValueDefaultCheckBox.isSelected();
@@ -255,18 +271,37 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 			for (int i = 0; i < shapeList.size(); i++) {
 				defaultListModel.addElement(shapeList.get(i).uuid);
 			}
-
 		}
 		this.shapeList.setModel(defaultListModel);
+	}
+
+	public void initGridShapeList(List<Shape> shapeList) {
+		DefaultListModel<String> defaultListModel = new DefaultListModel<String>();
+		if (shapeList != null && shapeList.size() > 0) {
+			logger.info("initGridShapeList(" + shapeList + ")");
+			for (int i = 0; i < shapeList.size(); i++) {
+				defaultListModel.addElement(shapeList.get(i).uuid);
+			}
+		}
+		this.gridShapeList.setModel(defaultListModel);
 	}
 
 	public void setShapeListSelectedUUID(String uuid) {
 		this.shapeList.setSelectedValue(uuid, true);
 	}
-	
+
 	public void setShapeListSelectedIndex(int index) {
 		logger.debug("setShapeListSelectedIndex(" + index + ")");
 		this.shapeList.setSelectedIndex(index);
+	}
+	
+	public void setGridShapeListSelectedUUID(String uuid) {
+		this.gridShapeList.setSelectedValue(uuid, true);
+	}
+
+	public void setGridShapeListSelectedIndex(int index) {
+		logger.info("setGridShapeListSelectedIndex(" + index + ")");
+		this.gridShapeList.setSelectedIndex(index);
 	}
 
 	public void shapeListAddKeyListener() {
@@ -297,12 +332,13 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 						logger.debug("keyEvent.VK_LEFT");
 						model.document.cache.pressedShape = null;
 						setShapeListSelectedIndex(--index);
-						model.document.cache.shapeUUID = (String)shapeList.getSelectedValue();
+						model.document.cache.shapeUUID = (String) shapeList.getSelectedValue();
 						try {
 							model.document.pattern.execute("setShape");
 							mainFrame.init();
 						} catch (Exception e) {
-							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+									JOptionPane.ERROR_MESSAGE);
 						}
 						break;
 					}
@@ -310,12 +346,41 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 						logger.debug("keyEvent.VK_RIGHT");
 						model.document.cache.pressedShape = null;
 						setShapeListSelectedIndex(++index);
-						model.document.cache.shapeUUID = (String)shapeList.getSelectedValue();
+						model.document.cache.shapeUUID = (String) shapeList.getSelectedValue();
 						try {
 							model.document.pattern.execute("setShape");
 							mainFrame.init();
 						} catch (Exception e) {
-							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
+						break;
+					}
+					case KeyEvent.VK_UP: {
+						logger.debug("keyEvent.VK_UP");
+						model.document.cache.pressedShape = null;
+						setShapeListSelectedIndex(--index);
+						model.document.cache.shapeUUID = (String) shapeList.getSelectedValue();
+						try {
+							model.document.pattern.execute("setShape");
+							mainFrame.init();
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
+						break;
+					}
+					case KeyEvent.VK_DOWN: {
+						logger.debug("keyEvent.VK_DOWN");
+						model.document.cache.pressedShape = null;
+						setShapeListSelectedIndex(++index);
+						model.document.cache.shapeUUID = (String) shapeList.getSelectedValue();
+						try {
+							model.document.pattern.execute("setShape");
+							mainFrame.init();
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+									JOptionPane.ERROR_MESSAGE);
 						}
 						break;
 					}
@@ -332,10 +397,108 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 				Document document = (model != null) ? model.document : null;
 				document.cache.pressedShape = null;
 				document.cache.shapeIndex = -1;
-				document.cache.shapeUUID = (String)shapeList.getSelectedValue();
-				logger.info("shapeListAddMouseListener() document.cache.shapeUUID="+document.cache.shapeUUID);
+				document.cache.shapeUUID = (String) shapeList.getSelectedValue();
+				logger.info("shapeListAddMouseListener() document.cache.shapeUUID=" + document.cache.shapeUUID);
 				try {
 					document.pattern.execute("setShape");
+					mainFrame.init();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+	}
+	
+	public void gridShapeListAddKeyListener() {
+		this.gridShapeList.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent ke) {
+				ke.consume();
+				if (ke.isControlDown()) {
+					switch (ke.getKeyCode()) {
+					case KeyEvent.VK_Z: {
+						logger.debug("keyPressed(e) KeyEvent.VK_Z");
+						model.document.pattern.undo();
+						mainFrame.init();
+						break;
+					}
+					case KeyEvent.VK_Y: {
+						logger.debug("keyPressed(e) KeyEvent.VK_Y");
+						model.document.pattern.redo();
+						mainFrame.init();
+						break;
+					}
+					}
+				} else {
+					int keyCode = ke.getKeyCode();
+					int index = gridShapeList.getSelectedIndex();
+					switch (keyCode) {
+					case KeyEvent.VK_LEFT: {
+						logger.debug("keyEvent.VK_LEFT");
+						setGridShapeListSelectedIndex(--index);
+						model.document.cache.shapeUUID = (String) gridShapeList.getSelectedValue();
+						try {
+							model.document.pattern.execute("setGridShape");
+							mainFrame.init();
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
+						break;
+					}
+					case KeyEvent.VK_RIGHT: {
+						logger.debug("keyEvent.VK_RIGHT");
+						setGridShapeListSelectedIndex(++index);
+						model.document.cache.shapeUUID = (String) gridShapeList.getSelectedValue();
+						try {
+							model.document.pattern.execute("setGridShape");
+							mainFrame.init();
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
+						break;
+					}
+					case KeyEvent.VK_UP: {
+						logger.debug("keyEvent.VK_UP");
+						setGridShapeListSelectedIndex(--index);
+						model.document.cache.shapeUUID = (String) gridShapeList.getSelectedValue();
+						try {
+							model.document.pattern.execute("setGridShape");
+							mainFrame.init();
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
+						break;
+					}
+					case KeyEvent.VK_DOWN: {
+						logger.debug("keyEvent.VK_DOWN");
+						setGridShapeListSelectedIndex(++index);
+						model.document.cache.shapeUUID = (String) gridShapeList.getSelectedValue();
+						try {
+							model.document.pattern.execute("setGridShape");
+							mainFrame.init();
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
+						break;
+					}
+					}
+				}
+			}
+		});
+	}
+
+	public void gridShapeListAddMouseListener() {
+		this.gridShapeList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent me) {
+				Document document = (model != null) ? model.document : null;
+				document.cache.shapeUUID = (String) gridShapeList.getSelectedValue();
+				try {
+					document.pattern.execute("setGridShape");
 					mainFrame.init();
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -372,13 +535,15 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 	 * Function responds to keyTyped Event.
 	 */
 	@Override
-	public void keyTyped(KeyEvent e) {}
+	public void keyTyped(KeyEvent e) {
+	}
 
 	/**
 	 * Function responds to keyReleased Event.
 	 */
 	@Override
-	public void keyReleased(KeyEvent e) {}
+	public void keyReleased(KeyEvent e) {
+	}
 
 	/**
 	 * This method is called from within the constructor to initialize the form.
@@ -388,375 +553,425 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 	@SuppressWarnings("unchecked")
 	// <editor-fold defaultstate="collapsed" desc="Generated
 	// <editor-fold defaultstate="collapsed" desc="Generated
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+	// <editor-fold defaultstate="collapsed" desc="Generated
+	// Code">//GEN-BEGIN:initComponents
+	private void initComponents() {
 
-        jTextField1 = new javax.swing.JTextField();
-        textLabel = new javax.swing.JLabel();
-        inputLabel = new javax.swing.JLabel();
-        noInputCheckBox = new javax.swing.JCheckBox();
-        inputAddButton = new javax.swing.JButton();
-        valueLabel = new javax.swing.JLabel();
-        textValueComboBox = new javax.swing.JComboBox();
-        textValueDefaultCheckBox = new javax.swing.JCheckBox();
-        textUnitSeparator = new javax.swing.JSeparator();
-        unitLabel = new javax.swing.JLabel();
-        typeLabel = new javax.swing.JLabel();
-        unitTypeComboBox = new javax.swing.JComboBox();
-        unitValueLabel = new javax.swing.JLabel();
-        unitValueComboBox = new javax.swing.JComboBox();
-        unitRectangleSeparator = new javax.swing.JSeparator();
-        rectangleScrollPane = new javax.swing.JScrollPane();
-        shapeList = new javax.swing.JList();
-        removeShapeButton = new javax.swing.JButton();
-        applyUnitButton = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        rectangleButton = new javax.swing.JButton();
-        ellipseButton = new javax.swing.JButton();
-        setTextButton = new javax.swing.JButton();
-        jSeparator1 = new javax.swing.JSeparator();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        scriptTextArea = new javax.swing.JTextArea();
-        scriptLabel = new javax.swing.JLabel();
-        resetScriptButton = new javax.swing.JButton();
-        setScriptButton = new javax.swing.JButton();
-        jSeparator2 = new javax.swing.JSeparator();
-        shapePanel = new com.meritoki.app.desktop.retina.view.panel.ShapePanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        textInputTextArea = new javax.swing.JTextArea();
-        gridLabel = new javax.swing.JLabel();
-        gridColumnTextField = new javax.swing.JTextField();
-        gridRowTextField = new javax.swing.JTextField();
-        rowLabel = new javax.swing.JLabel();
-        columnLabel = new javax.swing.JLabel();
-        setGridButton = new javax.swing.JButton();
-        jSeparator3 = new javax.swing.JSeparator();
+		jTextField1 = new javax.swing.JTextField();
+		textLabel = new javax.swing.JLabel();
+		inputLabel = new javax.swing.JLabel();
+		noInputCheckBox = new javax.swing.JCheckBox();
+		inputAddButton = new javax.swing.JButton();
+		valueLabel = new javax.swing.JLabel();
+		textValueComboBox = new javax.swing.JComboBox();
+		textValueDefaultCheckBox = new javax.swing.JCheckBox();
+		textUnitSeparator = new javax.swing.JSeparator();
+		unitLabel = new javax.swing.JLabel();
+		typeLabel = new javax.swing.JLabel();
+		unitTypeComboBox = new javax.swing.JComboBox();
+		unitValueLabel = new javax.swing.JLabel();
+		unitValueComboBox = new javax.swing.JComboBox();
+		unitRectangleSeparator = new javax.swing.JSeparator();
+		rectangleScrollPane = new javax.swing.JScrollPane();
+		shapeList = new javax.swing.JList();
+		removeShapeButton = new javax.swing.JButton();
+		applyUnitButton = new javax.swing.JButton();
+		jLabel1 = new javax.swing.JLabel();
+		rectangleButton = new javax.swing.JButton();
+		ellipseButton = new javax.swing.JButton();
+		setTextButton = new javax.swing.JButton();
+		jScrollPane1 = new javax.swing.JScrollPane();
+		scriptTextArea = new javax.swing.JTextArea();
+		scriptLabel = new javax.swing.JLabel();
+		resetScriptButton = new javax.swing.JButton();
+		setScriptButton = new javax.swing.JButton();
+		jSeparator2 = new javax.swing.JSeparator();
+		shapePanel = new com.meritoki.app.desktop.retina.view.panel.ShapePanel();
+		jScrollPane2 = new javax.swing.JScrollPane();
+		textInputTextArea = new javax.swing.JTextArea();
+		gridLabel = new javax.swing.JLabel();
+		gridColumnTextField = new javax.swing.JTextField();
+		gridRowTextField = new javax.swing.JTextField();
+		rowLabel = new javax.swing.JLabel();
+		columnLabel = new javax.swing.JLabel();
+		setGridButton = new javax.swing.JButton();
+		jSeparator3 = new javax.swing.JSeparator();
+		rectangleScrollPane1 = new javax.swing.JScrollPane();
+		gridShapeList = new javax.swing.JList();
+		jLabel2 = new javax.swing.JLabel();
 
-        jTextField1.setText("jTextField1");
+		jTextField1.setText("jTextField1");
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        textLabel.setText("Text");
+		textLabel.setText("Text");
 
-        inputLabel.setText("Input:");
+		inputLabel.setText("Input:");
 
-        noInputCheckBox.setText("No");
-        noInputCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                noInputCheckBoxActionPerformed(evt);
-            }
-        });
+		noInputCheckBox.setText("No");
+		noInputCheckBox.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				noInputCheckBoxActionPerformed(evt);
+			}
+		});
 
-        inputAddButton.setText("Add");
-        inputAddButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inputAddButtonActionPerformed(evt);
-            }
-        });
+		inputAddButton.setText("Add");
+		inputAddButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				inputAddButtonActionPerformed(evt);
+			}
+		});
 
-        valueLabel.setText("Value:");
+		valueLabel.setText("Value:");
 
-        textValueComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+		textValueComboBox.setModel(
+				new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        textValueDefaultCheckBox.setText("Default");
-        textValueDefaultCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textValueDefaultCheckBoxActionPerformed(evt);
-            }
-        });
+		textValueDefaultCheckBox.setText("Default");
+		textValueDefaultCheckBox.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				textValueDefaultCheckBoxActionPerformed(evt);
+			}
+		});
 
-        unitLabel.setText("Unit");
+		unitLabel.setText("Unit");
 
-        typeLabel.setText("Type:");
+		typeLabel.setText("Type:");
 
-        unitTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        unitTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                unitTypeComboBoxActionPerformed(evt);
-            }
-        });
+		unitTypeComboBox.setModel(
+				new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+		unitTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				unitTypeComboBoxActionPerformed(evt);
+			}
+		});
 
-        unitValueLabel.setText("Value:");
+		unitValueLabel.setText("Value:");
 
-        unitValueComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+		unitValueComboBox.setModel(
+				new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        shapeList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        rectangleScrollPane.setViewportView(shapeList);
+		shapeList.setModel(new javax.swing.AbstractListModel() {
+			String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
 
-        removeShapeButton.setText("X");
-        removeShapeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeShapeButtonActionPerformed(evt);
-            }
-        });
+			public int getSize() {
+				return strings.length;
+			}
 
-        applyUnitButton.setText("Apply");
-        applyUnitButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                applyUnitButtonActionPerformed(evt);
-            }
-        });
+			public Object getElementAt(int i) {
+				return strings[i];
+			}
+		});
+		rectangleScrollPane.setViewportView(shapeList);
 
-        jLabel1.setText("Shapes");
+		removeShapeButton.setText("X");
+		removeShapeButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				removeShapeButtonActionPerformed(evt);
+			}
+		});
 
-        rectangleButton.setText("Rectangle");
-        rectangleButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rectangleButtonActionPerformed(evt);
-            }
-        });
+		applyUnitButton.setText("Apply");
+		applyUnitButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				applyUnitButtonActionPerformed(evt);
+			}
+		});
 
-        ellipseButton.setText("Ellipse");
-        ellipseButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ellipseButtonActionPerformed(evt);
-            }
-        });
+		jLabel1.setText("Shape:");
 
-        setTextButton.setText("Set");
-        setTextButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setTextButtonActionPerformed(evt);
-            }
-        });
+		rectangleButton.setText("Rectangle");
+		rectangleButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				rectangleButtonActionPerformed(evt);
+			}
+		});
 
-        scriptTextArea.setColumns(20);
-        scriptTextArea.setRows(5);
-        jScrollPane1.setViewportView(scriptTextArea);
+		ellipseButton.setText("Ellipse");
+		ellipseButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				ellipseButtonActionPerformed(evt);
+			}
+		});
 
-        scriptLabel.setText("Script");
+		setTextButton.setText("Set");
+		setTextButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				setTextButtonActionPerformed(evt);
+			}
+		});
 
-        resetScriptButton.setText("Reset");
-        resetScriptButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                resetScriptButtonActionPerformed(evt);
-            }
-        });
+		scriptTextArea.setColumns(20);
+		scriptTextArea.setRows(5);
+		jScrollPane1.setViewportView(scriptTextArea);
 
-        setScriptButton.setText("Set");
-        setScriptButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setScriptButtonActionPerformed(evt);
-            }
-        });
+		scriptLabel.setText("Script:");
 
-        javax.swing.GroupLayout shapePanelLayout = new javax.swing.GroupLayout(shapePanel);
-        shapePanel.setLayout(shapePanelLayout);
-        shapePanelLayout.setHorizontalGroup(
-            shapePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 404, Short.MAX_VALUE)
-        );
-        shapePanelLayout.setVerticalGroup(
-            shapePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 197, Short.MAX_VALUE)
-        );
+		resetScriptButton.setText("Reset");
+		resetScriptButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				resetScriptButtonActionPerformed(evt);
+			}
+		});
 
-        textInputTextArea.setColumns(20);
-        textInputTextArea.setRows(5);
-        jScrollPane2.setViewportView(textInputTextArea);
+		setScriptButton.setText("Set");
+		setScriptButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				setScriptButtonActionPerformed(evt);
+			}
+		});
 
-        gridLabel.setText("Grid");
+		javax.swing.GroupLayout shapePanelLayout = new javax.swing.GroupLayout(shapePanel);
+		shapePanel.setLayout(shapePanelLayout);
+		shapePanelLayout.setHorizontalGroup(shapePanelLayout
+				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 404, Short.MAX_VALUE));
+		shapePanelLayout.setVerticalGroup(shapePanelLayout
+				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 197, Short.MAX_VALUE));
 
-        rowLabel.setText("Rows:");
+		textInputTextArea.setColumns(20);
+		textInputTextArea.setRows(5);
+		jScrollPane2.setViewportView(textInputTextArea);
 
-        columnLabel.setText("Columns:");
+		gridLabel.setText("Grid");
 
-        setGridButton.setText("Set");
-        setGridButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                setGridButtonActionPerformed(evt);
-            }
-        });
+		rowLabel.setText("Rows:");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(214, 214, 214)
-                                .addComponent(unitLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(textUnitSeparator))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(rectangleScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(removeShapeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(210, 210, 210)
-                                        .addComponent(gridLabel))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(212, 212, 212)
-                                        .addComponent(textLabel))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(1, 1, 1)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(inputAddButton, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(inputLabel)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                    .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
-                                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(noInputCheckBox))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(valueLabel)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(setTextButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(textValueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(textValueDefaultCheckBox))
-                                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel1)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(setScriptButton, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(resetScriptButton, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(scriptLabel)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addGap(6, 6, 6)
-                                                .addComponent(typeLabel))
-                                            .addComponent(unitValueLabel))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(unitRectangleSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(applyUnitButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(unitValueComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(unitTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                    .addComponent(shapePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(ellipseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(rowLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(rectangleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jSeparator3)
-                                        .addComponent(setGridButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGroup(layout.createSequentialGroup()
-                                            .addComponent(gridRowTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(columnLabel)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(gridColumnTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(rectangleButton)
-                    .addComponent(ellipseButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(gridLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(gridColumnTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(gridRowTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(rowLabel)
-                    .addComponent(columnLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(setGridButton)
-                .addGap(11, 11, 11)
-                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(shapePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(8, 8, 8)
-                .addComponent(textLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(noInputCheckBox)
-                            .addComponent(inputLabel))
-                        .addGap(137, 137, 137))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inputAddButton)
-                        .addGap(14, 14, 14)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(textValueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(valueLabel)
-                    .addComponent(textValueDefaultCheckBox))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(setTextButton)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(textUnitSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(unitLabel)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(unitTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(typeLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(unitValueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(unitValueLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(applyUnitButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(unitRectangleSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(rectangleScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(removeShapeButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scriptLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(resetScriptButton)
-                    .addComponent(setScriptButton))
-                .addContainerGap())
-        );
+		columnLabel.setText("Columns:");
 
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
+		setGridButton.setText("Set");
+		setGridButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				setGridButtonActionPerformed(evt);
+			}
+		});
 
-    private void setGridButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setGridButtonActionPerformed
-    	Document document = (model != null) ? model.document : null;
-    	document.cache.shapeUUID = (String)shapeList.getSelectedValue();
-    	document.cache.row = Integer.parseInt(this.gridRowTextField.getText());
-    	document.cache.column = Integer.parseInt(this.gridColumnTextField.getText());
+		gridShapeList.setModel(new javax.swing.AbstractListModel() {
+			String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+
+			public int getSize() {
+				return strings.length;
+			}
+
+			public Object getElementAt(int i) {
+				return strings[i];
+			}
+		});
+		rectangleScrollPane1.setViewportView(gridShapeList);
+
+		jLabel2.setText("Grid:");
+
+		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout
+				.createSequentialGroup().addContainerGap()
+				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+						.addGroup(layout.createSequentialGroup().addGap(214, 214, 214).addComponent(unitLabel)
+								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+								.addComponent(textUnitSeparator))
+						.addGroup(layout.createSequentialGroup().addGap(210, 210, 210).addComponent(gridLabel))
+						.addGroup(layout.createSequentialGroup().addGap(212, 212, 212).addComponent(textLabel))
+						.addGroup(layout.createSequentialGroup().addGap(1, 1, 1).addGroup(layout
+								.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+								.addComponent(inputAddButton, javax.swing.GroupLayout.PREFERRED_SIZE, 344,
+										javax.swing.GroupLayout.PREFERRED_SIZE)
+								.addGroup(layout.createSequentialGroup().addComponent(inputLabel)
+										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+										.addGroup(layout
+												.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+												.addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
+												.addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 344,
+														javax.swing.GroupLayout.PREFERRED_SIZE))))
+								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+								.addComponent(noInputCheckBox))
+						.addGroup(layout.createSequentialGroup().addComponent(valueLabel)
+								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+								.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+										.addComponent(setTextButton, javax.swing.GroupLayout.DEFAULT_SIZE,
+												javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+										.addComponent(textValueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 344,
+												javax.swing.GroupLayout.PREFERRED_SIZE))
+								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+								.addComponent(textValueDefaultCheckBox))
+						.addComponent(shapePanel, javax.swing.GroupLayout.PREFERRED_SIZE,
+								javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+								.addComponent(ellipseButton, javax.swing.GroupLayout.PREFERRED_SIZE, 164,
+										javax.swing.GroupLayout.PREFERRED_SIZE)
+								.addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+										.addComponent(rowLabel)
+										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+										.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+												.addComponent(rectangleButton, javax.swing.GroupLayout.PREFERRED_SIZE,
+														165, javax.swing.GroupLayout.PREFERRED_SIZE)
+												.addGroup(layout
+														.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING,
+																false)
+														.addComponent(jSeparator3)
+														.addComponent(setGridButton,
+																javax.swing.GroupLayout.DEFAULT_SIZE,
+																javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+														.addGroup(layout.createSequentialGroup()
+																.addComponent(gridRowTextField,
+																		javax.swing.GroupLayout.PREFERRED_SIZE, 115,
+																		javax.swing.GroupLayout.PREFERRED_SIZE)
+																.addGap(18, 18, 18).addComponent(columnLabel)
+																.addPreferredGap(
+																		javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+																.addComponent(gridColumnTextField,
+																		javax.swing.GroupLayout.PREFERRED_SIZE, 116,
+																		javax.swing.GroupLayout.PREFERRED_SIZE))))))
+						.addGroup(layout.createSequentialGroup()
+								.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+										.addComponent(jLabel1)
+										.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+												.addGroup(layout.createSequentialGroup().addGap(6, 6, 6)
+														.addComponent(typeLabel))
+												.addComponent(unitValueLabel))
+										.addComponent(jLabel2).addComponent(scriptLabel))
+								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+								.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+										.addGroup(layout.createSequentialGroup().addGroup(layout
+												.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+												.addComponent(unitRectangleSeparator,
+														javax.swing.GroupLayout.PREFERRED_SIZE, 349,
+														javax.swing.GroupLayout.PREFERRED_SIZE)
+												.addGroup(layout
+														.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING,
+																false)
+														.addComponent(applyUnitButton,
+																javax.swing.GroupLayout.DEFAULT_SIZE,
+																javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+														.addComponent(unitValueComboBox, 0,
+																javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+														.addComponent(unitTypeComboBox,
+																javax.swing.GroupLayout.PREFERRED_SIZE, 349,
+																javax.swing.GroupLayout.PREFERRED_SIZE))
+												.addGroup(layout.createSequentialGroup()
+														.addComponent(setScriptButton,
+																javax.swing.GroupLayout.PREFERRED_SIZE, 177,
+																javax.swing.GroupLayout.PREFERRED_SIZE)
+														.addPreferredGap(
+																javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+														.addComponent(resetScriptButton,
+																javax.swing.GroupLayout.PREFERRED_SIZE, 168,
+																javax.swing.GroupLayout.PREFERRED_SIZE)))
+												.addGap(0, 0, Short.MAX_VALUE))
+										.addGroup(layout.createSequentialGroup().addGroup(layout
+												.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+												.addComponent(rectangleScrollPane1,
+														javax.swing.GroupLayout.Alignment.LEADING)
+												.addComponent(rectangleScrollPane,
+														javax.swing.GroupLayout.Alignment.LEADING)
+												.addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 349,
+														Short.MAX_VALUE))
+												.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+												.addComponent(removeShapeButton, javax.swing.GroupLayout.DEFAULT_SIZE,
+														javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+				.addContainerGap()));
+		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(layout.createSequentialGroup().addContainerGap()
+						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+								.addComponent(rectangleButton).addComponent(ellipseButton))
+						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED).addComponent(gridLabel)
+						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+								.addComponent(gridColumnTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
+										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+								.addComponent(gridRowTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
+										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+								.addComponent(rowLabel).addComponent(columnLabel))
+						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(setGridButton)
+						.addGap(11, 11, 11)
+						.addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10,
+								javax.swing.GroupLayout.PREFERRED_SIZE)
+						.addGap(18, 18, 18)
+						.addComponent(shapePanel, javax.swing.GroupLayout.PREFERRED_SIZE,
+								javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+						.addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10,
+								javax.swing.GroupLayout.PREFERRED_SIZE)
+						.addGap(8, 8, 8).addComponent(textLabel)
+						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+								.addGroup(layout.createSequentialGroup()
+										.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+												.addComponent(noInputCheckBox).addComponent(inputLabel))
+										.addGap(137, 137, 137))
+								.addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+										layout.createSequentialGroup()
+												.addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE,
+														javax.swing.GroupLayout.DEFAULT_SIZE,
+														javax.swing.GroupLayout.PREFERRED_SIZE)
+												.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+												.addComponent(inputAddButton).addGap(14, 14, 14)))
+						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+								.addComponent(textValueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE,
+										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+								.addComponent(valueLabel).addComponent(textValueDefaultCheckBox))
+						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(setTextButton)
+						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+								.addGroup(layout.createSequentialGroup().addGap(19, 19, 19).addComponent(
+										textUnitSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 2,
+										javax.swing.GroupLayout.PREFERRED_SIZE))
+								.addGroup(layout.createSequentialGroup()
+										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+										.addComponent(unitLabel)))
+						.addGap(12, 12, 12)
+						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+								.addComponent(unitTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE,
+										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+								.addComponent(typeLabel))
+						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+								.addComponent(unitValueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE,
+										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+								.addComponent(unitValueLabel))
+						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+						.addComponent(applyUnitButton)
+						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
+								javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(unitRectangleSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 10,
+								javax.swing.GroupLayout.PREFERRED_SIZE)
+						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+								.addGroup(layout.createSequentialGroup().addGap(5, 5, 5)
+										.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+												.addComponent(jLabel1).addComponent(rectangleScrollPane,
+														javax.swing.GroupLayout.PREFERRED_SIZE, 159,
+														javax.swing.GroupLayout.PREFERRED_SIZE)))
+								.addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
+										layout.createSequentialGroup()
+												.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+												.addComponent(removeShapeButton)))
+						.addGap(15, 15, 15)
+						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+								.addComponent(jLabel2)
+								.addComponent(rectangleScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 157,
+										javax.swing.GroupLayout.PREFERRED_SIZE))
+						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+								.addComponent(scriptLabel).addComponent(jScrollPane1,
+										javax.swing.GroupLayout.PREFERRED_SIZE, 155,
+										javax.swing.GroupLayout.PREFERRED_SIZE))
+						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+								.addComponent(setScriptButton).addComponent(resetScriptButton))
+						.addGap(100, 100, 100)));
+
+		pack();
+	}// </editor-fold>//GEN-END:initComponents
+
+	private void setGridButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_setGridButtonActionPerformed
+		Document document = (model != null) ? model.document : null;
+		document.cache.shapeUUID = (String) shapeList.getSelectedValue();
+		document.cache.row = Integer.parseInt(this.gridRowTextField.getText());
+		document.cache.column = Integer.parseInt(this.gridColumnTextField.getText());
 		try {
 			document.pattern.execute("setGrid");
 			mainFrame.init();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
-    }//GEN-LAST:event_setGridButtonActionPerformed
+	}// GEN-LAST:event_setGridButtonActionPerformed
 
 	private void noInputCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_noInputCheckBoxActionPerformed
 		boolean flag = this.noInputCheckBox.isSelected();
@@ -977,48 +1192,50 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 		});
 	}
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton applyUnitButton;
-    private javax.swing.JLabel columnLabel;
-    private javax.swing.JButton ellipseButton;
-    private javax.swing.JTextField gridColumnTextField;
-    private javax.swing.JLabel gridLabel;
-    private javax.swing.JTextField gridRowTextField;
-    private javax.swing.JButton inputAddButton;
-    private javax.swing.JLabel inputLabel;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JSeparator jSeparator3;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JCheckBox noInputCheckBox;
-    private javax.swing.JButton rectangleButton;
-    private javax.swing.JScrollPane rectangleScrollPane;
-    private javax.swing.JButton removeShapeButton;
-    private javax.swing.JButton resetScriptButton;
-    private javax.swing.JLabel rowLabel;
-    private javax.swing.JLabel scriptLabel;
-    private javax.swing.JTextArea scriptTextArea;
-    private javax.swing.JButton setGridButton;
-    private javax.swing.JButton setScriptButton;
-    private javax.swing.JButton setTextButton;
-    private javax.swing.JList shapeList;
-    private com.meritoki.app.desktop.retina.view.panel.ShapePanel shapePanel;
-    private javax.swing.JTextArea textInputTextArea;
-    private javax.swing.JLabel textLabel;
-    private javax.swing.JSeparator textUnitSeparator;
-    private javax.swing.JComboBox textValueComboBox;
-    private javax.swing.JCheckBox textValueDefaultCheckBox;
-    private javax.swing.JLabel typeLabel;
-    private javax.swing.JLabel unitLabel;
-    private javax.swing.JSeparator unitRectangleSeparator;
-    private javax.swing.JComboBox unitTypeComboBox;
-    private javax.swing.JComboBox unitValueComboBox;
-    private javax.swing.JLabel unitValueLabel;
-    private javax.swing.JLabel valueLabel;
-    // End of variables declaration//GEN-END:variables
+	// Variables declaration - do not modify//GEN-BEGIN:variables
+	private javax.swing.JButton applyUnitButton;
+	private javax.swing.JLabel columnLabel;
+	private javax.swing.JButton ellipseButton;
+	private javax.swing.JTextField gridColumnTextField;
+	private javax.swing.JLabel gridLabel;
+	private javax.swing.JTextField gridRowTextField;
+	private javax.swing.JList gridShapeList;
+	private javax.swing.JButton inputAddButton;
+	private javax.swing.JLabel inputLabel;
+	private javax.swing.JLabel jLabel1;
+	private javax.swing.JLabel jLabel2;
+	private javax.swing.JScrollPane jScrollPane1;
+	private javax.swing.JScrollPane jScrollPane2;
+	private javax.swing.JSeparator jSeparator2;
+	private javax.swing.JSeparator jSeparator3;
+	private javax.swing.JTextField jTextField1;
+	private javax.swing.JCheckBox noInputCheckBox;
+	private javax.swing.JButton rectangleButton;
+	private javax.swing.JScrollPane rectangleScrollPane;
+	private javax.swing.JScrollPane rectangleScrollPane1;
+	private javax.swing.JButton removeShapeButton;
+	private javax.swing.JButton resetScriptButton;
+	private javax.swing.JLabel rowLabel;
+	private javax.swing.JLabel scriptLabel;
+	private javax.swing.JTextArea scriptTextArea;
+	private javax.swing.JButton setGridButton;
+	private javax.swing.JButton setScriptButton;
+	private javax.swing.JButton setTextButton;
+	private javax.swing.JList shapeList;
+	private com.meritoki.app.desktop.retina.view.panel.ShapePanel shapePanel;
+	private javax.swing.JTextArea textInputTextArea;
+	private javax.swing.JLabel textLabel;
+	private javax.swing.JSeparator textUnitSeparator;
+	private javax.swing.JComboBox textValueComboBox;
+	private javax.swing.JCheckBox textValueDefaultCheckBox;
+	private javax.swing.JLabel typeLabel;
+	private javax.swing.JLabel unitLabel;
+	private javax.swing.JSeparator unitRectangleSeparator;
+	private javax.swing.JComboBox unitTypeComboBox;
+	private javax.swing.JComboBox unitValueComboBox;
+	private javax.swing.JLabel unitValueLabel;
+	private javax.swing.JLabel valueLabel;
+	// End of variables declaration//GEN-END:variables
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -1028,25 +1245,24 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
-

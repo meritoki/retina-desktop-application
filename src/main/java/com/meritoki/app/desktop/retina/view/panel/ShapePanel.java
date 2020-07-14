@@ -17,6 +17,7 @@ package com.meritoki.app.desktop.retina.view.panel;
 
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Grid;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
@@ -65,6 +66,10 @@ public class ShapePanel extends JPanel {
 			Page page = (document != null) ? document.getPage() : null;
 			Shape shape = (page != null) ? page.getShape(): null;
 			if (shape != null) {
+				if(shape instanceof Grid) {
+					Grid grid = (Grid)shape;
+					shape = grid.getShape();
+				}
 				AffineTransform affineTransform = new AffineTransform();
 				affineTransform.scale(1, 1);
 				BufferedImage bufferedImage = shape.bufferedImage;

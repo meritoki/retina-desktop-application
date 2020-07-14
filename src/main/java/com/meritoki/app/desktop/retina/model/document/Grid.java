@@ -12,7 +12,6 @@ public class Grid extends Shape {
 	
 	@JsonIgnore
 	static Logger logger = LogManager.getLogger(Grid.class.getName());
-	public Dimension dimension;
 	public int row = 1;
 	public int column = 1;
 	public Shape[][] matrix = new Shape[row][column];
@@ -55,7 +54,6 @@ public class Grid extends Shape {
 		double height = dimension.height/row;
 		for(int i=0;i<matrix.length;i++) {
 			for(int j=0;j<matrix[i].length;j++) {
-				
 				matrix[i][j].position.point.x = point.x+(j*width);
 				matrix[i][j].position.point.y = point.y+(i*height);
 				matrix[i][j].position.dimension.width = width;

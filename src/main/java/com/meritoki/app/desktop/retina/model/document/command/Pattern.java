@@ -65,6 +65,7 @@ public class Pattern {
 		Command setImage = new SetImage(this.document);
 		Command removeImage = new RemoveImage(this.document);
 		Command setGrid = new SetGrid(this.document);
+		Command setGridShape = new SetGridShape(this.document);
 		this.register("addPage", addPage);
 		this.register("setPage", setPage);
 		this.register("addShape", addShape);
@@ -80,6 +81,7 @@ public class Pattern {
 		this.register("setImage", setImage);
 		this.register("removeImage", removeImage);
 		this.register("setGrid", setGrid);
+		this.register("setGridShape", setGridShape);
 	}
 
 	@JsonIgnore
