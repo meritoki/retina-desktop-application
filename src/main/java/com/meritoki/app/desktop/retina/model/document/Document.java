@@ -167,6 +167,7 @@ public class Document {
 	public Page getPage() {
 		int size = this.pageList.size();
 		Page page = (this.index < size && size > 0) ? this.pageList.get(this.index) : null;
+		this.setBufferedImage(page);
 		return page;
 	}
 
@@ -308,7 +309,7 @@ public class Document {
 	
 	@JsonIgnore
 	public void setBufferedImage(Image image) {
-//		if (image.getBufferedImage() == null)
+		if (image.getBufferedImage() == null)
 			image.setBufferedImage(this.getBufferedImage(image));
 	}
 

@@ -245,13 +245,18 @@ public class Page {
 
 	@JsonIgnore
 	public BufferedImage getShapeBufferedImage(Shape shape) {
+		logger.info("getShapeBufferedImage("+shape+") 0");
 		BufferedImage bufferedImage = null;
 		if (this.getBufferedImage() != null) {
+			logger.info("getShapeBufferedImage("+shape+") A");
 			if(shape.position.point.x >= 0 && shape.position.point.y >= 0 && (int)shape.position.dimension.height > 0 && (int)shape.position.dimension.width > 0) {
+				logger.info("getShapeBufferedImage("+shape+") B");
 				bufferedImage = this.getBufferedImage().getSubimage((int)shape.position.point.x, (int)shape.position.point.y, (int)shape.position.dimension.width, (int)shape.position.dimension.height);
 			} else {
 				logger.error("MAJOR ERROR THAT NEEDS TO BE FIXED shape.position="+shape.position);
 			}
+		} else {
+			logger.info("getShapeBufferedImage("+shape+") this.getBufferedImage() == null");
 		}
 		return bufferedImage;
 	}
