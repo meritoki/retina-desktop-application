@@ -99,6 +99,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 		this.initList();
 		this.initComboBox();
 		this.initTextArea();
+		this.initCheckBox();
 	}
 
 	public void initTextArea() {
@@ -108,6 +109,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 		if (script != null) {
 			this.scriptTextArea.setText(script.value);
 		}
+		this.textInputTextArea.setText("");
 	}
 
 	public void initLabel() {
@@ -140,6 +142,29 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 				this.initGridShapeList(new ArrayList<>());
 			}
 		}
+	}
+	
+	public void initCheckBox() {
+		Document document = (this.model != null) ? this.model.document : null;
+		Page page = (document != null) ? document.getPage() : null;
+		Shape shape = (page != null) ? page.getShape() : null;
+		if(shape != null) {
+			String textValue = shape.getData().getText().value;
+			if(textValue != null && textValue.trim().equals("")) {
+				this.noInputCheckBox.setSelected(true);
+				this.textInputTextArea.setEnabled(false);
+				this.inputAddButton.setEnabled(false);
+				this.textValueComboBox.setEnabled(false);
+				this.textValueDefaultCheckBox.setEnabled(false);
+			} else {
+				this.noInputCheckBox.setSelected(false);
+				this.textInputTextArea.setEnabled(true);
+				this.inputAddButton.setEnabled(true);
+				this.textValueComboBox.setEnabled(true);
+				this.textValueDefaultCheckBox.setEnabled(true);
+			}
+		}
+		
 	}
 
 	public void initComboBox() {
@@ -186,6 +211,8 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 			this.initUnitValueComboBox(this.model.resource.emptyList);
 		}
 	}
+	
+	
 
 	/**
 	 *
@@ -944,11 +971,23 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 			this.inputAddButton.setEnabled(false);
 			this.textValueComboBox.setEnabled(false);
 			this.textValueDefaultCheckBox.setEnabled(false);
+			Document document = (this.model != null) ? this.model.document : null;
+			Page page = (document != null) ? document.getPage() : null;
+			Shape shape = (page != null) ? page.getShape() : null;
+			if(shape != null) {
+				shape.getData().getText().setValue("");
+			}
 		} else {
 			this.textInputTextArea.setEnabled(true);
 			this.inputAddButton.setEnabled(true);
 			this.textValueComboBox.setEnabled(true);
 			this.textValueDefaultCheckBox.setEnabled(true);
+			Document document = (this.model != null) ? this.model.document : null;
+			Page page = (document != null) ? document.getPage() : null;
+			Shape shape = (page != null) ? page.getShape() : null;
+			if(shape != null) {
+				shape.getData().getText().setValue(null);
+			}
 		}
 	}// GEN-LAST:event_noInputCheckBoxActionPerformed
 
@@ -1045,7 +1084,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 		Data data = (shape != null) ? shape.data : null;
 		Text text = (data != null) ? data.text : null;
 		String value = (String) this.textValueComboBox.getSelectedItem();
-		text.value = value;
+		text.setValue(value);
 
 	}// GEN-LAST:event_setTextButtonActionPerformed
 

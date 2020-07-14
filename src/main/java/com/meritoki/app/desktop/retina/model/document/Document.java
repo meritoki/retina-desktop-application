@@ -57,7 +57,7 @@ public class Document {
 		this.uuid = UUID.randomUUID().toString();
 		this.init();
 		new File(NodeController.getDocumentCache(this.uuid)).mkdirs();
-//		this.test();
+		this.test();
 	}
 
 	public void save() {
