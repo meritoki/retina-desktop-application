@@ -253,7 +253,11 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				try {
 					this.model.document.pattern.execute("resizeImage");
 					this.mainFrame.init();
-				} catch (Exception e) {
+				}
+				catch(NullPointerException e) {
+					e.printStackTrace();
+				}
+				catch (Exception e) {
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
@@ -266,7 +270,11 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				try {
 					this.model.document.pattern.execute("resizeImage");
 					this.mainFrame.init();
-				} catch (Exception e) {
+				} 
+				catch(NullPointerException e) {
+					e.printStackTrace();
+				}
+				catch (Exception e) {
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;

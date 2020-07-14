@@ -52,6 +52,14 @@ public class NodeController {
 	public static String getRetinaHome() {
 		return getUserHome()+getSeperator()+".retina";
 	}
+	
+	public static String getDocumentCache() {
+		return getRetinaHome()+getSeperator()+"document";
+	}
+	
+	public static String getDocumentCache(String uuid) {
+		return getDocumentCache()+getSeperator()+uuid;
+	}
 
 	public static String getImageCache() {
 		return getRetinaHome()+getSeperator()+"image";

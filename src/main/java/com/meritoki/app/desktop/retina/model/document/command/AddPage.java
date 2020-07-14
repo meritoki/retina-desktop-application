@@ -34,7 +34,7 @@ public class AddPage extends Command {
     	File[] fileArray = this.document.cache.fileArray;
     	for(File file: fileArray) {
     		if(file.getName().contains(".pdf")) {
-    			File[] pageArray = PDFController.openPDF(file);
+    			File[] pageArray = PDFController.openPDF(file, this.document.uuid);
     			for(File p:pageArray) {
     				Page page = new Page();
     				page.imageList.add(new Image(p));

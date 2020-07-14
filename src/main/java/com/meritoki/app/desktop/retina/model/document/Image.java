@@ -46,6 +46,8 @@ public class Image {
 	@JsonIgnore
 	static Logger logger = LogManager.getLogger(Image.class.getName());
 	@JsonProperty
+	public String documentUUID;
+	@JsonProperty
 	public String uuid;
 	@JsonIgnore
 	public File file;
@@ -70,6 +72,13 @@ public class Image {
 			this.file = new File(this.filePath + getSeperator() + this.fileName);
 		}
 	}
+	
+	public Image(String documentUUID) {
+		this.documentUUID = documentUUID;
+		if (this.file == null) {
+			this.file = new File(this.filePath + getSeperator() + this.fileName);
+		}
+	}
 
 	public static String getSeperator() {
 		return FileSystems.getDefault().getSeparator();
@@ -82,10 +91,11 @@ public class Image {
 	 */
 	public Image(Image image) {
 		this.uuid = image.uuid;
+		this.documentUUID = image.documentUUID;
 		this.file = image.file;
 		this.filePath = image.filePath;
 		this.fileName = image.fileName;
-		this.bufferedImage = image.getBufferedImage();
+//		this.bufferedImage = image.getBufferedImage();
 		this.position = new Position(image.position);
 		this.index = image.index;
 		for (Shape shape : image.shapeList) {
@@ -98,7 +108,7 @@ public class Image {
 		this.file = file;
 		this.filePath = this.file.getParent();
 		this.fileName = this.file.getName();
-		this.getBufferedImage();
+//		this.getBufferedImage();
 	}
 
 	@JsonIgnore
@@ -198,39 +208,61 @@ public class Image {
 		}
 		return shapeList;
 	}
-
+	
+//New Approach
 	@JsonIgnore
 	public BufferedImage getBufferedImage() {
-		if (this.bufferedImage == null) {
-			this.bufferedImage = NodeController.openBufferedImage(NodeController.getImageCache(),
-					this.uuid + "." + this.getExtension());
-			if (bufferedImage == null) {
-				if (this.file != null) {
-					bufferedImage = NodeController.openBufferedImage(this.file);
-					if (bufferedImage != null) {
-						this.setBufferedImage(bufferedImage);
-						if (this.getExtension().equals("jpg") || this.getExtension().equals("jpeg")) {
-							NodeController.saveJpg(NodeController.getImageCache(),
-									this.uuid + "." + this.getExtension(), bufferedImage);
-						}
-					}
-				}
-			}
-			BufferedImage before = this.bufferedImage;
-			int w = before.getWidth();
-			int h = before.getHeight();
-			BufferedImage after = new BufferedImage((int) (w * this.position.relativeScale),
-					(int) (h * this.position.relativeScale), BufferedImage.TYPE_INT_ARGB);
-			AffineTransform at = new AffineTransform();
-			at.scale(this.position.relativeScale, this.position.relativeScale);
-			AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-			after = scaleOp.filter(before, after);
-			this.bufferedImage = after;
-			this.position
-					.setAbsoluteDimension(new Dimension(this.bufferedImage.getWidth(), this.bufferedImage.getHeight()));
-		}
+//		logger.info("getBufferedImage() this.bufferedImage="+this.bufferedImage);
+//		if(this.bufferedImage != null) {
+//			BufferedImage before = this.bufferedImage;
+//			int w = before.getWidth();
+//			int h = before.getHeight();
+//			BufferedImage after = new BufferedImage((int) (w * this.position.relativeScale),
+//					(int) (h * this.position.relativeScale), BufferedImage.TYPE_INT_ARGB);
+//			AffineTransform at = new AffineTransform();
+//			at.scale(this.position.relativeScale, this.position.relativeScale);
+//			AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+//			after = scaleOp.filter(before, after);
+//			this.bufferedImage = after;
+//			this.position.setAbsoluteDimension(new Dimension(this.bufferedImage.getWidth(), this.bufferedImage.getHeight()));
+//		}
 		return this.bufferedImage;
 	}
+
+	
+//Original Revert to this state
+//	@JsonIgnore
+//	public BufferedImage getBufferedImage() {
+//		if (this.bufferedImage == null) {
+//			this.bufferedImage = NodeController.openBufferedImage(NodeController.getImageCache(),
+//					this.uuid + "." + this.getExtension());
+//			if (bufferedImage == null) {
+//				if (this.file != null) {
+//					bufferedImage = NodeController.openBufferedImage(this.file);
+//					if (bufferedImage != null) {
+//						this.setBufferedImage(bufferedImage);
+//						if (this.getExtension().equals("jpg") || this.getExtension().equals("jpeg")) {
+//							NodeController.saveJpg(NodeController.getImageCache(),
+//									this.uuid + "." + this.getExtension(), bufferedImage);
+//						}
+//					}
+//				}
+//			}
+//			BufferedImage before = this.bufferedImage;
+//			int w = before.getWidth();
+//			int h = before.getHeight();
+//			BufferedImage after = new BufferedImage((int) (w * this.position.relativeScale),
+//					(int) (h * this.position.relativeScale), BufferedImage.TYPE_INT_ARGB);
+//			AffineTransform at = new AffineTransform();
+//			at.scale(this.position.relativeScale, this.position.relativeScale);
+//			AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+//			after = scaleOp.filter(before, after);
+//			this.bufferedImage = after;
+//			this.position
+//					.setAbsoluteDimension(new Dimension(this.bufferedImage.getWidth(), this.bufferedImage.getHeight()));
+//		}
+//		return this.bufferedImage;
+//	}
 
 	/**
 	 * Function sets the current index selected by user.
@@ -262,6 +294,7 @@ public class Image {
 		}
 	}
 
+//New 
 	@JsonIgnore
 	public void setBufferedImage(BufferedImage bufferedImage) {
 		logger.debug("setBufferedImage(" + bufferedImage + ")");
@@ -271,6 +304,17 @@ public class Image {
 			this.position.absoluteDimension.height = this.bufferedImage.getHeight();
 		}
 	}
+
+//Original revert to this state
+//	@JsonIgnore
+//	public void setBufferedImage(BufferedImage bufferedImage) {
+//		logger.debug("setBufferedImage(" + bufferedImage + ")");
+//		this.bufferedImage = bufferedImage;
+//		if (this.bufferedImage != null) {
+//			this.position.absoluteDimension.width = this.bufferedImage.getWidth();
+//			this.position.absoluteDimension.height = this.bufferedImage.getHeight();
+//		}
+//	}
 
 	@JsonIgnore
 	public void setOffset(double offset) {

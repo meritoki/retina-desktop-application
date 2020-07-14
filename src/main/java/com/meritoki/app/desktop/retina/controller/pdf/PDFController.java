@@ -14,13 +14,13 @@ import com.meritoki.app.desktop.retina.controller.node.NodeController;
 public class PDFController {
 
 	public static void main(String[] args) {
-		PDFController.openPDF(new File("./data/image/1905.pdf"));
+//		PDFController.openPDF(new File("./data/image/1905.pdf"));
 	}
 	
-	public static File[] openPDF(File pdf) {
+	public static File[] openPDF(File pdf, String documentUUID) {
 		File[] fileArray = new File[0];
 		try {
-			String destinationDirectory = NodeController.getImageCache()+NodeController.getSeperator();
+			String destinationDirectory = NodeController.getDocumentCache(documentUUID)+NodeController.getSeperator();
 			File destinationFile = new File(destinationDirectory);
 			if (!destinationFile.exists()) {
 				destinationFile.mkdir();

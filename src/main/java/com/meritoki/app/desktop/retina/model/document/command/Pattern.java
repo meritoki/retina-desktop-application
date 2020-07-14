@@ -252,9 +252,11 @@ public class Pattern {
 				for(Operation o: command.operationList) {
 					if(o.sign == 0) {
 						if(o.object instanceof Double) {
-							this.document.getPage().setBufferedImage(null);
-							this.document.getImage().setBufferedImage(null);
+//							this.document.getPage().setBufferedImage(null);
+//							this.document.getImage().setBufferedImage(null);
 							this.document.getImage().setRelativeScale((double)o.object);
+							this.document.setBufferedImage(this.document.getPage());
+							
 						}
 					}
 				}
