@@ -202,10 +202,7 @@ public class Document {
 				if (page.uuid.equals(uuid)) {
 					this.setIndex(i);
 				} else {
-					page.setBufferedImage(null);
-					for(Image image: page.imageList) {
-						image.setBufferedImage(null);
-					}
+					page.setBufferedImageNull();
 				}
 			}
 		}

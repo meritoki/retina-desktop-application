@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.meritoki.app.desktop.retina.controller.memory.MemoryController;
 import com.meritoki.app.desktop.retina.controller.pdf.PDFController;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Image;
@@ -38,11 +39,15 @@ public class AddPage extends Command {
     				Page page = new Page();
     				page.imageList.add(new Image(p));
     	    		this.document.addPage(page);
+    	    		page.setBufferedImageNull();
+    	    		MemoryController.log();
     			}
     		} else {
 	    		Page page = new Page();
 				page.imageList.add(new Image(file));
 	    		this.document.addPage(page);
+	    		page.setBufferedImageNull();
+	    		MemoryController.log();
     		}
     	}
     	//redo

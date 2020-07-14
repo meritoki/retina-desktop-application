@@ -71,6 +71,27 @@ public class Grid extends Shape {
 		this.column = column;
 	}
 	
+	public void setScale(double scale) {
+		super.setScale(scale);
+		this.updateMatrix();
+		
+	}
+	
+	public void setRelativeScale(double scale) {
+		super.setRelativeScale(scale);
+		this.updateMatrix();
+	}
+	
+	public void setMargin(double margin) {
+		super.setMargin(margin);
+		this.updateMatrix();
+	}
+	
+	public void setOffset(double offset) {
+		super.setOffset(offset);
+		this.updateMatrix();
+	}
+	
 	@JsonIgnore
 	public boolean setShape(String uuid) {
 		logger.info("setShape(" + uuid + ")");

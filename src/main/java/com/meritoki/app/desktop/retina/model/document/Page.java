@@ -298,6 +298,14 @@ public class Page {
 	public void setBufferedImage(BufferedImage bufferedImage) {
 		this.bufferedImage = bufferedImage;
 	}
+	
+	@JsonIgnore
+	public void setBufferedImageNull() {
+		this.setBufferedImage(null);
+		for(Image image: this.imageList) {
+			image.setBufferedImage(null);
+		}
+	}
 
 	/**
 	 * Function sets the current index selected by user.

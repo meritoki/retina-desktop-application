@@ -33,6 +33,7 @@ import com.meritoki.app.desktop.retina.view.dialog.RecognitionDialog;
 import com.meritoki.app.desktop.retina.view.dialog.AttributionDialog;
 import com.meritoki.app.desktop.retina.view.dialog.CommandDialog;
 import com.meritoki.app.desktop.retina.view.dialog.OpenDialog;
+import com.meritoki.app.desktop.retina.view.dialog.PropertyDialog;
 import com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog;
 import com.meritoki.app.desktop.retina.view.dialog.ShapeDialog;
 import com.meritoki.app.desktop.retina.view.dialog.audio.AudioExportDialog;
@@ -69,6 +70,7 @@ public final class MainFrame extends JFrame {
 	public ZooniverseImportDialog zooniverseImportDialog = new ZooniverseImportDialog(this, false);
 	public MicrosoftExportDialog microsoftExportDialog = new MicrosoftExportDialog(this, false);
 	public AudioExportDialog audioExportDialog = new AudioExportDialog(this, false);
+        public PropertyDialog propertyDialog = new PropertyDialog(this, false);
 	public ModuleController moduleController;
 
 	public MainFrame(Model model) {
@@ -112,6 +114,7 @@ public final class MainFrame extends JFrame {
 		this.registerDialog.setModel(this.model);
 		this.registerDialog.setLoginDialog(this.loginDialog);
 		this.loginDialog.setModel(this.model);
+		this.propertyDialog.setModel(this.model);
 		this.loginDialog.setRegisterDialog(this.registerDialog);
 		if (this.model.system.newUser) {
 			this.registerDialog.setVisible(true);
@@ -188,6 +191,7 @@ public final class MainFrame extends JFrame {
         recognitionMenuItem = new javax.swing.JMenuItem();
         commandMenuItem = new javax.swing.JMenuItem();
         attributionMenuItem = new javax.swing.JMenuItem();
+        propertyMenuItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -409,6 +413,14 @@ public final class MainFrame extends JFrame {
         });
         dialogMenu.add(attributionMenuItem);
 
+        propertyMenuItem.setText("Property");
+        propertyMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                propertyMenuItemActionPerformed(evt);
+            }
+        });
+        dialogMenu.add(propertyMenuItem);
+
         windowMenu.add(dialogMenu);
 
         mainMenuBar.add(windowMenu);
@@ -445,6 +457,10 @@ public final class MainFrame extends JFrame {
     private void recognitionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_recognitionMenuItemActionPerformed
         this.recognitionDialog.setVisible(true);
     }//GEN-LAST:event_recognitionMenuItemActionPerformed
+
+    private void propertyMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_propertyMenuItemActionPerformed
+        this.propertyDialog.setVisible(true);
+    }//GEN-LAST:event_propertyMenuItemActionPerformed
 
 	private void newMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newMenuItemActionPerformed
 		this.model.document = (new Document());
@@ -588,6 +604,7 @@ public final class MainFrame extends JFrame {
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem pageMenuItem;
     private com.meritoki.app.desktop.retina.view.panel.PagePanel pagePanel;
+    private javax.swing.JMenuItem propertyMenuItem;
     private javax.swing.JMenu recognitionMenu;
     private javax.swing.JMenuItem recognitionMenuItem;
     private javax.swing.JMenuItem recognitionStartMenuItem;

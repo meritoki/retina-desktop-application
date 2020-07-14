@@ -74,4 +74,6 @@ public class Cache {
 	public int row = 1;
 	@JsonIgnore
 	public int column = 1;
+        @JsonIgnore
+        public double defaultScale = 1;
 }

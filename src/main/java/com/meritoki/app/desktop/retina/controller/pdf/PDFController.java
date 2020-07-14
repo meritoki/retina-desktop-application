@@ -37,7 +37,7 @@ public class PDFController {
 					PDPage page = pdPageList.get(i);
 					File outputFile = new File(destinationDirectory + fileName + "_" + pageNumber + ".jpg");
 					if(!outputFile.exists()) {
-						BufferedImage image = page.convertToImage();
+						BufferedImage image = page.convertToImage(BufferedImage.TYPE_INT_RGB, 300);
 						System.out.println("Image Created -> " + outputFile.getName());
 						ImageIO.write(image, "jpg", outputFile);
 					}
