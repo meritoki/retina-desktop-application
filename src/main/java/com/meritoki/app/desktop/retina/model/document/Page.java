@@ -82,6 +82,7 @@ public class Page {
 	/**
 	 * 
 	 */
+	@JsonProperty
 	public double threshold = 16;
 
 	/**
@@ -135,6 +136,7 @@ public class Page {
 		return index;
 	}
 	
+	@JsonIgnore
 	public double getThreshold() {
 		return threshold;
 	}
@@ -304,6 +306,7 @@ public class Page {
 		return this.bufferedImage;
 	}
 
+	@JsonIgnore
 	public void setThreshold(double threshold) {
 		this.threshold = threshold;
 	}

@@ -46,8 +46,6 @@ public class Image {
 	@JsonIgnore
 	static Logger logger = LogManager.getLogger(Image.class.getName());
 	@JsonProperty
-	public String documentUUID;
-	@JsonProperty
 	public String uuid;
 	@JsonIgnore
 	public File file;
@@ -74,7 +72,6 @@ public class Image {
 	}
 	
 	public Image(String documentUUID) {
-		this.documentUUID = documentUUID;
 		if (this.file == null) {
 			this.file = new File(this.filePath + getSeperator() + this.fileName);
 		}
@@ -91,7 +88,6 @@ public class Image {
 	 */
 	public Image(Image image) {
 		this.uuid = image.uuid;
-		this.documentUUID = image.documentUUID;
 		this.file = image.file;
 		this.filePath = image.filePath;
 		this.fileName = image.fileName;

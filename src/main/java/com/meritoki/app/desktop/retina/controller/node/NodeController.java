@@ -60,6 +60,10 @@ public class NodeController {
 	public static String getDocumentCache(String uuid) {
 		return getDocumentCache() + getSeperator() + uuid;
 	}
+	
+	public static String getResourceCache() {
+		return getRetinaHome() + getSeperator() + "resource";
+	}
 
 //	public static String getImageCache(String uuid) {
 //		return getDocumentCache(uuid) + getSeperator() + "image";
