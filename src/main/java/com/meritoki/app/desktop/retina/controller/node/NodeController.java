@@ -40,39 +40,43 @@ public class NodeController {
 	public static void main(String[] args) {
 		System.out.println(getUserHome());
 	}
-	
+
 	public static String getSeperator() {
 		return FileSystems.getDefault().getSeparator();
 	}
-	
+
 	public static String getUserHome() {
 		return System.getProperty("user.home");
 	}
-	
+
 	public static String getRetinaHome() {
-		return getUserHome()+getSeperator()+".retina";
-	}
-	
-	public static String getDocumentCache() {
-		return getRetinaHome()+getSeperator()+"document";
-	}
-	
-	public static String getDocumentCache(String uuid) {
-		return getDocumentCache()+getSeperator()+uuid;
+		return getUserHome() + getSeperator() + ".retina";
 	}
 
-	public static String getImageCache() {
-		return getRetinaHome()+getSeperator()+"image";
+	public static String getDocumentCache() {
+		return getRetinaHome() + getSeperator() + "document";
 	}
-	
+
+	public static String getDocumentCache(String uuid) {
+		return getDocumentCache() + getSeperator() + uuid;
+	}
+
+//	public static String getImageCache(String uuid) {
+//		return getDocumentCache(uuid) + getSeperator() + "image";
+//	}
+
+//	public static String getImageCache() {
+//		return getRetinaHome()+getSeperator()+"image";
+//	}
+
 	public static String getPanoptesHome() {
-		return getUserHome()+getSeperator()+".panoptes";
+		return getUserHome() + getSeperator() + ".panoptes";
 	}
-	
+
 	public static String getProviderHome() {
-		return getRetinaHome()+getSeperator()+"provider";
+		return getRetinaHome() + getSeperator() + "provider";
 	}
-	
+
 	public static BufferedImage openBufferedImage(String filePath, String fileName) {
 		logger.debug("openBufferedImage(" + filePath + ", " + fileName + ")");
 		return openBufferedImage(new java.io.File(filePath + getSeperator() + fileName));
@@ -83,7 +87,7 @@ public class NodeController {
 		try {
 			bufferedImage = ImageIO.read(file);
 		} catch (IOException ex) {
-			logger.error("IOException "+ex.getMessage());
+			logger.error("IOException " + ex.getMessage());
 		}
 		return bufferedImage;
 	}
@@ -95,10 +99,10 @@ public class NodeController {
 
 	@JsonIgnore
 	public static void saveJpg(File file, BufferedImage bufferedImage) {
-		logger.debug("saveJpg("+file+", "+bufferedImage+")");
+		logger.debug("saveJpg(" + file + ", " + bufferedImage + ")");
 		try {
 			ImageIO.write(bufferedImage, "jpg", file);
-			
+
 		} catch (IOException ex) {
 			logger.error(ex);
 		}
@@ -120,7 +124,7 @@ public class NodeController {
 		}
 		return object;
 	}
-	
+
 //	public static Object openJson(File file, TypeReference<List<Input>> typeReference) {
 //		logger.info("openJson(" + file + ", " + typeReference + ")");
 //		Object object = null;
@@ -145,7 +149,7 @@ public class NodeController {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			object = mapper.readValue(file, typeReference);
-			
+
 		} catch (JsonGenerationException e) {
 			logger.error(e);
 		} catch (JsonMappingException e) {
@@ -185,13 +189,13 @@ public class NodeController {
 
 	@JsonIgnore
 	public static void saveJson(String path, String name, Object object) {
-		logger.debug("saveJson("+path+","+name+", object)");
-		saveJson(new java.io.File(path+getSeperator()+name), object);
+		logger.debug("saveJson(" + path + "," + name + ", object)");
+		saveJson(new java.io.File(path + getSeperator() + name), object);
 	}
 
 	@JsonIgnore
 	public static void saveJson(File file, Object object) {
-		logger.debug("saveJson("+file.getAbsolutePath()+",object)");
+		logger.debug("saveJson(" + file.getAbsolutePath() + ",object)");
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 		try {
@@ -203,18 +207,18 @@ public class NodeController {
 
 	@JsonIgnore
 	public static void saveProperties(String path, String name, Properties properties) {
-		logger.info("saveProperties("+path+","+name+", properties");
-	       try (OutputStream output = new FileOutputStream(path+name)) {
-	            properties.store(output, null);
-	        } catch (IOException io) {
-	            io.printStackTrace();
-	        }
+		logger.info("saveProperties(" + path + "," + name + ", properties");
+		try (OutputStream output = new FileOutputStream(path + name)) {
+			properties.store(output, null);
+		} catch (IOException io) {
+			io.printStackTrace();
+		}
 
 	}
 
 	@JsonIgnore
 	public static void saveYaml(String filePath, String fileName, Object object) {
-		logger.info("saveYaml("+filePath+", "+fileName+", object)");
+		logger.info("saveYaml(" + filePath + ", " + fileName + ", object)");
 		DumperOptions options = new DumperOptions();
 		options.setPrettyFlow(true);
 		options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
@@ -230,11 +234,11 @@ public class NodeController {
 
 	@JsonIgnore
 	public static void saveCsv(String filePath, String fileName, Object object) {
-		logger.info("saveCsv("+filePath+", "+fileName+", object)");
+		logger.info("saveCsv(" + filePath + ", " + fileName + ", object)");
 		try (PrintWriter writer = new PrintWriter(new File(filePath + getSeperator() + fileName))) {
 			if (object instanceof StringBuilder)
 				writer.write(((StringBuilder) object).toString());
-			
+
 		} catch (FileNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
@@ -274,17 +278,15 @@ public class NodeController {
 					stringList.add(s);
 				}
 			}
-		}
-		catch (Exception e) {
-			logger.error("executeCommand(...) Exception "+e.getMessage());
+		} catch (Exception e) {
+			logger.error("executeCommand(...) Exception " + e.getMessage());
 			throw new Exception("process timed out");
-		} 
-		finally {
+		} finally {
 			logger.info("executeCommand(...) process.exitValue=" + process.exitValue());
 		}
 		return stringList;
 	}
-	
+
 	@JsonIgnore
 	public static Object toJson(String string, Class className) {
 		logger.info("toJson(" + string + ", " + className + ")");
@@ -293,7 +295,7 @@ public class NodeController {
 //		mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
 		try {
 			object = mapper.readValue(string, className);
-			
+
 		} catch (JsonGenerationException e) {
 			logger.error(e);
 		} catch (JsonMappingException e) {
@@ -303,7 +305,7 @@ public class NodeController {
 		}
 		return object;
 	}
-	
+
 	public static void deleteDirectory(File directory) {
 		directory.delete();
 	}

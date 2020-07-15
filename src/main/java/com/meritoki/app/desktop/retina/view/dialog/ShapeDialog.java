@@ -189,22 +189,61 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 			Grid grid = (Grid)shape;
 			shape = grid.getShape();
 		}
-		Data data = (shape != null) ? shape.data : null;
-		String value = (shape != null) ? shape.data.text.value : null;
+		Data data = (shape != null) ? shape.getData() : null;	
+		this.initTextValueComboBox(shape);
+		this.initUnitTypeComboBox(data);
+		this.initUnitValueComboBox(data);
+	}
+	
+	/**
+	 *
+	 * @param textList
+	 */
+	public void initTextValueComboBox(Shape shape) {
 		List<Text> textList = (shape != null) ? shape.getTextList() : null;
-		this.initTextValueComboBox(textList, value);
+		Data data = (shape != null) ? shape.getData() : null;
+		Text text = (data != null) ? data.getText(): null;
+		String value = (text != null)?text.value:null;
+		String[] textArray = new String[0];
+		if (textList != null) {
+			textArray = new String[textList.size()];
+			for (int i = 0; i < textArray.length; i++) {
+				textArray[i] = textList.get(i).value;
+			}
+		}
+		this.textValueComboBox.setModel(new DefaultComboBoxModel(textArray));
+		if (value != null) {
+			this.textValueComboBox.setSelectedItem(value);
+		} else {
+			boolean flag = this.textValueDefaultCheckBox.isSelected();
+			if (flag) {
+				this.textValueComboBox.setSelectedItem(shape.getDefaultText().value);
+			}
+		}
+	}
+
+	public void initUnitTypeComboBox(Data data) {
 		List<String> unitTypeList = new ArrayList<>();
-		unitTypeList.add("data");
-		unitTypeList.add("time");
-		unitTypeList.add("space");
-		unitTypeList.add("energy");
-		unitTypeList.add("language");
+		unitTypeList.add(UnitType.DATA.toString());
+		unitTypeList.add(UnitType.TABLE.toString());
+		unitTypeList.add(UnitType.TIME.toString());
+		unitTypeList.add(UnitType.SPACE.toString());
+		unitTypeList.add(UnitType.ENERGY.toString());
+		unitTypeList.add(UnitType.LANGUAGE.toString());
 		this.initUnitTypeComboBox(unitTypeList);
+		if(data != null)
+			this.unitTypeComboBox.setSelectedItem(data.unit.type.toString());
+	}
+	
+	public void initUnitValueComboBox(Data data) {
 		if (data != null) {
-			this.unitTypeComboBox.setSelectedItem(data.unit.type);
 			switch (data.unit.type) {
 			case DATA: {
 				this.initUnitValueComboBox(this.model.resource.emptyList);
+				break;
+			}
+			case TABLE: {
+				this.initUnitValueComboBox(this.model.resource.tableList);
 				break;
 			}
 			case TIME: {
@@ -224,41 +263,14 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 				break;
 			}
 			}
+
+			this.unitValueComboBox.setSelectedItem(data.unit.value);
 		} else {
 			this.initUnitValueComboBox(this.model.resource.emptyList);
 		}
 	}
 	
 	
-
-	/**
-	 *
-	 * @param textList
-	 */
-	public void initTextValueComboBox(List<Text> textList, String value) {
-		String[] array = new String[0];
-		if (textList != null) {
-			array = new String[textList.size()];
-			for (int i = 0; i < array.length; i++) {
-				array[i] = textList.get(i).value;
-			}
-		}
-		this.textValueComboBox.setModel(new DefaultComboBoxModel(array));
-		if (value != null) {
-			this.textValueComboBox.setSelectedItem(value);
-		} else {
-			boolean flag = this.textValueDefaultCheckBox.isSelected();
-			if (flag) {
-				Document document = (this.model != null) ? this.model.document : null;
-				Page page = (document != null) ? document.getPage() : null;
-				Shape shape = (page != null) ? page.getImage().getShape() : null;
-				Data data = (shape != null) ? shape.getData() : null;
-				if (data != null) {
-					this.textValueComboBox.setSelectedItem(shape.getDefaultText().value);
-				}
-			}
-		}
-	}
 
 	public void initUnitTypeComboBox(List<String> unitTypeList) {
 		String[] array = new String[0];
@@ -271,25 +283,30 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 		this.unitTypeComboBox.setModel(new DefaultComboBoxModel(array));
 		this.unitTypeComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int selectedIndex = unitTypeComboBox.getSelectedIndex();
-				switch (selectedIndex) {
-				case 0: {
+				String selectedItem = (String)unitTypeComboBox.getSelectedItem();
+				UnitType unitType = UnitType.valueOf(selectedItem);
+				switch (unitType) {
+				case DATA: {
 					initUnitValueComboBox(model.resource.emptyList);
 					break;
 				}
-				case 1: {
+				case TABLE: {
+					initUnitValueComboBox(model.resource.tableList);
+					break;
+				}
+				case TIME: {
 					initUnitValueComboBox(model.resource.timeList);
 					break;
 				}
-				case 2: {
+				case SPACE: {
 					initUnitValueComboBox(model.resource.spaceList);
 					break;
 				}
-				case 3: {
+				case ENERGY: {
 					initUnitValueComboBox(model.resource.energyList);
 					break;
 				}
-				case 4: {
+				case LANGUAGE: {
 					initUnitValueComboBox(model.resource.languageList);
 				}
 				}
@@ -1033,8 +1050,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 				shape = grid.getShape();
 			}
 			shape.addText(text);
-			System.out.println(shape.getTextMap());
-			this.setModel(this.model);
+			this.mainFrame.init();
 		}
 
 	}// GEN-LAST:event_inputAddButtonActionPerformed
@@ -1075,30 +1091,15 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
 		Shape shape = (page != null) ? page.getImage().getShape() : null;
+		if(shape != null && shape instanceof Grid) {
+			Grid grid = (Grid)shape;
+			shape = grid.getShape();
+		}
 		Data data = (shape != null) ? shape.getData() : null;
 		if (data != null) {
-			String unitType = (String) this.unitTypeComboBox.getSelectedItem();
-			switch (unitType) {
-			case "data": {
-				data.unit.type = UnitType.DATA;
-				break;
-			}
-			case "time": {
-				data.unit.type = UnitType.TIME;
-				break;
-			}
-			case "space": {
-				data.unit.type = UnitType.SPACE;
-				break;
-			}
-			case "energy": {
-				data.unit.type = UnitType.ENERGY;
-				break;
-			}
-			case "language": {
-				data.unit.type = UnitType.LANGUAGE;
-			}
-			}
+			String selectedItem = (String) this.unitTypeComboBox.getSelectedItem();
+			UnitType unitType = UnitType.valueOf(selectedItem);
+			data.unit.type = unitType;
 			data.unit.value = (String) this.unitValueComboBox.getSelectedItem();
 			logger.info("applyUnitButtonActionPerformed(e) data.unit.value=" + data.unit.value);
 			logger.info("applyUnitButtonActionPerformed(e) data.unit.type=" + data.unit.type);
@@ -1127,6 +1128,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 			Text text = (data != null) ? data.text : null;
 			String value = (String) this.textValueComboBox.getSelectedItem();
 			text.setValue(value);
+			this.mainFrame.init();
 		}
 	}// GEN-LAST:event_setTextButtonActionPerformed
 
