@@ -64,6 +64,8 @@ public class PropertyDialog extends javax.swing.JDialog {
         defaultScaleLabel = new javax.swing.JLabel();
         defaultScaleTextField = new javax.swing.JTextField();
         setButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        defaultThresholdTextField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -76,6 +78,8 @@ public class PropertyDialog extends javax.swing.JDialog {
             }
         });
 
+        jLabel1.setText("Default Threshold:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -83,11 +87,15 @@ public class PropertyDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(setButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(defaultScaleLabel)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1)
+                            .addComponent(defaultScaleLabel))
                         .addGap(4, 4, 4)
-                        .addComponent(defaultScaleTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE))
-                    .addComponent(setButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(defaultScaleTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                            .addComponent(defaultThresholdTextField))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -98,8 +106,12 @@ public class PropertyDialog extends javax.swing.JDialog {
                     .addComponent(defaultScaleLabel)
                     .addComponent(defaultScaleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(defaultThresholdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                 .addComponent(setButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -107,9 +119,12 @@ public class PropertyDialog extends javax.swing.JDialog {
 
     private void setButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setButtonActionPerformed
         String defaultScaleText = this.defaultScaleTextField.getText();
+        String defaultThresholdValue = this.defaultThresholdTextField.getText();
         double defaultScale = Double.parseDouble(defaultScaleText);
+        double defaultThreshold = Double.parseDouble(defaultThresholdValue);
         for(Page page: this.model.document.pageList) {
             page.setScale(defaultScale);
+            page.setThreshold(defaultThreshold);
         }
     }//GEN-LAST:event_setButtonActionPerformed
 
@@ -158,6 +173,8 @@ public class PropertyDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel defaultScaleLabel;
     private javax.swing.JTextField defaultScaleTextField;
+    private javax.swing.JTextField defaultThresholdTextField;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JButton setButton;
     // End of variables declaration//GEN-END:variables
 }

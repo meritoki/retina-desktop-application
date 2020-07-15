@@ -24,6 +24,7 @@ import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
@@ -74,6 +75,7 @@ public class ShapePanel extends JPanel {
 				affineTransform.scale(1, 1);
 				BufferedImage bufferedImage = shape.bufferedImage;
 				if (bufferedImage != null) {
+//					Image image = bufferedImage.getScaledInstance(bufferedImage.getWidth(),this.getHeight(),Image.SCALE_SMOOTH);
 					graphics2D.drawImage(bufferedImage, affineTransform, null);
 				}
 			}

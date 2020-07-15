@@ -117,6 +117,10 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 		Page page = (document != null) ? document.getPage() : null;
 		Image image = (page != null) ? page.getImage() : null;
 		Shape shape = (image != null) ? image.getShape() : null;
+		if(shape instanceof Grid) {
+			Grid grid = (Grid)shape;
+			shape = grid.getShape();
+		}
 		List<Text> textList = (shape != null) ? shape.getTextList() : null;
 	}
 
@@ -149,6 +153,10 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 		Page page = (document != null) ? document.getPage() : null;
 		Shape shape = (page != null) ? page.getShape() : null;
 		if(shape != null) {
+			if(shape instanceof Grid) {
+				Grid grid = (Grid)shape;
+				shape = grid.getShape();
+			}
 			String textValue = shape.getData().getText().value;
 			if(textValue != null && textValue.trim().equals("")) {
 				this.noInputCheckBox.setSelected(true);
@@ -170,7 +178,6 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 				this.setTextButton.setEnabled(true);
 			}
 		}
-		
 	}
 
 	public void initComboBox() {
@@ -178,6 +185,10 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 		Page page = (document != null) ? document.getPage() : null;
 		Image image = (page != null) ? page.getImage() : null;
 		Shape shape = (image != null) ? image.getShape() : null;
+		if(shape instanceof Grid) {
+			Grid grid = (Grid)shape;
+			shape = grid.getShape();
+		}
 		Data data = (shape != null) ? shape.data : null;
 		String value = (shape != null) ? shape.data.text.value : null;
 		List<Text> textList = (shape != null) ? shape.getTextList() : null;
@@ -428,8 +439,6 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 			@Override
 			public void mouseClicked(MouseEvent me) {
 				Document document = (model != null) ? model.document : null;
-				document.cache.pressedShape = null;
-				document.cache.shapeIndex = -1;
 				document.cache.shapeUUID = (String) shapeList.getSelectedValue();
 				logger.info("shapeListAddMouseListener() document.cache.shapeUUID=" + document.cache.shapeUUID);
 				try {
@@ -984,6 +993,10 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 			Page page = (document != null) ? document.getPage() : null;
 			Shape shape = (page != null) ? page.getShape() : null;
 			if(shape != null) {
+				if(shape instanceof Grid) {
+					Grid grid = (Grid)shape;
+					shape = grid.getShape();
+				}
 				shape.getData().getText().setValue("");
 			}
 		} else {
@@ -998,6 +1011,10 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 			Page page = (document != null) ? document.getPage() : null;
 			Shape shape = (page != null) ? page.getShape() : null;
 			if(shape != null) {
+				if(shape instanceof Grid) {
+					Grid grid = (Grid)shape;
+					shape = grid.getShape();
+				}
 				shape.getData().getText().setValue(null);
 			}
 		}
@@ -1011,6 +1028,10 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 		Page page = (document != null) ? document.getPage() : null;
 		Shape shape = (page != null) ? page.getImage().getShape() : null;
 		if (shape != null) {
+			if(shape instanceof Grid) {
+				Grid grid = (Grid)shape;
+				shape = grid.getShape();
+			}
 			shape.addText(text);
 			System.out.println(shape.getTextMap());
 			this.setModel(this.model);
@@ -1025,6 +1046,10 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 			Page page = (document != null) ? document.getPage() : null;
 			Shape shape = (page != null) ? page.getImage().getShape() : null;
 			if (shape != null) {
+				if(shape instanceof Grid) {
+					Grid grid = (Grid)shape;
+					shape = grid.getShape();
+				}
 				this.textValueComboBox.setSelectedItem(shape.getDefaultText().value);
 			}
 		}
@@ -1093,11 +1118,16 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 
 	private void setTextButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_setTextButtonActionPerformed
 		Shape shape = this.model.document.getPage().getShape();
-		Data data = (shape != null) ? shape.data : null;
-		Text text = (data != null) ? data.text : null;
-		String value = (String) this.textValueComboBox.getSelectedItem();
-		text.setValue(value);
-
+		if(shape != null) {
+			if(shape instanceof Grid) {
+				Grid grid = (Grid)shape;
+				shape = grid.getShape();
+			}
+			Data data = (shape != null) ? shape.data : null;
+			Text text = (data != null) ? data.text : null;
+			String value = (String) this.textValueComboBox.getSelectedItem();
+			text.setValue(value);
+		}
 	}// GEN-LAST:event_setTextButtonActionPerformed
 
 	private void applyParserButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_applyParserButtonActionPerformed
