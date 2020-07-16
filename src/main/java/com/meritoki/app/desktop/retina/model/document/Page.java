@@ -20,6 +20,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -226,8 +227,6 @@ public class Page {
 
 	@JsonIgnore
 	public List<Shape> getShapeList() {
-		double scale = this.position.scale;
-		this.position.setScale(1);
 		List<Shape> shapeList = new ArrayList<>();
 		for (Image image : this.imageList) {
 			for (Shape shape : image.getShapeList()) {
@@ -235,14 +234,11 @@ public class Page {
 				shapeList.add(shape);
 			}
 		}
-		this.position.setScale(scale);
 		return shapeList;
 	}
 	
 	@JsonIgnore
 	public List<Shape> getCompleteShapeList() {
-		double scale = this.position.scale;
-		this.position.setScale(1);
 		List<Shape> shapeList = new ArrayList<>();
 		for (Image image : this.imageList) {
 			for (Shape shape : image.getCompleteShapeList()) {
@@ -250,22 +246,27 @@ public class Page {
 				shapeList.add(shape);
 			}
 		}
-		this.position.setScale(scale);
 		return shapeList;
 	}
 
 	@JsonIgnore
 	public BufferedImage getShapeBufferedImage(Shape shape) {
 		logger.debug("getShapeBufferedImage("+shape+")");
-		BufferedImage bufferedImage = null;
-		if (this.getBufferedImage() != null) {
+		BufferedImage before = this.getBufferedImage();
+		BufferedImage after = new BufferedImage(before.getWidth(),before.getHeight(),BufferedImage.TYPE_INT_ARGB);
+		AffineTransform affineTransform = new AffineTransform();
+		affineTransform.scale(this.position.scale, this.position.scale);//this handles scaling the bufferedImage
+		AffineTransformOp affineTransformOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
+		after = affineTransformOp.filter(before, after);
+		BufferedImage shapeBufferedImage = null;
+		if (after != null) {
 			if(shape.position.point.x >= 0 && shape.position.point.y >= 0 && (int)shape.position.dimension.height > 0 && (int)shape.position.dimension.width > 0) {
-				bufferedImage = this.getBufferedImage().getSubimage((int)shape.position.point.x, (int)shape.position.point.y, (int)shape.position.dimension.width, (int)shape.position.dimension.height);
+				shapeBufferedImage = after.getSubimage((int)shape.position.point.x, (int)shape.position.point.y, (int)shape.position.dimension.width, (int)shape.position.dimension.height);
 			} else {
 				logger.error("MAJOR ERROR THAT NEEDS TO BE FIXED shape.position="+shape.position);
 			}
 		}
-		return bufferedImage;
+		return shapeBufferedImage;
 	}
 	
 	@JsonIgnore

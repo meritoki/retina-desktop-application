@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Grid;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Shape;
@@ -153,10 +154,21 @@ public class Pattern {
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
 						if (operation.object instanceof Shape) {
+							Shape shape = (Shape)operation.object;
+							if(shape instanceof Grid) {
+								Grid grid = (Grid) shape;
+								grid.updateMatrix();
+							}
 							this.document.getPage().removeShape((Shape) operation.object);
 						}
-					} else if (operation.sign == 0) {
+					} else 
+					if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
+							Shape shape = (Shape)operation.object;
+							if(shape instanceof Grid) {
+								Grid grid = (Grid) shape;
+								grid.updateMatrix();
+							}
 							this.document.getPage().getImage().addShape((Shape) operation.object);
 						}
 					}
@@ -343,10 +355,21 @@ public class Pattern {
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
 						if (operation.object instanceof Shape) {
+							Shape shape = (Shape)operation.object;
+							if(shape instanceof Grid) {
+								Grid grid = (Grid) shape;
+								grid.updateMatrix();
+							}
 							this.document.getPage().getImage().addShape((Shape) operation.object);
 						}
-					} else if (operation.sign == 0) {
+					} 
+					else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
+							Shape shape = (Shape)operation.object;
+							if(shape instanceof Grid) {
+								Grid grid = (Grid) shape;
+								grid.updateMatrix();
+							}
 							this.document.getPage().getImage().removeShape((Shape) operation.object);
 						}
 					}

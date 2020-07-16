@@ -34,9 +34,17 @@ public class MoveShape extends Command {
 		Image releasedImage = this.document.cache.releasedImage;
 		Point releasedPoint = this.document.cache.releasedPoint;
 		Point pressedPoint = this.document.cache.pressedPoint;
+		Shape undoShape = null;
+		Shape redoShape = null;
+		if(pressedShape instanceof Grid) {
+			Grid pressedGrid = (Grid)pressedShape;
+			undoShape = new Grid(pressedGrid,true);
+		} else {
+			undoShape = new Shape(pressedShape,true);
+		}
 		// Undo
 		Operation operation = new Operation();
-		operation.object = new Shape(this.document.cache.pressedShape, true);
+		operation.object = undoShape;
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		// operation.uuid = this.document.cache.pressedShape.uuid;
@@ -69,8 +77,15 @@ public class MoveShape extends Command {
 			throw new Exception("Release Point Invalid");
 		}
 		// Redo
+		if(newShape instanceof Grid) {
+			logger.info("execute() (newShape instanceof Grid)");
+			Grid newGrid = (Grid)newShape;
+			redoShape = new Grid(newGrid,true);
+		} else {
+			redoShape = new Shape(newShape,true);
+		}
 		operation = new Operation();
-		operation.object = new Shape(newShape, true);
+		operation.object = redoShape;//new Shape(newShape, true);
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
 		// operation.uuid = this.document.cache.pressedShape.uuid;

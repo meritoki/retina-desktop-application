@@ -22,6 +22,14 @@ public class Grid extends Shape {
 		initMatrix();
 	}
 	
+	public Grid(Grid grid, boolean flag) {
+		super((Shape)grid,flag);
+		this.row = grid.row;
+		this.column = grid.column;
+		this.matrix = grid.matrix;
+		this.index = grid.index;
+	}
+	
 	public Grid(Shape shape) {
 		super(shape,true);
 		initMatrix();
