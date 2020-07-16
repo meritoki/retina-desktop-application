@@ -18,12 +18,38 @@ public class Resource {
 	public List<String> energyList = new ArrayList<>();//Arrays.asList("temperature", "pressure");
 	@JsonIgnore
 	public List<String> languageList = new ArrayList<>();//Arrays.asList("letter", "word", "sentance", "paragraph");
+	@JsonIgnore
+	public List<String> recentList = new ArrayList<>();
 	
 	public Resource() {
 		this.initEnergyList();
 		this.initTimeList();
 		this.initSpaceList();
 		this.initLanguageList();
+		this.initRecentList();
+	}
+	
+	public void addRecent(String recent) {
+		if(!this.recentList.contains(recent)) {
+			this.recentList.add(recent);
+			NodeController.saveCsv(NodeController.getResourceCache(), "recent.csv", this.recentList);
+		}
+	}
+	
+	public void removeRecent(String recent) {
+		if(this.recentList.contains(recent)) {
+			this.recentList.remove(recent);
+			NodeController.saveCsv(NodeController.getResourceCache(), "recent.csv", this.recentList);
+		}
+	}
+	
+	public void initRecentList() {
+		List<String[]> list = NodeController.openCsv(NodeController.getResourceCache()+NodeController.getSeperator()+"recent.csv");
+		for(String[] stringArray:list) {
+			for(String string: stringArray) {
+				this.recentList.add(string);
+			}
+		}
 	}
 	
 	public void initEnergyList() {

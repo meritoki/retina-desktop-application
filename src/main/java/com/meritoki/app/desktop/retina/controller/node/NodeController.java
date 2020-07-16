@@ -242,6 +242,10 @@ public class NodeController {
 		try (PrintWriter writer = new PrintWriter(new File(filePath + getSeperator() + fileName))) {
 			if (object instanceof StringBuilder)
 				writer.write(((StringBuilder) object).toString());
+			else if(object instanceof List) {
+				String objectsCommaSeparated = String.join(",", (List<String>)object);
+				writer.write(objectsCommaSeparated);
+			}
 
 		} catch (FileNotFoundException e) {
 			System.out.println(e.getMessage());

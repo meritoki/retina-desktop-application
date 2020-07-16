@@ -17,9 +17,13 @@ package com.meritoki.app.desktop.retina.view.frame;
 
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.io.File;
 import java.net.URL;
+import java.util.List;
 
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -141,6 +145,30 @@ public final class MainFrame extends JFrame {
 		} else {
 			this.logInOutMenuItem.setText("Login");
 		}
+		this.initMenu();
+	}
+	
+	public void initMenu() {
+		List<String> recentList = this.model.resource.recentList;
+		this.openRecentMenu.removeAll();
+		for(String recent: recentList) {
+			File file = new File(recent);
+			if(file.exists()) {
+				JMenuItem recentMenuItem = new javax.swing.JMenuItem();
+				recentMenuItem.setText(file.getName());
+				recentMenuItem.addActionListener(new java.awt.event.ActionListener() {
+		            public void actionPerformed(java.awt.event.ActionEvent evt) {
+		    			model.document = (DocumentController.open(file));
+		    			model.document.pattern.user = model.system.user;
+		    			model.system.newDocument = false;
+		    			init();
+		            }
+		        });
+				this.openRecentMenu.add(recentMenuItem);
+			} else {
+				this.model.resource.removeRecent(recent);
+			}
+		}
 	}
 
 	/**
@@ -168,6 +196,7 @@ public final class MainFrame extends JFrame {
         logInOutMenuItem = new javax.swing.JMenuItem();
         newMenuItem = new javax.swing.JMenuItem();
         openMenuItem = new javax.swing.JMenuItem();
+        openRecentMenu = new javax.swing.JMenu();
         saveMenuItem = new javax.swing.JMenuItem();
         saveAsMenuItem = new javax.swing.JMenuItem();
         importMenu = new javax.swing.JMenu();
@@ -258,6 +287,9 @@ public final class MainFrame extends JFrame {
             }
         });
         fileMenu.add(openMenuItem);
+
+        openRecentMenu.setText("Open Recent");
+        fileMenu.add(openRecentMenu);
 
         saveMenuItem.setText("Save");
         saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -602,6 +634,7 @@ public final class MainFrame extends JFrame {
     private javax.swing.JMenuItem microsoftExportMenuItem;
     private javax.swing.JMenuItem newMenuItem;
     private javax.swing.JMenuItem openMenuItem;
+    private javax.swing.JMenu openRecentMenu;
     private javax.swing.JMenuItem pageMenuItem;
     private com.meritoki.app.desktop.retina.view.panel.PagePanel pagePanel;
     private javax.swing.JMenuItem propertyMenuItem;
