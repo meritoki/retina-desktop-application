@@ -82,6 +82,7 @@ public class DocumentResizeImageTest {
 		document.pattern.undo();
 		document.pattern.undo();
 		document.pattern.undo();
+		document.pattern.undo();
 		logger.info(origin);
 		logger.info(document.cache.pressedImage);
 		assertEquals(origin.width,document.cache.pressedImage.position.dimension.width);

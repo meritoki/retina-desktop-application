@@ -419,7 +419,7 @@ public class Position {
 			}
 		} else if (logger.isInfoEnabled()) {
 //			string = "{\"relativeScale\":"+this.relativeScale+",\"offset\":"+this.offset+",\"margin\":"+this.margin+", \"relativePoint\":"+this.relativePoint+"\",\"point\":" + this.point + ", \"center\":"+this.center+", \"dimension\":" + this.dimension + "}";
-			string = "{\"relativeScale\":"+this.relativeScale+", \"point\":" + this.point + ", \"center\":"+this.center+", \"dimension\":" + this.dimension + "}";
+			string = "{\"scale\":"+this.scale+", \"relativeScale\":"+this.relativeScale+", \"point\":" + this.point + ", \"center\":"+this.center+", \"dimension\":" + this.dimension + "}";
 		}
 		return string;
 	}

@@ -32,8 +32,11 @@ public class ResizeImage extends Command {
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);
 		//Logic
+		//Both set to null, to invoke a reload inside of the classes
+		//Now the bufferedImage must be passed to the classes from Document;
 		page.setBufferedImage(null);
 		pressedImage.setBufferedImage(null);
+		
 		double relativeScale = (scale == pressedImage.position.relativeScale)?scale/pressedImage.position.relativeScale:pressedImage.position.relativeScale;//This LINE IS ESSENTIAL TO FIXING THE BUG
 		switch(scaleOperator) {
 		case '*':{
@@ -46,7 +49,10 @@ public class ResizeImage extends Command {
 		}
 		}
 		pressedImage.setRelativeScale(relativeScale);
-		page.getBufferedImage();
+		this.document.setBufferedImage(page);
+		
+////		this.document.setBufferedImage(pressedImage);
+//		page.getBufferedImage();
 		//Redo
 		operation = new Operation();
 		operation.object = pressedImage.position.relativeScale;

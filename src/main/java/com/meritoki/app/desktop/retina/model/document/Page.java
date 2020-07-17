@@ -20,6 +20,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -80,6 +81,12 @@ public class Page {
 	@JsonProperty
 	public Script script = new Script();
 	/**
+	 * 
+	 */
+	@JsonProperty
+	public double threshold = 16;
+
+	/**
 	 * Class constructor
 	 */
 	public Page() {
@@ -128,6 +135,11 @@ public class Page {
 			}
 		}
 		return index;
+	}
+	
+	@JsonIgnore
+	public double getThreshold() {
+		return threshold;
 	}
 	/**
 	 * Function returns Image using index
@@ -202,43 +214,76 @@ public class Page {
 		Shape shape = (image != null) ? image.getShape() : null;
 		return shape;
 	}
-
+	
 	@JsonIgnore
-	public List<Shape> getShapeList() {
-		double scale = this.position.scale;
-		this.position.setScale(1);
-		List<Shape> shapeList = new ArrayList<>();
-		for (Image image : this.imageList) {
-			for (Shape shape : image.getShapeList()) {
-				shape.bufferedImage = this.getShapeBufferedImage(shape);
-				shapeList.add(shape);
-			}
+	public Shape getGridShape() {
+		Shape shape = this.getShape();
+		if(shape instanceof Grid) {
+			Grid grid = (Grid)shape;
+			shape = grid.getShape();
 		}
-		this.position.setScale(scale);
-		return shapeList;
+		return shape;
 	}
 
 	@JsonIgnore
-	public BufferedImage getShapeBufferedImage(Shape shape) {
-		BufferedImage bufferedImage = null;
-		if (this.getBufferedImage() != null) {
+	public List<Shape> getShapeList() {
+		BufferedImage bufferedImage = this.getScaledBufferedImage();
+		List<Shape> shapeList = new ArrayList<>();
+		for (Image image : this.imageList) {
+			for (Shape shape : image.getShapeList()) {
+				shape.bufferedImage = this.getShapeBufferedImage(bufferedImage, shape);
+				shapeList.add(shape);
+			}
+		}
+		return shapeList;
+	}
+	
+	@JsonIgnore
+	public List<Shape> getCompleteShapeList() {
+		BufferedImage bufferedImage = this.getScaledBufferedImage();
+		List<Shape> shapeList = new ArrayList<>();
+		for (Image image : this.imageList) {
+			for (Shape shape : image.getCompleteShapeList()) {
+				shape.bufferedImage = this.getShapeBufferedImage(bufferedImage,shape);
+				shapeList.add(shape);
+			}
+		}
+		return shapeList;
+	}
+	
+	@JsonIgnore
+	public BufferedImage getScaledBufferedImage() {
+		BufferedImage before = this.getBufferedImage();
+		BufferedImage after = new BufferedImage(before.getWidth(),before.getHeight(),BufferedImage.TYPE_INT_ARGB);
+		AffineTransform affineTransform = new AffineTransform();
+		affineTransform.scale(this.position.scale, this.position.scale);//this handles scaling the bufferedImage
+		AffineTransformOp affineTransformOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
+		after = affineTransformOp.filter(before, after);
+		return after;
+	}
+
+	@JsonIgnore
+	public BufferedImage getShapeBufferedImage(BufferedImage after, Shape shape) {
+		logger.debug("getShapeBufferedImage("+shape+")");
+		BufferedImage shapeBufferedImage = null;
+		if (after != null) {
 			if(shape.position.point.x >= 0 && shape.position.point.y >= 0 && (int)shape.position.dimension.height > 0 && (int)shape.position.dimension.width > 0) {
-				bufferedImage = this.getBufferedImage().getSubimage((int)shape.position.point.x, (int)shape.position.point.y, (int)shape.position.dimension.width, (int)shape.position.dimension.height);
+				shapeBufferedImage = after.getSubimage((int)shape.position.point.x, (int)shape.position.point.y, (int)shape.position.dimension.width, (int)shape.position.dimension.height);
 			} else {
 				logger.error("MAJOR ERROR THAT NEEDS TO BE FIXED shape.position="+shape.position);
 			}
 		}
-		return bufferedImage;
+		return shapeBufferedImage;
 	}
 	
 	@JsonIgnore
 	public List<Shape> getSortedShapeList() {
-		return new Matrix(this.getShapeList(),null).getShapeList();
+		return new Matrix(this.getShapeList(),null,this.threshold).getShapeList();
 	}
 
 	@JsonIgnore
 	public Matrix getMatrix() {
-		return new Matrix(this.getShapeList(), this.script);
+		return new Matrix(this.getCompleteShapeList(), this.script, this.threshold);
 	}
 	
 	@JsonIgnore
@@ -270,8 +315,20 @@ public class Page {
 	}
 
 	@JsonIgnore
+	public void setThreshold(double threshold) {
+		this.threshold = threshold;
+	}
+	@JsonIgnore
 	public void setBufferedImage(BufferedImage bufferedImage) {
 		this.bufferedImage = bufferedImage;
+	}
+	
+	@JsonIgnore
+	public void setBufferedImageNull() {
+		this.setBufferedImage(null);
+		for(Image image: this.imageList) {
+			image.setBufferedImage(null);
+		}
 	}
 
 	/**
@@ -326,6 +383,16 @@ public class Page {
 	public void setShape(String uuid) {
 		for (Image image : this.getImageList()) {
 			if (image.setShape(uuid)) {
+				this.setImage(image.uuid);
+				break;
+			}
+		}
+	}
+	
+	@JsonIgnore
+	public void setGridShape(String uuid) {
+		for (Image image : this.getImageList()) {
+			if (image.setGridShape(uuid)) {
 				this.setImage(image.uuid);
 				break;
 			}
@@ -484,6 +551,7 @@ public class Page {
 		}
 		List<Shape> shapeList = this.getSortedShapeList();//this.getMatrix().getShapeList();
 		Shape shape = this.getShape();
+		Shape gridShape = this.getGridShape();
 		Shape previousShape = null;
 		if (shapeList != null) {
 			for (Shape s : shapeList) {
@@ -502,6 +570,25 @@ public class Page {
 				case RECTANGLE: {
 					Rectangle2D.Double rectangle = new Rectangle2D.Double(position.point.x, position.point.y, position.dimension.width, position.dimension.height);
 					graphics2D.draw(rectangle);
+					if(s instanceof Grid) {
+						Shape[][] matrix = ((Grid) s).matrix;
+						for(int i=0;i<matrix.length;i++) {
+							for(int j=0;j<matrix[i].length;j++) {
+								Shape gs = matrix[i][j];
+								if (gridShape != null && gs.uuid.equals(gridShape.uuid)) {
+									graphics2D.setColor(Color.YELLOW);
+								} else {
+									if (shape != null && s.uuid.equals(shape.uuid)) {
+										graphics2D.setColor(Color.RED);
+									} else {
+										graphics2D.setColor(Color.BLUE);
+									}
+								}
+								rectangle = new Rectangle2D.Double(gs.position.point.x, gs.position.point.y, gs.position.dimension.width, gs.position.dimension.height);
+								graphics2D.draw(rectangle);
+							}
+						}
+					}
 					break;
 				}
 				}

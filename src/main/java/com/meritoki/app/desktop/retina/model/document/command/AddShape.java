@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.document.Position;
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Grid;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
@@ -32,11 +33,14 @@ public class AddShape extends Command {
 		Image pressedImage = this.document.cache.pressedImage;
 		double scale = page.position.scale;
 		Shape shape = new Shape();
+//		Grid shape = new Grid();
+		
 //		if (this.minimumSize(pressedPoint, releasedPoint, scale)) {
 			shape.type = type;
 			shape.position = new Position(new Point(pressedPoint), new Point(releasedPoint),
 					pressedImage.position.relativeScale, scale, pressedImage.position.offset,
 					pressedImage.position.margin);
+//			shape.updateMatrix();
 			this.document.addShape(shape);
 			Operation operation = new Operation();
 			operation.object = new Shape(shape, true);

@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Grid;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Selection;
 import com.meritoki.app.desktop.retina.model.document.Shape;
@@ -34,6 +35,9 @@ public class ResizeShape extends Command {
 		this.operationList.push(operation);
 		//Logic
 		pressedShape.position.resize(new Point(releasedPoint), selection);
+		if(pressedShape instanceof Grid) {
+			((Grid)pressedShape).updateMatrix();
+		}
 		//Redo
 		operation = new Operation();
 		operation.object = new Shape(pressedShape,true);

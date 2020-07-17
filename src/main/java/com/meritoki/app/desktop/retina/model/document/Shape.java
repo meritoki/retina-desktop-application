@@ -25,12 +25,22 @@ import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
-
+@JsonTypeInfo(use = Id.CLASS,
+include = JsonTypeInfo.As.PROPERTY,
+property = "type")
+@JsonSubTypes({
+@Type(value = Grid.class)
+})
 public class Shape {
 
 	@JsonIgnore
@@ -50,6 +60,7 @@ public class Shape {
 
 	public Shape() {
 		this.uuid = UUID.randomUUID().toString();
+		this.type = ShapeType.RECTANGLE;
 	}
 
 	/**
@@ -167,6 +178,11 @@ public class Shape {
 	public void setData(Data data) {
 		this.data = data;
 	}
+	
+//	@JsonIgnore
+//	public void paint(Graphics2D graphics2D) {
+//		
+//	}
 
 	@JsonIgnore
 	@Override

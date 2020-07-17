@@ -15,6 +15,9 @@
  */
 package com.meritoki.app.desktop.retina.model.document;
 
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +29,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.document.command.Pattern;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Output;
 
@@ -52,13 +56,14 @@ public class Document {
 	public Document() {
 		this.uuid = UUID.randomUUID().toString();
 		this.init();
+		new File(NodeController.getDocumentCache(this.uuid)).mkdirs();
 //		this.test();
 	}
-	
+
 	public void save() {
 		this.pattern.save();
 	}
-	
+
 	public void init() {
 		this.pattern.setDocument(this);
 	}
@@ -82,13 +87,13 @@ public class Document {
 		if (this.getPage() != null) {
 			image = this.getPage().getImage();
 		}
-		logger.info("getImage() image="+image);
+		logger.info("getImage() image=" + image);
 		return image;
 	}
 
 	@JsonIgnore
 	public Image getImage(Point point) {
-		logger.info("getImage("+point+")");
+		logger.info("getImage(" + point + ")");
 		Image image = null;
 		if (this.getPage() != null) {
 			image = this.getPage().getImage(point);
@@ -98,15 +103,15 @@ public class Document {
 
 	@JsonIgnore
 	public void setImage(String uuid) {
-		logger.info("setImage("+uuid+")");
+		logger.info("setImage(" + uuid + ")");
 		if (this.getPage() != null) {
 			this.getPage().setImage(uuid);
 		}
 	}
-	
+
 	@JsonIgnore
 	public void setImage(int index) {
-		logger.debug("setImage("+index+")");
+		logger.debug("setImage(" + index + ")");
 		if (this.getPage() != null) {
 			this.getPage().setIndex(index);
 		}
@@ -118,7 +123,7 @@ public class Document {
 		if (this.getPage() != null) {
 			shape = this.getPage().getShape(point);
 		}
-		logger.info("getShape("+point+") shape="+shape);
+		logger.info("getShape(" + point + ") shape=" + shape);
 		return shape;
 	}
 
@@ -138,14 +143,14 @@ public class Document {
 	public int getIndex() {
 		return this.index;
 	}
-	
+
 	@JsonIgnore
 	public int getIndex(String uuid) {
 		int index = 0;
 		Page page;
-		for(int i = 0; i< this.pageList.size();i++) {
+		for (int i = 0; i < this.pageList.size(); i++) {
 			page = this.pageList.get(i);
-			if(page.uuid.equals(uuid)) {
+			if (page.uuid.equals(uuid)) {
 				index = i;
 				break;
 			}
@@ -161,14 +166,16 @@ public class Document {
 	@JsonIgnore
 	public Page getPage() {
 		int size = this.pageList.size();
-		return (this.index < size && size > 0) ? this.pageList.get(this.index) : null;
+		Page page = (this.index < size && size > 0) ? this.pageList.get(this.index) : null;
+		this.setBufferedImage(page);
+		return page;
 	}
-	
+
 	@JsonIgnore
 	public Page getPage(int index) {
 		int size = this.pageList.size();
 		Page page = (index < size && size > 0) ? this.pageList.get(index) : null;
-		logger.debug("getPage("+index+") page="+page);
+		logger.debug("getPage(" + index + ") page=" + page);
 		return page;
 	}
 
@@ -201,7 +208,8 @@ public class Document {
 				page = this.pageList.get(i);
 				if (page.uuid.equals(uuid)) {
 					this.setIndex(i);
-					break;
+				} else {
+					page.setBufferedImageNull();
 				}
 			}
 		}
@@ -216,6 +224,7 @@ public class Document {
 	@JsonIgnore
 	public void addPage(Page page) {
 		logger.info("addPage(" + page + ")");
+		this.setBufferedImage(page);
 		this.pageList.add(page);
 	}
 
@@ -262,12 +271,12 @@ public class Document {
 		}
 		return flag;
 	}
-	
+
 	@JsonIgnore
 	public void importOutputList(List<Output> outputList) {
-		for(Shape s: this.getShapeList()) {
-			for(Output o: outputList) {
-				if(s.uuid.equals(o.shape.uuid)) {
+		for (Shape s : this.getShapeList()) {
+			for (Output o : outputList) {
+				if (s.uuid.equals(o.shape.uuid)) {
 					s.textList.add(new Text(o.concept));
 				}
 			}
@@ -285,6 +294,51 @@ public class Document {
 			}
 		}
 		return null;
+	}
+
+	@JsonIgnore
+	public void setBufferedImage(Page page) {
+		if (page != null) {
+			List<Image> imageList = page.getImageList();
+			for (Image image : imageList) {
+				this.setBufferedImage(image);
+			}
+			page.getBufferedImage();
+		}
+	}
+	
+	@JsonIgnore
+	public void setBufferedImage(Image image) {
+		if (image.getBufferedImage() == null)
+			image.setBufferedImage(this.getBufferedImage(image));
+	}
+
+	@JsonIgnore
+	public BufferedImage getBufferedImage(Image image) {
+		BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getDocumentCache(this.uuid), image.uuid + "." + image.getExtension());
+		if (bufferedImage == null) {
+			if (image.file != null) {
+				bufferedImage = NodeController.openBufferedImage(image.file);
+				if (bufferedImage != null) {
+					if (image.getExtension().equals("jpg") || image.getExtension().equals("jpeg")) {
+						NodeController.saveJpg(NodeController.getDocumentCache(this.uuid),
+								image.uuid + "." + image.getExtension(), bufferedImage);
+					}
+				}
+			}
+		}
+		BufferedImage before = bufferedImage;
+		int w = before.getWidth();
+		int h = before.getHeight();
+		BufferedImage after = new BufferedImage((int) (w * image.position.relativeScale),
+				(int) (h * image.position.relativeScale), BufferedImage.TYPE_INT_ARGB);
+		AffineTransform at = new AffineTransform();
+		at.scale(image.position.relativeScale, image.position.relativeScale);
+		AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+		after = scaleOp.filter(before, after);
+		bufferedImage = after;
+		image.position.setAbsoluteDimension(new Dimension(bufferedImage.getWidth(), bufferedImage.getHeight()));
+		return bufferedImage;
 	}
 
 //	@JsonIgnore

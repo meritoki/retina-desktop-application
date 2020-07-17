@@ -38,7 +38,7 @@ public class Matrix {
 	static Logger logger = LogManager.getLogger(Matrix.class.getName());
 
 	@JsonIgnore
-	public static final double THRESHOLD = 16;
+	public double threshold = 16;
 
 	@JsonProperty
 	public Script script = new Script();
@@ -49,9 +49,10 @@ public class Matrix {
 	@JsonIgnore
 	public List<Shape> shapeList;
 
-	public Matrix(List<Shape> shapeList, Script script) {
+	public Matrix(List<Shape> shapeList, Script script, double threshold) {
 		this.shapeList = shapeList;
 		this.script = script;
+		this.threshold = threshold;
 	}
 
 	@JsonIgnore
@@ -243,10 +244,9 @@ public class Matrix {
 		double average = this.getShapeListYAverage(shapeList, shape);
 		a = shape.position.center.y;
 		a = Math.abs(average - a);
-		if (a > (THRESHOLD * shape.position.scale)) {
+		if (a > (threshold * shape.position.scale)) {
 			flag = false;
 		}
-
 		return flag;
 	}
 
