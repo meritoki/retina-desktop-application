@@ -24,7 +24,7 @@ public class SetGrid extends Command {
 		Shape shape = this.document.getPage().getShape();
 		//undo
 		Operation operation = new Operation();
-		operation.object = (shape != null)?shape.uuid:null;
+		operation.object = new Shape(shape,true);//(shape != null)?shape.uuid:null;
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);
@@ -45,7 +45,7 @@ public class SetGrid extends Command {
 		}
 		//redo
 		operation = new Operation();
-		operation.object = shapeUUID;
+		operation.object = new Grid((Grid)shape,true);//shapeUUID;
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);

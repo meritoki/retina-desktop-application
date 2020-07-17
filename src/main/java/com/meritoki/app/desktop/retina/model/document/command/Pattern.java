@@ -298,6 +298,17 @@ public class Pattern {
 					}
 				}
 			}
+			case "setGrid": {
+				for(Operation o: command.operationList) {
+					if(o.sign == 0) {
+						if(o.object instanceof Shape) {
+							Shape shape = (Shape)o.object;
+							this.document.getPage().removeShape(shape);
+							this.document.getPage().addShape(shape);
+						}
+					}
+				}
+			}
 			default: {
 				logger.error("undo() default");
 			}
@@ -491,6 +502,17 @@ public class Pattern {
 					}
 				}
 				break;
+			}
+			case "setGrid": {
+				for(Operation o: command.operationList) {
+					if(o.sign == 1) {
+						if(o.object instanceof Grid) {
+							Grid grid = (Grid)o.object;
+							this.document.getPage().removeShape(grid);
+							this.document.getPage().addShape(grid);
+						}
+					}
+				}
 			}
 			default: {
 

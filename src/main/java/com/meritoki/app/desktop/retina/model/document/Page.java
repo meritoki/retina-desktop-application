@@ -227,10 +227,11 @@ public class Page {
 
 	@JsonIgnore
 	public List<Shape> getShapeList() {
+		BufferedImage bufferedImage = this.getScaledBufferedImage();
 		List<Shape> shapeList = new ArrayList<>();
 		for (Image image : this.imageList) {
 			for (Shape shape : image.getShapeList()) {
-				shape.bufferedImage = this.getShapeBufferedImage(shape);
+				shape.bufferedImage = this.getShapeBufferedImage(bufferedImage, shape);
 				shapeList.add(shape);
 			}
 		}
@@ -239,25 +240,31 @@ public class Page {
 	
 	@JsonIgnore
 	public List<Shape> getCompleteShapeList() {
+		BufferedImage bufferedImage = this.getScaledBufferedImage();
 		List<Shape> shapeList = new ArrayList<>();
 		for (Image image : this.imageList) {
 			for (Shape shape : image.getCompleteShapeList()) {
-				shape.bufferedImage = this.getShapeBufferedImage(shape);
+				shape.bufferedImage = this.getShapeBufferedImage(bufferedImage,shape);
 				shapeList.add(shape);
 			}
 		}
 		return shapeList;
 	}
-
+	
 	@JsonIgnore
-	public BufferedImage getShapeBufferedImage(Shape shape) {
-		logger.debug("getShapeBufferedImage("+shape+")");
+	public BufferedImage getScaledBufferedImage() {
 		BufferedImage before = this.getBufferedImage();
 		BufferedImage after = new BufferedImage(before.getWidth(),before.getHeight(),BufferedImage.TYPE_INT_ARGB);
 		AffineTransform affineTransform = new AffineTransform();
 		affineTransform.scale(this.position.scale, this.position.scale);//this handles scaling the bufferedImage
 		AffineTransformOp affineTransformOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
 		after = affineTransformOp.filter(before, after);
+		return after;
+	}
+
+	@JsonIgnore
+	public BufferedImage getShapeBufferedImage(BufferedImage after, Shape shape) {
+		logger.debug("getShapeBufferedImage("+shape+")");
 		BufferedImage shapeBufferedImage = null;
 		if (after != null) {
 			if(shape.position.point.x >= 0 && shape.position.point.y >= 0 && (int)shape.position.dimension.height > 0 && (int)shape.position.dimension.width > 0) {

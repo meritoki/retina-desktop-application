@@ -13,15 +13,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import com.meritoki.app.desktop.retina.controller.document.DocumentController;
-import com.meritoki.app.desktop.retina.model.document.Document;
-import com.meritoki.app.desktop.retina.model.document.Image;
-import com.meritoki.app.desktop.retina.model.document.Page;
-import com.meritoki.app.desktop.retina.model.document.Point;
-import com.meritoki.app.desktop.retina.model.document.Position;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DocumentAddShapeTest {
-	static Logger logger = LogManager.getLogger(DocumentResizeShapeTest.class.getName());
+	static Logger logger = LogManager.getLogger(DocumentAddShapeTest.class.getName());
 	static Document document = null;
 	static String pageZeroUUID = null;
 	static String pageOneUUID = null;
