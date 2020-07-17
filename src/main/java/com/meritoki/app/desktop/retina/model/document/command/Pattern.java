@@ -155,11 +155,7 @@ public class Pattern {
 					if (operation.sign == 1) {
 						if (operation.object instanceof Shape) {
 							Shape shape = (Shape)operation.object;
-							if(shape instanceof Grid) {
-								Grid grid = (Grid) shape;
-								grid.updateMatrix();
-							}
-							this.document.getPage().removeShape((Shape) operation.object);
+							this.document.getPage().removeShape(shape);
 						}
 					} else 
 					if (operation.sign == 0) {
@@ -169,7 +165,7 @@ public class Pattern {
 								Grid grid = (Grid) shape;
 								grid.updateMatrix();
 							}
-							this.document.getPage().getImage().addShape((Shape) operation.object);
+							this.document.getPage().getImage().addShape(shape);
 						}
 					}
 				}
@@ -393,11 +389,7 @@ public class Pattern {
 					else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
 							Shape shape = (Shape)operation.object;
-							if(shape instanceof Grid) {
-								Grid grid = (Grid) shape;
-								grid.updateMatrix();
-							}
-							this.document.getPage().getImage().removeShape((Shape) operation.object);
+							this.document.getPage().getImage().removeShape(shape);
 						}
 					}
 				}

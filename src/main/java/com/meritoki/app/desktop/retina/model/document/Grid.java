@@ -22,18 +22,31 @@ public class Grid extends Shape {
 		initMatrix();
 	}
 	
+	public Grid(Shape shape, int row, int column) {
+		super(shape,true);
+		this.row = row;
+		this.column = column;
+		this.initMatrix();
+		this.updateMatrix();
+	}
+
 	public Grid(Grid grid, boolean flag) {
 		super((Shape)grid,flag);
 		this.row = grid.row;
 		this.column = grid.column;
-		this.matrix = grid.matrix;
+		this.matrix = grid.matrix;//this.copyShapeMatrix(grid.matrix);
 		this.index = grid.index;
 	}
 	
-	public Grid(Shape shape) {
-		super(shape,true);
-		initMatrix();
-	}
+//	public Shape[][] copyShapeMatrix(Shape[][] matrix) {
+//		Shape[][] m = new Shape[matrix.length][matrix[0].length];
+//		for(int i=0;i<matrix.length;i++) {
+//			for(int j=0;j<matrix[i].length;j++) {
+//				m[i][j] = new Shape(matrix[i][j],true);
+//			}
+//		}
+//		return m;
+//	}
 	
 	public List<Shape> getShapeList() {
 		

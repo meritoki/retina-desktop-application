@@ -93,7 +93,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 	}
 
 	public void init() {
-		logger.debug("init()");
+		logger.info("init()");
 		this.shapePanel.setModel(this.model);
 		this.initLabel();
 		this.initList();
@@ -141,7 +141,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 	}
 
 	public void initList() {
-		logger.info("initList()");
+		logger.debug("initList()");
 		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
 		List<Shape> shapeList = (page != null) ? page.getSortedShapeList() : null;
@@ -335,7 +335,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 	public void initShapeList(List<Shape> shapeList) {
 		DefaultListModel<String> defaultListModel = new DefaultListModel<String>();
 		if (shapeList != null && shapeList.size() > 0) {
-			logger.debug("initShapeList(" + shapeList + ")");
+			logger.trace("initShapeList(" + shapeList + ")");
 			for (int i = 0; i < shapeList.size(); i++) {
 				defaultListModel.addElement(shapeList.get(i).uuid);
 			}
@@ -346,7 +346,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 	public void initGridShapeList(List<Shape> shapeList) {
 		DefaultListModel<String> defaultListModel = new DefaultListModel<String>();
 		if (shapeList != null && shapeList.size() > 0) {
-			logger.info("initGridShapeList(" + shapeList + ")");
+			logger.trace("initGridShapeList(" + shapeList + ")");
 			for (int i = 0; i < shapeList.size(); i++) {
 				defaultListModel.addElement(shapeList.get(i).uuid);
 			}

@@ -22,6 +22,7 @@ public class SetGrid extends Command {
 		int column = document.cache.column;
 		String shapeUUID = document.cache.shapeUUID;
 		Shape shape = this.document.getPage().getShape();
+		Grid grid = null;
 		//undo
 		Operation operation = new Operation();
 		operation.object = new Shape(shape,true);//(shape != null)?shape.uuid:null;
@@ -33,19 +34,17 @@ public class SetGrid extends Command {
 			this.document.getPage().setShape(shapeUUID);
 			shape = this.document.getPage().getShape();
 			if(!(shape instanceof Grid)) {
-				shape = new Grid(shape);
+				grid = new Grid(shape, row, column);
+			} else {
+				grid = (Grid)shape;
 			}
-			((Grid)shape).setRow(row);
-			((Grid)shape).setColumn(column);
-			((Grid)shape).initMatrix();
-			((Grid)shape).updateMatrix();
 			this.document.getPage().removeShape(shape);
-			this.document.getPage().addShape(shape);
+			this.document.getPage().addShape(grid);
 			
 		}
 		//redo
 		operation = new Operation();
-		operation.object = new Grid((Grid)shape,true);//shapeUUID;
+		operation.object = new Grid(grid,true);//shapeUUID;
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);
