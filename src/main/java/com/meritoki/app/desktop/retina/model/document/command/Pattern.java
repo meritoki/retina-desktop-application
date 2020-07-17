@@ -308,6 +308,22 @@ public class Pattern {
 						}
 					}
 				}
+				break;
+			}
+			case "setGridShape": {
+				for(Operation o: command.operationList) {
+					if(o.sign == 0) {
+						if(o.object instanceof String) {
+							String uuid = (String)o.object;
+							Shape shape = this.document.getPage().getShape();
+							if(shape instanceof Grid) {
+								Grid grid = (Grid)shape;
+								grid.setShape(uuid);
+							}
+						}
+					}
+				}
+				break;
 			}
 			default: {
 				logger.error("undo() default");
@@ -513,6 +529,22 @@ public class Pattern {
 						}
 					}
 				}
+				break;
+			}
+			case "setGridShape": {
+				for(Operation o: command.operationList) {
+					if(o.sign == 1) {
+						if(o.object instanceof String) {
+							String uuid = (String)o.object;
+							Shape shape = this.document.getPage().getShape();
+							if(shape instanceof Grid) {
+								Grid grid = (Grid)shape;
+								grid.setShape(uuid);
+							}
+						}
+					}
+				}
+				break;
 			}
 			default: {
 
