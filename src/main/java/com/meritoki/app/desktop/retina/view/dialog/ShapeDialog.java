@@ -89,7 +89,6 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 
 	public void setModel(Model model) {
 		this.model = model;
-		this.init();
 	}
 
 	public void init() {

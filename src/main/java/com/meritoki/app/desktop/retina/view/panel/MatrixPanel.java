@@ -17,6 +17,7 @@ package com.meritoki.app.desktop.retina.view.panel;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -24,6 +25,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -35,6 +38,8 @@ import com.meritoki.app.desktop.retina.model.document.Data;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Matrix;
 import com.meritoki.app.desktop.retina.model.document.Page;
+import com.meritoki.app.desktop.retina.model.document.Shape;
+import com.meritoki.app.desktop.retina.model.document.Text;
 
 /**
  *
@@ -95,7 +100,68 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 			Page page = (document != null) ? document.getPage() : null;
 			Matrix matrix = (page != null) ? page.getMatrix() : null;
 			if (matrix != null) {
-				matrix.paint(graphics);
+				graphics.setColor(Color.black);
+				List<ArrayList<Shape>> rowList = matrix.getTableRowList();
+				List<Shape> shapeList;
+				int width = matrix.width;//(int) (this.position.dimension.width * 0.10);
+				int height = matrix.height;//(int) (this.position.dimension.height * 0.10);
+				int widthIndex = 0;
+				int heightIndex = 0;
+				graphics.setFont(new Font("default", Font.BOLD, (int) (8 * matrix.position.scale)));
+				Data data;
+				Shape shape = this.model.document.getPage().getShape();
+				Shape gridShape = this.model.document.getPage().getGridShape();
+				Shape s;
+				for (int i = 0; i < rowList.size(); i++) {
+					shapeList = rowList.get(i);
+					heightIndex = (int) (i * height);
+					for (int j = 0; j < shapeList.size(); j++) {
+						graphics.setColor(Color.BLACK);
+						widthIndex = (int) (j * width);
+						s = shapeList.get(j);
+						if (shape != null && s.uuid.equals(shape.uuid)) {
+							graphics.setColor(Color.RED);
+						} else if (gridShape != null && s.uuid.equals(gridShape.uuid)) {
+							graphics.setColor(Color.RED);
+						}
+						else {
+							graphics.setColor(Color.BLACK);
+						}
+						graphics.drawRect(widthIndex, heightIndex, width, height);
+						data = s.data;
+						if (data != null) {
+							Text text = data.text;
+							switch (data.unit.type) {
+							case DATA: {
+//								graphics.setColor(Color.BLACK);
+								graphics.drawString("D", widthIndex + (width / 2), heightIndex + (height / 2));
+								break;
+							}
+							case TIME: {
+								graphics.drawString("T", widthIndex + (width / 2), heightIndex + (height / 2));
+								break;
+							}
+							case SPACE: {
+								graphics.drawString("S", widthIndex + (width / 2), heightIndex + (height / 2));
+								break;
+							}
+							case ENERGY: {
+								graphics.drawString("E", widthIndex + (width / 2), heightIndex + (height / 2));
+								break;
+							}
+							}
+//							if(text.value == null) {
+								String id = s.uuid.substring(0,7);
+								int z = graphics.getFontMetrics().stringWidth(id);
+								graphics.drawString(id, widthIndex + (width/2) - (z / 2), heightIndex + (height*3/4));
+//							} else {
+//								String id = text.value;
+//								int z = graphics.getFontMetrics().stringWidth(id);
+//								graphics.drawString(id, widthIndex + (width/2) - (z / 2), heightIndex + (height*3/4));
+//							}
+						}
+					}
+				}
 			}
 		}
 	}

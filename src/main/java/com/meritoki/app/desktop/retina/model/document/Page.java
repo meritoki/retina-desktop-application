@@ -172,7 +172,6 @@ public class Page {
 	public Image getImage(Point point) {
 		for (Image image : this.imageList) {
 			if (image.containsPoint(point)) {
-				logger.info("getImage(" + point + ") image=" + image);
 				return image;
 			}
 		}
@@ -348,7 +347,7 @@ public class Page {
 
 	@JsonIgnore
 	public void setImage(String uuid) {
-		logger.info("setImage(" + uuid + ")");
+		logger.debug("setImage(" + uuid + ")");
 		Image image = null;
 		List<Image> imageList = this.getImageList();
 		for (int i = 0; i < imageList.size(); i++) {
@@ -485,7 +484,7 @@ public class Page {
 
 	@JsonIgnore
 	public BufferedImage joinImages(List<Image> imageList) {
-		logger.info("joinImages(" + imageList + ")");
+		logger.debug("joinImages(" + imageList + ")");
 		BufferedImage bufferedImage = null;
 		double offset = 0;
 		for (int i = 0; i < imageList.size(); i++) {

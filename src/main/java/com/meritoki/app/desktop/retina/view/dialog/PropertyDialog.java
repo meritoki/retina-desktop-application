@@ -45,6 +45,7 @@ public class PropertyDialog extends javax.swing.JDialog {
 	 */
 	public PropertyDialog(java.awt.Frame parent, boolean modal) {
 		super(parent, modal);
+		this.mainFrame = (MainFrame) parent;
 		initComponents();
 	}
 
@@ -131,6 +132,7 @@ public class PropertyDialog extends javax.swing.JDialog {
 				page.setThreshold(defaultThreshold);
 			}
 		}
+		this.mainFrame.init();
 	}// GEN-LAST:event_setButtonActionPerformed
 
 	/**

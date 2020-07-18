@@ -93,11 +93,11 @@ public class Document {
 
 	@JsonIgnore
 	public Image getImage(Point point) {
-		logger.info("getImage(" + point + ")");
 		Image image = null;
 		if (this.getPage() != null) {
 			image = this.getPage().getImage(point);
 		}
+		logger.info("getImage(" + point + ") image="+image);
 		return image;
 	}
 
@@ -129,8 +129,10 @@ public class Document {
 
 	@JsonIgnore
 	public void addShape(Shape shape) {
-		if (this.getPage() != null) {
-			this.getPage().addShape(shape);
+		logger.info("addShape(" + shape + ")");
+		Page page = this.getPage();
+		if (page != null) {
+			page.addShape(shape);
 		}
 	}
 

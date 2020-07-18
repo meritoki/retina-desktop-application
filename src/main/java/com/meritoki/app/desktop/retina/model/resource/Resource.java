@@ -1,5 +1,7 @@
 package com.meritoki.app.desktop.retina.model.resource;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +32,15 @@ public class Resource {
 	}
 	
 	public void addRecent(String recent) {
+		File file = new File(NodeController.getResourceCache()+NodeController.getSeperator()+"recent.csv");
+		if(!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		if(!this.recentList.contains(recent)) {
 			this.recentList.add(recent);
 			NodeController.saveCsv(NodeController.getResourceCache(), "recent.csv", this.recentList);

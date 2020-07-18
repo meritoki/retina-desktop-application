@@ -11,10 +11,11 @@ import com.meritoki.app.desktop.retina.model.document.Shape;
 
 public class SetGrid extends Command {
 	private static Logger logger = LogManager.getLogger(SetGrid.class.getName());
+
 	public SetGrid(Document document) {
 		super(document, "setGrid");
 	}
-	
+
 	@Override
 	public void execute() throws Exception {
 		logger.info("execute()");
@@ -23,30 +24,35 @@ public class SetGrid extends Command {
 		String shapeUUID = document.cache.shapeUUID;
 		Shape shape = this.document.getPage().getShape();
 		Grid grid = null;
-		//undo
-		Operation operation = new Operation();
-		operation.object = new Shape(shape,true);//(shape != null)?shape.uuid:null;
-		operation.sign = 0;
-		operation.id = UUID.randomUUID().toString();
-		this.operationList.add(operation);
-		//logic
-		if(shapeUUID != null) {
-			this.document.getPage().setShape(shapeUUID);
-			shape = this.document.getPage().getShape();
-			if(!(shape instanceof Grid)) {
-				grid = new Grid(shape, row, column);
+		// undo
+		if (row > 1 || column > 1) {
+			if (shapeUUID != null) {
+				Operation operation = new Operation();
+				operation.object = new Shape(shape, true);// (shape != null)?shape.uuid:null;
+				operation.sign = 0;
+				operation.id = UUID.randomUUID().toString();
+				this.operationList.add(operation);
+				// logic
+				this.document.getPage().setShape(shapeUUID);
+				shape = this.document.getPage().getShape();
+				if (!(shape instanceof Grid)) {
+					grid = new Grid(shape, row, column);
+				} else {
+					grid = (Grid) shape;
+				}
+				this.document.getPage().removeShape(shape);
+				this.document.getPage().addShape(grid);
+				// redo
+				operation = new Operation();
+				operation.object = new Grid(grid, true);// shapeUUID;
+				operation.sign = 1;
+				operation.id = UUID.randomUUID().toString();
+				this.operationList.add(operation);
 			} else {
-				grid = (Grid)shape;
+				throw new Exception("shape uuid is null");
 			}
-			this.document.getPage().removeShape(shape);
-			this.document.getPage().addShape(grid);
-			
+		} else {
+			throw new Exception("row and column less than or equal to 1");
 		}
-		//redo
-		operation = new Operation();
-		operation.object = new Grid(grid,true);//shapeUUID;
-		operation.sign = 1;
-		operation.id = UUID.randomUUID().toString();
-		this.operationList.add(operation);
 	}
 }

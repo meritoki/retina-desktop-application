@@ -33,20 +33,16 @@ public class AddShape extends Command {
 		Image pressedImage = this.document.cache.pressedImage;
 		double scale = page.position.scale;
 		Shape shape = new Shape();
-//		Grid shape = new Grid();
-		
 //		if (this.minimumSize(pressedPoint, releasedPoint, scale)) {
-			shape.type = type;
-			shape.position = new Position(new Point(pressedPoint), new Point(releasedPoint),
-					pressedImage.position.relativeScale, scale, pressedImage.position.offset,
-					pressedImage.position.margin);
-//			shape.updateMatrix();
-			this.document.addShape(shape);
-			Operation operation = new Operation();
-			operation.object = new Shape(shape, true);
-			operation.sign = 1;
-			operation.id = UUID.randomUUID().toString();
-			this.operationList.push(operation);
+		shape.type = type;
+		shape.position = new Position(new Point(pressedPoint), new Point(releasedPoint),
+				pressedImage.position.relativeScale, scale, pressedImage.position.offset, pressedImage.position.margin);
+		this.document.addShape(shape);
+		Operation operation = new Operation();
+		operation.object = new Shape(shape, true);
+		operation.sign = 1;
+		operation.id = UUID.randomUUID().toString();
+		this.operationList.push(operation);
 //		} else {
 //			throw new Exception("Shape too small");
 //		}

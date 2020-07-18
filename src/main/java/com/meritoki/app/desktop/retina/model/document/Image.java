@@ -15,8 +15,6 @@
  */
 package com.meritoki.app.desktop.retina.model.document;
 
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -33,8 +31,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-
-import com.meritoki.app.desktop.retina.controller.node.NodeController;
 
 /**
  * Class is used to manage reference to file in filesystem
@@ -314,7 +310,7 @@ public class Image {
 
 	@JsonIgnore
 	public void setOffset(double offset) {
-		logger.info("setOffset(" + offset + ")");
+		logger.debug("setOffset(" + offset + ")");
 		this.position.setOffset(offset);
 		for (Shape shape : this.shapeList) {
 			shape.setOffset(offset);
@@ -328,7 +324,7 @@ public class Image {
 	 */
 	@JsonIgnore
 	public void setMargin(double margin) {
-		logger.info("setMargin(" + margin + ")");
+		logger.debug("setMargin(" + margin + ")");
 		this.position.setMargin(margin);
 		for (Shape shape : this.shapeList) {
 			shape.setMargin(margin);
@@ -342,7 +338,7 @@ public class Image {
 	 */
 	@JsonIgnore
 	public boolean setShape(String uuid) {
-		logger.info("setShape(" + uuid + ")");
+		logger.debug("setShape(" + uuid + ")");
 		boolean flag = false;
 		Shape shape = null;
 		for (int i = 0; i < this.shapeList.size(); i++) {
@@ -374,7 +370,6 @@ public class Image {
 	 */
 	@JsonIgnore
 	public void addShape(Shape shape) {
-		logger.info("addShape(" + shape + ")");
 		this.shapeList.add(shape);
 	}
 
@@ -445,7 +440,7 @@ public class Image {
 	@JsonIgnore
 	public boolean containsPoint(Point point) {
 		boolean flag = this.position.contains(point);
-		logger.info("contains(" + point + ") flag=" + flag);
+		logger.debug("containsPoint(" + point + ") flag=" + flag);
 		return flag;
 	}
 
