@@ -17,12 +17,19 @@ package com.meritoki.app.desktop.retina.model;
 
 import java.io.File;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.meritoki.app.desktop.retina.controller.document.DocumentController;
+import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Image;
+import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.resource.Resource;
 import com.meritoki.app.desktop.retina.model.system.System;
 
 public class Model {
+	private static final Logger logger = LogManager.getLogger(Model.class.getName());
 	/**
 	 * System is an object that retains objects relative to the operation of Retina
 	 */
@@ -46,5 +53,9 @@ public class Model {
 		this.document.pattern.user = this.system.user;
 		this.system.newDocument = false;
 		this.resource.addRecent(this.system.file.getAbsolutePath());
+		File directory = new File(NodeController.getDocumentCache(this.document.uuid));
+		if(!directory.exists()) {
+			directory.mkdirs();
+		}
 	}
 }

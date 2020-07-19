@@ -43,8 +43,6 @@ public class Image {
 	static Logger logger = LogManager.getLogger(Image.class.getName());
 	@JsonProperty
 	public String uuid;
-	@JsonIgnore
-	public File file;
 	@JsonProperty
 	public String filePath;
 	@JsonProperty
@@ -57,20 +55,22 @@ public class Image {
 	public BufferedImage bufferedImage;
 	@JsonIgnore
 	public int index = 0;
+	@JsonIgnore
+	public File file;
 
 	/**
 	 * Default constructor
 	 */
 	public Image() {
-		if (this.file == null) {
-			this.file = new File(this.filePath + getSeperator() + this.fileName);
-		}
+//		if (this.file == null) {
+//			this.file = new File(this.filePath + getSeperator() + this.fileName);
+//		}
 	}
 	
 	public Image(String documentUUID) {
-		if (this.file == null) {
-			this.file = new File(this.filePath + getSeperator() + this.fileName);
-		}
+//		if (this.file == null) {
+//			this.file = new File(this.filePath + getSeperator() + this.fileName);
+//		}
 	}
 
 	public static String getSeperator() {
@@ -449,16 +449,16 @@ public class Image {
 	public String toString() {
 		String string = "";
 		ObjectWriter ow = new ObjectMapper().writer();
-		if (logger.isDebugEnabled()) {
+//		if (logger.isDebugEnabled()) {
 			try {
 				string = ow.writeValueAsString(this);
 			} catch (IOException e) {
 				logger.error("IOException " + e.getMessage());
 			}
-		} else if (logger.isInfoEnabled()) {
-			string = "{\"uuid\":" + this.uuid + ", \"position\":" + position + ", \"shapeList\":" + this.shapeList
-					+ "}";
-		}
+//		} else if (logger.isInfoEnabled()) {
+//			string = "{\"uuid\":" + this.uuid + ", \"position\":" + position + ", \"shapeList\":" + this.shapeList
+//					+ "}";
+//		}
 		return string;
 	}
 }

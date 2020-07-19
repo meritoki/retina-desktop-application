@@ -34,6 +34,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.document.command.Pattern;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Output;
@@ -64,7 +65,6 @@ public class Document {
 	public Document() {
 		this.uuid = UUID.randomUUID().toString();
 		this.init();
-		new File(NodeController.getDocumentCache(this.uuid)).mkdirs();
 //		this.test();
 	}
 
@@ -384,6 +384,11 @@ public class Document {
 	public BufferedImage getBufferedImage(Image image) {
 		BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getDocumentCache(this.uuid), image.uuid + "." + image.getExtension());
 		if (bufferedImage == null) {
+			logger.info("getBufferedImage("+image+") bufferedImage==null");
+			if(image.file == null) {
+				File file = new File(image.filePath+NodeController.getSeperator()+image.fileName);
+				image.file = file;
+			}
 			if (image.file != null) {
 				bufferedImage = NodeController.openBufferedImage(image.file);
 				if (bufferedImage != null) {
@@ -392,8 +397,7 @@ public class Document {
 							NodeController.saveJpg(NodeController.getDocumentCache(this.uuid),
 									image.uuid + "." + image.getExtension(), bufferedImage);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+							logger.error("Exception "+e.getMessage());
 						}
 					}
 				}
@@ -411,6 +415,14 @@ public class Document {
 		bufferedImage = after;
 		image.position.setAbsoluteDimension(new Dimension(bufferedImage.getWidth(), bufferedImage.getHeight()));
 		return bufferedImage;
+	}
+	
+	@JsonIgnore
+	@Override
+	public String toString() {
+		String string = "";
+		string = "{\"uuid\":"+this.uuid+"}";
+		return string;
 	}
 
 //	@JsonIgnore
