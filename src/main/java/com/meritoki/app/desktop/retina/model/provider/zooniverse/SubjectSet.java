@@ -31,6 +31,7 @@ public class SubjectSet {
     public String uuid;
     public String id;
     public String name;
+    public String path;
     public List<Shape> shapeList = new ArrayList<>();
 
     

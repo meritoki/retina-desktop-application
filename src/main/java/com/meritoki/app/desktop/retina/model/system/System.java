@@ -71,8 +71,8 @@ public class System {
 		if(!new File(NodeController.getRetinaHome()).exists()) {
 			new File(NodeController.getRetinaHome()).mkdirs();
 		}
-		if(!new File(NodeController.getImageCache()).exists()) {
-			new File(NodeController.getImageCache()).mkdirs();
+		if(!new File(NodeController.getDocumentCache()).exists()) {
+			new File(NodeController.getDocumentCache()).mkdirs();
 		}
 	}
 	

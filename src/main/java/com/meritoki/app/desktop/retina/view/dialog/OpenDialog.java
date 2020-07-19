@@ -15,6 +15,8 @@
  */
 package com.meritoki.app.desktop.retina.view.dialog;
 
+import java.io.File;
+
 import javax.swing.JFileChooser;
 
 import org.apache.logging.log4j.LogManager;
@@ -58,10 +60,8 @@ public class OpenDialog extends javax.swing.JDialog {
 	public void result() {
 		int result = this.openFileChooser.showOpenDialog(null);
 		if (result == JFileChooser.APPROVE_OPTION) {
-			this.model.system.file = this.openFileChooser.getSelectedFile();
-			this.model.document = (DocumentController.open(model.system.file));
-			this.model.document.pattern.user = this.model.system.user;
-			this.model.system.newDocument = false;
+			File file = this.openFileChooser.getSelectedFile();
+			this.model.openDocument(file);
 			this.mainFrame.init();
 			this.setVisible(false);
 		} else if (result == JFileChooser.CANCEL_OPTION) {

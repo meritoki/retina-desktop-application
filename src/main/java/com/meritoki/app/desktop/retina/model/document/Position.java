@@ -68,7 +68,7 @@ public class Position {
 	}
 
 	public Position(Point a, Point b, double addRelativeScale, double addScale, double offset, double margin) {
-		logger.info("Position(" + a + ", " + b + ", " +addRelativeScale+", "+ addScale + ", " + offset + ", " + margin + ")");
+		logger.debug("Position(" + a + ", " + b + ", " +addRelativeScale+", "+ addScale + ", " + offset + ", " + margin + ")");
 		List<Point> pointList = new ArrayList<>();
 		pointList.add(a);
 		pointList.add(b);
@@ -84,8 +84,6 @@ public class Position {
 		this.absoluteDimension.height = Math.abs(stopPoint.y - this.absolutePoint.y);
 		this.relative = true;
 		this.relativePoint = this.getRelativePoint();
-		logger.info("Position(...) this.absolutePoint="+this.absolutePoint);
-		logger.info("Position(...) this.relativePoint="+this.relativePoint);
 		this.scale();
 	}
 
@@ -228,16 +226,16 @@ public class Position {
 	@JsonIgnore
 	public void move(Point point) {
 		Point startPoint = this.getStartPoint();
-		logger.info("move("+point+") A startPoint="+startPoint);
+		logger.trace("move("+point+") A startPoint="+startPoint);
 		Point movePoint = new Point(startPoint.x + point.x, startPoint.y + point.y);
-		logger.info("move("+point+") B movePoint="+movePoint);
+		logger.trace("move("+point+") B movePoint="+movePoint);
 		Point absolutePoint = this.getAbsolutePoint(new Point(movePoint));
-		logger.info("move("+point+") C absolutePoint="+absolutePoint);
+		logger.trace("move("+point+") C absolutePoint="+absolutePoint);
 		this.absolutePoint = new Point(absolutePoint);
 		this.relativePoint = this.getRelativePoint();
 		this.scale();
-		logger.info("move("+point+") D this.point="+this.point);
-		logger.info("move("+point+") (this.point==movePoint)="+this.point.equals(movePoint));
+		logger.trace("move("+point+") D this.point="+this.point);
+		logger.trace("move("+point+") (this.point==movePoint)="+this.point.equals(movePoint));
 	}
 	
 	@JsonIgnore
@@ -419,7 +417,7 @@ public class Position {
 			}
 		} else if (logger.isInfoEnabled()) {
 //			string = "{\"relativeScale\":"+this.relativeScale+",\"offset\":"+this.offset+",\"margin\":"+this.margin+", \"relativePoint\":"+this.relativePoint+"\",\"point\":" + this.point + ", \"center\":"+this.center+", \"dimension\":" + this.dimension + "}";
-			string = "{\"relativeScale\":"+this.relativeScale+", \"point\":" + this.point + ", \"center\":"+this.center+", \"dimension\":" + this.dimension + "}";
+			string = "{\"scale\":"+this.scale+", \"relativeScale\":"+this.relativeScale+", \"point\":" + this.point + ", \"center\":"+this.center+", \"dimension\":" + this.dimension + "}";
 		}
 		return string;
 	}

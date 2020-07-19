@@ -24,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
@@ -108,7 +109,8 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 		this.model.document.cache.pressedPoint = point;
 		logger.trace("mousePressed(me) point="+point);
 		this.model.document.cache.pressedImage = this.model.document.getImage(point);
-		if(this.model.document.cache.pressedImage != null && this.model.document.getImage() != null && !this.model.document.getImage().equals(this.model.document.cache.pressedImage)) {
+		Image image = this.model.document.getImage();
+		if(this.model.document.cache.pressedImage != null && image != null && !image.equals(this.model.document.cache.pressedImage)) {
 			this.model.document.cache.imageUUID = this.model.document.cache.pressedImage.uuid;
 			try {
 				this.model.document.pattern.execute("setImage");
@@ -253,7 +255,11 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				try {
 					this.model.document.pattern.execute("resizeImage");
 					this.mainFrame.init();
-				} catch (Exception e) {
+				}
+				catch(NullPointerException e) {
+					e.printStackTrace();
+				}
+				catch (Exception e) {
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
@@ -266,7 +272,11 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				try {
 					this.model.document.pattern.execute("resizeImage");
 					this.mainFrame.init();
-				} catch (Exception e) {
+				} 
+				catch(NullPointerException e) {
+					e.printStackTrace();
+				}
+				catch (Exception e) {
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
@@ -283,11 +293,6 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				this.mainFrame.init();
 				break;
 
-			}
-			case KeyEvent.VK_T: {
-				List<String[]> stringArrayList = NodeController.openCsv("import.csv");
-				this.model.document.importText(stringArrayList);
-				break;
 			}
 			}
 		} else {

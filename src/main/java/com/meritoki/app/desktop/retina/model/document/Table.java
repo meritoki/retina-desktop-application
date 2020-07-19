@@ -76,26 +76,18 @@ public class Table {
 				for (int j = 0; j < shapeList.size(); j++) {
 					shape = shapeList.get(j);
 					data = shape.data;
-					value = null;
-					switch (data.unit.type) {
-					case TIME: {
-						value = "time";
-						break;
-					}
-					case SPACE: {
-						value = "space";
-						break;
-					}
-					case ENERGY: {
-						if (data.unit.value != null && data.unit.value.equals("label")) {
-							value = data.text.value;
+					value = data.text.value;
+					if(value != null) {
+						columnArray[j] = value;
+					} else {
+						value = data.unit.value;
+						if(value != null) {
+							columnArray[j] = value;
 						} else {
-							value = data.unit.value;
+							value = data.unit.type.toString();
+							columnArray[j] = value;
 						}
-						break;
 					}
-					}
-					columnArray[j] = value;
 				}
 				dataMatrix = new Object[rowList.size()-1][matrix.getShapeListMax()];
 				for (int i = 1; i < rowList.size(); i++) {

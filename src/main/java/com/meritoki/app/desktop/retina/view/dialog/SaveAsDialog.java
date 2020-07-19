@@ -58,6 +58,7 @@ public class SaveAsDialog extends javax.swing.JDialog {
 			this.model.system.file = this.saveFileChooser.getSelectedFile();
 			model.document.save();
 			DocumentController.save(this.model.system.file, model.document);
+			this.model.resource.addRecent(this.model.system.file.getAbsolutePath());
 			mainFrame.init();
 			this.model.system.newDocument = false;
 			this.setVisible(false);

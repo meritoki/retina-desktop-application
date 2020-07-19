@@ -15,12 +15,20 @@
  */
 package com.meritoki.app.desktop.retina.model.document;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public class Text {
 	
+	/**
+	 * Logger for class.
+	 */
+	@JsonIgnore
+	static Logger logger = LogManager.getLogger(Text.class.getName());
 	@JsonProperty
 	public String value = null;
 	
@@ -38,6 +46,7 @@ public class Text {
 
 	@JsonIgnore
 	public void setValue(String value) {
+		logger.info("setValue("+value+")");
 		this.value = value;
 	}
 }

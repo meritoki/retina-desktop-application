@@ -56,7 +56,8 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 		x = (document.cache.pressedImage.position.center.x);
 		y = (document.cache.pressedImage.position.center.y);
 		Shape shape =document.getShape(new Point(x, y));
-		logger.info("shape="+shape);
+		logger.info("addShape() pressedImage="+document.cache.pressedImage);
+		logger.info("addShape() shape="+shape);
 		assertNotNull(shape);
 	}
 	
@@ -82,6 +83,7 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 		}
 		double x = (document.cache.pressedImage.position.center.x);
 		double y = (document.cache.pressedImage.position.center.y);
+		logger.info("addShape() pressedImage="+document.cache.pressedImage);
 		logger.info("shapeList="+document.getShapeList());
 		Shape shape = document.getShape(new Point(x, y));
 		logger.info("shapeList="+document.getShapeList());
