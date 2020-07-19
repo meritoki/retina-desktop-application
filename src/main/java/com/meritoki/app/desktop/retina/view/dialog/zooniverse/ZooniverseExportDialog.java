@@ -15,10 +15,8 @@
  */
 package com.meritoki.app.desktop.retina.view.dialog.zooniverse;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -29,7 +27,6 @@ import javax.swing.SwingUtilities;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Shape;
@@ -104,22 +101,10 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
 
 	public void initComboBox() {
 		List<Project> projectList = (this.zooniverse != null) ? this.zooniverse.getProjectList() : null;
-//		this.initProjectComboBox(projectList);
-		this.initSearchProjectComboBox(new ArrayList<Project>());
+		this.initSearchProjectComboBox(projectList);
 		this.initProjectWorkflowComboBox(new ArrayList<Workflow>());
 
 	}
-
-//	public void initProjectComboBox(List<Project> projectList) {
-//		String[] array = new String[0];
-//		if (projectList != null && projectList.size() > 0) {
-//			array = new String[projectList.size()];
-//			for (int i = 0; i < array.length; i++) {
-//				array[i] = projectList.get(i).name;
-//			}
-//		}
-//		this.projectComboBox.setModel(new DefaultComboBoxModel(array));
-//	}
 
 	public void initSearchProjectComboBox(
 			List<com.meritoki.app.desktop.retina.model.provider.zooniverse.Project> projectList) {
@@ -191,13 +176,13 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
 		if (query.pageIndexList != null) {
 			shapeList = new ArrayList<>();
 			if (query.pageIndexList.contains(-1)) {
-				shapeList = this.model.document.getGridShapeList();
+				shapeList = this.model.document.getGridShapeList(true);
 			} else {
 				for (Integer i : query.pageIndexList) {
 					if (this.model.document.setIndex(i)) {
 						Page p = this.model.document.getPage();
 						if (p != null) {
-							shapeList = p.getGridShapeList();
+							shapeList = p.getGridShapeList(true);
 						}
 					}
 				}
@@ -527,26 +512,6 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
 			}
 		}
 	}// GEN-LAST:event_findProjectButtonActionPerformed
-
-//	/**
-//	 * Function is invoked when pressing the addProject button
-//	 *
-//	 * @param evt
-//	 */
-//	private void addProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_addProjectButtonActionPerformed
-//		if (zooniverse != null) {
-//			String searchProjectName = (String) this.searchProjectComboBox.getSelectedItem();
-//			if (this.zooniverse.projectList != null) {
-//				for (Project p : this.zooniverse.projectList) {
-//					if (p.name.equals(searchProjectName)) {
-//						zooniverse.addProject(p);
-//						break;
-//					}
-//				}
-//			}
-//			this.initProjectComboBox(zooniverse.getProjectList());
-//		}
-//	}// GEN-LAST:event_addProjectButtonActionPerformed
 
 	private void updateProjectWorkflowButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_updateProjectWorkflowButtonActionPerformed
 		if (zooniverse != null) {

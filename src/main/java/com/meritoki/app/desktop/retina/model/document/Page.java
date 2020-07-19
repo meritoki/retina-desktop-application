@@ -238,12 +238,15 @@ public class Page {
 	}
 	
 	@JsonIgnore
-	public List<Shape> getGridShapeList() {
-		BufferedImage bufferedImage = this.getScaledBufferedImage();
+	public List<Shape> getGridShapeList(boolean flag) {
+		BufferedImage bufferedImage = null;
+		if(flag)
+			bufferedImage = this.getScaledBufferedImage();
 		List<Shape> shapeList = new ArrayList<>();
 		for (Image image : this.imageList) {
 			for (Shape shape : image.getGridShapeList()) {
-				shape.bufferedImage = this.getShapeBufferedImage(bufferedImage,shape);
+				if(flag)
+					shape.bufferedImage = this.getShapeBufferedImage(bufferedImage,shape);
 				shapeList.add(shape);
 			}
 		}
@@ -275,25 +278,6 @@ public class Page {
 		return shapeBufferedImage;
 	}
 	
-	@JsonIgnore
-	public List<Shape> getSortedShapeList() {
-		return new Matrix(this.getShapeList(),null,this.threshold).getShapeList();
-	}
-
-	@JsonIgnore
-	public Matrix getMatrix() {
-		return new Matrix(this.getGridShapeList(), this.script, this.threshold);
-	}
-	
-	@JsonIgnore
-	public Table getTable() {
-		return new Table(this.getMatrix());
-	}
-	
-	@JsonIgnore
-	public Archive getArchive() {
-		return new Archive(this.getMatrix());
-	}
 	/**
 	 * Function returns bufferedImage with one or more File bufferedImages from the
 	 * fileList
@@ -312,7 +296,25 @@ public class Page {
 		}
 		return this.bufferedImage;
 	}
+	@JsonIgnore
+	public List<Shape> getSortedShapeList() {
+		return new Matrix(this.getShapeList(),null,this.threshold).getShapeList();
+	}
 
+	@JsonIgnore
+	public Matrix getMatrix() {
+		return new Matrix(this.getGridShapeList(false), this.script, this.threshold);
+	}
+	
+	@JsonIgnore
+	public Table getTable() {
+		return new Table(this.getMatrix());
+	}
+	
+	@JsonIgnore
+	public Archive getArchive() {
+		return new Archive(this.getMatrix());
+	}
 	@JsonIgnore
 	public void setThreshold(double threshold) {
 		this.threshold = threshold;
