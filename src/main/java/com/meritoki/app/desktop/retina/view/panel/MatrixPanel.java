@@ -151,7 +151,7 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 							}
 							}
 //							if(text.value == null) {
-								String id = s.uuid.substring(0,7);
+								String id = s.uuid.substring(0,8);
 								int z = graphics.getFontMetrics().stringWidth(id);
 								graphics.drawString(id, widthIndex + (width/2) - (z / 2), heightIndex + (height*3/4));
 //							} else {

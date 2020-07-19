@@ -15,6 +15,9 @@
  */
 package com.meritoki.app.desktop.retina.model;
 
+import java.io.File;
+
+import com.meritoki.app.desktop.retina.controller.document.DocumentController;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.resource.Resource;
 import com.meritoki.app.desktop.retina.model.system.System;
@@ -35,5 +38,13 @@ public class Model {
 
 	public Model() {
 		this.document.pattern.user = this.system.user;
+	}
+	
+	public void openDocument(File file) {
+		this.system.file = file;
+		this.document = (DocumentController.open(this.system.file));
+		this.document.pattern.user = this.system.user;
+		this.system.newDocument = false;
+		this.resource.addRecent(this.system.file.getAbsolutePath());
 	}
 }

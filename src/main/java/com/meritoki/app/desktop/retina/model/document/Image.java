@@ -189,7 +189,7 @@ public class Image {
 	}
 	
 	@JsonIgnore
-	public List<Shape> getCompleteShapeList() {
+	public List<Shape> getGridShapeList() {
 		List<Shape> shapeList = new ArrayList<>();
 		for(Shape s: this.shapeList) {
 			if(s instanceof Grid) {

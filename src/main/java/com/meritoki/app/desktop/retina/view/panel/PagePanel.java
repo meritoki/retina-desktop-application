@@ -294,11 +294,6 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				break;
 
 			}
-			case KeyEvent.VK_T: {
-				List<String[]> stringArrayList = NodeController.openCsv("import.csv");
-				this.model.document.importText(stringArrayList);
-				break;
-			}
 			}
 		} else {
 			int keyCode = ke.getKeyCode();

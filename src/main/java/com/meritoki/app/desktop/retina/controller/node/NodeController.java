@@ -96,20 +96,15 @@ public class NodeController {
 		return bufferedImage;
 	}
 
-	public static void saveJpg(String filePath, String fileName, BufferedImage bufferedImage) {
+	public static void saveJpg(String filePath, String fileName, BufferedImage bufferedImage) throws Exception {
 //		logger.info("saveJpg"+filePath + ", " + fileName + ", " + bufferedImage);
 		saveJpg(new File(filePath + getSeperator() + fileName), bufferedImage);
 	}
 
 	@JsonIgnore
-	public static void saveJpg(File file, BufferedImage bufferedImage) {
-		logger.debug("saveJpg(" + file + ", " + bufferedImage + ")");
-		try {
-			ImageIO.write(bufferedImage, "jpg", file);
-
-		} catch (IOException ex) {
-			logger.error(ex);
-		}
+	public static void saveJpg(File file, BufferedImage bufferedImage) throws Exception {
+		logger.info("saveJpg(" + file + ", " + bufferedImage + ")");
+		ImageIO.write(bufferedImage, "jpg", file);
 	}
 
 	@JsonIgnore
@@ -182,7 +177,7 @@ public class NodeController {
 		try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
 			while ((line = br.readLine()) != null) {
 				logger.info(line);
-				String[] array = line.split(",");
+				String[] array = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");//",");
 				stringArrayList.add(array);
 			}
 		} catch (IOException e) {

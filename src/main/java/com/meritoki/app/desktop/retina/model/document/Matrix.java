@@ -423,8 +423,6 @@ public class Matrix {
 		int heightIndex = 0;
 		graphics.setFont(new Font("default", Font.BOLD, (int) (8 * this.position.scale)));
 		Data data;
-		Shape shape = this.model.document.getPage().getShape();
-		Shape gridShape = this.getGridShape();
 		Shape s;
 		for (int i = 0; i < rowList.size(); i++) {
 			shapeList = rowList.get(i);

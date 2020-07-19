@@ -517,7 +517,11 @@ class DocumentTest {
 		}
 		Zooniverse zooniverse = new Zooniverse();
 		NodeController.deleteDirectory(new File("./test/manifest-test-A"));
-		zooniverse.generateManifest("./test/manifest-test-A", shapeList);
+		try {
+			zooniverse.generateManifest("./test/manifest-test-A", shapeList);
+		} catch(Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
 	}
 
 	@Test
@@ -777,12 +781,16 @@ class DocumentTest {
 	@Order(16)
 	public void getShapeBufferedImage() {
 		assertEquals(document.setIndex(0), true);
-		List<Shape> shapeList = document.getPage().getCompleteShapeList();
+		List<Shape> shapeList = document.getPage().getGridShapeList();
 		for(Shape s: shapeList) {
 			assertNotNull(s.bufferedImage);
 		}
 		Zooniverse zooniverse = new Zooniverse();
 		NodeController.deleteDirectory(new File("./test/manifest-test-B"));
+		try {
 		zooniverse.generateManifest("./test/manifest-test-B", shapeList);
+		} catch(Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
 	}
 }

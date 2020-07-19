@@ -19,6 +19,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -29,9 +30,16 @@ import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.document.command.Pattern;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Output;
+import com.meritoki.app.desktop.retina.model.provider.zooniverse.Annotation;
+import com.meritoki.app.desktop.retina.model.provider.zooniverse.Subject;
+import com.meritoki.app.desktop.retina.model.provider.zooniverse.Data;
 
 /**
  * Document
@@ -238,39 +246,96 @@ public class Document {
 		}
 		return shapeList;
 	}
+	
+	@JsonIgnore
+	public List<Shape> getGridShapeList() {
+		List<Shape> shapeList = new ArrayList<>();
+		for (Page page : this.pageList) {
+			shapeList.addAll(page.getGridShapeList());
+		}
+		return shapeList;
+	}
+	
+	@JsonIgnore
+	public List<Shape> getCompleteShapeList() {
+		List<Shape> shapeList = new ArrayList<>();
+		for (Page page : this.pageList) {
+			shapeList.addAll(page.getGridShapeList());
+		}
+		return shapeList;
+	}
 
 	@JsonIgnore
-	public boolean importText(List<String[]> stringArrayList) {
-		logger.info("importText(...)");
+	public boolean importZooniverse(String fileName) {
+		List<String[]> stringArrayList = NodeController.openCsv(fileName);
+		logger.info("importZooniverse("+fileName+")");
 		boolean flag = false;
-		for (int i = 0; i < stringArrayList.size(); i++) {
+		for (int i = 1; i < stringArrayList.size(); i++) {
 			String[] stringArray = stringArrayList.get(i);
-			String value = null;
-			for (String string : stringArray) {
-				if (string.contains("value")) {
-					value = string.split(":")[1].replace("\"", "");
-				}
-			}
+			logger.info("importZooniverse("+fileName+") stringArray.length="+stringArray.length);
+			List<String> valueList = new ArrayList<>();
 			String uuid = null;
-			for (String string : stringArray) {
-				if (string.contains("the_image")) {
-					uuid = string.split(":")[1].replace(".jpg", "").replace("}", "").replace("\"", "");
+			String annotationString = stringArray[11];
+			annotationString = annotationString.replace("\"\"", "\"");
+			annotationString = annotationString.replaceFirst("\"", "");
+			int length = annotationString.length();
+			annotationString = annotationString.substring(0,length-1);
+			ObjectMapper objectMapper = new ObjectMapper();
+			try {
+				List<Annotation> annotationList = objectMapper.readValue(annotationString,  new TypeReference<List<Annotation>>(){});
+				for(Annotation a:annotationList) {
+					valueList.add(a.value);
 				}
+			} catch (JsonParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			System.out.println(value + " " + uuid);
-			if (uuid != null && value != null) {
+			String subjectString = stringArray[12];
+			subjectString = subjectString.replace("\"\"", "\"");
+			subjectString = subjectString.replaceFirst("\"", "");
+			length = subjectString.length();
+			subjectString = subjectString.substring(0,length-1);
+			try {
+				Subject subject = objectMapper.readValue(subjectString,  Subject.class);
+				Data data = (Data)subject.dataMap.firstEntry().getValue();
+				uuid = data.getUUID();
+			} catch (JsonParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			if (uuid != null && valueList.size() > 0) {
+				logger.info("importZooniverse("+fileName+") valueList="+valueList + " uuid=" + uuid);
 				for (Page page : this.getPageList()) {
-					for (Shape shape : page.getShapeList()) {
+					for (Shape shape : page.getGridShapeList()) {
 						if (uuid.equals(shape.uuid)) {
-							Text text = new Text();
-							text.value = value;
-							shape.addText(text);
-							flag = true;
+							for(String value: valueList) {
+								Text text = new Text();
+								text.value = value;
+								shape.addText(text);
+								flag = true;
+							}
+							shape.getData().setText(shape.getDefaultText());
 						}
 					}
 				}
+			} else {
+				logger.error("importZooniverse("+fileName+") valueList="+valueList + " uuid=" + uuid);
 			}
 		}
+		logger.error("importZooniverse("+fileName+") flag="+flag);
 		return flag;
 	}
 
@@ -323,8 +388,13 @@ public class Document {
 				bufferedImage = NodeController.openBufferedImage(image.file);
 				if (bufferedImage != null) {
 					if (image.getExtension().equals("jpg") || image.getExtension().equals("jpeg")) {
-						NodeController.saveJpg(NodeController.getDocumentCache(this.uuid),
-								image.uuid + "." + image.getExtension(), bufferedImage);
+						try {
+							NodeController.saveJpg(NodeController.getDocumentCache(this.uuid),
+									image.uuid + "." + image.getExtension(), bufferedImage);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				}
 			}

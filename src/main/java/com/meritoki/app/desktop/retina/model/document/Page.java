@@ -238,11 +238,11 @@ public class Page {
 	}
 	
 	@JsonIgnore
-	public List<Shape> getCompleteShapeList() {
+	public List<Shape> getGridShapeList() {
 		BufferedImage bufferedImage = this.getScaledBufferedImage();
 		List<Shape> shapeList = new ArrayList<>();
 		for (Image image : this.imageList) {
-			for (Shape shape : image.getCompleteShapeList()) {
+			for (Shape shape : image.getGridShapeList()) {
 				shape.bufferedImage = this.getShapeBufferedImage(bufferedImage,shape);
 				shapeList.add(shape);
 			}
@@ -253,7 +253,7 @@ public class Page {
 	@JsonIgnore
 	public BufferedImage getScaledBufferedImage() {
 		BufferedImage before = this.getBufferedImage();
-		BufferedImage after = new BufferedImage(before.getWidth(),before.getHeight(),BufferedImage.TYPE_INT_ARGB);
+		BufferedImage after = new BufferedImage(before.getWidth(),before.getHeight(),BufferedImage.TYPE_INT_RGB);
 		AffineTransform affineTransform = new AffineTransform();
 		affineTransform.scale(this.position.scale, this.position.scale);//this handles scaling the bufferedImage
 		AffineTransformOp affineTransformOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
@@ -282,7 +282,7 @@ public class Page {
 
 	@JsonIgnore
 	public Matrix getMatrix() {
-		return new Matrix(this.getCompleteShapeList(), this.script, this.threshold);
+		return new Matrix(this.getGridShapeList(), this.script, this.threshold);
 	}
 	
 	@JsonIgnore

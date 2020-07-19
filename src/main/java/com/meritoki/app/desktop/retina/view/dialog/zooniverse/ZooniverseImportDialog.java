@@ -68,22 +68,6 @@ public class ZooniverseImportDialog extends javax.swing.JDialog {
         this.init();
         
     }
-    
-        private void showLoad() {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                loadDialog.setVisible(true);
-            }
-        });
-    }
-
-    private void hideLoad() {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                loadDialog.setVisible(false);
-            }
-        });
-    }
 
     public void init() {
         logger.debug("init()");
@@ -261,12 +245,12 @@ public class ZooniverseImportDialog extends javax.swing.JDialog {
         if (zooniverse != null) {
             String searchProjectName = (String) this.searchProjectComboBox.getSelectedItem();
             if (this.zooniverse.projectList != null) {
-                this.showLoad();
                 for (Project p : this.zooniverse.projectList) {
                     if (p.name.equals(searchProjectName)) {
                     	try {
-                    		zooniverse.downloadClassification(p, this.getClassificationPath()+timeStamp + ".csv");
-	                        if(!this.model.document.importText(NodeController.openCsv(this.getClassificationPath()+timeStamp+".csv"))) {
+                    		String fileName = this.getClassificationPath()+timeStamp + ".csv";
+                    		zooniverse.downloadClassification(p, fileName);
+	                        if(!this.model.document.importZooniverse(fileName)) {
 	                        	JOptionPane.showMessageDialog(this, "No shape uuid matches");
 	                        }
                     	} catch (Exception e) {
@@ -275,7 +259,6 @@ public class ZooniverseImportDialog extends javax.swing.JDialog {
                         break;
                     }
                 }
-                this.hideLoad();
             }
         }
     }//GEN-LAST:event_importButtonActionPerformed

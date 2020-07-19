@@ -158,10 +158,7 @@ public final class MainFrame extends JFrame {
 				recentMenuItem.setText(file.getName());
 				recentMenuItem.addActionListener(new java.awt.event.ActionListener() {
 					public void actionPerformed(java.awt.event.ActionEvent evt) {
-						model.system.file = file;
-						model.document = (DocumentController.open(model.system.file));
-						model.document.pattern.user = model.system.user;
-						model.system.newDocument = false;
+						model.openDocument(file);
 						init();
 					}
 				});
