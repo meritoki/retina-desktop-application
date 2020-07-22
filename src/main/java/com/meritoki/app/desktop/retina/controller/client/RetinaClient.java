@@ -79,10 +79,6 @@ public class RetinaClient {
 		return flag;
 	}
 
-	public void updateProject() {
-
-	}
-
 	public void login(User user) {
 		RestTemplate restTemplate = new RestTemplate();
 		String uri = new String(url + "/authenticate");
