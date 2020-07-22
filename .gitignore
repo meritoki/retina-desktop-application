@@ -10,3 +10,5 @@ test/
 *.json
 data/
 task/
+process/
+output/

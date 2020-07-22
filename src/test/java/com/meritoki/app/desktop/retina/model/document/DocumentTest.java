@@ -781,7 +781,7 @@ class DocumentTest {
 	@Order(16)
 	public void getShapeBufferedImage() {
 		assertEquals(document.setIndex(0), true);
-		List<Shape> shapeList = document.getPage().getGridShapeList();
+		List<Shape> shapeList = document.getPage().getGridShapeList(true);
 		for(Shape s: shapeList) {
 			assertNotNull(s.bufferedImage);
 		}

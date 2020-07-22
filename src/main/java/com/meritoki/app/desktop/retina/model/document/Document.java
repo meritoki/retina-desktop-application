@@ -398,6 +398,10 @@ public class Document {
 				bufferedImage = NodeController.openBufferedImage(image.file);
 				if (bufferedImage != null) {
 					if (image.getExtension().equals("jpg") || image.getExtension().equals("jpeg")) {
+						File documentCache = new File(NodeController.getDocumentCache(this.uuid));
+						if(!documentCache.exists()) {
+							documentCache.mkdirs();
+						}
 						try {
 							NodeController.saveJpg(NodeController.getDocumentCache(this.uuid),
 									image.uuid + "." + image.getExtension(), bufferedImage);
