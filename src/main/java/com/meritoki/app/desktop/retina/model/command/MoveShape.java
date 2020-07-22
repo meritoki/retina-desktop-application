@@ -1,22 +1,22 @@
-package com.meritoki.app.desktop.retina.model.document.command;
+package com.meritoki.app.desktop.retina.model.command;
 
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.model.document.Position;
-import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Grid;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
+import com.meritoki.app.desktop.retina.model.document.Position;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 
 public class MoveShape extends Command {
 	private static Logger logger = LogManager.getLogger(MoveShape.class.getName());
 
-	public MoveShape(Document document) {
+	public MoveShape(Model document) {
 		super(document, "moveShape");
 	}
 
@@ -28,12 +28,12 @@ public class MoveShape extends Command {
 		logger.info("execute()");
 //    	this.user = this.document.cache.user;
 		// Variables
-		Page pressedPage = this.document.getPage();
-		Shape pressedShape = this.document.cache.pressedShape;
-		Image pressedImage = this.document.cache.pressedImage;
-		Image releasedImage = this.document.cache.releasedImage;
-		Point releasedPoint = this.document.cache.releasedPoint;
-		Point pressedPoint = this.document.cache.pressedPoint;
+		Page pressedPage = this.model.document.getPage();
+		Shape pressedShape = this.model.cache.pressedShape;
+		Image pressedImage = this.model.cache.pressedImage;
+		Image releasedImage = this.model.cache.releasedImage;
+		Point releasedPoint = this.model.cache.releasedPoint;
+		Point pressedPoint = this.model.cache.pressedPoint;
 		Shape undoShape = null;
 		Shape redoShape = null;
 		if(pressedShape instanceof Grid) {

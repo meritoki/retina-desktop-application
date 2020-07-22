@@ -1,18 +1,18 @@
-package com.meritoki.app.desktop.retina.model.document.command;
+package com.meritoki.app.desktop.retina.model.command;
 
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Grid;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 
 public class SetGridShape extends Command {
 	private static Logger logger = LogManager.getLogger(SetGridShape.class.getName());
 	
-	public SetGridShape(Document document) {
+	public SetGridShape(Model document) {
 		super(document, "setGridShape");
 	}
 	
@@ -20,8 +20,8 @@ public class SetGridShape extends Command {
 	public void execute() {
 		logger.info("execute()");
 		// variables
-		String shapeUUID = document.cache.shapeUUID;
-		Shape shape = this.document.getPage().getShape();
+		String shapeUUID = model.cache.shapeUUID;
+		Shape shape = this.model.document.getPage().getShape();
 		Grid grid = null;
 		if(shape instanceof Grid) {
 			grid = (Grid)shape;
@@ -35,7 +35,7 @@ public class SetGridShape extends Command {
 		this.operationList.add(operation);
 		//logic
 		if(shapeUUID != null) {
-			this.document.getPage().setGridShape(shapeUUID);
+			this.model.document.getPage().setGridShape(shapeUUID);
 		}
 		//redo
 		operation = new Operation();

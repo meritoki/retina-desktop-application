@@ -16,9 +16,9 @@
 package com.meritoki.app.desktop.retina.view.dialog;
 
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.command.Command;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Page;
-import com.meritoki.app.desktop.retina.model.document.command.Command;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 
 import java.util.List;
@@ -55,11 +55,9 @@ public class CommandDialog extends javax.swing.JDialog {
     }
 
     public void initList() {
-        Document document = (this.model != null) ? this.model.document : null;
-        int pageIndex = (document != null) ? document.getIndex() : 0;
-        List<Command> undoCommandList = (document != null) ? document.pattern.undoStack : null;
+        List<Command> undoCommandList = (this.model != null) ? this.model.pattern.undoStack : null;
         this.initUndoCommandList(undoCommandList);
-        List<Command> redoCommandList = (document != null) ? document.pattern.redoStack : null;
+        List<Command> redoCommandList = (this.model != null) ? this.model.pattern.redoStack : null;
         this.initRedoCommandList(redoCommandList);
     }
 

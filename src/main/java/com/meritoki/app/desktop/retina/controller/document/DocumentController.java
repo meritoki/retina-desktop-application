@@ -35,7 +35,6 @@ public class DocumentController extends Controller {
 	@JsonIgnore
 	public static Document open(File file) {
 		Document document = (Document) NodeController.openJson(file, Document.class);
-		document.init();
 		logger.info("open(" + file + ") document="+document);
 		return document;
 	}

@@ -1,16 +1,15 @@
-package com.meritoki.app.desktop.retina.model.document.command;
+package com.meritoki.app.desktop.retina.model.command;
 
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.model.document.Position;
-import com.meritoki.app.desktop.retina.model.document.Document;
-import com.meritoki.app.desktop.retina.model.document.Grid;
+import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
+import com.meritoki.app.desktop.retina.model.document.Position;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.ShapeType;
 
@@ -18,7 +17,7 @@ public class AddShape extends Command {
 
 	private static Logger logger = LogManager.getLogger(AddShape.class.getName());
 
-	public AddShape(Document document) {
+	public AddShape(Model document) {
 		super(document, "addShape");
 	}
 
@@ -26,18 +25,18 @@ public class AddShape extends Command {
 	public void execute() throws Exception {
 		logger.info("execute()");
 		// variable
-		Page page = this.document.getPage();
-		ShapeType type = this.document.cache.type;
-		Point pressedPoint = this.document.cache.pressedPoint;
-		Point releasedPoint = this.document.cache.releasedPoint;
-		Image pressedImage = this.document.cache.pressedImage;
+		Page page = this.model.document.getPage();
+		ShapeType type = this.model.cache.type;
+		Point pressedPoint = this.model.cache.pressedPoint;
+		Point releasedPoint = this.model.cache.releasedPoint;
+		Image pressedImage = this.model.cache.pressedImage;
 		double scale = page.position.scale;
 		Shape shape = new Shape();
 //		if (this.minimumSize(pressedPoint, releasedPoint, scale)) {
 		shape.type = type;
 		shape.position = new Position(new Point(pressedPoint), new Point(releasedPoint),
 				pressedImage.position.relativeScale, scale, pressedImage.position.offset, pressedImage.position.margin);
-		this.document.addShape(shape);
+		this.model.document.addShape(shape);
 		Operation operation = new Operation();
 		operation.object = new Shape(shape, true);
 		operation.sign = 1;

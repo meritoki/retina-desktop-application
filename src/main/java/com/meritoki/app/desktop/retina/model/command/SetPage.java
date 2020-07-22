@@ -1,4 +1,4 @@
-package com.meritoki.app.desktop.retina.model.document.command;
+package com.meritoki.app.desktop.retina.model.command;
 
 import java.util.UUID;
 
@@ -6,14 +6,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.controller.memory.MemoryController;
-import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Page;
 
 public class SetPage extends Command {
 	
 	private static Logger logger = LogManager.getLogger(SetPage.class.getName());
 	
-	public SetPage(Document document) {
+	public SetPage(Model document) {
 		super(document, "setPage");
 	}
 	
@@ -21,9 +21,9 @@ public class SetPage extends Command {
     public void execute() {
     	logger.info("execute()");
     	//variables
-    	String pageUUID = document.cache.pageUUID;
-    	int pageIndex = document.cache.pageIndex;
-    	Page page = document.getPage();
+    	String pageUUID = model.cache.pageUUID;
+    	int pageIndex = model.cache.pageIndex;
+    	Page page = model.document.getPage();
     	//undo
     	Operation operation = new Operation();
 		operation.object = (page != null)?page.uuid:null;
@@ -32,10 +32,10 @@ public class SetPage extends Command {
 		this.operationList.add(operation);
 		//logic
     	if (pageUUID != null) {
-    		this.document.setPage(pageUUID);
+    		this.model.document.setPage(pageUUID);
     	} else if(pageIndex >  -1) {
-    		this.document.setIndex(pageIndex);
-    		pageUUID = this.document.getPage().uuid;
+    		this.model.document.setIndex(pageIndex);
+    		pageUUID = this.model.document.getPage().uuid;
     	}
     	//redo
     	operation = new Operation();

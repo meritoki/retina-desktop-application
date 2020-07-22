@@ -1,31 +1,30 @@
-package com.meritoki.app.desktop.retina.model.document.command;
+package com.meritoki.app.desktop.retina.model.command;
 
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
-import com.meritoki.app.desktop.retina.model.document.Position;
 
 public class ShiftImage extends Command {
 	
 	private static Logger logger = LogManager.getLogger(ShiftImage.class.getName());
 
-	public ShiftImage(Document document) {
+	public ShiftImage(Model document) {
 		super(document, "shiftImage");
 	}
 	
 	public void execute() {
 		logger.info("execute()");
 		//variables
-		Page page = this.document.getPage();
-		Image pressedImage = this.document.cache.pressedImage;
+		Page page = this.model.document.getPage();
+		Image pressedImage = this.model.cache.pressedImage;
 		double margin = pressedImage.position.margin;
-		double shiftFactor = this.document.cache.shiftFactor;
-		char shiftOperator = this.document.cache.shiftOperator;
+		double shiftFactor = this.model.cache.shiftFactor;
+		char shiftOperator = this.model.cache.shiftOperator;
 		//undo
 		Operation operation = new Operation();
 		operation.object = margin;

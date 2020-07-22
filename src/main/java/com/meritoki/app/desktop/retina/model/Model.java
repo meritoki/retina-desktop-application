@@ -22,6 +22,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.controller.document.DocumentController;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
+import com.meritoki.app.desktop.retina.model.command.Pattern;
+import com.meritoki.app.desktop.retina.model.document.Cache;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
@@ -42,20 +44,44 @@ public class Model {
 	 * Document is an object that is manipulated by Retina
 	 */
 	public Document document = new Document();
+	/**
+	 * Pattern is used as the control interface with a document and web services
+	 */
+	public Pattern pattern = new Pattern();
+	/**
+	 * Cache retains variables for use with the Command Pattern
+	 */
+	public Cache cache = new Cache();
 
 	public Model() {
-		this.document.pattern.user = this.system.user;
+		this.pattern.setModel(this);
 	}
 	
 	public void openDocument(File file) {
+		logger.info("openDocument("+file+")");
 		this.system.file = file;
 		this.document = (DocumentController.open(this.system.file));
-		this.document.pattern.user = this.system.user;
 		this.system.newDocument = false;
 		this.resource.addRecent(this.system.file.getAbsolutePath());
 		File directory = new File(NodeController.getDocumentCache(this.document.uuid));
 		if(!directory.exists()) {
 			directory.mkdirs();
 		}
+	}
+	
+	public void saveDocument(File file) {
+		logger.info("saveDocument("+file+")");
+		this.system.file = file;
+		this.pattern.save();
+		DocumentController.save(this.system.file, this.document);
+		this.resource.addRecent(this.system.file.getAbsolutePath());
+		this.system.newDocument = false;
+	}
+	public void saveDocument() {
+		logger.info("saveDocument()");
+		this.pattern.save();
+		DocumentController.save(this.system.file, this.document);
+		this.resource.addRecent(this.system.file.getAbsolutePath());
+		this.system.newDocument = false;
 	}
 }

@@ -1,4 +1,4 @@
-package com.meritoki.app.desktop.retina.model.document.command;
+package com.meritoki.app.desktop.retina.model.command;
 
 import java.util.UUID;
 
@@ -6,7 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.Model;
-import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Grid;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Selection;
@@ -16,7 +15,7 @@ public class ResizeShape extends Command {
 	
 	private static Logger logger = LogManager.getLogger(ResizeShape.class.getName());
 	
-	public ResizeShape(Document document) {
+	public ResizeShape(Model document) {
 		super(document, "resizeShape");
 	}
 	
@@ -24,9 +23,9 @@ public class ResizeShape extends Command {
     public void execute() {
     	logger.info("execute()");
     	//variable
-		Point releasedPoint = this.document.cache.releasedPoint;
-		Shape pressedShape = this.document.cache.pressedShape;
-		Selection selection = this.document.cache.selection;
+		Point releasedPoint = this.model.cache.releasedPoint;
+		Shape pressedShape = this.model.cache.pressedShape;
+		Selection selection = this.model.cache.selection;
     	//Undo
 		Operation operation = new Operation();
 		operation.object = new Shape(pressedShape,true);

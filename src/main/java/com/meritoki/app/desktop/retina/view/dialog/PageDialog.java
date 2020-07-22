@@ -84,13 +84,13 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
 					switch (ke.getKeyCode()) {
 					case KeyEvent.VK_Z: {
 						logger.debug("keyPressed(e) KeyEvent.VK_Z");
-						model.document.pattern.undo();
+						model.pattern.undo();
 						mainFrame.init();
 						break;
 					}
 					case KeyEvent.VK_Y: {
 						logger.debug("keyPressed(e) KeyEvent.VK_Y");
-						model.document.pattern.redo();
+						model.pattern.redo();
 						mainFrame.init();
 						break;
 					}
@@ -102,9 +102,9 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
 					case KeyEvent.VK_LEFT: {
 						logger.debug("keyEvent.VK_LEFT");
 						setPageListSelectedIndex(--index);
-						model.document.cache.pageUUID = (String)pageList.getSelectedValue();
+						model.cache.pageUUID = (String)pageList.getSelectedValue();
 						try {
-							model.document.pattern.execute("setPage");
+							model.pattern.execute("setPage");
 							mainFrame.init();
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -114,9 +114,9 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
 					case KeyEvent.VK_RIGHT: {
 						logger.debug("keyEvent.VK_RIGHT");
 						setPageListSelectedIndex(++index);
-						model.document.cache.pageUUID = (String)pageList.getSelectedValue();
+						model.cache.pageUUID = (String)pageList.getSelectedValue();
 						try {
-							model.document.pattern.execute("setPage");
+							model.pattern.execute("setPage");
 							mainFrame.init();
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -134,9 +134,9 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
 		this.pageList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent me) {
-				model.document.cache.pageUUID = (String)pageList.getSelectedValue();
+				model.cache.pageUUID = (String)pageList.getSelectedValue();
 				try {
-					model.document.pattern.execute("setPage");
+					model.pattern.execute("setPage");
 					mainFrame.init();
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -154,13 +154,13 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
 					switch (ke.getKeyCode()) {
 					case KeyEvent.VK_Z: {
 						logger.debug("keyPressed(e) KeyEvent.VK_Z");
-						model.document.pattern.undo();
+						model.pattern.undo();
 						mainFrame.init();
 						break;
 					}
 					case KeyEvent.VK_Y: {
 						logger.debug("keyPressed(e) KeyEvent.VK_Y");
-						model.document.pattern.redo();
+						model.pattern.redo();
 						mainFrame.init();
 						break;
 					}
@@ -172,9 +172,9 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
 					case KeyEvent.VK_LEFT: {
 						logger.debug("keyEvent.VK_LEFT");
 						setImageListSelectedIndex(--index);
-						model.document.cache.imageUUID = imageList.getSelectedValue();
+						model.cache.imageUUID = imageList.getSelectedValue();
 						try {
-							model.document.pattern.execute("setImage");
+							model.pattern.execute("setImage");
 							mainFrame.init();
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -184,9 +184,9 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
 					case KeyEvent.VK_RIGHT: {
 						logger.debug("keyEvent.VK_RIGHT");
 						setImageListSelectedIndex(++index);
-						model.document.cache.imageUUID = imageList.getSelectedValue();
+						model.cache.imageUUID = imageList.getSelectedValue();
 						try {
-							model.document.pattern.execute("setImage");
+							model.pattern.execute("setImage");
 							mainFrame.init();
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -203,9 +203,9 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
 		this.imageList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent me) {
-				model.document.cache.imageUUID = imageList.getSelectedValue();
+				model.cache.imageUUID = imageList.getSelectedValue();
 				try {
-					model.document.pattern.execute("setImage");
+					model.pattern.execute("setImage");
 					mainFrame.init();
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -328,13 +328,13 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
 			switch (ke.getKeyCode()) {
 			case KeyEvent.VK_Z: {
 				logger.debug("keyPressed(e) KeyEvent.VK_Z");
-				this.model.document.pattern.undo();
+				this.model.pattern.undo();
 				this.mainFrame.init();
 				break;
 			}
 			case KeyEvent.VK_Y: {
 				logger.debug("keyPressed(e) KeyEvent.VK_Y");
-				this.model.document.pattern.redo();
+				this.model.pattern.redo();
 				this.mainFrame.init();
 				break;
 			}
@@ -660,10 +660,10 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
 
 	private void executeImageScriptButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_executeImageScriptButtonActionPerformed
 		Document document = (this.model != null) ? this.model.document : null;
-		document.cache.script = this.pageScriptTextArea.getText();
-		document.cache.pageList = (document != null) ? document.getPageList() : null;
+		this.model.cache.script = this.pageScriptTextArea.getText();
+		this.model.cache.pageList = (document != null) ? document.getPageList() : null;
 		try {
-			document.pattern.execute("executeScript");
+			this.model.pattern.execute("executeScript");
 			this.mainFrame.init();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -677,9 +677,9 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
 
 	private void removePageButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_removePageButtonActionPerformed
 		Document document = (this.model != null) ? this.model.document : null;
-		document.cache.pressedPage = (document != null) ? document.getPage() : null;
+		this.model.cache.pressedPage = (document != null) ? document.getPage() : null;
 		try {
-			document.pattern.execute("removePage");
+			this.model.pattern.execute("removePage");
 			this.mainFrame.init();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -690,9 +690,9 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
 	private void removeImageButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_removeImageButtonActionPerformed
 		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
-		document.cache.pressedImage = (page != null) ? page.getImage() : null;
+		this.model.cache.pressedImage = (page != null) ? page.getImage() : null;
 		try {
-			document.pattern.execute("removeImage");
+			this.model.pattern.execute("removeImage");
 			this.mainFrame.init();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

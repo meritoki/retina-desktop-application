@@ -1,4 +1,4 @@
-package com.meritoki.app.desktop.retina.model.document.command;
+package com.meritoki.app.desktop.retina.model.command;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
@@ -18,14 +19,14 @@ public class ExecuteScript extends Command {
 
 	private Logger logger = LogManager.getLogger(ExecuteScript.class.getName());
 
-	public ExecuteScript(Document document) {
+	public ExecuteScript(Model document) {
 		super(document, "executeScript");
 	}
 
 	public void execute() throws Exception {
 		logger.info("execute()");
-		this.user = this.document.cache.user;
-		this.operationList = (LinkedList<Operation>)this.getOperationList(this.document.cache.pageList, this.document.cache.script);
+		this.user = this.model.cache.user;
+		this.operationList = (LinkedList<Operation>)this.getOperationList(this.model.cache.pageList, this.model.cache.script);
 	}
 
 	/**

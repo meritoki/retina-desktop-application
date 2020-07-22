@@ -21,6 +21,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.UUID;
@@ -36,7 +37,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
-import com.meritoki.app.desktop.retina.model.document.command.Pattern;
+import com.meritoki.app.desktop.retina.model.command.Command;
+import com.meritoki.app.desktop.retina.model.command.Pattern;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Output;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Annotation;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Subject;
@@ -58,23 +60,21 @@ public class Document {
 	@JsonProperty
 	public List<Page> pageList = new ArrayList<>();
 	@JsonProperty
-	public Pattern pattern = new Pattern();
-	@JsonIgnore
-	public Cache cache = new Cache();
+	public LinkedList<Command> logStack = new LinkedList<>();
 
 	public Document() {
 		this.uuid = UUID.randomUUID().toString();
-		this.init();
+//		this.init();
 //		this.test();
 	}
 
-	public void save() {
-		this.pattern.save();
-	}
-
-	public void init() {
-		this.pattern.setDocument(this);
-	}
+//	public void save() {
+//		this.pattern.save();
+//	}
+//
+//	public void init() {
+//		this.pattern.setDocument(this);
+//	}
 
 	@JsonIgnore
 	public void test() {

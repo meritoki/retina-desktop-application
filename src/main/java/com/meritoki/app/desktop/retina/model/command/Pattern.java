@@ -1,4 +1,4 @@
-package com.meritoki.app.desktop.retina.model.document.command;
+package com.meritoki.app.desktop.retina.model.command;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Grid;
 import com.meritoki.app.desktop.retina.model.document.Image;
@@ -22,11 +22,8 @@ public class Pattern {
 	@JsonIgnore
 	static Logger logger = LogManager.getLogger(Pattern.class.getName());
 	@JsonIgnore
-	public Document document;
-	@JsonIgnore
-	public User user;
-	@JsonProperty
-	public LinkedList<Command> logStack = new LinkedList<>();
+	public Model model;
+	
 	@JsonIgnore
 	public LinkedList<Command> undoStack = new LinkedList<>();
 	@JsonIgnore
@@ -39,34 +36,34 @@ public class Pattern {
 	}
 	
 	public void save() {
-		this.logStack.addAll(0, this.undoStack);
+		this.model.document.logStack.addAll(0, this.undoStack);
 		this.undoStack = new LinkedList<>();
 	}
 	
-	public void setDocument(Document document) {
-		logger.info("setDocument("+document+")");
-		this.document = document;
+	public void setModel(Model model) {
+		logger.info("setModel("+model+")");
+		this.model = model;
 		this.register();
 	}
 	
 	@JsonIgnore
 	public void register() {
-		Command addPage = new AddPage(this.document);
-		Command setPage = new SetPage(this.document);
-		Command addShape = new AddShape(this.document);
-		Command setShape = new SetShape(this.document);
-		Command moveShape = new MoveShape(this.document);
-		Command removeShape = new RemoveShape(this.document);
-		Command resizeShape = new ResizeShape(this.document);
-		Command executeScript = new ExecuteScript(this.document);
-		Command removePage = new RemovePage(this.document);
-		Command resizeImage = new ResizeImage(this.document);
-		Command scalePage = new ScalePage(this.document);
-		Command shiftImage = new ShiftImage(this.document);
-		Command setImage = new SetImage(this.document);
-		Command removeImage = new RemoveImage(this.document);
-		Command setGrid = new SetGrid(this.document);
-		Command setGridShape = new SetGridShape(this.document);
+		Command addPage = new AddPage(this.model);
+		Command setPage = new SetPage(this.model);
+		Command addShape = new AddShape(this.model);
+		Command setShape = new SetShape(this.model);
+		Command moveShape = new MoveShape(this.model);
+		Command removeShape = new RemoveShape(this.model);
+		Command resizeShape = new ResizeShape(this.model);
+		Command executeScript = new ExecuteScript(this.model);
+		Command removePage = new RemovePage(this.model);
+		Command resizeImage = new ResizeImage(this.model);
+		Command scalePage = new ScalePage(this.model);
+		Command shiftImage = new ShiftImage(this.model);
+		Command setImage = new SetImage(this.model);
+		Command removeImage = new RemoveImage(this.model);
+		Command setGrid = new SetGrid(this.model);
+		Command setGridShape = new SetGridShape(this.model);
 		this.register("addPage", addPage);
 		this.register("setPage", setPage);
 		this.register("addShape", addShape);
@@ -97,8 +94,8 @@ public class Pattern {
 			throw new IllegalStateException("no command registered for " + commandName);
 		}
 		command.execute();
-		Command newCommand = new Command(this.document, command.name);
-		newCommand.user = this.user;
+		Command newCommand = new Command(this.model, command.name);
+		newCommand.user = this.model.system.user;
 		newCommand.operationList = command.operationList;
 		this.undoStack.push(newCommand);
 		this.redoStack = new LinkedList<>();
@@ -117,7 +114,7 @@ public class Pattern {
 					operation = command.operationList.get(i);
 					if (operation.sign == 0) {
 						if (operation.object instanceof List) {
-							this.document.pageList = (List<Page>)operation.object;
+							this.model.document.pageList = (List<Page>)operation.object;
 						}
 					}
 				}
@@ -128,7 +125,7 @@ public class Pattern {
 					operation = command.operationList.get(i);
 					if (operation.sign == 0) {
 						if (operation.object instanceof String) {
-							this.document.getPage().setShape((String) operation.object);
+							this.model.document.getPage().setShape((String) operation.object);
 						}
 					}
 				}
@@ -139,11 +136,11 @@ public class Pattern {
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().removeShape((Shape) operation.object);
+							this.model.document.getPage().removeShape((Shape) operation.object);
 						}
 					} else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getImage().addShape((Shape) operation.object);
+							this.model.document.getPage().getImage().addShape((Shape) operation.object);
 						}
 					}
 				}
@@ -155,7 +152,7 @@ public class Pattern {
 					if (operation.sign == 1) {
 						if (operation.object instanceof Shape) {
 							Shape shape = (Shape)operation.object;
-							this.document.getPage().removeShape(shape);
+							this.model.document.getPage().removeShape(shape);
 						}
 					} else 
 					if (operation.sign == 0) {
@@ -165,7 +162,7 @@ public class Pattern {
 								Grid grid = (Grid) shape;
 								grid.updateMatrix();
 							}
-							this.document.getPage().getImage().addShape(shape);
+							this.model.document.getPage().getImage().addShape(shape);
 						}
 					}
 				}
@@ -176,11 +173,11 @@ public class Pattern {
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().removeShape((Shape) operation.object);
+							this.model.document.getPage().removeShape((Shape) operation.object);
 						}
 					} else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getImage().addShape((Shape) operation.object);
+							this.model.document.getPage().getImage().addShape((Shape) operation.object);
 						}
 					}
 				}
@@ -191,11 +188,11 @@ public class Pattern {
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().removeShape((Shape) operation.object);
+							this.model.document.getPage().removeShape((Shape) operation.object);
 						}
 					} else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getImage().addShape((Shape) operation.object);
+							this.model.document.getPage().getImage().addShape((Shape) operation.object);
 						}
 					}
 				}
@@ -207,7 +204,7 @@ public class Pattern {
 				for(Operation o: command.operationList) {
 					if(o.sign == 0) {
 						if(o.object instanceof List) {
-							this.document.pageList = (List<Page>)o.object;
+							this.model.document.pageList = (List<Page>)o.object;
 						}
 					}
 				}
@@ -220,7 +217,7 @@ public class Pattern {
 							Object[] objectArray = (Object[])o.object;
 							int index = (int)objectArray[0];
 							Page image = (Page)objectArray[1];
-							this.document.pageList.add(index, image);
+							this.model.document.pageList.add(index, image);
 						}
 					}
 				}
@@ -230,7 +227,7 @@ public class Pattern {
 				for(Operation o: command.operationList) {
 					if(o.sign == 0) {
 						if(o.object instanceof String) {
-							this.document.setPage((String)o.object);
+							this.model.document.setPage((String)o.object);
 						}
 					}
 				}
@@ -240,7 +237,7 @@ public class Pattern {
 				for(Operation o: command.operationList) {
 					if(o.sign == 0) {
 						if(o.object instanceof Double) {
-							this.document.getPage().setScale((double)o.object);
+							this.model.document.getPage().setScale((double)o.object);
 						}
 					}
 				}
@@ -250,7 +247,7 @@ public class Pattern {
 				for(Operation o: command.operationList) {
 					if(o.sign == 0) {
 						if(o.object instanceof String) {
-							this.document.setImage((String)o.object);
+							this.model.document.setImage((String)o.object);
 						}
 					}
 				}
@@ -260,10 +257,10 @@ public class Pattern {
 				for(Operation o: command.operationList) {
 					if(o.sign == 0) {
 						if(o.object instanceof Double) {
-//							this.document.getPage().setBufferedImage(null);
-//							this.document.getImage().setBufferedImage(null);
-							this.document.getImage().setRelativeScale((double)o.object);
-							this.document.setBufferedImage(this.document.getPage());
+//							this.model.document.getPage().setBufferedImage(null);
+//							this.model.document.getImage().setBufferedImage(null);
+							this.model.document.getImage().setRelativeScale((double)o.object);
+							this.model.document.setBufferedImage(this.model.document.getPage());
 							
 						}
 					}
@@ -274,8 +271,8 @@ public class Pattern {
 				for(Operation o: command.operationList) {
 					if(o.sign == 0) {
 						if(o.object instanceof Double) {
-							this.document.getPage().setBufferedImage(null);
-							this.document.getPage().getImage().setMargin((double)o.object);
+							this.model.document.getPage().setBufferedImage(null);
+							this.model.document.getPage().getImage().setMargin((double)o.object);
 						}
 					}
 				}
@@ -288,8 +285,8 @@ public class Pattern {
 							Object[] objectArray = (Object[])o.object;
 							int index = (int)objectArray[0];
 							Image image = (Image)objectArray[1];
-							this.document.getPage().setBufferedImage(null);
-							this.document.getPage().imageList.add(index, image);
+							this.model.document.getPage().setBufferedImage(null);
+							this.model.document.getPage().imageList.add(index, image);
 						}
 					}
 				}
@@ -299,8 +296,8 @@ public class Pattern {
 					if(o.sign == 0) {
 						if(o.object instanceof Shape) {
 							Shape shape = (Shape)o.object;
-							this.document.getPage().removeShape(shape);
-							this.document.getPage().addShape(shape);
+							this.model.document.getPage().removeShape(shape);
+							this.model.document.getPage().addShape(shape);
 						}
 					}
 				}
@@ -311,7 +308,7 @@ public class Pattern {
 					if(o.sign == 0) {
 						if(o.object instanceof String) {
 							String uuid = (String)o.object;
-							Shape shape = this.document.getPage().getShape();
+							Shape shape = this.model.document.getPage().getShape();
 							if(shape instanceof Grid) {
 								Grid grid = (Grid)shape;
 								grid.setShape(uuid);
@@ -341,7 +338,7 @@ public class Pattern {
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
 						if (operation.object instanceof List) {
-							this.document.pageList = (List<Page>)operation.object;
+							this.model.document.pageList = (List<Page>)operation.object;
 						}
 					}
 				}
@@ -352,7 +349,7 @@ public class Pattern {
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
 						if (operation.object instanceof String) {
-							this.document.getPage().setShape((String) operation.object);
+							this.model.document.getPage().setShape((String) operation.object);
 						}
 					}
 				}
@@ -363,11 +360,11 @@ public class Pattern {
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getImage().addShape((Shape) operation.object);
+							this.model.document.getPage().getImage().addShape((Shape) operation.object);
 						}
 					} else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getImage().removeShape((Shape) operation.object);
+							this.model.document.getPage().getImage().removeShape((Shape) operation.object);
 						}
 					}
 				}
@@ -383,13 +380,13 @@ public class Pattern {
 								Grid grid = (Grid) shape;
 								grid.updateMatrix();
 							}
-							this.document.getPage().getImage().addShape((Shape) operation.object);
+							this.model.document.getPage().getImage().addShape((Shape) operation.object);
 						}
 					} 
 					else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
 							Shape shape = (Shape)operation.object;
-							this.document.getPage().getImage().removeShape(shape);
+							this.model.document.getPage().getImage().removeShape(shape);
 						}
 					}
 				}
@@ -400,7 +397,7 @@ public class Pattern {
 				for(Operation o: command.operationList) {
 					if(o.sign == 1) {
 						if(o.object instanceof String) {
-							this.document.removePage((String)o.object);
+							this.model.document.removePage((String)o.object);
 						}
 					}
 				}
@@ -411,11 +408,11 @@ public class Pattern {
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getImage().addShape((Shape) operation.object);
+							this.model.document.getPage().getImage().addShape((Shape) operation.object);
 						}
 					} else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getImage().removeShape((Shape) operation.object);
+							this.model.document.getPage().getImage().removeShape((Shape) operation.object);
 						}
 					}
 				}
@@ -426,11 +423,11 @@ public class Pattern {
 					operation = command.operationList.get(i);
 					if (operation.sign == 1) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getImage().addShape((Shape) operation.object);
+							this.model.document.getPage().getImage().addShape((Shape) operation.object);
 						}
 					} else if (operation.sign == 0) {
 						if (operation.object instanceof Shape) {
-							this.document.getPage().getImage().removeShape((Shape) operation.object);
+							this.model.document.getPage().getImage().removeShape((Shape) operation.object);
 						}
 					}
 				}
@@ -441,7 +438,7 @@ public class Pattern {
 				for(Operation o: command.operationList) {
 					if(o.sign == 1) {
 						if(o.object instanceof List) {
-							this.document.pageList = (List<Page>)o.object;
+							this.model.document.pageList = (List<Page>)o.object;
 						}
 					} 
 				}
@@ -451,7 +448,7 @@ public class Pattern {
 				for(Operation o: command.operationList) {
 					if(o.sign == 1) {
 						if(o.object instanceof String) {
-							this.document.setImage((String)o.object);
+							this.model.document.setImage((String)o.object);
 						}
 					}
 				}
@@ -461,9 +458,9 @@ public class Pattern {
 				for(Operation o: command.operationList) {
 					if(o.sign == 1) {
 						if(o.object instanceof Double) {
-							this.document.getPage().setBufferedImage(null);
-							this.document.getImage().setBufferedImage(null);
-							this.document.getImage().setRelativeScale((double)o.object);
+							this.model.document.getPage().setBufferedImage(null);
+							this.model.document.getImage().setBufferedImage(null);
+							this.model.document.getImage().setRelativeScale((double)o.object);
 						}
 					}
 				}
@@ -473,7 +470,7 @@ public class Pattern {
 				for(Operation o: command.operationList) {
 					if(o.sign == 1) {
 						if(o.object instanceof Double) {
-							this.document.getPage().setScale((double)o.object);
+							this.model.document.getPage().setScale((double)o.object);
 						}
 					}
 				}
@@ -483,7 +480,7 @@ public class Pattern {
 				for(Operation o: command.operationList) {
 					if(o.sign == 1) {
 						if(o.object instanceof String) {
-							this.document.setPage((String)o.object);
+							this.model.document.setPage((String)o.object);
 						}
 					}
 				}
@@ -493,8 +490,8 @@ public class Pattern {
 				for(Operation o: command.operationList) {
 					if(o.sign == 1) {
 						if(o.object instanceof Double) {
-							this.document.getPage().setBufferedImage(null);
-							this.document.getPage().getImage().setMargin((double)o.object);
+							this.model.document.getPage().setBufferedImage(null);
+							this.model.document.getPage().getImage().setMargin((double)o.object);
 						}
 					}
 				}
@@ -504,8 +501,8 @@ public class Pattern {
 				for(Operation o: command.operationList) {
 					if(o.sign == 1) {
 						if(o.object instanceof String) {
-							this.document.getPage().setBufferedImage(null);
-							this.document.getPage().removeImage((String)o.object);
+							this.model.document.getPage().setBufferedImage(null);
+							this.model.document.getPage().removeImage((String)o.object);
 						}
 					}
 				}
@@ -516,8 +513,8 @@ public class Pattern {
 					if(o.sign == 1) {
 						if(o.object instanceof Grid) {
 							Grid grid = (Grid)o.object;
-							this.document.getPage().removeShape(grid);
-							this.document.getPage().addShape(grid);
+							this.model.document.getPage().removeShape(grid);
+							this.model.document.getPage().addShape(grid);
 						}
 					}
 				}
@@ -528,7 +525,7 @@ public class Pattern {
 					if(o.sign == 1) {
 						if(o.object instanceof String) {
 							String uuid = (String)o.object;
-							Shape shape = this.document.getPage().getShape();
+							Shape shape = this.model.document.getPage().getShape();
 							if(shape instanceof Grid) {
 								Grid grid = (Grid)shape;
 								grid.setShape(uuid);

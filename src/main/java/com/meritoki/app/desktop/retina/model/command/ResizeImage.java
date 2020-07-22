@@ -1,18 +1,18 @@
-package com.meritoki.app.desktop.retina.model.document.command;
+package com.meritoki.app.desktop.retina.model.command;
 
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 
 public class ResizeImage extends Command {
 	private static Logger logger = LogManager.getLogger(ResizeImage.class.getName());
 	
-	public ResizeImage(Document document) {
+	public ResizeImage(Model document) {
 		super(document, "resizeImage");
 	}
 	
@@ -20,14 +20,14 @@ public class ResizeImage extends Command {
     public void execute() {
     	logger.info("execute()");
 		//variable
-    	Page page = this.document.getPage();
-    	Image pressedImage = this.document.cache.pressedImage;//new Image(this.document.cache.pressedImage);
+    	Page page = this.model.document.getPage();
+    	Image pressedImage = this.model.cache.pressedImage;//new Image(this.document.cache.pressedImage);
     	double scale = page.position.scale;
-    	double scaleFactor = this.document.cache.scaleFactor;
-    	char scaleOperator = this.document.cache.scaleOperator;
+    	double scaleFactor = this.model.cache.scaleFactor;
+    	char scaleOperator = this.model.cache.scaleOperator;
     	//undo
     	Operation operation = new Operation();
-		operation.object = this.document.cache.pressedImage.position.relativeScale;//new Image(this.document.cache.pressedImage);
+		operation.object = this.model.cache.pressedImage.position.relativeScale;//new Image(this.document.cache.pressedImage);
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);
@@ -49,7 +49,7 @@ public class ResizeImage extends Command {
 		}
 		}
 		pressedImage.setRelativeScale(relativeScale);
-		this.document.setBufferedImage(page);
+		this.model.document.setBufferedImage(page);
 		
 ////		this.document.setBufferedImage(pressedImage);
 //		page.getBufferedImage();

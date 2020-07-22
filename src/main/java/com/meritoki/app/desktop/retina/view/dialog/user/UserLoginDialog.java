@@ -169,7 +169,7 @@ public class UserLoginDialog extends javax.swing.JDialog {
         if(userController.loginUser(userName, password)) {
         	JOptionPane.showMessageDialog(this, "Welcome");
         	this.model.system.loggedIn = true;
-        	this.model.document.pattern.user = this.model.system.user;
+//        	this.model.document.pattern.user = this.model.system.user;
         	this.mainFrame.init();
         	this.setVisible(false);
         } else {

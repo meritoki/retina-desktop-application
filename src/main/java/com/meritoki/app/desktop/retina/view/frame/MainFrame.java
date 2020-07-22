@@ -509,9 +509,9 @@ public final class MainFrame extends JFrame {
 	}// GEN-LAST:event_propertyMenuItemActionPerformed
 
 	private void newMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newMenuItemActionPerformed
-		this.model.document = (new Document());
+		this.model.document = new Document();
 		this.model.system.newDocument = true;
-		this.model.document.pattern.user = this.model.system.user;
+//		this.model.document.pattern.user = this.model.system.user;
 		this.init();
 	}// GEN-LAST:event_newMenuItemActionPerformed
 
@@ -519,7 +519,7 @@ public final class MainFrame extends JFrame {
 		if (this.model.system.newDocument) {
 			this.saveAsDialog = new com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog(this, false, this.model);
 		} else {
-			this.model.document.save();
+			this.model.saveDocument();
 			DocumentController.save(model.system.file, this.model.document);
 			this.init();
 		}
@@ -558,17 +558,17 @@ public final class MainFrame extends JFrame {
 		} else {
 			this.model.system.loggedIn = false;
 			this.model.system.initUsers();
-			this.model.document.pattern.user = this.model.system.user;
+//			this.model.document.pattern.user = this.model.system.user;
 			this.init();
 		}
 	}// GEN-LAST:event_loginMenuItemActionPerformed
 
 	private void undoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_undoMenuItemActionPerformed
-		this.model.document.pattern.undo();
+		this.model.pattern.undo();
 	}// GEN-LAST:event_undoMenuItemActionPerformed
 
 	private void redoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_redoMenuItemActionPerformed
-		this.model.document.pattern.redo();
+		this.model.pattern.redo();
 	}// GEN-LAST:event_redoMenuItemActionPerformed
 
 	private void zooniverseImportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_zooniverseImportMenuItemActionPerformed

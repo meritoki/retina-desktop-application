@@ -380,13 +380,13 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					switch (ke.getKeyCode()) {
 					case KeyEvent.VK_Z: {
 						logger.debug("keyPressed(e) KeyEvent.VK_Z");
-						model.document.pattern.undo();
+						model.pattern.undo();
 						mainFrame.init();
 						break;
 					}
 					case KeyEvent.VK_Y: {
 						logger.debug("keyPressed(e) KeyEvent.VK_Y");
-						model.document.pattern.redo();
+						model.pattern.redo();
 						mainFrame.init();
 						break;
 					}
@@ -397,11 +397,11 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					switch (keyCode) {
 					case KeyEvent.VK_LEFT: {
 						logger.debug("keyEvent.VK_LEFT");
-						model.document.cache.pressedShape = null;
+						model.cache.pressedShape = null;
 						setShapeListSelectedIndex(--index);
-						model.document.cache.shapeUUID = (String) shapeList.getSelectedValue();
+						model.cache.shapeUUID = (String) shapeList.getSelectedValue();
 						try {
-							model.document.pattern.execute("setShape");
+							model.pattern.execute("setShape");
 							mainFrame.init();
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
@@ -411,11 +411,11 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					}
 					case KeyEvent.VK_RIGHT: {
 						logger.debug("keyEvent.VK_RIGHT");
-						model.document.cache.pressedShape = null;
+						model.cache.pressedShape = null;
 						setShapeListSelectedIndex(++index);
-						model.document.cache.shapeUUID = (String) shapeList.getSelectedValue();
+						model.cache.shapeUUID = (String) shapeList.getSelectedValue();
 						try {
-							model.document.pattern.execute("setShape");
+							model.pattern.execute("setShape");
 							mainFrame.init();
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
@@ -425,11 +425,11 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					}
 					case KeyEvent.VK_UP: {
 						logger.debug("keyEvent.VK_UP");
-						model.document.cache.pressedShape = null;
+						model.cache.pressedShape = null;
 						setShapeListSelectedIndex(--index);
-						model.document.cache.shapeUUID = (String) shapeList.getSelectedValue();
+						model.cache.shapeUUID = (String) shapeList.getSelectedValue();
 						try {
-							model.document.pattern.execute("setShape");
+							model.pattern.execute("setShape");
 							mainFrame.init();
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
@@ -439,11 +439,11 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					}
 					case KeyEvent.VK_DOWN: {
 						logger.debug("keyEvent.VK_DOWN");
-						model.document.cache.pressedShape = null;
+						model.cache.pressedShape = null;
 						setShapeListSelectedIndex(++index);
-						model.document.cache.shapeUUID = (String) shapeList.getSelectedValue();
+						model.cache.shapeUUID = (String) shapeList.getSelectedValue();
 						try {
-							model.document.pattern.execute("setShape");
+							model.pattern.execute("setShape");
 							mainFrame.init();
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
@@ -461,11 +461,9 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 		this.shapeList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent me) {
-				Document document = (model != null) ? model.document : null;
-				document.cache.shapeUUID = (String) shapeList.getSelectedValue();
-				logger.info("shapeListAddMouseListener() document.cache.shapeUUID=" + document.cache.shapeUUID);
+				model.cache.shapeUUID = (String) shapeList.getSelectedValue();
 				try {
-					document.pattern.execute("setShape");
+					model.pattern.execute("setShape");
 					mainFrame.init();
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -483,13 +481,13 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					switch (ke.getKeyCode()) {
 					case KeyEvent.VK_Z: {
 						logger.debug("keyPressed(e) KeyEvent.VK_Z");
-						model.document.pattern.undo();
+						model.pattern.undo();
 						mainFrame.init();
 						break;
 					}
 					case KeyEvent.VK_Y: {
 						logger.debug("keyPressed(e) KeyEvent.VK_Y");
-						model.document.pattern.redo();
+						model.pattern.redo();
 						mainFrame.init();
 						break;
 					}
@@ -501,9 +499,9 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					case KeyEvent.VK_LEFT: {
 						logger.debug("keyEvent.VK_LEFT");
 						setGridShapeListSelectedIndex(--index);
-						model.document.cache.shapeUUID = (String) gridShapeList.getSelectedValue();
+						model.cache.shapeUUID = (String) gridShapeList.getSelectedValue();
 						try {
-							model.document.pattern.execute("setGridShape");
+							model.pattern.execute("setGridShape");
 							mainFrame.init();
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
@@ -514,9 +512,9 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					case KeyEvent.VK_RIGHT: {
 						logger.debug("keyEvent.VK_RIGHT");
 						setGridShapeListSelectedIndex(++index);
-						model.document.cache.shapeUUID = (String) gridShapeList.getSelectedValue();
+						model.cache.shapeUUID = (String) gridShapeList.getSelectedValue();
 						try {
-							model.document.pattern.execute("setGridShape");
+							model.pattern.execute("setGridShape");
 							mainFrame.init();
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
@@ -527,9 +525,9 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					case KeyEvent.VK_UP: {
 						logger.debug("keyEvent.VK_UP");
 						setGridShapeListSelectedIndex(--index);
-						model.document.cache.shapeUUID = (String) gridShapeList.getSelectedValue();
+						model.cache.shapeUUID = (String) gridShapeList.getSelectedValue();
 						try {
-							model.document.pattern.execute("setGridShape");
+							model.pattern.execute("setGridShape");
 							mainFrame.init();
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
@@ -540,9 +538,9 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					case KeyEvent.VK_DOWN: {
 						logger.debug("keyEvent.VK_DOWN");
 						setGridShapeListSelectedIndex(++index);
-						model.document.cache.shapeUUID = (String) gridShapeList.getSelectedValue();
+						model.cache.shapeUUID = (String) gridShapeList.getSelectedValue();
 						try {
-							model.document.pattern.execute("setGridShape");
+							model.pattern.execute("setGridShape");
 							mainFrame.init();
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
@@ -560,10 +558,9 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 		this.gridShapeList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent me) {
-				Document document = (model != null) ? model.document : null;
-				document.cache.shapeUUID = (String) gridShapeList.getSelectedValue();
+				model.cache.shapeUUID = (String) gridShapeList.getSelectedValue();
 				try {
-					document.pattern.execute("setGridShape");
+					model.pattern.execute("setGridShape");
 					mainFrame.init();
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -582,13 +579,13 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 			switch (ke.getKeyCode()) {
 			case KeyEvent.VK_Z: {
 				logger.debug("keyPressed(e) KeyEvent.VK_Z");
-				this.model.document.pattern.undo();
+				this.model.pattern.undo();
 				this.mainFrame.init();
 				break;
 			}
 			case KeyEvent.VK_Y: {
 				logger.debug("keyPressed(e) KeyEvent.VK_Y");
-				this.model.document.pattern.redo();
+				this.model.pattern.redo();
 				this.mainFrame.init();
 				break;
 			}
@@ -1015,12 +1012,12 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 	}// </editor-fold>//GEN-END:initComponents
 
 	private void setGridButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_setGridButtonActionPerformed
-		Document document = (model != null) ? model.document : null;
-		document.cache.shapeUUID = (String) shapeList.getSelectedValue();
+		
+		this.model.cache.shapeUUID = (String) shapeList.getSelectedValue();
 		try {
-			document.cache.row = Integer.parseInt(this.gridRowTextField.getText());
-			document.cache.column = Integer.parseInt(this.gridColumnTextField.getText());
-			document.pattern.execute("setGrid");
+			this.model.cache.row = Integer.parseInt(this.gridRowTextField.getText());
+			this.model.cache.column = Integer.parseInt(this.gridColumnTextField.getText());
+			this.model.pattern.execute("setGrid");
 			mainFrame.init();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -1103,9 +1100,9 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 	}// GEN-LAST:event_textValueDefaultCheckBoxActionPerformed
 
 	private void removeShapeButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_deleteRectangleButtonActionPerformed
-		this.model.document.cache.pressedShape = this.model.document.getPage().getShape();
+		this.model.cache.pressedShape = this.model.document.getPage().getShape();
 		try {
-			this.model.document.pattern.execute("removeShape");
+			this.model.pattern.execute("removeShape");
 			this.mainFrame.init();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -1136,11 +1133,11 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 	}// GEN-LAST:event_applyUnitButtonActionPerformed
 
 	private void rectangleButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_rectangleButtonActionPerformed
-		this.model.document.cache.type = com.meritoki.app.desktop.retina.model.document.ShapeType.RECTANGLE;
+		this.model.cache.type = com.meritoki.app.desktop.retina.model.document.ShapeType.RECTANGLE;
 	}// GEN-LAST:event_rectangleButtonActionPerformed
 
 	private void ellipseButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_ellipseButtonActionPerformed
-		this.model.document.cache.type = com.meritoki.app.desktop.retina.model.document.ShapeType.ELLIPSE;
+		this.model.cache.type = com.meritoki.app.desktop.retina.model.document.ShapeType.ELLIPSE;
 	}// GEN-LAST:event_ellipseButtonActionPerformed
 
 	private void setTextButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_setTextButtonActionPerformed

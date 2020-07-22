@@ -1,17 +1,17 @@
-package com.meritoki.app.desktop.retina.model.document.command;
+package com.meritoki.app.desktop.retina.model.command;
 
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 
 public class SetShape extends Command {
 	private static Logger logger = LogManager.getLogger(SetShape.class.getName());
 
-	public SetShape(Document document) {
+	public SetShape(Model document) {
 		super(document, "setShape");
 	}
 
@@ -19,8 +19,8 @@ public class SetShape extends Command {
 	public void execute() {
 		logger.info("execute()");
 		// variables
-		String shapeUUID = document.cache.shapeUUID;
-		Shape shape = this.document.getPage().getShape();
+		String shapeUUID = model.cache.shapeUUID;
+		Shape shape = this.model.document.getPage().getShape();
 		//undo
 		Operation operation = new Operation();
 		operation.object = (shape != null)?shape.uuid:null;
@@ -29,7 +29,7 @@ public class SetShape extends Command {
 		this.operationList.add(operation);
 		//logic
 		if(shapeUUID != null) {
-			this.document.getPage().setShape(shapeUUID);
+			this.model.document.getPage().setShape(shapeUUID);
 		}
 		//redo
 		operation = new Operation();
