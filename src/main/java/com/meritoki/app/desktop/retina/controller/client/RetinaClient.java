@@ -36,14 +36,14 @@ import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 
-public class ModelClient {
+public class RetinaClient {
 
-	private static Logger logger = LogManager.getLogger(ModelClient.class.getName());
+	private static Logger logger = LogManager.getLogger(RetinaClient.class.getName());
 	private String url = null;
 	private Token token = null;
 	private Properties properties;
 	
-	public ModelClient(Model model) {
+	public RetinaClient(Model model) {
 		this.properties = model.system.properties;
 		boolean gateway = Boolean.parseBoolean((String) this.properties.get("gateway"));
 		if(gateway) {
@@ -77,10 +77,6 @@ public class ModelClient {
 			flag = true;
 		}
 		return flag;
-	}
-
-	public void updateProject() {
-
 	}
 
 	public void login(User user) {

@@ -16,6 +16,7 @@ import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
@@ -38,7 +39,7 @@ public class NodeController {
 	private static Logger logger = LogManager.getLogger(NodeController.class.getName());
 
 	public static void main(String[] args) {
-		System.out.println(getUserHome());
+		System.out.println(getOperatingSystem());
 	}
 
 	public static String getSeperator() {
@@ -60,7 +61,7 @@ public class NodeController {
 	public static String getDocumentCache(String uuid) {
 		return getDocumentCache() + getSeperator() + uuid;
 	}
-	
+
 	public static String getResourceCache() {
 		return getRetinaHome() + getSeperator() + "resource";
 	}
@@ -124,31 +125,12 @@ public class NodeController {
 		return object;
 	}
 
-//	public static Object openJson(File file, TypeReference<List<Input>> typeReference) {
-//		logger.info("openJson(" + file + ", " + typeReference + ")");
-//		Object object = null;
-//		ObjectMapper mapper = new ObjectMapper();
-////		mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
-//		try {
-//			object = mapper.readValue(file, typeReference);
-//			
-//		} catch (JsonGenerationException e) {
-//			logger.error(e);
-//		} catch (JsonMappingException e) {
-//			logger.error(e);
-//		} catch (IOException e) {
-//			logger.error(e);
-//		}
-//		return object;
-//	}
-
 	public static <T> Object openJson(File file, TypeReference<List<T>> typeReference) {
 		logger.debug("openJson(" + file + ", " + typeReference + ")");
 		Object object = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			object = mapper.readValue(file, typeReference);
-
 		} catch (JsonGenerationException e) {
 			logger.error(e);
 		} catch (JsonMappingException e) {
@@ -177,7 +159,7 @@ public class NodeController {
 		try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
 			while ((line = br.readLine()) != null) {
 				logger.info(line);
-				String[] array = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");//",");
+				String[] array = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");// ",");
 				stringArrayList.add(array);
 			}
 		} catch (IOException e) {
@@ -237,8 +219,8 @@ public class NodeController {
 		try (PrintWriter writer = new PrintWriter(new File(filePath + getSeperator() + fileName))) {
 			if (object instanceof StringBuilder)
 				writer.write(((StringBuilder) object).toString());
-			else if(object instanceof List) {
-				String objectsCommaSeparated = String.join(",", (List<String>)object);
+			else if (object instanceof List) {
+				String objectsCommaSeparated = String.join(",", (List<String>) object);
 				writer.write(objectsCommaSeparated);
 			}
 
@@ -255,8 +237,21 @@ public class NodeController {
 	@JsonIgnore
 	public static List<String> executeCommand(String command, int timeout) throws Exception {
 		logger.info("executeCommand(" + command + ", " + timeout + ")");
-		ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", command).redirectError(new File("error"))
-				.redirectOutput(new File("output"));
+		UUID uuid = UUID.randomUUID();
+		File processDirectory = new File("process");
+		if (!processDirectory.exists()) {
+			processDirectory.mkdir();
+		}
+		File outputFile = new File(processDirectory + getSeperator() + "output-" + uuid.toString());
+		File errorFile = new File(processDirectory + getSeperator() + "error-" + uuid.toString());
+		ProcessBuilder processBuilder = null;
+		if (isLinux()) {
+			processBuilder = new ProcessBuilder("bash", "-c", command).redirectError(errorFile)
+					.redirectOutput(outputFile);
+		} else if (isWindows()) {
+			processBuilder = new ProcessBuilder("CMD", "/C", command).redirectError(errorFile)
+					.redirectOutput(outputFile);
+		}
 
 		Process process = null;
 		String output = null;
@@ -281,6 +276,10 @@ public class NodeController {
 					stringList.add(s);
 				}
 			}
+			if (outputFile.exists() || errorFile.exists()) {
+				outputFile.delete();
+				errorFile.delete();
+			}
 		} catch (Exception e) {
 			logger.error("executeCommand(...) Exception " + e.getMessage());
 			throw new Exception("process timed out");
@@ -290,15 +289,25 @@ public class NodeController {
 		return stringList;
 	}
 
+	public static String getOperatingSystem() {
+		return System.getProperty("os.name");
+	}
+
+	public static boolean isWindows() {
+		return (getOperatingSystem().toLowerCase().contains("windows"));
+	}
+
+	public static boolean isLinux() {
+		return (getOperatingSystem().toLowerCase().contains("linux"));
+	}
+
 	@JsonIgnore
 	public static Object toJson(String string, Class className) {
 		logger.info("toJson(" + string + ", " + className + ")");
 		Object object = null;
 		ObjectMapper mapper = new ObjectMapper();
-//		mapper.disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
 		try {
 			object = mapper.readValue(string, className);
-
 		} catch (JsonGenerationException e) {
 			logger.error(e);
 		} catch (JsonMappingException e) {

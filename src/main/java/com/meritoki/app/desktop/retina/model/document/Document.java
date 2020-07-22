@@ -248,22 +248,25 @@ public class Document {
 	}
 	
 	@JsonIgnore
-	public List<Shape> getGridShapeList() {
+	public List<Shape> getGridShapeList(boolean flag) {
 		List<Shape> shapeList = new ArrayList<>();
 		for (Page page : this.pageList) {
-			shapeList.addAll(page.getGridShapeList());
+			if(flag)
+				this.setBufferedImage(page);
+			shapeList.addAll(page.getGridShapeList(flag));
+			page.setBufferedImageNull();
 		}
 		return shapeList;
 	}
 	
-	@JsonIgnore
-	public List<Shape> getCompleteShapeList() {
-		List<Shape> shapeList = new ArrayList<>();
-		for (Page page : this.pageList) {
-			shapeList.addAll(page.getGridShapeList());
-		}
-		return shapeList;
-	}
+//	@JsonIgnore
+//	public List<Shape> getCompleteShapeList() {
+//		List<Shape> shapeList = new ArrayList<>();
+//		for (Page page : this.pageList) {
+//			shapeList.addAll(page.getGridShapeList());
+//		}
+//		return shapeList;
+//	}
 
 	@JsonIgnore
 	public boolean importZooniverse(String fileName) {
@@ -318,8 +321,8 @@ public class Document {
 			
 			if (uuid != null && valueList.size() > 0) {
 				logger.info("importZooniverse("+fileName+") valueList="+valueList + " uuid=" + uuid);
-				for (Page page : this.getPageList()) {
-					for (Shape shape : page.getGridShapeList()) {
+				
+					for (Shape shape : this.getGridShapeList(false)) {
 						if (uuid.equals(shape.uuid)) {
 							for(String value: valueList) {
 								Text text = new Text();
@@ -330,7 +333,7 @@ public class Document {
 							shape.getData().setText(shape.getDefaultText());
 						}
 					}
-				}
+				
 			} else {
 				logger.error("importZooniverse("+fileName+") valueList="+valueList + " uuid=" + uuid);
 			}
@@ -370,7 +373,9 @@ public class Document {
 			for (Image image : imageList) {
 				this.setBufferedImage(image);
 			}
-			page.getBufferedImage();
+			if(page.getBufferedImage()== null) {
+				logger.error("setBufferedImage("+page+") bufferedImage==null");
+			}
 		}
 	}
 	
@@ -393,6 +398,10 @@ public class Document {
 				bufferedImage = NodeController.openBufferedImage(image.file);
 				if (bufferedImage != null) {
 					if (image.getExtension().equals("jpg") || image.getExtension().equals("jpeg")) {
+						File documentCache = new File(NodeController.getDocumentCache(this.uuid));
+						if(!documentCache.exists()) {
+							documentCache.mkdirs();
+						}
 						try {
 							NodeController.saveJpg(NodeController.getDocumentCache(this.uuid),
 									image.uuid + "." + image.getExtension(), bufferedImage);

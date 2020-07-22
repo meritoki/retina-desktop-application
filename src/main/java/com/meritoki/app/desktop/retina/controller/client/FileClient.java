@@ -97,7 +97,6 @@ public class FileClient {
 			fileJson = mapper.writeValueAsString(file);
 			RestTemplate restTemplate = new RestTemplate();
 			String uri = new String(url+"/register");
-			this.properties = NodeController.openProperties("./retina-desktop.properties");
 			String token = this.properties.getProperty("token");
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
@@ -122,7 +121,6 @@ public class FileClient {
 			fileJson = mapper.writeValueAsString(file);
 			RestTemplate restTemplate = new RestTemplate();
 			String uri = new String(url+"/check");
-			this.properties = NodeController.openProperties("./retina-desktop.properties");
 			String token = this.properties.getProperty("token");
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
@@ -135,12 +133,6 @@ public class FileClient {
 		} catch (ResourceAccessException e) {
 			logger.error("ResourceAccessException");
 		}
-//		File file = new File();
-//		file.uuid = uuid;
-//		RestTemplate restTemplate = new RestTemplate();
-//		String uri = new String(url+"/check");
-//		String returns = restTemplate.postForObject(uri, file, String.class);
-//		boolean 
 		return flag;
 	}
 	
@@ -154,7 +146,6 @@ public class FileClient {
 			fileJson = mapper.writeValueAsString(file);
 			RestTemplate restTemplate = new RestTemplate();
 			String uri = new String(url+"/mark");
-			this.properties = NodeController.openProperties("./retina-desktop.properties");
 			String token = this.properties.getProperty("token");
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
@@ -166,12 +157,6 @@ public class FileClient {
 		} catch (ResourceAccessException e) {
 			logger.error("ResourceAccessException");
 		}
-//		File file = new File();
-//		file.uuid = uuid;
-//		RestTemplate restTemplate = new RestTemplate();
-//		String uri = new String(url+"/mark");
-//		String returns = restTemplate.postForObject(uri, file, String.class);
-//		System.out.println(returns);
 	}
 	
 	public void unmarkFile(String uuid) {
@@ -184,7 +169,6 @@ public class FileClient {
 			fileJson = mapper.writeValueAsString(file);
 			RestTemplate restTemplate = new RestTemplate();
 			String uri = new String(url+"/unmark");
-			this.properties = NodeController.openProperties("./retina-desktop.properties");
 			String token = this.properties.getProperty("token");
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
@@ -196,18 +180,11 @@ public class FileClient {
 		} catch (ResourceAccessException e) {
 			logger.error("ResourceAccessException");
 		}
-//		File file = new File();
-//		file.uuid = uuid;
-//		RestTemplate restTemplate = new RestTemplate();
-//		String uri = new String(url+"/unmark");
-//		String returns = restTemplate.postForObject(uri, file, String.class);
-//		System.out.println(returns);
 	}
 
 	public void uploadFile(String filePath, String fileName) {
 		logger.info("uploadFile("+filePath+","+fileName+")");
 		java.io.File file = new java.io.File(filePath+fileName);
-		this.properties = NodeController.openProperties("./retina-desktop.properties");
 		String token = this.properties.getProperty("token");
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -248,41 +225,14 @@ public class FileClient {
 		}
 	}
 
-//	public static void main(String args[]) {
-//		FileClient fileClient = new FileClient(new System());
-//		fileClient.checkHealth();
-//		fileClient.registerFile("123");
-//		fileClient.checkFile("123");
-//		fileClient.markFile("123");
-//		fileClient.unmarkFile("123");
-//		fileClient.uploadFile("./data/image/","01.jpg");
-//		fileClient.downloadFile(NodeController.getImageCache()+NodeController.getSeperator(),"01.jpg");
-//	}
+	public static void main(String args[]) {
+		FileClient fileClient = new FileClient(new Model());
+		fileClient.checkHealth();
+		fileClient.registerFile("123");
+		fileClient.checkFile("123");
+		fileClient.markFile("123");
+		fileClient.unmarkFile("123");
+		fileClient.uploadFile("./data/image/","01.jpg");
+		fileClient.downloadFile("."+NodeController.getSeperator(),"01.jpg");
+	}
 }
-
-//public void registerFile(String uuid) {
-	////////////////////////////////////
-//	Map<String, String> vars = new HashMap<String, String>();
-//	vars.put("uuid", file.uuid);
-//	RestTemplate restTemplate = new RestTemplate();
-//	String uri = new String("http://localhost:8302/register");
-//	String returns = restTemplate.postForObject(uri, file, String.class, vars);
-	////////////////////
-//	RestTemplate restTemplate = new RestTemplate();
-//	String url = new String("http://localhost:8302/register");
-//	HttpHeaders headers = new HttpHeaders();
-//	headers.setContentType(MediaType.APPLICATION_JSON);
-//	MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
-//	map.add("uuid", uuid);
-//	HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
-//	ResponseEntity<String> response = restTemplate.postForEntity( url, request , String.class );
-
-//}
-
-//public void registerFile(File file) {
-//	Map<String, String> vars = new HashMap<String, String>();
-//	vars.put("uuid", file.uuid);
-//	RestTemplate restTemplate = new RestTemplate();
-//	String uri = new String("http://localhost:8302/register");
-//	String returns = restTemplate.postForObject(uri, file, String.class, vars);
-//}
