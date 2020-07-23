@@ -20,13 +20,16 @@ import java.io.File;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.meritoki.app.desktop.retina.controller.client.ClientController;
 import com.meritoki.app.desktop.retina.controller.document.DocumentController;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
+import com.meritoki.app.desktop.retina.controller.user.UserController;
 import com.meritoki.app.desktop.retina.model.command.Pattern;
 import com.meritoki.app.desktop.retina.model.document.Cache;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
+import com.meritoki.app.desktop.retina.model.document.user.User;
 import com.meritoki.app.desktop.retina.model.resource.Resource;
 import com.meritoki.app.desktop.retina.model.system.System;
 
@@ -83,5 +86,24 @@ public class Model {
 		DocumentController.save(this.system.file, this.document);
 		this.resource.addRecent(this.system.file.getAbsolutePath());
 		this.system.newDocument = false;
+	}
+	
+	public boolean loginUser(String name, String password) {
+		UserController userController = new UserController(this.system);
+		if(this.system.isConnected) {
+			ClientController clientController = new ClientController(this);
+			User user = new User();
+			user.name = name;
+			user.password = password;
+			this.system.loggedIn = clientController.userClient.login(user);
+		} else {
+			this.system.loggedIn = userController.loginUser(name, password);	
+		}
+		return this.system.loggedIn;
+	}
+	
+	public void logoutUser() {
+		this.system.loggedIn = false;
+		this.system.initUsers();
 	}
 }

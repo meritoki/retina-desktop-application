@@ -58,6 +58,8 @@ public class System {
 	public boolean loggedIn = false;
 	@JsonIgnore
 	public boolean newDocument = true;
+	@JsonIgnore
+	public boolean isConnected = false;
 
 	public System() {
 		this.initDirectories();

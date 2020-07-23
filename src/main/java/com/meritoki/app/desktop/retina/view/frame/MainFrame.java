@@ -23,22 +23,23 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JFrame;
-import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.meritoki.app.desktop.retina.controller.client.ClientController;
 import com.meritoki.app.desktop.retina.controller.document.DocumentController;
 import com.meritoki.app.desktop.retina.controller.module.ModuleController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
-import com.meritoki.app.desktop.retina.view.dialog.PageDialog;
-import com.meritoki.app.desktop.retina.view.dialog.RecognitionDialog;
 import com.meritoki.app.desktop.retina.view.dialog.AttributionDialog;
 import com.meritoki.app.desktop.retina.view.dialog.CommandDialog;
 import com.meritoki.app.desktop.retina.view.dialog.OpenDialog;
+import com.meritoki.app.desktop.retina.view.dialog.PageDialog;
 import com.meritoki.app.desktop.retina.view.dialog.PropertyDialog;
+import com.meritoki.app.desktop.retina.view.dialog.RecognitionDialog;
 import com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog;
 import com.meritoki.app.desktop.retina.view.dialog.ShapeDialog;
 import com.meritoki.app.desktop.retina.view.dialog.audio.AudioExportDialog;
@@ -197,6 +198,7 @@ public final class MainFrame extends JFrame {
         archivePanel = new com.meritoki.app.desktop.retina.view.panel.ArchivePanel();
         mainMenuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
+        connectMenuItem = new javax.swing.JMenuItem();
         logInOutMenuItem = new javax.swing.JMenuItem();
         newMenuItem = new javax.swing.JMenuItem();
         openMenuItem = new javax.swing.JMenuItem();
@@ -268,6 +270,14 @@ public final class MainFrame extends JFrame {
         imagePageTabbedPane.addTab("Archive", jScrollPane4);
 
         fileMenu.setText("File");
+
+        connectMenuItem.setText("Connect");
+        connectMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                connectMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(connectMenuItem);
 
         logInOutMenuItem.setText("Login");
         logInOutMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -490,6 +500,18 @@ public final class MainFrame extends JFrame {
     	this.zooniverseCSVImportDialog = new com.meritoki.app.desktop.retina.view.dialog.zooniverse.ZooniverseCSVImportDialog(this, false, this.model);
     }//GEN-LAST:event_zooniverseCSVImportMenuItemActionPerformed
 
+    private void connectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectMenuItemActionPerformed
+        ClientController clientController = new ClientController(this.model);
+        boolean fileFlag = clientController.fileClient.checkHealth();
+        boolean userFlag = clientController.userClient.checkHealth();
+        boolean retinaFlag = clientController.retinaClient.checkHealth();
+        if(fileFlag && userFlag && retinaFlag) {
+        	this.model.system.isConnected = true;
+        } else {
+        	JOptionPane.showMessageDialog(this, "Services Unavailable", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_connectMenuItemActionPerformed
+
 	private void attributionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_attributionMenuItemActionPerformed
 		this.attributionDialog.setVisible(true);
 	}// GEN-LAST:event_attributionMenuItemActionPerformed
@@ -523,7 +545,6 @@ public final class MainFrame extends JFrame {
 			this.saveAsDialog = new com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog(this, false, this.model);
 		} else {
 			this.model.saveDocument();
-			DocumentController.save(model.system.file, this.model.document);
 			this.init();
 		}
 
@@ -559,9 +580,7 @@ public final class MainFrame extends JFrame {
 		if (!this.model.system.loggedIn) {
 			this.loginDialog.setVisible(true);
 		} else {
-			this.model.system.loggedIn = false;
-			this.model.system.initUsers();
-//			this.model.document.pattern.user = this.model.system.user;
+			this.model.logoutUser();
 			this.init();
 		}
 	}// GEN-LAST:event_loginMenuItemActionPerformed
@@ -634,6 +653,7 @@ public final class MainFrame extends JFrame {
     private javax.swing.JMenuItem attributionMenuItem;
     private javax.swing.JMenuItem audioMenuItem;
     private javax.swing.JMenuItem commandMenuItem;
+    private javax.swing.JMenuItem connectMenuItem;
     private javax.swing.JMenu dialogMenu;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu exportMenu;

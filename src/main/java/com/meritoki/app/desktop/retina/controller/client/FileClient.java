@@ -40,6 +40,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.meritoki.app.desktop.retina.controller.json.JsonController;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.Model;
 
@@ -62,27 +63,16 @@ public class FileClient {
 	public boolean checkHealth() {
 		logger.info("checkHealth()");
 		boolean flag = false;
-		Status status = null;
 		try {
 			RestTemplate restTemplate = new RestTemplate();
 			String uri = new String(url + "/actuator/health");
-			String responseJson = restTemplate.getForObject(uri, String.class);
-			ObjectMapper mapper = new ObjectMapper();
-
-			try {
-				status = mapper.readValue(responseJson, Status.class);
-			} catch (JsonParseException e) {
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+			String response = restTemplate.getForObject(uri, String.class);
+			Status status = (Status)JsonController.getObject(response, Status.class);
+			if (status != null && status.status.equals("UP")) {
+				flag = true;
 			}
 		} catch (ResourceAccessException e) {
 			logger.error("ResourceAccessException");
-		}
-		if (status != null && status.status.equals("UP")) {
-			flag = true;
 		}
 		return flag;
 	}
