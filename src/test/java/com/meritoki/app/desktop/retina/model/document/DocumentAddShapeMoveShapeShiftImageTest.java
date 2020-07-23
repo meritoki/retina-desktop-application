@@ -13,17 +13,14 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import com.meritoki.app.desktop.retina.controller.document.DocumentController;
-import com.meritoki.app.desktop.retina.model.document.Document;
-import com.meritoki.app.desktop.retina.model.document.Image;
-import com.meritoki.app.desktop.retina.model.document.Page;
-import com.meritoki.app.desktop.retina.model.document.Point;
+import com.meritoki.app.desktop.retina.model.Model;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DocumentAddShapeMoveShapeShiftImageTest {
 
 	static Logger logger = LogManager.getLogger(DocumentAddShapeMoveShapeShiftImageTest.class.getName());
-	static Document document = null;
+	static Model model = new Model();
+//	static Document document = null;
 	static String pageZeroUUID = null;
 	static String pageOneUUID = null;
 	static String pageTwoUUID = null;
@@ -32,82 +29,82 @@ public class DocumentAddShapeMoveShapeShiftImageTest {
 
 	@BeforeAll
 	public static void initialize() {
-		document = new Document();
+		model.document = new Document();
 		Page page = new Page();
 		page = new Page(new Image(new File("./data/image/01.jpg")));
 		pageZeroUUID = page.uuid;
-		document.addPage(page);
+		model.document.addPage(page);
 		page = new Page();
 		page.addImage(new Image(new File("./data/image/01.jpg")));
 		page.addImage(new Image(new File("./data/image/02.jpg")));
 		pageOneUUID = page.uuid;
-		document.addPage(page);
+		model.document.addPage(page);
 		page = new Page();
 		page.addImage(new Image(new File("./data/image/01.jpg")));
 		page.addImage(new Image(new File("./data/image/02.jpg")));
 		pageTwoUUID = page.uuid;
-		document.addPage(page);
-		assertEquals(document.pageList.size(), 3);
+		model.document.addPage(page);
+		assertEquals(model.document.pageList.size(), 3);
 	}
 
 	@Test
 	@Order(1)
 	public void addShape() {
 		//Page Zero
-		assertEquals(document.setIndex(0), true);
-		assertEquals(document.getPage().setIndex(0), true);
-		document.cache.pressedImage = document.getImage();
-		double x = (document.cache.pressedImage.position.dimension.width / 2 - dimension / 2);
-		double y = (document.cache.pressedImage.position.dimension.height / 2 - dimension / 2);
+		assertEquals(model.document.setIndex(0), true);
+		assertEquals(model.document.getPage().setIndex(0), true);
+		model.cache.pressedImage = model.document.getImage();
+		double x = (model.cache.pressedImage.position.dimension.width / 2 - dimension / 2);
+		double y = (model.cache.pressedImage.position.dimension.height / 2 - dimension / 2);
 		int width = dimension;
 		int height = dimension;
-		document.cache.pressedPoint = new Point(x, y);
-		document.cache.releasedPoint = new Point(x + width, y + height);
+		model.cache.pressedPoint = new Point(x, y);
+		model.cache.releasedPoint = new Point(x + width, y + height);
 		try {
-			document.pattern.execute("addShape");
+			model.pattern.execute("addShape");
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		}
-		x = (document.cache.pressedImage.position.center.x);
-		y = (document.cache.pressedImage.position.center.y);
-		assertNotNull(document.getShape(new Point(x,y)));
+		x = (model.cache.pressedImage.position.center.x);
+		y = (model.cache.pressedImage.position.center.y);
+		assertNotNull(model.document.getShape(new Point(x,y)));
 		//Page One
-		assertEquals(document.setIndex(1), true);
-		assertEquals(document.getPage().setIndex(0),true);
-		document.cache.pressedImage = document.getImage();
-		x = (document.cache.pressedImage.position.center.x- dimension / 2);
-		y = (document.cache.pressedImage.position.center.y - dimension / 2);
+		assertEquals(model.document.setIndex(1), true);
+		assertEquals(model.document.getPage().setIndex(0),true);
+		model.cache.pressedImage = model.document.getImage();
+		x = (model.cache.pressedImage.position.center.x- dimension / 2);
+		y = (model.cache.pressedImage.position.center.y - dimension / 2);
 		width = dimension;
 		height = dimension;
-		document.cache.pressedPoint = new Point(x, y);
-		document.cache.releasedPoint = new Point(x + width, y + height);
+		model.cache.pressedPoint = new Point(x, y);
+		model.cache.releasedPoint = new Point(x + width, y + height);
 		try {
-			document.pattern.execute("addShape");
+			model.pattern.execute("addShape");
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		}
-		x = (document.cache.pressedImage.position.center.x);
-		y = (document.cache.pressedImage.position.center.y);
-		assertNotNull(document.getShape(new Point(x,y)));
+		x = (model.cache.pressedImage.position.center.x);
+		y = (model.cache.pressedImage.position.center.y);
+		assertNotNull(model.document.getShape(new Point(x,y)));
 		//Page Two
-		assertEquals(document.setIndex(2), true);
-		assertEquals(document.getPage().setIndex(1),true);
-		document.cache.pressedImage = document.getPage().getImage();
-		x = (document.cache.pressedImage.position.center.x - dimension / 2);
-		y = (document.cache.pressedImage.position.center.y - dimension / 2);
+		assertEquals(model.document.setIndex(2), true);
+		assertEquals(model.document.getPage().setIndex(1),true);
+		model.cache.pressedImage = model.document.getPage().getImage();
+		x = (model.cache.pressedImage.position.center.x - dimension / 2);
+		y = (model.cache.pressedImage.position.center.y - dimension / 2);
 		width = dimension;
 		height = dimension;
-		document.cache.pressedPoint = new Point(x, y);
-		document.cache.releasedPoint = new Point(x + width, y + height);
+		model.cache.pressedPoint = new Point(x, y);
+		model.cache.releasedPoint = new Point(x + width, y + height);
 		try {
-			document.pattern.execute("addShape");
+			model.pattern.execute("addShape");
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		}
-		document.cache.pressedImage = document.getPage().getImage();
-		x = (document.cache.pressedImage.position.center.x);
-		y = (document.cache.pressedImage.position.center.y);
-		assertNotNull(document.getShape(new Point(x,y)));
+		model.cache.pressedImage = model.document.getPage().getImage();
+		x = (model.cache.pressedImage.position.center.x);
+		y = (model.cache.pressedImage.position.center.y);
+		assertNotNull(model.document.getShape(new Point(x,y)));
 	}
 	
 //	@Test
@@ -120,60 +117,60 @@ public class DocumentAddShapeMoveShapeShiftImageTest {
 	@Order(2)
 	public void moveShape() {
 		logger.info("single page");
-		assertEquals(document.setIndex(0), true);
-		assertEquals(document.getPage().setIndex(0), true);
-		document.cache.pressedImage = document.getPage().getImage();
-		double x = (document.cache.pressedImage.position.center.x);
-		double y = (document.cache.pressedImage.position.center.y);
-		document.cache.pressedPoint = new Point(x, y);
-		document.cache.pressedShape = document.getPage().getShape(document.cache.pressedPoint);
-		x = (document.cache.pressedImage.position.dimension.width / 2);
-		y = (document.cache.pressedImage.position.dimension.height / 4);
-		document.cache.releasedPoint = new Point(x, y);
+		assertEquals(model.document.setIndex(0), true);
+		assertEquals(model.document.getPage().setIndex(0), true);
+		model.cache.pressedImage = model.document.getPage().getImage();
+		double x = (model.cache.pressedImage.position.center.x);
+		double y = (model.cache.pressedImage.position.center.y);
+		model.cache.pressedPoint = new Point(x, y);
+		model.cache.pressedShape = model.document.getPage().getShape(model.cache.pressedPoint);
+		x = (model.cache.pressedImage.position.dimension.width / 2);
+		y = (model.cache.pressedImage.position.dimension.height / 4);
+		model.cache.releasedPoint = new Point(x, y);
 		try {
-			document.pattern.execute("moveShape");
+			model.pattern.execute("moveShape");
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		}
-		assertNotNull(document.getPage().getShape(new Point(x,y)));
+		assertNotNull(model.document.getPage().getShape(new Point(x,y)));
 		logger.info("left to right");
-		assertEquals(document.setIndex(1), true);
-		assertEquals(document.getPage().setIndex(0), true);
-		document.cache.pressedImage = document.getPage().getImage();
-		assertEquals(document.getPage().setIndex(1), true);
-		document.cache.releasedImage = document.getPage().getImage();
-		x = (document.cache.pressedImage.position.center.x);
-		y = (document.cache.pressedImage.position.center.y);
-		document.cache.pressedPoint = new Point(x, y);
-		document.cache.pressedShape = document.getPage().getShape(document.cache.pressedPoint);
-		x = (document.cache.releasedImage.position.center.x); 
-		y = (document.cache.releasedImage.position.center.y);
-		document.cache.releasedPoint = new Point(x, y);
+		assertEquals(model.document.setIndex(1), true);
+		assertEquals(model.document.getPage().setIndex(0), true);
+		model.cache.pressedImage = model.document.getPage().getImage();
+		assertEquals(model.document.getPage().setIndex(1), true);
+		model.cache.releasedImage = model.document.getPage().getImage();
+		x = (model.cache.pressedImage.position.center.x);
+		y = (model.cache.pressedImage.position.center.y);
+		model.cache.pressedPoint = new Point(x, y);
+		model.cache.pressedShape = model.document.getPage().getShape(model.cache.pressedPoint);
+		x = (model.cache.releasedImage.position.center.x); 
+		y = (model.cache.releasedImage.position.center.y);
+		model.cache.releasedPoint = new Point(x, y);
 		try {
-			document.pattern.execute("moveShape");
+			model.pattern.execute("moveShape");
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		}
-		assertNotNull(document.getPage().getShape(new Point(x,y)));
+		assertNotNull(model.document.getPage().getShape(new Point(x,y)));
 		logger.info("right to left");
-		assertEquals(document.setIndex(2), true);
-		assertEquals(document.getPage().setIndex(1), true);
-		document.cache.pressedImage = document.getPage().getImage();
-		assertEquals(document.getPage().setIndex(0), true);
-		document.cache.releasedImage = document.getPage().getImage();
-		x = (document.cache.pressedImage.position.center.x);
-		y = (document.cache.pressedImage.position.center.y);
-		document.cache.pressedPoint = new Point(x, y);
-		document.cache.pressedShape = document.getPage().getShape(document.cache.pressedPoint);
-		x = (document.cache.releasedImage.position.center.x);
-		y = (document.cache.releasedImage.position.center.y);
-		document.cache.releasedPoint = new Point(x, y);
+		assertEquals(model.document.setIndex(2), true);
+		assertEquals(model.document.getPage().setIndex(1), true);
+		model.cache.pressedImage = model.document.getPage().getImage();
+		assertEquals(model.document.getPage().setIndex(0), true);
+		model.cache.releasedImage = model.document.getPage().getImage();
+		x = (model.cache.pressedImage.position.center.x);
+		y = (model.cache.pressedImage.position.center.y);
+		model.cache.pressedPoint = new Point(x, y);
+		model.cache.pressedShape = model.document.getPage().getShape(model.cache.pressedPoint);
+		x = (model.cache.releasedImage.position.center.x);
+		y = (model.cache.releasedImage.position.center.y);
+		model.cache.releasedPoint = new Point(x, y);
 		try {
-			document.pattern.execute("moveShape");
+			model.pattern.execute("moveShape");
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		}
-		assertNotNull(document.getPage().getShape(new Point(x,y)));
+		assertNotNull(model.document.getPage().getShape(new Point(x,y)));
 	}
 	
 //	@Test
@@ -186,68 +183,68 @@ public class DocumentAddShapeMoveShapeShiftImageTest {
 	@Order(3)
 	public void shiftImage() {
 		logger.info("single page");
-		assertEquals(document.setIndex(0), true);
-		assertEquals(document.getPage().setIndex(0), true);
-		document.cache.pressedImage = document.getImage();
-		document.cache.shiftOperator = '+';
-		document.cache.shiftFactor = 10;
+		assertEquals(model.document.setIndex(0), true);
+		assertEquals(model.document.getPage().setIndex(0), true);
+		model.cache.pressedImage = model.document.getImage();
+		model.cache.shiftOperator = '+';
+		model.cache.shiftFactor = 10;
 		try {
-			document.pattern.execute("shiftImage");
-			document.pattern.execute("shiftImage");
-			document.pattern.execute("shiftImage");
-			document.pattern.execute("shiftImage");
-			document.pattern.execute("shiftImage");
-			document.pattern.execute("shiftImage");
-			document.pattern.execute("shiftImage");
-			document.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
-		double x = (int)(document.cache.pressedImage.position.dimension.width/2);
-		double y = (int)(document.cache.pressedImage.position.point.y+document.cache.pressedImage.position.dimension.height/4);
-		assertNotNull(document.getShape(new Point(x,y)));
+		double x = (int)(model.cache.pressedImage.position.dimension.width/2);
+		double y = (int)(model.cache.pressedImage.position.point.y+model.cache.pressedImage.position.dimension.height/4);
+		assertNotNull(model.document.getShape(new Point(x,y)));
 		logger.info("right");
-		assertEquals(document.setIndex(1), true);
-		assertEquals(document.getPage().setIndex(1), true);
-		document.cache.pressedImage = document.getImage();
-		document.cache.shiftOperator = '+';
-		document.cache.shiftFactor = 10;
+		assertEquals(model.document.setIndex(1), true);
+		assertEquals(model.document.getPage().setIndex(1), true);
+		model.cache.pressedImage = model.document.getImage();
+		model.cache.shiftOperator = '+';
+		model.cache.shiftFactor = 10;
 		try {
-			document.pattern.execute("shiftImage");
-			document.pattern.execute("shiftImage");
-			document.pattern.execute("shiftImage");
-			document.pattern.execute("shiftImage");
-			document.pattern.execute("shiftImage");
-			document.pattern.execute("shiftImage");
-			document.pattern.execute("shiftImage");
-			document.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
-		x = document.cache.pressedImage.position.center.x;
-		y = document.cache.pressedImage.position.center.y;
-		assertNotNull(document.cache.pressedImage.getShape(new Point(x,y)));
+		x = model.cache.pressedImage.position.center.x;
+		y = model.cache.pressedImage.position.center.y;
+		assertNotNull(model.cache.pressedImage.getShape(new Point(x,y)));
 		logger.info("left");
-		assertEquals(document.setIndex(2), true);
-		assertEquals(document.getPage().setIndex(0), true);
-		document.cache.pressedImage = document.getImage();
-		document.cache.shiftOperator = '+';
-		document.cache.shiftFactor = 10;
+		assertEquals(model.document.setIndex(2), true);
+		assertEquals(model.document.getPage().setIndex(0), true);
+		model.cache.pressedImage = model.document.getImage();
+		model.cache.shiftOperator = '+';
+		model.cache.shiftFactor = 10;
 		try {
-			document.pattern.execute("shiftImage");
-			document.pattern.execute("shiftImage");
-			document.pattern.execute("shiftImage");
-			document.pattern.execute("shiftImage");
-			document.pattern.execute("shiftImage");
-			document.pattern.execute("shiftImage");
-			document.pattern.execute("shiftImage");
-			document.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
+			model.pattern.execute("shiftImage");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
-		x = document.cache.pressedImage.position.center.x;
-		y = document.cache.pressedImage.position.center.y;
-		assertNotNull(document.cache.pressedImage.getShape(new Point(x,y)));
+		x = model.cache.pressedImage.position.center.x;
+		y = model.cache.pressedImage.position.center.y;
+		assertNotNull(model.cache.pressedImage.getShape(new Point(x,y)));
 	}
 	
 	@Test
@@ -279,20 +276,20 @@ public class DocumentAddShapeMoveShapeShiftImageTest {
 //	@Test
 //	@Order(4) 
 //	public void undoMoveShape() {
-//		document.pattern.undo();
-//		document.pattern.undo();
-//		document.pattern.undo();
+//		model.pattern.undo();
+//		model.pattern.undo();
+//		model.pattern.undo();
 //	}
 //	
 //	@Test
 //	@Order(5)
 //	public void verifyShapePosition() {
-//		assertEquals(document.setIndex(0), true);
-//		assertEquals(document.getPage().setIndex(0), true);
-//		document.cache.pressedImage = document.getPage().getImage();
-//		int x = (int) (document.cache.pressedImage.position.absoluteDimension.width / 2);
-//		int y = (int) (document.cache.pressedImage.position.absoluteDimension.height / 2);
-//		assertNotNull(document.getPage().getShape(new Point(x,y)));
+//		assertEquals(model.document.setIndex(0), true);
+//		assertEquals(model.document.getPage().setIndex(0), true);
+//		model.cache.pressedImage = model.document.getPage().getImage();
+//		int x = (int) (model.cache.pressedImage.position.absoluteDimension.width / 2);
+//		int y = (int) (model.cache.pressedImage.position.absoluteDimension.height / 2);
+//		assertNotNull(model.document.getPage().getShape(new Point(x,y)));
 //	}
 //	
 //	@Test

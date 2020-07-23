@@ -19,6 +19,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.File;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -153,7 +154,9 @@ public final class MainFrame extends JFrame {
 	public void initMenu() {
 		List<String> recentList = this.model.resource.recentList;
 		this.openRecentMenu.removeAll();
-		for (String recent : recentList) {
+		Iterator<String> recentIterator = recentList.iterator();
+		while(recentIterator.hasNext()) {
+			String recent = recentIterator.next();
 			File file = new File(recent);
 			if (file.exists()) {
 				JMenuItem recentMenuItem = new javax.swing.JMenuItem();

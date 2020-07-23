@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.meritoki.app.desktop.retina.controller.client.ClientController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.user.User;
@@ -24,14 +25,17 @@ public class Command implements CommandInterface {
 	public User user;
 	@JsonProperty
     public LinkedList<Operation> operationList = new LinkedList<>();
+	@JsonIgnore
+//	public ClientController clientController;
 	
 	public Command() {
 	}
 
-	public Command(Model document, String name) {
-		this.model = document;
+	public Command(Model model, String name) {
+		this.model = model;
 		this.date = new Date();
 		this.name = name;
+//		this.clientController = new ClientController(this.model);
 	}
 	
 	@Override
@@ -41,4 +45,6 @@ public class Command implements CommandInterface {
 	public void reset() {
 		this.operationList = new LinkedList<>();
 	}
+	
+	
 }

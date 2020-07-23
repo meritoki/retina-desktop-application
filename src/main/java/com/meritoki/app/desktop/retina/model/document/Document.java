@@ -35,14 +35,12 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.command.Command;
-import com.meritoki.app.desktop.retina.model.command.Pattern;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Output;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Annotation;
-import com.meritoki.app.desktop.retina.model.provider.zooniverse.Subject;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Data;
+import com.meritoki.app.desktop.retina.model.provider.zooniverse.Subject;
 
 /**
  * Document
@@ -64,29 +62,6 @@ public class Document {
 
 	public Document() {
 		this.uuid = UUID.randomUUID().toString();
-//		this.init();
-//		this.test();
-	}
-
-//	public void save() {
-//		this.pattern.save();
-//	}
-//
-//	public void init() {
-//		this.pattern.setDocument(this);
-//	}
-
-	@JsonIgnore
-	public void test() {
-		Page page = new Page();
-		page.addImage(new Image(new File("./data/image/01.jpg")));
-		page.addImage(new Image(new File("./data/image/02.jpg")));
-		page.addImage(new Image(new File("./data/image/03.jpg")));
-		this.addPage(page);
-		page = new Page(new Image(new File("./data/image/03.jpg")));
-		this.addPage(page);
-		page = new Page(new Image(new File("./data/image/04.jpg")));
-		this.addPage(page);
 	}
 
 	@JsonIgnore

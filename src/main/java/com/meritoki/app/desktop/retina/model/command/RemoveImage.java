@@ -25,6 +25,7 @@ public class RemoveImage extends Command {
 		//logic
 		this.model.document.getPage().removeImage(pressedImage.uuid);
 		this.model.document.getPage().setBufferedImage(null);
+		//logic
 		operation = new Operation();
 		operation.object = pressedImage.uuid;
 		operation.sign = 1;
