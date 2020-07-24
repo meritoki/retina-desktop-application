@@ -31,8 +31,9 @@ public class AddPage extends Command {
     	operation.sign = 0;
     	this.operationList.push(operation);	
     	//logic
-    	File[] fileArray = this.model.cache.fileArray;
-    	for(File file: fileArray) {
+    	String[] fileArray = this.model.cache.fileArray;
+    	for(String f: fileArray) {
+    		File file = new File(f);
     		if(file.getName().contains(".pdf")) {
     			File[] pageArray = PDFController.openPDF(file, this.model.document.uuid);
     			for(File p:pageArray) {

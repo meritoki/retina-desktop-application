@@ -31,6 +31,8 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.meritoki.app.desktop.retina.controller.json.JsonController;
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.cache.Cache;
+import com.meritoki.app.desktop.retina.model.command.Command;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 
@@ -93,6 +95,26 @@ public class RetinaClient {
 			logger.error("ResourceAccessException " + e.getMessage());
 		}
 		return flag;
+	}
+	
+	public Document postDocumentCommand(Document document, Command command, Cache cache) {
+		logger.info("postDocumentCommand(" + document + ", "+command+")");
+		Document d = null;
+		try {
+			String json = JsonController.getJson(cache);
+			RestTemplate restTemplate = new RestTemplate();
+			String uri = new String(url + "/document/"+document.uuid+"/command/"+command.name);
+			HttpHeaders httpHeaders = this.getApplicationJsonAuthorizationBearerHttpHeaders();
+			HttpEntity<String> httpEntity = new HttpEntity<String>(json, httpHeaders);
+			String response = restTemplate.postForObject(uri, httpEntity, String.class);
+			Status status = (Status) JsonController.getObject(response, Status.class);
+			if (status.message.equals("success")) {
+				d = (Document) JsonController.getObject(status.data.toString(), Document.class);
+			}
+		} catch (ResourceAccessException e) {
+			logger.error("ResourceAccessException " + e.getMessage());
+		}
+		return d;
 	}
 
 	public boolean postDocumentShare(Document document, User user) {

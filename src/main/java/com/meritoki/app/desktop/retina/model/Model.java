@@ -16,6 +16,7 @@
 package com.meritoki.app.desktop.retina.model;
 
 import java.io.File;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,8 +25,8 @@ import com.meritoki.app.desktop.retina.controller.client.ClientController;
 import com.meritoki.app.desktop.retina.controller.document.DocumentController;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.controller.user.UserController;
+import com.meritoki.app.desktop.retina.model.cache.Cache;
 import com.meritoki.app.desktop.retina.model.command.Pattern;
-import com.meritoki.app.desktop.retina.model.document.Cache;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
@@ -58,6 +59,21 @@ public class Model {
 
 	public Model() {
 		this.pattern.setModel(this);
+	}
+	
+	public List<String> getDocumentList() {
+		ClientController clientController = new ClientController(this);
+		List<String> stringList = clientController.retinaClient.getDocumentList();
+		return stringList;
+	}
+	
+	public void openDocument(String uuid) {
+		ClientController clientController = new ClientController(this);
+		this.document = clientController.retinaClient.getDocument(uuid);
+		File directory = new File(NodeController.getDocumentCache(this.document.uuid));
+		if(!directory.exists()) {
+			directory.mkdirs();
+		}
 	}
 	
 	public void openDocument(File file) {

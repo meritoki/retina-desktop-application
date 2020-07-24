@@ -13,67 +13,73 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meritoki.app.desktop.retina.model.document;
+package com.meritoki.app.desktop.retina.model.cache;
 
 import java.io.File;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.meritoki.app.desktop.retina.model.document.Image;
+import com.meritoki.app.desktop.retina.model.document.Page;
+import com.meritoki.app.desktop.retina.model.document.Point;
+import com.meritoki.app.desktop.retina.model.document.Selection;
+import com.meritoki.app.desktop.retina.model.document.Shape;
+import com.meritoki.app.desktop.retina.model.document.ShapeType;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 
 public class Cache {
-	@JsonIgnore
+	@JsonProperty
 	public User user = null;
-	@JsonIgnore
+	@JsonProperty
 	public Selection selection = null;
-	@JsonIgnore
+	@JsonProperty
 	public ShapeType type = ShapeType.RECTANGLE;
-	@JsonIgnore
-	public File[] fileArray = null;
-	@JsonIgnore
+	@JsonProperty
+	public String[] fileArray = null;
+	@JsonProperty
 	public Page pressedPage = null;
-	@JsonIgnore
+	@JsonProperty
 	public Image pressedImage = null;
-	@JsonIgnore
+	@JsonProperty
 	public Image releasedImage = null;
-	@JsonIgnore
+	@JsonProperty
 	public Shape pressedShape = null;
-	@JsonIgnore
+	@JsonProperty
 	public List<Page> pageList = null;
-	@JsonIgnore
+	@JsonProperty
 	public List<Shape> shapeList = null;
-	@JsonIgnore
+	@JsonProperty
 	public Point pressedPoint = null;
-	@JsonIgnore
+	@JsonProperty
 	public Point releasedPoint = null;
-//	@JsonIgnore
+//	@JsonProperty
 //	public double scale = 1;
-	@JsonIgnore
+	@JsonProperty
 	public String script;
-	@JsonIgnore
+	@JsonProperty
 	public int pageIndex = -1;
-	@JsonIgnore
+	@JsonProperty
 	public int imageIndex = -1;
-	@JsonIgnore
+	@JsonProperty
 	public int shapeIndex = -1;
-	@JsonIgnore
+	@JsonProperty
 	public String pageUUID = null;
-	@JsonIgnore
+	@JsonProperty
 	public String imageUUID = null;
-	@JsonIgnore
+	@JsonProperty
 	public String shapeUUID = null;
-	@JsonIgnore
+	@JsonProperty
 	public char scaleOperator = ' ';
-	@JsonIgnore
+	@JsonProperty
 	public char shiftOperator = ' ';
-	@JsonIgnore
+	@JsonProperty
 	public double scaleFactor = 1;
-	@JsonIgnore
+	@JsonProperty
 	public double shiftFactor = 1;
-	@JsonIgnore
+	@JsonProperty
 	public int row = 1;
-	@JsonIgnore
+	@JsonProperty
 	public int column = 1;
-        @JsonIgnore
+        @JsonProperty
         public double defaultScale = 1;
 }

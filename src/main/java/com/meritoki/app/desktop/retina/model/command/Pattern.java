@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.meritoki.app.desktop.retina.controller.client.ClientController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Grid;
 import com.meritoki.app.desktop.retina.model.document.Image;
@@ -21,13 +22,14 @@ public class Pattern {
 	static Logger logger = LogManager.getLogger(Pattern.class.getName());
 	@JsonIgnore
 	public Model model;
-	
 	@JsonIgnore
 	public LinkedList<Command> undoStack = new LinkedList<>();
 	@JsonIgnore
 	public LinkedList<Command> redoStack = new LinkedList<>();
 	@JsonIgnore
 	private final HashMap<String, Command> commandMap = new HashMap<>();
+	@JsonIgnore
+	public ClientController clientController;
 	
 	public Pattern() {
 		
@@ -42,6 +44,7 @@ public class Pattern {
 		logger.info("setModel("+model+")");
 		this.model = model;
 		this.register();
+		this.clientController = new ClientController(this.model);
 	}
 	
 	@JsonIgnore
@@ -91,13 +94,17 @@ public class Pattern {
 		if (command == null) {
 			throw new IllegalStateException("no command registered for " + commandName);
 		}
-		command.execute();
-		Command newCommand = new Command(this.model, command.name);
-		newCommand.user = this.model.system.user;
-		newCommand.operationList = command.operationList;
-		this.undoStack.push(newCommand);
-		this.redoStack = new LinkedList<>();
-		command.reset();
+		if(this.model.system.isConnected) {
+			this.model.document = this.clientController.retinaClient.postDocumentCommand(this.model.document, command, this.model.cache);
+		} else {
+			command.execute();
+			Command newCommand = new Command(this.model, command.name);
+			newCommand.user = this.model.system.user;
+			newCommand.operationList = command.operationList;
+			this.undoStack.push(newCommand);
+			this.redoStack = new LinkedList<>();
+			command.reset();
+		}
 	}
 	
 	@JsonIgnore
