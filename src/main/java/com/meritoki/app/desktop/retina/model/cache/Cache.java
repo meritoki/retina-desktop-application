@@ -80,6 +80,6 @@ public class Cache {
 	public int row = 1;
 	@JsonProperty
 	public int column = 1;
-        @JsonProperty
-        public double defaultScale = 1;
+	@JsonProperty
+	public double defaultScale = 1;
 }

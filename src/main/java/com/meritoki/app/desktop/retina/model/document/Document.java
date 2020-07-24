@@ -83,6 +83,20 @@ public class Document {
 		logger.info("getImage(" + point + ") image="+image);
 		return image;
 	}
+	
+	@JsonIgnore
+	public Image getImage(String uuid) {
+		Image image = null;
+		for(Page page:this.pageList) {
+			for(Image i: page.imageList) {
+				if(i.uuid.equals(uuid)) {
+					image = i;
+					break;
+				}
+			}
+		}
+		return image;
+	}
 
 	@JsonIgnore
 	public void setImage(String uuid) {
