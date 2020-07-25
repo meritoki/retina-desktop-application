@@ -99,6 +99,7 @@ public class Shape {
 	
 	public void setRelativeScale(double scale) {
 		logger.info("setRelativeScale("+scale+")");
+		System.out.println("setRelativeScale("+scale+")");
 		this.position.setRelativeScale(scale);
 	}
 	

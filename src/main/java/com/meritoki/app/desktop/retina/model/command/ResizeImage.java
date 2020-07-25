@@ -20,14 +20,17 @@ public class ResizeImage extends Command {
     public void execute() {
     	logger.info("execute()");
 		//variable
-    	Page page = this.model.document.getPage();
-    	Image pressedImage = this.model.cache.pressedImage;//new Image(this.document.cache.pressedImage);
+    	String pressedPageUUID = this.model.cache.pressedPageUUID;
+    	String pressedImageUUID = this.model.cache.pressedImageUUID;
+    	
+    	Page page = this.model.document.getPage(pressedPageUUID);
+    	Image pressedImage = this.model.document.getImage(pressedImageUUID);
     	double scale = page.position.scale;
     	double scaleFactor = this.model.cache.scaleFactor;
     	char scaleOperator = this.model.cache.scaleOperator;
     	//undo
     	Operation operation = new Operation();
-		operation.object = this.model.cache.pressedImage.position.relativeScale;//new Image(this.document.cache.pressedImage);
+		operation.object = pressedImage.position.relativeScale;
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);
@@ -49,6 +52,7 @@ public class ResizeImage extends Command {
 		}
 		}
 		pressedImage.setRelativeScale(relativeScale);
+		
 		this.model.document.setBufferedImage(page);
 		
 ////		this.document.setBufferedImage(pressedImage);

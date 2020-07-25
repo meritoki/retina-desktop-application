@@ -96,6 +96,9 @@ public class Pattern {
 		}
 		if(this.model.system.isConnected) {
 			this.model.document = this.clientController.retinaClient.postDocumentCommand(this.model.document, command, this.model.cache);
+			for(Shape s: this.model.document.getShapeList(false)) {
+				System.out.println(s.position);
+			}
 		} else {
 			command.execute();
 			Command newCommand = new Command(this.model, command.name);

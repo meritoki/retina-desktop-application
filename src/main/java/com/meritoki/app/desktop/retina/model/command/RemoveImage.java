@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Image;
+import com.meritoki.app.desktop.retina.model.document.Page;
 
 public class RemoveImage extends Command {
 	public RemoveImage(Model document) {
@@ -11,8 +12,11 @@ public class RemoveImage extends Command {
 	}
 	
 	public void execute() {
-    	Image pressedImage = this.model.cache.pressedImage;
-    	int imageIndex = this.model.document.getPage().getIndex(pressedImage.uuid);
+		String pressedPageUUID = this.model.cache.pressedPageUUID;
+		String pressedImageUUID = this.model.cache.pressedImageUUID;
+		Page pressedPage = this.model.document.getPage(pressedPageUUID);
+    	Image pressedImage = this.model.document.getImage(pressedImageUUID);
+    	int imageIndex = pressedPage.getIndex(pressedImage.uuid);
     	Object[] objectArray = new Object[2];
     	objectArray[0] = imageIndex;
     	objectArray[1] = new Image(pressedImage);
@@ -23,8 +27,8 @@ public class RemoveImage extends Command {
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);
 		//logic
-		this.model.document.getPage().removeImage(pressedImage.uuid);
-		this.model.document.getPage().setBufferedImage(null);
+		pressedPage.removeImage(pressedImage.uuid);
+		pressedPage.setBufferedImage(null);
 		//logic
 		operation = new Operation();
 		operation.object = pressedImage.uuid;

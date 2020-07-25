@@ -677,8 +677,9 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
 
 	private void removePageButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_removePageButtonActionPerformed
 		Document document = (this.model != null) ? this.model.document : null;
-		this.model.cache.pressedPage = (document != null) ? document.getPage() : null;
+		Page pressedPage = (document != null) ? document.getPage() : null;
 		try {
+			this.model.cache.pressedPageUUID = pressedPage.uuid;
 			this.model.pattern.execute("removePage");
 			this.mainFrame.init();
 		} catch (Exception e) {
@@ -690,8 +691,10 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
 	private void removeImageButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_removeImageButtonActionPerformed
 		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
-		this.model.cache.pressedImage = (page != null) ? page.getImage() : null;
+		Image image = (page != null) ? page.getImage() : null;
 		try {
+			this.model.cache.pressedPageUUID = page.uuid;
+			this.model.cache.pressedImageUUID = image.uuid;
 			this.model.pattern.execute("removeImage");
 			this.mainFrame.init();
 		} catch (Exception e) {

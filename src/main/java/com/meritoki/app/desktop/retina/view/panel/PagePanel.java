@@ -103,22 +103,23 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 	 */
 	@Override
 	public void mousePressed(MouseEvent me) {
-		Point point = new Point();
-		point.x = me.getX();
-		point.y = me.getY();
-		this.model.cache.pressedPoint = point;
-		logger.trace("mousePressed(me) point="+point);
-		this.model.cache.pressedImage = this.model.document.getImage(point);
+		Point pressedPoint = new Point();
+		pressedPoint.x = me.getX();
+		pressedPoint.y = me.getY();
+		this.model.system.pressedPoint = pressedPoint;
+		logger.trace("mousePressed(me) pressedPoint="+pressedPoint);
+		this.model.system.pressedImage = this.model.document.getImage(pressedPoint);
 		Image image = this.model.document.getImage();
-		if(this.model.cache.pressedImage != null && image != null && !image.equals(this.model.cache.pressedImage)) {
-			this.model.cache.imageUUID = this.model.cache.pressedImage.uuid;
+		if(this.model.system.pressedImage != null && image != null && !image.equals(this.model.system.pressedImage)) {
 			try {
+				this.model.cache.pressedImageUUID = this.model.system.pressedImage.uuid;
+				this.model.cache.imageUUID = image.uuid;
 				this.model.pattern.execute("setImage");
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
-		this.model.cache.pressedShape = this.model.document.getShape(point);
+		this.model.system.pressedShape = this.model.document.getShape(pressedPoint);
 	}
 
 	/**
@@ -126,29 +127,40 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 	 */
 	@Override
 	public void mouseReleased(MouseEvent me) {
-		this.model.cache.releasedPoint = new Point(me.getX(), me.getY());
-		if (this.model.cache.pressedPoint.equals(this.model.cache.releasedPoint)) {
-			if (this.model.cache.pressedShape != null)
-				this.model.cache.shapeUUID = this.model.cache.pressedShape.uuid;
+		this.model.system.releasedPoint = new Point(me.getX(), me.getY());
+		if (this.model.system.pressedPoint.equals(this.model.system.releasedPoint)) {
+			if (this.model.system.pressedShape != null) {
 				try {
+					this.model.cache.shapeUUID = this.model.document.getShape().uuid;
+					this.model.cache.pressedShapeUUID = this.model.system.pressedShape.uuid;
 					this.model.pattern.execute("setShape");
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
+			}
 		} else {
 			Page page = this.model.document.getPage();
 			if (page != null) {
-				if (this.model.cache.pressedShape != null) {
-					this.model.cache.selection = page.intersectShape(this.model.cache.pressedPoint);
-					if (this.model.cache.selection != null) {
+				if (this.model.system.pressedShape != null) {
+					this.model.system.selection = page.intersectShape(this.model.system.pressedPoint);
+					if (this.model.system.selection != null) {
 						try {
+							this.model.cache.selection = this.model.system.selection;
+							this.model.cache.pressedShapeUUID = this.model.system.pressedShape.uuid;
+							this.model.cache.releasedPoint = this.model.system.releasedPoint;
 							this.model.pattern.execute("resizeShape");
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 						}
 					} else {
-						this.model.cache.releasedImage = this.model.document.getImage(this.model.cache.releasedPoint);
+						this.model.system.releasedImage = this.model.document.getImage(this.model.system.releasedPoint);
 						try {
+							this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+							this.model.cache.pressedShapeUUID = this.model.system.pressedShape.uuid;
+							this.model.cache.pressedImageUUID = this.model.system.pressedImage.uuid;
+							this.model.cache.releasedImageUUID = this.model.system.releasedImage.uuid;
+							this.model.cache.pressedPoint = this.model.system.pressedPoint;
+							this.model.cache.releasedPoint = this.model.system.releasedPoint;
 							this.model.pattern.execute("moveShape");
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -156,6 +168,10 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 					}
 				} else {
 					try {
+						this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+						this.model.cache.pressedImageUUID = this.model.system.pressedImage.uuid;
+						this.model.cache.pressedPoint = this.model.system.pressedPoint;
+						this.model.cache.releasedPoint = this.model.system.releasedPoint;
 						this.model.pattern.execute("addShape");
 					} catch (Exception e) {
 						JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -222,7 +238,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_DOWN: {
 				logger.debug("keyPressed(e) KeyEvent.VK_DOWN"); 
-				this.model.cache.pressedImage = this.model.document.getImage();
+//				this.model.cache.pressedImage = this.model.document.getImage();
+				this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+				this.model.cache.pressedImageUUID = this.model.document.getImage().uuid;
 				this.model.cache.shiftOperator = '+';
 				this.model.cache.shiftFactor = 10;
 				try {
@@ -236,7 +254,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_UP: {
 				logger.debug("keyPressed(e) KeyEvent.VK_UP");
-				this.model.cache.pressedImage = this.model.document.getImage();
+//				this.model.cache.pressedImage = this.model.document.getImage();
+				this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+				this.model.cache.pressedImageUUID = this.model.document.getImage().uuid;
 				this.model.cache.shiftOperator = '-';
 				this.model.cache.shiftFactor = 10;
 				try {
@@ -249,10 +269,12 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_LEFT: {
 				logger.info("keyPressed(e) KeyEvent.VK_LEFT");
-				this.model.cache.pressedImage = this.model.document.getImage();
-				this.model.cache.scaleOperator = '/';
-				this.model.cache.scaleFactor = 1.01;
+				
 				try {
+					this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+					this.model.cache.pressedImageUUID = this.model.document.getImage().uuid;
+					this.model.cache.scaleOperator = '/';
+					this.model.cache.scaleFactor = 1.01;
 					this.model.pattern.execute("resizeImage");
 					this.mainFrame.init();
 				}
@@ -266,10 +288,11 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_RIGHT: {
 				logger.info("keyPressed(e) KeyEvent.VK_RIGHT");
-				this.model.cache.pressedImage = this.model.document.getImage();
-				this.model.cache.scaleOperator = '*';
-				this.model.cache.scaleFactor = 1.01;
 				try {
+					this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+					this.model.cache.pressedImageUUID = this.model.document.getImage().uuid;
+					this.model.cache.scaleOperator = '*';
+					this.model.cache.scaleFactor = 1.01;
 					this.model.pattern.execute("resizeImage");
 					this.mainFrame.init();
 				} 
@@ -300,8 +323,8 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			int index = this.model.document.getIndex();
 			switch (keyCode) {
 			case KeyEvent.VK_BACK_SPACE: {
-				this.model.cache.pressedShape = this.model.document.getPage().getShape();
 				try {
+					this.model.cache.pressedShapeUUID = this.model.document.getPage().getShape().uuid;
 					this.model.pattern.execute("removeShape");
 					this.mainFrame.init();
 				} catch (Exception e) {

@@ -27,6 +27,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.controller.user.UserController;
+import com.meritoki.app.desktop.retina.model.document.Image;
+import com.meritoki.app.desktop.retina.model.document.Page;
+import com.meritoki.app.desktop.retina.model.document.Point;
+import com.meritoki.app.desktop.retina.model.document.Selection;
+import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
@@ -60,6 +65,20 @@ public class System {
 	public boolean newDocument = true;
 	@JsonIgnore
 	public boolean isConnected = false;
+	@JsonIgnore
+	public Page pressedPage;
+	@JsonIgnore
+	public Image pressedImage;
+	@JsonIgnore
+	public Image releasedImage;
+	@JsonIgnore
+	public Shape pressedShape;
+	@JsonIgnore
+	public Point pressedPoint;
+	@JsonIgnore
+	public Point releasedPoint;
+	@JsonIgnore
+	public Selection selection;
 
 	public System() {
 		this.initDirectories();

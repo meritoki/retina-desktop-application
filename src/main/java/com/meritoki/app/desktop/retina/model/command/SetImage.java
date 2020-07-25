@@ -20,8 +20,9 @@ public class SetImage extends Command {
 		logger.info("execute()");
 		//variables
 //		Point pressedPoint = document.cache.pressedPoint;
+    	String pressedImageUUID = model.cache.pressedImageUUID;
     	String imageUUID = model.cache.imageUUID;
-    	Image image = model.document.getPage().getImage();
+    	Image image = model.document.getImage(imageUUID);
     	//undo
 		Operation operation = new Operation();
 		operation.object = (image != null)?image.uuid:null;//(pressedImage != null)?pressedImage.uuid:null;
@@ -29,12 +30,12 @@ public class SetImage extends Command {
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);
 		//logic
-		if(imageUUID != null) {
-			model.document.setImage(imageUUID);
+		if(pressedImageUUID != null) {
+			model.document.setImage(pressedImageUUID);
 		}
 		//redo
 		operation = new Operation();
-		operation.object = imageUUID;
+		operation.object = pressedImageUUID;
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);

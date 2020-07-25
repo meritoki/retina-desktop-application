@@ -19,21 +19,21 @@ public class SetShape extends Command {
 	public void execute() {
 		logger.info("execute()");
 		// variables
+		String pressedShapeUUID = model.cache.pressedShapeUUID;
 		String shapeUUID = model.cache.shapeUUID;
-		Shape shape = this.model.document.getPage().getShape();
 		//undo
 		Operation operation = new Operation();
-		operation.object = (shape != null)?shape.uuid:null;
+		operation.object = shapeUUID;
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);
 		//logic
-		if(shapeUUID != null) {
-			this.model.document.getPage().setShape(shapeUUID);
+		if(pressedShapeUUID != null) {
+			this.model.document.getPage().setShape(pressedShapeUUID);
 		}
 		//redo
 		operation = new Operation();
-		operation.object = shapeUUID;
+		operation.object = pressedShapeUUID;
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);

@@ -20,7 +20,8 @@ public class RemoveShape extends Command {
     public void execute() {
     	logger.info("execute()");
     	//variables
-    	Shape pressedShape = this.model.cache.pressedShape;
+    	String pressedShapeUUID = this.model.cache.pressedShapeUUID;
+    	Shape pressedShape = this.model.document.getShape(pressedShapeUUID);
 		//undo
 		Operation operation = new Operation();
 		operation.object = new Shape(pressedShape,true);

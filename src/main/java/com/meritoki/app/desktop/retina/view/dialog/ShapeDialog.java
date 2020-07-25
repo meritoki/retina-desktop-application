@@ -397,7 +397,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					switch (keyCode) {
 					case KeyEvent.VK_LEFT: {
 						logger.debug("keyEvent.VK_LEFT");
-						model.cache.pressedShape = null;
+//						model.cache.pressedShape = null;
 						setShapeListSelectedIndex(--index);
 						model.cache.shapeUUID = (String) shapeList.getSelectedValue();
 						try {
@@ -411,7 +411,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					}
 					case KeyEvent.VK_RIGHT: {
 						logger.debug("keyEvent.VK_RIGHT");
-						model.cache.pressedShape = null;
+//						model.cache.pressedShape = null;
 						setShapeListSelectedIndex(++index);
 						model.cache.shapeUUID = (String) shapeList.getSelectedValue();
 						try {
@@ -425,7 +425,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					}
 					case KeyEvent.VK_UP: {
 						logger.debug("keyEvent.VK_UP");
-						model.cache.pressedShape = null;
+//						model.cache.pressedShape = null;
 						setShapeListSelectedIndex(--index);
 						model.cache.shapeUUID = (String) shapeList.getSelectedValue();
 						try {
@@ -439,7 +439,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					}
 					case KeyEvent.VK_DOWN: {
 						logger.debug("keyEvent.VK_DOWN");
-						model.cache.pressedShape = null;
+//						model.cache.pressedShape = null;
 						setShapeListSelectedIndex(++index);
 						model.cache.shapeUUID = (String) shapeList.getSelectedValue();
 						try {
@@ -1100,7 +1100,8 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 	}// GEN-LAST:event_textValueDefaultCheckBoxActionPerformed
 
 	private void removeShapeButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_deleteRectangleButtonActionPerformed
-		this.model.cache.pressedShape = this.model.document.getPage().getShape();
+		Shape shape = this.model.document.getPage().getShape();
+		this.model.cache.pressedShapeUUID = shape.uuid;
 		try {
 			this.model.pattern.execute("removeShape");
 			this.mainFrame.init();

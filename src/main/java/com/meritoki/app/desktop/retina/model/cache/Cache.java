@@ -37,13 +37,13 @@ public class Cache {
 	@JsonProperty
 	public String[] fileArray = null;
 	@JsonProperty
-	public Page pressedPage = null;
+	public String pressedPageUUID = null;
 	@JsonProperty
-	public Image pressedImage = null;
+	public String pressedImageUUID = null;
 	@JsonProperty
-	public Image releasedImage = null;
+	public String releasedImageUUID = null;
 	@JsonProperty
-	public Shape pressedShape = null;
+	public String pressedShapeUUID = null;
 	@JsonProperty
 	public List<Page> pageList = null;
 	@JsonProperty
@@ -52,8 +52,6 @@ public class Cache {
 	public Point pressedPoint = null;
 	@JsonProperty
 	public Point releasedPoint = null;
-//	@JsonProperty
-//	public double scale = 1;
 	@JsonProperty
 	public String script;
 	@JsonProperty

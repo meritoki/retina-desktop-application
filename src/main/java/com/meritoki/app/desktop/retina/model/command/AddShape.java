@@ -25,11 +25,14 @@ public class AddShape extends Command {
 	public void execute() throws Exception {
 		logger.info("execute()");
 		// variable
-		Page page = this.model.document.getPage();
+		String pressedPageUUID = this.model.cache.pressedPageUUID;
+		String pressedImageUUID = this.model.cache.pressedImageUUID;
+		Page page = this.model.document.getPage(pressedPageUUID);
+		Image pressedImage = this.model.document.getImage(pressedImageUUID);
 		ShapeType type = this.model.cache.type;
 		Point pressedPoint = this.model.cache.pressedPoint;
 		Point releasedPoint = this.model.cache.releasedPoint;
-		Image pressedImage = this.model.cache.pressedImage;
+		
 		double scale = page.position.scale;
 		Shape shape = new Shape();
 //		if (this.minimumSize(pressedPoint, releasedPoint, scale)) {

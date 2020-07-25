@@ -148,8 +148,8 @@ public class NodeController {
 		Properties properties = new Properties();
 		try (InputStream input = new FileInputStream(fileName)) {
 			properties.load(input);
-		} catch (IOException ex) {
-			ex.printStackTrace();
+		} catch (IOException e) {
+			logger.error("IOException "+e.getMessage());
 		}
 		return properties;
 	}

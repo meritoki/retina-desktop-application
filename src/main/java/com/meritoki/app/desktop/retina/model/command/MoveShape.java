@@ -28,10 +28,19 @@ public class MoveShape extends Command {
 		logger.info("execute()");
 //    	this.user = this.document.cache.user;
 		// Variables
-		Page pressedPage = this.model.document.getPage();
-		Shape pressedShape = this.model.cache.pressedShape;
-		Image pressedImage = this.model.cache.pressedImage;
-		Image releasedImage = this.model.cache.releasedImage;
+		String pressedPageUUID = this.model.cache.pressedPageUUID;
+		String pressedShapeUUID = this.model.cache.pressedShapeUUID;
+		String pressedImageUUID = this.model.cache.pressedImageUUID;
+		String releasedImageUUID = this.model.cache.releasedImageUUID;
+
+		Page pressedPage = this.model.document.getPage(pressedPageUUID);
+		Shape pressedShape = this.model.document.getShape(pressedShapeUUID);
+		Image pressedImage = this.model.document.getImage(pressedImageUUID);
+		Image releasedImage = this.model.document.getImage(releasedImageUUID);
+//		Page pressedPage = this.model.document.getPage();
+//		Shape pressedShape = this.model.cache.pressedShape;
+//		Image pressedImage = this.model.cache.pressedImage;
+//		Image releasedImage = this.model.cache.releasedImage;
 		Point releasedPoint = this.model.cache.releasedPoint;
 		Point pressedPoint = this.model.cache.pressedPoint;
 		Shape undoShape = null;

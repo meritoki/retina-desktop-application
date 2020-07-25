@@ -113,6 +113,11 @@ public class Document {
 			this.getPage().setIndex(index);
 		}
 	}
+	
+	@JsonIgnore
+	public Shape getShape() {
+		return getPage().getShape();
+	}
 
 	@JsonIgnore
 	public Shape getShape(Point point) {
@@ -121,6 +126,22 @@ public class Document {
 			shape = this.getPage().getShape(point);
 		}
 		logger.info("getShape(" + point + ") shape=" + shape);
+		return shape;
+	}
+	
+	@JsonIgnore
+	public Shape getShape(String uuid) {
+		Shape shape = null;
+		for(Page p:this.pageList) {
+			for(Image i: p.imageList) {
+				for(Shape s: i.shapeList) {
+					if(s.uuid.equals(uuid)) {
+						shape = s;
+						break;
+					}
+				}
+			}
+		}
 		return shape;
 	}
 
@@ -177,6 +198,18 @@ public class Document {
 		logger.debug("getPage(" + index + ") page=" + page);
 		return page;
 	}
+	
+	@JsonIgnore
+	public Page getPage(String uuid) {
+		Page page = null;
+		for(Page p: this.pageList) {
+			if(p.uuid.equals(uuid)) {
+				page = p;
+				break;
+			}
+		}
+		return page;
+	}
 
 	/**
 	 * Function get reference to Page List
@@ -228,10 +261,10 @@ public class Document {
 	}
 
 	@JsonIgnore
-	public List<Shape> getShapeList() {
+	public List<Shape> getShapeList(boolean flag) {
 		List<Shape> shapeList = new ArrayList<>();
 		for (Page page : this.pageList) {
-			shapeList.addAll(page.getShapeList());
+			shapeList.addAll(page.getShapeList(flag));
 		}
 		return shapeList;
 	}
@@ -333,7 +366,7 @@ public class Document {
 
 	@JsonIgnore
 	public void importOutputList(List<Output> outputList) {
-		for (Shape s : this.getShapeList()) {
+		for (Shape s : this.getShapeList(false)) {
 			for (Output o : outputList) {
 				if (s.uuid.equals(o.shape.uuid)) {
 					s.textList.add(new Text(o.concept));

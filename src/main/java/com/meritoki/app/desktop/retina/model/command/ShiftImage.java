@@ -20,9 +20,10 @@ public class ShiftImage extends Command {
 	public void execute() {
 		logger.info("execute()");
 		//variables
-		Page page = this.model.document.getPage();
-		Image pressedImage = this.model.document.getImage(this.model.cache.pressedImage.uuid);
-		System.out.println(pressedImage);
+//		Page page = this.model.document.getPage();
+//		Image pressedImage = this.model.document.getImage(this.model.cache.pressedImage.uuid);
+		Page pressedPage = this.model.document.getPage(this.model.cache.pressedPageUUID);
+		Image pressedImage = this.model.document.getImage(this.model.cache.pressedImageUUID);
 		double margin = pressedImage.position.margin;
 		double shiftFactor = this.model.cache.shiftFactor;
 		char shiftOperator = this.model.cache.shiftOperator;
@@ -33,9 +34,7 @@ public class ShiftImage extends Command {
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);
 		//logic
-		page.setBufferedImage(null);
-		System.out.println(shiftOperator);
-		System.out.println(shiftFactor);
+		pressedPage.setBufferedImage(null);
 		switch(shiftOperator) {
 		case '+':{
 			margin += shiftFactor;
@@ -46,7 +45,6 @@ public class ShiftImage extends Command {
 			break;
 		}
 		}
-		System.out.println(margin);
 		pressedImage.setMargin(margin);
 		System.out.println(pressedImage);
 		//redo

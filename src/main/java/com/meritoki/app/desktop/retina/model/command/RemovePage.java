@@ -19,7 +19,8 @@ public class RemovePage extends Command {
 	@Override
 	public void execute() {
     	logger.info("execute()");
-    	Page pressedPage = this.model.cache.pressedPage;
+    	String pressedPageUUID = this.model.cache.pressedPageUUID;
+    	Page pressedPage = this.model.document.getPage(pressedPageUUID);
     	int pageIndex = this.model.document.getIndex(pressedPage.uuid);
     	Object[] objectArray = new Object[2];
     	objectArray[0] = pageIndex;

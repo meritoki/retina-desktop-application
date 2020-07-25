@@ -23,9 +23,13 @@ public class ResizeShape extends Command {
     public void execute() {
     	logger.info("execute()");
     	//variable
+    	
+    	String pressedShapeUUID = this.model.cache.pressedShapeUUID;
+    	
+    	Selection selection = this.model.cache.selection;
 		Point releasedPoint = this.model.cache.releasedPoint;
-		Shape pressedShape = this.model.cache.pressedShape;
-		Selection selection = this.model.cache.selection;
+		Shape pressedShape = this.model.document.getShape(pressedShapeUUID);
+		
     	//Undo
 		Operation operation = new Operation();
 		operation.object = new Shape(pressedShape,true);

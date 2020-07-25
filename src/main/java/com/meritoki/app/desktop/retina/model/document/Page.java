@@ -225,12 +225,15 @@ public class Page {
 	}
 
 	@JsonIgnore
-	public List<Shape> getShapeList() {
-		BufferedImage bufferedImage = this.getScaledBufferedImage();
+	public List<Shape> getShapeList(boolean flag) {
+		BufferedImage bufferedImage = null;
+		if(flag)
+			bufferedImage = this.getScaledBufferedImage();
 		List<Shape> shapeList = new ArrayList<>();
 		for (Image image : this.imageList) {
 			for (Shape shape : image.getShapeList()) {
-				shape.bufferedImage = this.getShapeBufferedImage(bufferedImage, shape);
+				if(flag)
+					shape.bufferedImage = this.getShapeBufferedImage(bufferedImage, shape);
 				shapeList.add(shape);
 			}
 		}
@@ -298,7 +301,7 @@ public class Page {
 	}
 	@JsonIgnore
 	public List<Shape> getSortedShapeList() {
-		return new Matrix(this.getShapeList(),null,this.threshold).getShapeList();
+		return new Matrix(this.getShapeList(false),null,this.threshold).getShapeList();
 	}
 
 	@JsonIgnore
