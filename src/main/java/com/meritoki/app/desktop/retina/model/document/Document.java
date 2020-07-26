@@ -265,7 +265,7 @@ public class Document {
 	}
 
 	@JsonIgnore
-	public List<Shape> getShapeList(boolean flag) {
+	public List<Shape> getShapeList() {
 		List<Shape> shapeList = new ArrayList<>();
 		for (Page page : this.pageList) {
 			shapeList.addAll(page.getShapeList());
@@ -274,16 +274,30 @@ public class Document {
 	}
 
 	@JsonIgnore
-	public List<Shape> getGridShapeList(boolean flag) {
-		List<Shape> shapeList = new ArrayList<>();
-		for (Page page : this.pageList) {
-//			if(flag)
-//				this.setBufferedImage(page);
-			shapeList.addAll(page.getGridShapeList());
-			page.setBufferedImageNull();
+		public List<Shape> getGridShapeList() {
+			List<Shape> shapeList = new ArrayList<>();
+			for (Page page : this.pageList) {
+				shapeList.addAll(page.getGridShapeList());
+//				page.setBufferedImageNull();
+			}
+			return shapeList;
 		}
-		return shapeList;
+
+	@JsonIgnore
+	public BufferedImage getShapeBufferedImage(BufferedImage bufferedImage, Shape shape) {
+		logger.debug("getShapeBufferedImage("+shape+")");
+		BufferedImage shapeBufferedImage = null;
+		if (bufferedImage != null) {
+			if(shape.position.point.x >= 0 && shape.position.point.y >= 0 && (int)shape.position.dimension.height > 0 && (int)shape.position.dimension.width > 0) {
+				shapeBufferedImage = bufferedImage.getSubimage((int)shape.position.point.x, (int)shape.position.point.y, (int)shape.position.dimension.width, (int)shape.position.dimension.height);
+			} else {
+				logger.error("MAJOR ERROR THAT NEEDS TO BE FIXED shape.position="+shape.position);
+			}
+		}
+		return shapeBufferedImage;
 	}
+
+	
 
 //	@JsonIgnore
 //	public List<Shape> getCompleteShapeList() {
@@ -350,7 +364,7 @@ public class Document {
 			if (uuid != null && valueList.size() > 0) {
 				logger.info("importZooniverse(" + fileName + ") valueList=" + valueList + " uuid=" + uuid);
 
-				for (Shape shape : this.getGridShapeList(false)) {
+				for (Shape shape : this.getGridShapeList()) {
 					if (uuid.equals(shape.uuid)) {
 						for (String value : valueList) {
 							Text text = new Text();
@@ -372,7 +386,7 @@ public class Document {
 
 	@JsonIgnore
 	public void importOutputList(List<Output> outputList) {
-		for (Shape s : this.getShapeList(false)) {
+		for (Shape s : this.getShapeList()) {
 			for (Output o : outputList) {
 				if (s.uuid.equals(o.shape.uuid)) {
 					s.textList.add(new Text(o.concept));
@@ -499,19 +513,7 @@ public class Document {
 		}
 	}
 	
-	@JsonIgnore
-	public BufferedImage getShapeBufferedImage(BufferedImage bufferedImage, Shape shape) {
-		logger.debug("getShapeBufferedImage("+shape+")");
-		BufferedImage shapeBufferedImage = null;
-		if (bufferedImage != null) {
-			if(shape.position.point.x >= 0 && shape.position.point.y >= 0 && (int)shape.position.dimension.height > 0 && (int)shape.position.dimension.width > 0) {
-				shapeBufferedImage = bufferedImage.getSubimage((int)shape.position.point.x, (int)shape.position.point.y, (int)shape.position.dimension.width, (int)shape.position.dimension.height);
-			} else {
-				logger.error("MAJOR ERROR THAT NEEDS TO BE FIXED shape.position="+shape.position);
-			}
-		}
-		return shapeBufferedImage;
-	}
+	
 
 //	@JsonIgnore
 //	public void setBufferedImage(Page page) {
