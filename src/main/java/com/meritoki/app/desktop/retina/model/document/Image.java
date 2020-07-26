@@ -33,7 +33,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.meritoki.app.desktop.retina.controller.client.ClientController;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
+import com.meritoki.app.desktop.retina.model.Model;
 
 /**
  * Class is used to manage reference to file in filesystem
@@ -64,17 +66,7 @@ public class Image {
 	/**
 	 * Default constructor
 	 */
-	public Image() {
-//		if (this.file == null) {
-//			this.file = new File(this.filePath + getSeperator() + this.fileName);
-//		}
-	}
-	
-	public Image(String documentUUID) {
-//		if (this.file == null) {
-//			this.file = new File(this.filePath + getSeperator() + this.fileName);
-//		}
-	}
+	public Image() {}
 
 	public static String getSeperator() {
 		return FileSystems.getDefault().getSeparator();
@@ -90,7 +82,6 @@ public class Image {
 		this.file = image.file;
 		this.filePath = image.filePath;
 		this.fileName = image.fileName;
-//		this.bufferedImage = image.getBufferedImage();
 		this.position = new Position(image.position);
 		this.index = image.index;
 		for (Shape shape : image.shapeList) {
@@ -103,7 +94,6 @@ public class Image {
 		this.file = file;
 		this.filePath = this.file.getParent();
 		this.fileName = this.file.getName();
-//		this.getBufferedImage();
 	}
 
 	@JsonIgnore
@@ -152,10 +142,6 @@ public class Image {
 		Shape shape = null;
 		if (this.index >= 0 && this.index < this.shapeList.size()) {
 			shape = this.shapeList.get(this.index);
-//			if(shape instanceof Grid) {
-//				Grid grid = (Grid) shape;
-//				shape = grid.getShape();
-//			}
 		}
 		return shape;
 	}
@@ -204,34 +190,14 @@ public class Image {
 		return shapeList;
 	}
 	
-//New Approach
-//	@JsonIgnore
-//	public BufferedImage getBufferedImage() {
-////		logger.info("getBufferedImage() this.bufferedImage="+this.bufferedImage);
-////		if(this.bufferedImage != null) {
-////			BufferedImage before = this.bufferedImage;
-////			int w = before.getWidth();
-////			int h = before.getHeight();
-////			BufferedImage after = new BufferedImage((int) (w * this.position.relativeScale),
-////					(int) (h * this.position.relativeScale), BufferedImage.TYPE_INT_ARGB);
-////			AffineTransform at = new AffineTransform();
-////			at.scale(this.position.relativeScale, this.position.relativeScale);
-////			AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-////			after = scaleOp.filter(before, after);
-////			this.bufferedImage = after;
-////			this.position.setAbsoluteDimension(new Dimension(this.bufferedImage.getWidth(), this.bufferedImage.getHeight()));
-////		}
-//		return this.bufferedImage;
-//	}
+
 
 	
 //Original Revert to this state
 	@JsonIgnore
-	public BufferedImage getBufferedImage(String uuid) {
+	public BufferedImage getBufferedImage(Model model) {
 		if (this.bufferedImage == null) {
-//			this.bufferedImage = NodeController.openBufferedImage(NodeController.getImageCache(),
-//					this.uuid + "." + this.getExtension());
-			BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getDocumentCache(uuid), this.uuid + "." + this.getExtension());
+			BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getDocumentCache(model.document.uuid), this.uuid + "." + this.getExtension());
 			if (bufferedImage == null) {
 				if(file == null) {
 					file = new File(this.filePath+NodeController.getSeperator()+this.fileName);
@@ -249,21 +215,40 @@ public class Image {
 								e.printStackTrace();
 							}
 						}
+					} else {
+						ClientController clientController = new ClientController(model);
+						if(clientController.fileClient.checkHealth()) {
+							if(!clientController.fileClient.checkFile(this.uuid)) {
+								clientController.fileClient.markFile(this.uuid);
+							} else {
+								clientController.fileClient.downloadFile(NodeController.getDocumentCache(model.document.uuid), this.uuid + "." + this.getExtension());
+								clientController.fileClient.unmarkFile(this.uuid);
+							}
+						}			
+					}
+				}
+			} else {
+				ClientController clientController = new ClientController(model);
+				if(clientController.fileClient.checkHealth()) {
+					if(clientController.fileClient.checkFile(this.uuid)) {
+						clientController.fileClient.uploadFile(NodeController.getDocumentCache(model.document.uuid), this.uuid + "." + this.getExtension());
 					}
 				}
 			}
-			BufferedImage before = bufferedImage;
-			int w = before.getWidth();
-			int h = before.getHeight();
-			BufferedImage after = new BufferedImage((int) (w * this.position.relativeScale),
+			if(bufferedImage != null) {
+			BufferedImage beforeBufferedImage = bufferedImage;
+			int w = beforeBufferedImage.getWidth();
+			int h = beforeBufferedImage.getHeight();
+			BufferedImage afterBufferedImage = new BufferedImage((int) (w * this.position.relativeScale),
 					(int) (h * this.position.relativeScale), BufferedImage.TYPE_INT_ARGB);
 			AffineTransform at = new AffineTransform();
 			at.scale(this.position.relativeScale, this.position.relativeScale);
 			AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-			after = scaleOp.filter(before, after);
-			this.bufferedImage = after;
+			afterBufferedImage = scaleOp.filter(beforeBufferedImage, afterBufferedImage);
+			this.bufferedImage = afterBufferedImage;
 			this.position
 					.setAbsoluteDimension(new Dimension(this.bufferedImage.getWidth(), this.bufferedImage.getHeight()));
+			}
 		}
 		return this.bufferedImage;
 	}
@@ -309,16 +294,7 @@ public class Image {
 		}
 	}
 
-//Original revert to this state
-//	@JsonIgnore
-//	public void setBufferedImage(BufferedImage bufferedImage) {
-//		logger.debug("setBufferedImage(" + bufferedImage + ")");
-//		this.bufferedImage = bufferedImage;
-//		if (this.bufferedImage != null) {
-//			this.position.absoluteDimension.width = this.bufferedImage.getWidth();
-//			this.position.absoluteDimension.height = this.bufferedImage.getHeight();
-//		}
-//	}
+
 
 	@JsonIgnore
 	public void setOffset(double offset) {
@@ -474,3 +450,34 @@ public class Image {
 		return string;
 	}
 }
+
+//New Approach
+//@JsonIgnore
+//public BufferedImage getBufferedImage() {
+////	logger.info("getBufferedImage() this.bufferedImage="+this.bufferedImage);
+////	if(this.bufferedImage != null) {
+////		BufferedImage before = this.bufferedImage;
+////		int w = before.getWidth();
+////		int h = before.getHeight();
+////		BufferedImage after = new BufferedImage((int) (w * this.position.relativeScale),
+////				(int) (h * this.position.relativeScale), BufferedImage.TYPE_INT_ARGB);
+////		AffineTransform at = new AffineTransform();
+////		at.scale(this.position.relativeScale, this.position.relativeScale);
+////		AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+////		after = scaleOp.filter(before, after);
+////		this.bufferedImage = after;
+////		this.position.setAbsoluteDimension(new Dimension(this.bufferedImage.getWidth(), this.bufferedImage.getHeight()));
+////	}
+//	return this.bufferedImage;
+//}
+
+//Original revert to this state
+//@JsonIgnore
+//public void setBufferedImage(BufferedImage bufferedImage) {
+//	logger.debug("setBufferedImage(" + bufferedImage + ")");
+//	this.bufferedImage = bufferedImage;
+//	if (this.bufferedImage != null) {
+//		this.position.absoluteDimension.width = this.bufferedImage.getWidth();
+//		this.position.absoluteDimension.height = this.bufferedImage.getHeight();
+//	}
+//}

@@ -54,9 +54,9 @@ public class DocumentResizeShapeTest {
 		//Page Zero
 		assertEquals(model.document.setIndex(0), true);
 		assertEquals(model.document.getPage().setIndex(0), true);
-		model.cache.pressedImage = model.document.getImage();
-		int x = (int) (model.cache.pressedImage.position.dimension.width / 2 - dimension / 2);
-		int y = (int) (model.cache.pressedImage.position.dimension.height / 2 - dimension / 2);
+		model.system.pressedImage = model.document.getImage();
+		int x = (int) (model.system.pressedImage.position.dimension.width / 2 - dimension / 2);
+		int y = (int) (model.system.pressedImage.position.dimension.height / 2 - dimension / 2);
 		int width = dimension;
 		int height = dimension;
 		model.cache.pressedPoint = new Point(x, y);
@@ -69,9 +69,9 @@ public class DocumentResizeShapeTest {
 		//Page One
 		assertEquals(model.document.setIndex(1), true);
 		assertEquals(model.document.getPage().setIndex(1),true);
-		model.cache.pressedImage = model.document.getImage();
-		x = (int) (model.cache.pressedImage.position.point.x+model.cache.pressedImage.position.dimension.width / 2 - dimension / 2);
-		y = (int) (model.cache.pressedImage.position.point.y+model.cache.pressedImage.position.dimension.height / 2 - dimension / 2);
+		model.system.pressedImage = model.document.getImage();
+		x = (int) (model.system.pressedImage.position.point.x+model.system.pressedImage.position.dimension.width / 2 - dimension / 2);
+		y = (int) (model.system.pressedImage.position.point.y+model.system.pressedImage.position.dimension.height / 2 - dimension / 2);
 		width = dimension;
 		height = dimension;
 		model.cache.pressedPoint = new Point(x, y);
@@ -81,15 +81,15 @@ public class DocumentResizeShapeTest {
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		}
-		x = (int) (model.cache.pressedImage.position.point.x+model.cache.pressedImage.position.dimension.width / 2);
-		y = (int) (model.cache.pressedImage.position.point.y+model.cache.pressedImage.position.dimension.height / 2);
+		x = (int) (model.system.pressedImage.position.point.x+model.system.pressedImage.position.dimension.width / 2);
+		y = (int) (model.system.pressedImage.position.point.y+model.system.pressedImage.position.dimension.height / 2);
 		assertNotNull(model.document.getPage().getShape(new Point(x,y)));
 		//Page Two
 		assertEquals(model.document.setIndex(2), true);
 		assertEquals(model.document.getPage().setIndex(2),true);
-		model.cache.pressedImage = model.document.getPage().getImage();
-		x = (int) (model.cache.pressedImage.position.point.x+model.cache.pressedImage.position.dimension.width / 2 - dimension / 2);
-		y = (int) (model.cache.pressedImage.position.point.y+model.cache.pressedImage.position.dimension.height / 2 - dimension / 2);
+		model.system.pressedImage = model.document.getPage().getImage();
+		x = (int) (model.system.pressedImage.position.point.x+model.system.pressedImage.position.dimension.width / 2 - dimension / 2);
+		y = (int) (model.system.pressedImage.position.point.y+model.system.pressedImage.position.dimension.height / 2 - dimension / 2);
 		width = dimension;
 		height = dimension;
 		model.cache.pressedPoint = new Point(x, y);
@@ -99,9 +99,9 @@ public class DocumentResizeShapeTest {
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		}
-		model.cache.pressedImage = model.document.getPage().getImage();
-		x = (int) (model.cache.pressedImage.position.point.x+model.cache.pressedImage.position.dimension.width / 2);
-		y = (int) (model.cache.pressedImage.position.point.y+model.cache.pressedImage.position.dimension.height / 2);
+		model.system.pressedImage = model.document.getPage().getImage();
+		x = (int) (model.system.pressedImage.position.point.x+model.system.pressedImage.position.dimension.width / 2);
+		y = (int) (model.system.pressedImage.position.point.y+model.system.pressedImage.position.dimension.height / 2);
 		assertNotNull(model.document.getPage().getShape(new Point(x,y)));
 	}
 	
@@ -117,28 +117,28 @@ public class DocumentResizeShapeTest {
 		assertEquals(model.document.setIndex(0), true);
 		assertEquals(model.document.getPage().setIndex(0), true);
 		model.cache.selection = Selection.TOP;
-		model.cache.pressedImage = model.document.getImage();
-		int centerX = (int) (model.cache.pressedImage.position.dimension.width / 2);
-		int centerY = (int) (model.cache.pressedImage.position.dimension.height / 2);
-		model.cache.pressedShape = model.cache.pressedImage.getShape(new Point(centerX,centerY));
-		assertNotNull(model.cache.pressedShape);
+		model.system.pressedImage = model.document.getImage();
+		int centerX = (int) (model.system.pressedImage.position.dimension.width / 2);
+		int centerY = (int) (model.system.pressedImage.position.dimension.height / 2);
+		model.system.pressedShape = model.system.pressedImage.getShape(new Point(centerX,centerY));
+		assertNotNull(model.system.pressedShape);
 		model.cache.releasedPoint = new Point(centerX, centerY - dimension/2 - 10);
 		try {
 			model.pattern.execute("resizeShape");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
-		logger.info(model.cache.pressedShape);
-		assertEquals(model.cache.pressedShape.position.dimension.height, 110);
+		logger.info(model.system.pressedShape);
+		assertEquals(model.system.pressedShape.position.dimension.height, 110);
 		
 		assertEquals(model.document.setIndex(1), true);
 		assertEquals(model.document.getPage().setIndex(1), true);
 		model.cache.selection = Selection.TOP;
-		model.cache.pressedImage = model.document.getImage();
-		centerX = (int) (model.cache.pressedImage.position.point.x + model.cache.pressedImage.position.dimension.width / 2);
-		centerY = (int) (model.cache.pressedImage.position.point.y + model.cache.pressedImage.position.dimension.height / 2);
-		model.cache.pressedShape = model.cache.pressedImage.getShape(new Point(centerX,centerY));
-		assertNotNull(model.cache.pressedShape);
+		model.system.pressedImage = model.document.getImage();
+		centerX = (int) (model.system.pressedImage.position.point.x + model.system.pressedImage.position.dimension.width / 2);
+		centerY = (int) (model.system.pressedImage.position.point.y + model.system.pressedImage.position.dimension.height / 2);
+		model.system.pressedShape = model.system.pressedImage.getShape(new Point(centerX,centerY));
+		assertNotNull(model.system.pressedShape);
 		model.cache.releasedPoint = new Point(centerX, centerY - dimension/2 - 10);
 		logger.info(model.cache.releasedPoint);
 		try {
@@ -146,24 +146,24 @@ public class DocumentResizeShapeTest {
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
-		logger.info(model.cache.pressedShape);
-		assertEquals(model.cache.pressedShape.position.dimension.height, 110);
+		logger.info(model.system.pressedShape);
+		assertEquals(model.system.pressedShape.position.dimension.height, 110);
 		
 		assertEquals(model.document.setIndex(2), true);
 		assertEquals(model.document.getPage().setIndex(2), true);
 		model.cache.selection = Selection.TOP;
-		model.cache.pressedImage = model.document.getImage();
-		centerX = (int) (model.cache.pressedImage.position.point.x + model.cache.pressedImage.position.dimension.width / 2);
-		centerY = (int) (model.cache.pressedImage.position.point.y + model.cache.pressedImage.position.dimension.height / 2);
-		model.cache.pressedShape = model.cache.pressedImage.getShape(new Point(centerX,centerY));
+		model.system.pressedImage = model.document.getImage();
+		centerX = (int) (model.system.pressedImage.position.point.x + model.system.pressedImage.position.dimension.width / 2);
+		centerY = (int) (model.system.pressedImage.position.point.y + model.system.pressedImage.position.dimension.height / 2);
+		model.system.pressedShape = model.system.pressedImage.getShape(new Point(centerX,centerY));
 		model.cache.releasedPoint = new Point(centerX, centerY - dimension/2 - 10);
 		try {
 			model.pattern.execute("resizeShape");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
-		logger.info(model.cache.pressedShape);
-		assertEquals(model.cache.pressedShape.position.dimension.height, 110);
+		logger.info(model.system.pressedShape);
+		assertEquals(model.system.pressedShape.position.dimension.height, 110);
 		
 	}
 	

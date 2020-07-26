@@ -13,6 +13,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -24,9 +28,12 @@ import org.apache.logging.log4j.Logger;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Grid;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
+import com.meritoki.app.desktop.retina.model.document.Position;
+import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 public class PagePanel extends JPanel implements MouseListener, KeyListener {
@@ -76,7 +83,89 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 		if (this.model != null) {
 			Graphics2D graphics2D = (Graphics2D) graphics.create();
 			Document document = (this.model != null) ? this.model.document : null;
-			document.pagePaint(graphics2D);
+			Page page = (document != null)?document.getPage():null;
+			if (page != null) {
+				AffineTransform affineTransform = new AffineTransform();
+				affineTransform.scale(page.position.scale, page.position.scale);// this handles scaling the bufferedImage
+				BufferedImage bufferedImage = page.getBufferedImage(this.model);
+				if (bufferedImage != null) {
+					graphics2D.drawImage(bufferedImage, affineTransform, null);
+				}
+				List<Image> imageList = page.getImageList();
+				Image image = page.getImage();
+				if (imageList != null) {
+					for (Image i : imageList) {
+						Position p = i.position;
+						if (image != null && i.uuid.equals(image.uuid)) {
+							graphics2D.setColor(Color.RED);
+						} else {
+							graphics2D.setColor(Color.YELLOW);
+						}
+						Rectangle2D.Double rectangle = new Rectangle2D.Double(p.point.x, p.point.y, p.dimension.width,
+								p.dimension.height);
+						graphics2D.draw(rectangle);
+					}
+
+				}
+				List<Shape> shapeList = page.getSortedShapeList();// this.getMatrix().getShapeList();
+				Shape shape = page.getShape();
+				Shape gridShape = page.getGridShape();
+				Shape previousShape = null;
+				if (shapeList != null) {
+					for (Shape s : shapeList) {
+						Position position = s.position;
+						if (shape != null && s.uuid.equals(shape.uuid)) {
+							graphics2D.setColor(Color.RED);
+						} else {
+							graphics2D.setColor(Color.BLUE);
+						}
+						switch (s.type) {
+						case ELLIPSE: {
+							Ellipse2D.Double ellipse = new Ellipse2D.Double(position.point.x, position.point.y,
+									position.dimension.width, position.dimension.height);
+							graphics2D.draw(ellipse);
+							break;
+						}
+						case RECTANGLE: {
+							Rectangle2D.Double rectangle = new Rectangle2D.Double(position.point.x, position.point.y,
+									position.dimension.width, position.dimension.height);
+							graphics2D.draw(rectangle);
+							if (s instanceof Grid) {
+								Shape[][] matrix = ((Grid) s).matrix;
+								for (int i = 0; i < matrix.length; i++) {
+									for (int j = 0; j < matrix[i].length; j++) {
+										Shape gs = matrix[i][j];
+										if (gridShape != null && gs.uuid.equals(gridShape.uuid)) {
+											graphics2D.setColor(Color.YELLOW);
+										} else {
+											if (shape != null && s.uuid.equals(shape.uuid)) {
+												graphics2D.setColor(Color.RED);
+											} else {
+												graphics2D.setColor(Color.BLUE);
+											}
+										}
+										rectangle = new Rectangle2D.Double(gs.position.point.x, gs.position.point.y,
+												gs.position.dimension.width, gs.position.dimension.height);
+										graphics2D.draw(rectangle);
+									}
+								}
+							}
+							break;
+						}
+						}
+						if (previousShape != null) {
+							Position p = previousShape.position;
+							graphics2D.drawLine((int) (p.center.x), (int) (p.center.y), (int) (position.center.x),
+									(int) (position.center.y));
+						}
+						previousShape = s;
+					}
+				}
+				graphics2D.setColor(Color.BLUE);
+				Rectangle2D.Double frame = new Rectangle2D.Double(0, 0, page.position.dimension.width,
+						page.position.dimension.height);
+				graphics2D.draw(frame);
+			}
 		}
 	}
 

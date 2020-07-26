@@ -297,17 +297,19 @@ public class Document {
 		return shapeBufferedImage;
 	}
 
+	@JsonIgnore
+	public Page removePage(String uuid) {
+		ListIterator<Page> pageListIterator = this.pageList.listIterator();
+		while (pageListIterator.hasNext()) {
+			Page page = pageListIterator.next();
+			if (page.uuid.equals(uuid)) {
+				pageListIterator.remove();
+				return page;
+			}
+		}
+		return null;
+	}
 	
-
-//	@JsonIgnore
-//	public List<Shape> getCompleteShapeList() {
-//		List<Shape> shapeList = new ArrayList<>();
-//		for (Page page : this.pageList) {
-//			shapeList.addAll(page.getGridShapeList());
-//		}
-//		return shapeList;
-//	}
-
 	@JsonIgnore
 	public boolean importZooniverse(String fileName) {
 		List<String[]> stringArrayList = NodeController.openCsv(fileName);
@@ -396,206 +398,82 @@ public class Document {
 	}
 
 	@JsonIgnore
-	public Page removePage(String uuid) {
-		ListIterator<Page> pageListIterator = this.pageList.listIterator();
-		while (pageListIterator.hasNext()) {
-			Page page = pageListIterator.next();
-			if (page.uuid.equals(uuid)) {
-				pageListIterator.remove();
-				return page;
-			}
-		}
-		return null;
-	}
-
-	@JsonIgnore
-	public void pagePaint(Graphics2D graphics2D) {
-		AffineTransform affineTransform = new AffineTransform();
-		Page page = this.getPage();
-		if (page != null) {
-			affineTransform.scale(page.position.scale, page.position.scale);// this handles scaling the bufferedImage
-			BufferedImage bufferedImage = page.getBufferedImage(this.uuid);
-			if (bufferedImage != null) {
-				graphics2D.drawImage(bufferedImage, affineTransform, null);
-			}
-			List<Image> imageList = page.getImageList();
-			Image image = this.getImage();
-			if (imageList != null) {
-				for (Image i : imageList) {
-					Position p = i.position;
-					if (image != null && i.uuid.equals(image.uuid)) {
-						graphics2D.setColor(Color.RED);
-					} else {
-						graphics2D.setColor(Color.YELLOW);
-					}
-					Rectangle2D.Double rectangle = new Rectangle2D.Double(p.point.x, p.point.y, p.dimension.width,
-							p.dimension.height);
-					graphics2D.draw(rectangle);
-				}
-
-			}
-			List<Shape> shapeList = page.getSortedShapeList();// this.getMatrix().getShapeList();
-			Shape shape = page.getShape();
-			Shape gridShape = page.getGridShape();
-			Shape previousShape = null;
-			if (shapeList != null) {
-				for (Shape s : shapeList) {
-					Position position = s.position;
-					if (shape != null && s.uuid.equals(shape.uuid)) {
-						graphics2D.setColor(Color.RED);
-					} else {
-						graphics2D.setColor(Color.BLUE);
-					}
-					switch (s.type) {
-					case ELLIPSE: {
-						Ellipse2D.Double ellipse = new Ellipse2D.Double(position.point.x, position.point.y,
-								position.dimension.width, position.dimension.height);
-						graphics2D.draw(ellipse);
-						break;
-					}
-					case RECTANGLE: {
-						Rectangle2D.Double rectangle = new Rectangle2D.Double(position.point.x, position.point.y,
-								position.dimension.width, position.dimension.height);
-						graphics2D.draw(rectangle);
-						if (s instanceof Grid) {
-							Shape[][] matrix = ((Grid) s).matrix;
-							for (int i = 0; i < matrix.length; i++) {
-								for (int j = 0; j < matrix[i].length; j++) {
-									Shape gs = matrix[i][j];
-									if (gridShape != null && gs.uuid.equals(gridShape.uuid)) {
-										graphics2D.setColor(Color.YELLOW);
-									} else {
-										if (shape != null && s.uuid.equals(shape.uuid)) {
-											graphics2D.setColor(Color.RED);
-										} else {
-											graphics2D.setColor(Color.BLUE);
-										}
-									}
-									rectangle = new Rectangle2D.Double(gs.position.point.x, gs.position.point.y,
-											gs.position.dimension.width, gs.position.dimension.height);
-									graphics2D.draw(rectangle);
-								}
-							}
-						}
-						break;
-					}
-					}
-					if (previousShape != null) {
-						Position p = previousShape.position;
-						graphics2D.drawLine((int) (p.center.x), (int) (p.center.y), (int) (position.center.x),
-								(int) (position.center.y));
-					}
-					previousShape = s;
-				}
-			}
-			graphics2D.setColor(Color.BLUE);
-			Rectangle2D.Double frame = new Rectangle2D.Double(0, 0, page.position.dimension.width,
-					page.position.dimension.height);
-			graphics2D.draw(frame);
-		}
-	}
-	
-	@JsonIgnore
-	public void shapePaint(Graphics2D graphics2D) {
-		Page page = this.getPage();
-		Shape shape = (page != null) ? page.getShape(): null;
-		if (shape != null) {
-			if(shape instanceof Grid) {
-				Grid grid = (Grid)shape;
-				shape = grid.getShape();
-			}
-			AffineTransform affineTransform = new AffineTransform();
-			affineTransform.scale(1, 1);
-			BufferedImage bufferedImage = this.getShapeBufferedImage(page.getScaledBufferedImage(this.uuid), shape);
-			if (bufferedImage != null) {
-				graphics2D.drawImage(bufferedImage, affineTransform, null);
-			}
-		}
-	}
-	
-	
-
-//	@JsonIgnore
-//	public void setBufferedImage(Page page) {
-////		logger.info("setBufferedImage("+page+")");
-//		if (page != null) {
-//			List<Image> imageList = page.getImageList();
-//			for (Image image : imageList) {
-//				this.setBufferedImage(image);
-//			}
-//			if(page.getBufferedImage()== null) {
-//				logger.error("setBufferedImage("+page+") bufferedImage==null");
-//			}
-//		}
-//	}
-//	
-//	@JsonIgnore
-//	public void setBufferedImage(Image image) {
-//		if (image.getBufferedImage() == null) {
-////			logger.info("setBufferedImage("+image+") image.getBufferedImage()==null");
-//			image.setBufferedImage(this.getBufferedImage(image));
-//		}
-//	}
-//
-//	@JsonIgnore
-//	public BufferedImage getBufferedImage(Image image) {
-//		BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getDocumentCache(this.uuid), image.uuid + "." + image.getExtension());
-//		if (bufferedImage == null) {
-//			logger.info("getBufferedImage("+image+") bufferedImage==null");
-//			if(image.file == null) {
-//				File file = new File(image.filePath+NodeController.getSeperator()+image.fileName);
-//				image.file = file;
-//			}
-//			if (image.file != null) {
-//				bufferedImage = NodeController.openBufferedImage(image.file);
-//				if (bufferedImage != null) {
-//					if (image.getExtension().equals("jpg") || image.getExtension().equals("jpeg")) {
-//						File documentCache = new File(NodeController.getDocumentCache(this.uuid));
-//						if(!documentCache.exists()) {
-//							documentCache.mkdirs();
-//						}
-//						try {
-//							NodeController.saveJpg(NodeController.getDocumentCache(this.uuid),
-//									image.uuid + "." + image.getExtension(), bufferedImage);
-//						} catch (Exception e) {
-//							logger.error("Exception "+e.getMessage());
-//						}
-//					}
-//				}
-//			}
-//		}
-//		BufferedImage before = bufferedImage;
-//		int w = before.getWidth();
-//		int h = before.getHeight();
-//		BufferedImage after = new BufferedImage((int) (w * image.position.relativeScale),
-//				(int) (h * image.position.relativeScale), BufferedImage.TYPE_INT_ARGB);
-//		AffineTransform at = new AffineTransform();
-//		at.scale(image.position.relativeScale, image.position.relativeScale);
-//		AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-//		after = scaleOp.filter(before, after);
-//		bufferedImage = after;
-//		image.position.setAbsoluteDimension(new Dimension(bufferedImage.getWidth(), bufferedImage.getHeight()));
-//		return bufferedImage;
-//	}
-
-	@JsonIgnore
 	@Override
 	public String toString() {
 		String string = "";
 		string = "{\"uuid\":" + this.uuid + "}";
 		return string;
 	}
-
-//	@JsonIgnore
-//	@Override
-//	public String toString() {
-//		String string = "";
-//		ObjectWriter ow = new ObjectMapper().writer();//.withDefaultPrettyPrinter();
-//		try {
-//			string = ow.writeValueAsString(this);
-//		} catch (IOException ex) {
-//			logger.error("IOException " + ex.getMessage());
-//		}
-//		return string;
-//	}
 }
+
+//@JsonIgnore
+//public List<Shape> getCompleteShapeList() {
+//	List<Shape> shapeList = new ArrayList<>();
+//	for (Page page : this.pageList) {
+//		shapeList.addAll(page.getGridShapeList());
+//	}
+//	return shapeList;
+//}
+
+//@JsonIgnore
+//public void setBufferedImage(Page page) {
+////	logger.info("setBufferedImage("+page+")");
+//	if (page != null) {
+//		List<Image> imageList = page.getImageList();
+//		for (Image image : imageList) {
+//			this.setBufferedImage(image);
+//		}
+//		if(page.getBufferedImage()== null) {
+//			logger.error("setBufferedImage("+page+") bufferedImage==null");
+//		}
+//	}
+//}
+//
+//@JsonIgnore
+//public void setBufferedImage(Image image) {
+//	if (image.getBufferedImage() == null) {
+////		logger.info("setBufferedImage("+image+") image.getBufferedImage()==null");
+//		image.setBufferedImage(this.getBufferedImage(image));
+//	}
+//}
+//
+//@JsonIgnore
+//public BufferedImage getBufferedImage(Image image) {
+//	BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getDocumentCache(this.uuid), image.uuid + "." + image.getExtension());
+//	if (bufferedImage == null) {
+//		logger.info("getBufferedImage("+image+") bufferedImage==null");
+//		if(image.file == null) {
+//			File file = new File(image.filePath+NodeController.getSeperator()+image.fileName);
+//			image.file = file;
+//		}
+//		if (image.file != null) {
+//			bufferedImage = NodeController.openBufferedImage(image.file);
+//			if (bufferedImage != null) {
+//				if (image.getExtension().equals("jpg") || image.getExtension().equals("jpeg")) {
+//					File documentCache = new File(NodeController.getDocumentCache(this.uuid));
+//					if(!documentCache.exists()) {
+//						documentCache.mkdirs();
+//					}
+//					try {
+//						NodeController.saveJpg(NodeController.getDocumentCache(this.uuid),
+//								image.uuid + "." + image.getExtension(), bufferedImage);
+//					} catch (Exception e) {
+//						logger.error("Exception "+e.getMessage());
+//					}
+//				}
+//			}
+//		}
+//	}
+//	BufferedImage before = bufferedImage;
+//	int w = before.getWidth();
+//	int h = before.getHeight();
+//	BufferedImage after = new BufferedImage((int) (w * image.position.relativeScale),
+//			(int) (h * image.position.relativeScale), BufferedImage.TYPE_INT_ARGB);
+//	AffineTransform at = new AffineTransform();
+//	at.scale(image.position.relativeScale, image.position.relativeScale);
+//	AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+//	after = scaleOp.filter(before, after);
+//	bufferedImage = after;
+//	image.position.setAbsoluteDimension(new Dimension(bufferedImage.getWidth(), bufferedImage.getHeight()));
+//	return bufferedImage;
+//}

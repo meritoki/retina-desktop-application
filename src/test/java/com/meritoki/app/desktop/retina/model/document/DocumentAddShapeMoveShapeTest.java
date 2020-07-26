@@ -40,9 +40,9 @@ public class DocumentAddShapeMoveShapeTest {
 	public void addShape() {
 		assertEquals(model.document.setIndex(0), true);
 		assertEquals(model.document.getPage().setIndex(0), true);
-		model.cache.pressedImage = model.document.getImage();
-		double x = (int) (model.cache.pressedImage.position.center.x - dimension / 2);
-		double y = (int) (model.cache.pressedImage.position.center.y - dimension / 2);
+		model.system.pressedImage = model.document.getImage();
+		double x = (int) (model.system.pressedImage.position.center.x - dimension / 2);
+		double y = (int) (model.system.pressedImage.position.center.y - dimension / 2);
 		int width = dimension;
 		int height = dimension;
 		model.cache.pressedPoint = new Point(x, y);
@@ -52,7 +52,7 @@ public class DocumentAddShapeMoveShapeTest {
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		}
-		assertNotNull(model.document.getShape(new Point(model.cache.pressedImage.position.center.x, model.cache.pressedImage.position.center.y)));
+		assertNotNull(model.document.getShape(new Point(model.system.pressedImage.position.center.x, model.system.pressedImage.position.center.y)));
 	}
 	
 	@Test
@@ -61,14 +61,14 @@ public class DocumentAddShapeMoveShapeTest {
 		assertEquals(model.document.setIndex(0), true);
 		Page page = model.document.getPage();
 		Position position = page.position;
-		Point startPoint = new Point(model.cache.pressedImage.position.center.x, model.cache.pressedImage.position.center.y);
+		Point startPoint = new Point(model.system.pressedImage.position.center.x, model.system.pressedImage.position.center.y);
 		Point previousPoint = startPoint;
 		Point newPoint;
 		int count = limit;
 		while(count > 0) {
 			newPoint = getRandomPoint(position);
 			model.cache.pressedPoint = previousPoint;
-			model.cache.pressedShape = model.document.getPage().getShape(model.cache.pressedPoint);
+			model.system.pressedShape = model.document.getPage().getShape(model.cache.pressedPoint);
 			model.cache.releasedPoint = newPoint;
 			try {
 				model.pattern.execute("moveShape");
@@ -89,7 +89,7 @@ public class DocumentAddShapeMoveShapeTest {
 			model.pattern.undo();
 			count--;
 		}
-		assertNotNull(model.document.getShape(new Point(model.cache.pressedImage.position.center.x, model.cache.pressedImage.position.center.y)));
+		assertNotNull(model.document.getShape(new Point(model.system.pressedImage.position.center.x, model.system.pressedImage.position.center.y)));
 	}
 	
 	public static Point getRandomPoint(Position position) {

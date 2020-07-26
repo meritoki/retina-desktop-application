@@ -196,9 +196,9 @@ class DocumentTest {
 	public void addShapes() {
 		assertEquals(model.document.setIndex(0), true);
 		assertEquals(model.document.getPage().setIndex(0), true);
-		model.cache.pressedImage = model.document.getImage();
-		int x = (int) (model.cache.pressedImage.position.dimension.width / 2 - dimension / 2);
-		int y = (int) (model.cache.pressedImage.position.dimension.height / 2 - dimension / 2);
+		model.system.pressedImage = model.document.getImage();
+		int x = (int) (model.system.pressedImage.position.dimension.width / 2 - dimension / 2);
+		int y = (int) (model.system.pressedImage.position.dimension.height / 2 - dimension / 2);
 		int width = dimension;
 		int height = dimension;
 		model.cache.pressedPoint = new Point(x, y);
@@ -209,9 +209,9 @@ class DocumentTest {
 			logger.error("Exception " + e.getMessage());
 		}
 		assertEquals(model.document.setIndex(1), true);
-		model.cache.pressedImage = model.document.getImage();
-		x = (int) (model.cache.pressedImage.position.dimension.width / 2 - dimension / 2);
-		y = (int) (model.cache.pressedImage.position.dimension.height / 2 - dimension / 2);
+		model.system.pressedImage = model.document.getImage();
+		x = (int) (model.system.pressedImage.position.dimension.width / 2 - dimension / 2);
+		y = (int) (model.system.pressedImage.position.dimension.height / 2 - dimension / 2);
 		width = dimension;
 		height = dimension;
 		model.cache.pressedPoint = new Point(x, y);
@@ -223,9 +223,9 @@ class DocumentTest {
 		}
 
 		assertEquals(model.document.setIndex(2), true);
-		model.cache.pressedImage = model.document.getImage();
-		x = (int) (model.cache.pressedImage.position.dimension.width / 2 - dimension / 2);
-		y = (int) (model.cache.pressedImage.position.dimension.height / 2 - dimension / 2);
+		model.system.pressedImage = model.document.getImage();
+		x = (int) (model.system.pressedImage.position.dimension.width / 2 - dimension / 2);
+		y = (int) (model.system.pressedImage.position.dimension.height / 2 - dimension / 2);
 		width = dimension;
 		height = dimension;
 		model.cache.pressedPoint = new Point(x, y);
@@ -237,9 +237,9 @@ class DocumentTest {
 		}
 
 		assertEquals(model.document.setIndex(3), true);
-		model.cache.pressedImage = model.document.getImage();
-		x = (int) (model.cache.pressedImage.position.dimension.width / 2 - dimension / 2);
-		y = (int) (model.cache.pressedImage.position.dimension.height / 2 - dimension / 2);
+		model.system.pressedImage = model.document.getImage();
+		x = (int) (model.system.pressedImage.position.dimension.width / 2 - dimension / 2);
+		y = (int) (model.system.pressedImage.position.dimension.height / 2 - dimension / 2);
 		width = dimension;
 		height = dimension;
 		model.cache.pressedPoint = new Point(x, y);
@@ -782,7 +782,7 @@ class DocumentTest {
 	@Order(16)
 	public void getShapeBufferedImage() {
 		assertEquals(model.document.setIndex(0), true);
-		List<Shape> shapeList = model.document.getPage().getGridShapeList(true);
+		List<Shape> shapeList = model.document.getPage().getGridShapeList();
 		for(Shape s: shapeList) {
 			assertNotNull(s.bufferedImage);
 		}

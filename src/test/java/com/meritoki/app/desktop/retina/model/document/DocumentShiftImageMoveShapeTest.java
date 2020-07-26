@@ -38,9 +38,9 @@ public class DocumentShiftImageMoveShapeTest {
 		assertEquals(model.document.setIndex(0), true);
 		//add right
 		assertEquals(model.document.getPage().setIndex(1), true);
-		model.cache.pressedImage = model.document.getImage();
-		double x = (model.cache.pressedImage.position.center.x - dimension / 2);
-		double y = (model.cache.pressedImage.position.center.y - dimension / 2);
+		model.system.pressedImage = model.document.getImage();
+		double x = (model.system.pressedImage.position.center.x - dimension / 2);
+		double y = (model.system.pressedImage.position.center.y - dimension / 2);
 		int width = dimension;
 		int height = dimension;
 		model.cache.pressedPoint = new Point(x, y);
@@ -50,8 +50,8 @@ public class DocumentShiftImageMoveShapeTest {
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		}
-		x = (model.cache.pressedImage.position.center.x);
-		y = (model.cache.pressedImage.position.center.y);
+		x = (model.system.pressedImage.position.center.x);
+		y = (model.system.pressedImage.position.center.y);
 		assertNotNull(model.document.getShape(new Point(x,y)));
 	}
 	
@@ -60,7 +60,7 @@ public class DocumentShiftImageMoveShapeTest {
 	public void marginShift() {
 		assertEquals(model.document.setIndex(0), true);
 		assertEquals(model.document.getPage().setIndex(1), true);
-		model.cache.pressedImage = model.document.getImage();
+		model.system.pressedImage = model.document.getImage();
 		model.cache.shiftOperator = '+';
 		model.cache.shiftFactor = 10;
 		try {
@@ -74,8 +74,8 @@ public class DocumentShiftImageMoveShapeTest {
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
-		double x = (model.cache.pressedImage.position.center.x);
-		double y = (model.cache.pressedImage.position.center.y);
+		double x = (model.system.pressedImage.position.center.x);
+		double y = (model.system.pressedImage.position.center.y);
 		assertNotNull(model.document.getShape(new Point(x,y)));
 	}
 	
@@ -84,15 +84,15 @@ public class DocumentShiftImageMoveShapeTest {
 	public void moveShape() {
 		assertEquals(model.document.setIndex(0), true);
 		assertEquals(model.document.getPage().setIndex(1), true);
-		model.cache.pressedImage = model.document.getPage().getImage();
+		model.system.pressedImage = model.document.getPage().getImage();
 		assertEquals(model.document.getPage().setIndex(0), true);
-		model.cache.releasedImage = model.document.getPage().getImage();
-		double x = (model.cache.pressedImage.position.center.x);
-		double y = (model.cache.pressedImage.position.center.y);
+		model.system.releasedImage = model.document.getPage().getImage();
+		double x = (model.system.pressedImage.position.center.x);
+		double y = (model.system.pressedImage.position.center.y);
 		model.cache.pressedPoint = new Point(x, y);
-		model.cache.pressedShape = model.document.getPage().getShape(model.cache.pressedPoint);
-		x = (int) (model.cache.releasedImage.position.center.x);
-		y = (int) (model.cache.releasedImage.position.center.y);
+		model.system.pressedShape = model.document.getPage().getShape(model.cache.pressedPoint);
+		x = (int) (model.system.releasedImage.position.center.x);
+		y = (int) (model.system.releasedImage.position.center.y);
 		model.cache.releasedPoint = new Point(x, y);
 		try {
 			model.pattern.execute("moveShape");

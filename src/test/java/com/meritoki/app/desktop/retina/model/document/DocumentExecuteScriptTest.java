@@ -57,9 +57,9 @@ public class DocumentExecuteScriptTest {
 	public void addShapes() {
 		assertEquals(model.document.setIndex(0), true);
 		assertEquals(model.document.getPage().setIndex(0),true);
-		model.cache.pressedImage = model.document.getImage();
-		int x = (int)(model.cache.pressedImage.position.absoluteDimension.width/2 - dimension/2);
-		int y = (int)(model.cache.pressedImage.position.absoluteDimension.height/2 - dimension/2);
+		model.system.pressedImage = model.document.getImage();
+		int x = (int)(model.system.pressedImage.position.absoluteDimension.width/2 - dimension/2);
+		int y = (int)(model.system.pressedImage.position.absoluteDimension.height/2 - dimension/2);
 		int width = dimension;
 		int height = dimension;
 		model.cache.pressedPoint = new Point(x,y);
@@ -70,9 +70,9 @@ public class DocumentExecuteScriptTest {
 			logger.error("Exception "+e.getMessage());
 		}
 		assertEquals(model.document.setIndex(1), true);
-		model.cache.pressedImage = model.document.getImage();
-		x = (int)(model.cache.pressedImage.position.absoluteDimension.width/2 - dimension/2);
-		y = (int)(model.cache.pressedImage.position.absoluteDimension.height/2 - dimension/2);
+		model.system.pressedImage = model.document.getImage();
+		x = (int)(model.system.pressedImage.position.absoluteDimension.width/2 - dimension/2);
+		y = (int)(model.system.pressedImage.position.absoluteDimension.height/2 - dimension/2);
 		width = dimension;
 		height = dimension;
 		model.cache.pressedPoint = new Point(x,y);
@@ -84,9 +84,9 @@ public class DocumentExecuteScriptTest {
 		}
     	
 		assertEquals(model.document.setIndex(2), true);
-		model.cache.pressedImage = model.document.getImage();
-		x = (int)(model.cache.pressedImage.position.absoluteDimension.width/2 - dimension/2);
-		y = (int)(model.cache.pressedImage.position.absoluteDimension.height/2 - dimension/2);
+		model.system.pressedImage = model.document.getImage();
+		x = (int)(model.system.pressedImage.position.absoluteDimension.width/2 - dimension/2);
+		y = (int)(model.system.pressedImage.position.absoluteDimension.height/2 - dimension/2);
 		width = dimension;
 		height = dimension;
 		model.cache.pressedPoint = new Point(x,y);
@@ -98,9 +98,9 @@ public class DocumentExecuteScriptTest {
 		}
     	
 		assertEquals(model.document.setIndex(3), true);
-		model.cache.pressedImage = model.document.getImage();
-		x = (int)(model.cache.pressedImage.position.absoluteDimension.width/2 - dimension/2);
-		y = (int)(model.cache.pressedImage.position.absoluteDimension.height/2 - dimension/2);
+		model.system.pressedImage = model.document.getImage();
+		x = (int)(model.system.pressedImage.position.absoluteDimension.width/2 - dimension/2);
+		y = (int)(model.system.pressedImage.position.absoluteDimension.height/2 - dimension/2);
 		width = dimension;
 		height = dimension;
 		model.cache.pressedPoint = new Point(x,y);

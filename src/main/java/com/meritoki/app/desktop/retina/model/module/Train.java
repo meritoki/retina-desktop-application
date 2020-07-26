@@ -86,7 +86,7 @@ public class Train extends Node {
 		}
 		if (this.delayExpired()) {
 			this.meritoki.openInput(this.model.document.uuid);
-			List<Shape> shapeList = this.model.document.getGridShapeList(true);
+			List<Shape> shapeList = this.model.document.getGridShapeList();
 			boolean flag;
 			scan = false;
 			for (Shape s : shapeList) {

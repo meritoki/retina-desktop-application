@@ -39,8 +39,8 @@ public class DocumentResizeImageTest {
 	public void resize() {
 		assertEquals(model.document.setIndex(0), true);
 		assertEquals(model.document.getPage().setIndex(0), true);
-		model.cache.pressedImage = model.document.getImage();
-		origin = new Dimension(model.cache.pressedImage.position.dimension);
+		model.system.pressedImage = model.document.getImage();
+		origin = new Dimension(model.system.pressedImage.position.dimension);
 		model.cache.scaleOperator = '/';
 		model.cache.scaleFactor = 1.01;
 		try {
@@ -52,8 +52,8 @@ public class DocumentResizeImageTest {
 			logger.error("Exception "+e.getMessage());
 		}
 		assertEquals(model.document.getPage().setIndex(0), true);
-		model.cache.pressedPage = model.document.getPage();
-		model.cache.pressedImage = model.document.getImage();
+		model.system.pressedPage = model.document.getPage();
+		model.system.pressedImage = model.document.getImage();
 		model.cache.scaleOperator = '*';
 		model.cache.scaleFactor = 1.01;
 		try {
@@ -81,8 +81,8 @@ public class DocumentResizeImageTest {
 		model.pattern.undo();
 		model.pattern.undo();
 		logger.info(origin);
-		logger.info(model.cache.pressedImage);
-		assertEquals(origin.width,model.cache.pressedImage.position.dimension.width);
-		assertEquals(origin.height,model.cache.pressedImage.position.dimension.height);
+		logger.info(model.system.pressedImage);
+		assertEquals(origin.width,model.system.pressedImage.position.dimension.width);
+		assertEquals(origin.height,model.system.pressedImage.position.dimension.height);
 	}
 }

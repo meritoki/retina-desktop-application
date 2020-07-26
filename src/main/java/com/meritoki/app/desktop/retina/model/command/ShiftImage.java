@@ -46,7 +46,6 @@ public class ShiftImage extends Command {
 		}
 		}
 		pressedImage.setMargin(margin);
-		System.out.println(pressedImage);
 		//redo
 		operation = new Operation();
 		operation.object = margin;

@@ -37,9 +37,9 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 	public void addShape() {
 		assertEquals(model.document.setIndex(0), true);
 		assertEquals(model.document.getPage().setIndex(0), true);
-		model.cache.pressedImage = model.document.getImage();
-		double x = (model.cache.pressedImage.position.center.x - dimension / 2);
-		double y = (model.cache.pressedImage.position.center.y - dimension / 2);
+		model.system.pressedImage = model.document.getImage();
+		double x = (model.system.pressedImage.position.center.x - dimension / 2);
+		double y = (model.system.pressedImage.position.center.y - dimension / 2);
 		int width = dimension;
 		int height = dimension;
 		model.cache.pressedPoint = new Point(x, y);
@@ -49,10 +49,10 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		}
-		x = (model.cache.pressedImage.position.center.x);
-		y = (model.cache.pressedImage.position.center.y);
+		x = (model.system.pressedImage.position.center.x);
+		y = (model.system.pressedImage.position.center.y);
 		Shape shape =model.document.getShape(new Point(x, y));
-		logger.info("addShape() pressedImage="+model.cache.pressedImage);
+		logger.info("addShape() pressedImage="+model.system.pressedImage);
 		logger.info("addShape() shape="+shape);
 		assertNotNull(shape);
 	}
@@ -62,8 +62,8 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 	public void resizeImage() {
 		assertEquals(model.document.setIndex(0), true);
 		assertEquals(model.document.getPage().setIndex(0), true);
-		model.cache.pressedPage = model.document.getPage();
-		model.cache.pressedImage = model.document.getImage();
+		model.system.pressedPage = model.document.getPage();
+		model.system.pressedImage = model.document.getImage();
 		model.cache.scaleOperator = '/';
 		model.cache.scaleFactor = 1.01;
 		try {
@@ -77,9 +77,9 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
-		double x = (model.cache.pressedImage.position.center.x);
-		double y = (model.cache.pressedImage.position.center.y);
-		logger.info("addShape() pressedImage="+model.cache.pressedImage);
+		double x = (model.system.pressedImage.position.center.x);
+		double y = (model.system.pressedImage.position.center.y);
+		logger.info("addShape() pressedImage="+model.system.pressedImage);
 		logger.info("shapeList="+model.document.getShapeList());
 		Shape shape = model.document.getShape(new Point(x, y));
 		logger.info("shapeList="+model.document.getShapeList());
@@ -92,21 +92,21 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 	public void moveShape() {
 		assertEquals(model.document.setIndex(0), true);
 		assertEquals(model.document.getPage().setIndex(0), true);
-		model.cache.pressedImage = model.document.getPage().getImage();
+		model.system.pressedImage = model.document.getPage().getImage();
 		assertEquals(model.document.getPage().setIndex(1), true);
-		model.cache.releasedImage = model.document.getPage().getImage();
-		double x = (model.cache.pressedImage.position.center.x);
-		double y = (model.cache.pressedImage.position.center.y);
+		model.system.releasedImage = model.document.getPage().getImage();
+		double x = (model.system.pressedImage.position.center.x);
+		double y = (model.system.pressedImage.position.center.y);
 		model.cache.pressedPoint = new Point(x, y);
-		logger.info("pressedImage="+model.cache.pressedImage);
+		logger.info("pressedImage="+model.system.pressedImage);
 		logger.info("pressedPoint="+model.cache.pressedPoint);
-		model.cache.pressedShape = model.document.getPage().getShape(model.cache.pressedPoint);
-		logger.info("pressedShape="+model.cache.pressedShape);
-		assertNotNull(model.cache.pressedShape);
-		x = (model.cache.releasedImage.position.center.x);
-		y = (model.cache.releasedImage.position.center.y);
+		model.system.pressedShape = model.document.getPage().getShape(model.cache.pressedPoint);
+		logger.info("pressedShape="+model.system.pressedShape);
+		assertNotNull(model.system.pressedShape);
+		x = (model.system.releasedImage.position.center.x);
+		y = (model.system.releasedImage.position.center.y);
 		model.cache.releasedPoint = new Point(x, y);
-		logger.info("releasedImage="+model.cache.releasedImage);
+		logger.info("releasedImage="+model.system.releasedImage);
 		logger.info("releasedPoint="+model.cache.releasedPoint);
 		try {
 			model.pattern.execute("moveShape");
@@ -117,8 +117,8 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 		logger.info("shapeList="+model.document.getShapeList());
 		logger.info("shape="+shape);
 		assertNotNull(shape);
-		assertEquals(model.cache.pressedShape.position.dimension.width, shape.position.dimension.width);
-		assertEquals(model.cache.pressedShape.position.dimension.height, shape.position.dimension.height);
+		assertEquals(model.system.pressedShape.position.dimension.width, shape.position.dimension.width);
+		assertEquals(model.system.pressedShape.position.dimension.height, shape.position.dimension.height);
 	}
 	
 	@Test
@@ -138,7 +138,7 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 //		assertEquals(model.document.setIndex(0), true);
 //		assertEquals(model.document.getPage().setIndex(1), true);
 //		model.cache.pressedPage = model.document.getPage();
-//		model.cache.pressedImage = model.document.getImage();
+//		model.system.pressedImage = model.document.getImage();
 //		model.cache.scaleOperator = '/';
 //		model.cache.scaleFactor = 1.01;
 //		try {
@@ -152,8 +152,8 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 //		} catch (Exception e) {
 //			logger.error("Exception "+e.getMessage());
 //		}
-//		int x = (int) (model.cache.pressedImage.position.point.x+model.cache.pressedImage.position.dimension.width / 2);
-//		int y = (int) (model.cache.pressedImage.position.point.y+model.cache.pressedImage.position.dimension.height / 2);
+//		int x = (int) (model.system.pressedImage.position.point.x+model.system.pressedImage.position.dimension.width / 2);
+//		int y = (int) (model.system.pressedImage.position.point.y+model.system.pressedImage.position.dimension.height / 2);
 //		logger.info("shapeList="+model.document.getShapeList());
 //		Shape shape =model.document.getShape(new Point(x, y));
 //		logger.info("shapeList="+model.document.getShapeList());
@@ -166,21 +166,21 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 //	public void moveShapeOne() {
 //		assertEquals(model.document.setIndex(0), true);
 //		assertEquals(model.document.getPage().setIndex(1), true);
-//		model.cache.pressedImage = model.document.getPage().getImage();
+//		model.system.pressedImage = model.document.getPage().getImage();
 //		assertEquals(model.document.getPage().setIndex(0), true);
-//		model.cache.releasedImage = model.document.getPage().getImage();
-//		int x = (int) (model.cache.pressedImage.position.point.x+model.cache.pressedImage.position.dimension.width / 2);
-//		int y = (int) (model.cache.pressedImage.position.point.y+model.cache.pressedImage.position.dimension.height / 2);
+//		model.system.releasedImage = model.document.getPage().getImage();
+//		int x = (int) (model.system.pressedImage.position.point.x+model.system.pressedImage.position.dimension.width / 2);
+//		int y = (int) (model.system.pressedImage.position.point.y+model.system.pressedImage.position.dimension.height / 2);
 //		model.cache.pressedPoint = new Point(x, y);
-//		logger.info("pressedImage="+model.cache.pressedImage);
+//		logger.info("pressedImage="+model.system.pressedImage);
 //		logger.info("pressedPoint="+model.cache.pressedPoint);
-//		model.cache.pressedShape = model.document.getPage().getShape(model.cache.pressedPoint);
-//		logger.info("pressedShape="+model.cache.pressedShape);
-//		assertNotNull(model.cache.pressedShape);
-//		x = (int) (model.cache.releasedImage.position.point.x+model.cache.releasedImage.position.dimension.width / 2);
-//		y = (int) (model.cache.releasedImage.position.point.y+model.cache.releasedImage.position.dimension.height / 2);
+//		model.system.pressedShape = model.document.getPage().getShape(model.cache.pressedPoint);
+//		logger.info("pressedShape="+model.system.pressedShape);
+//		assertNotNull(model.system.pressedShape);
+//		x = (int) (model.system.releasedImage.position.point.x+model.system.releasedImage.position.dimension.width / 2);
+//		y = (int) (model.system.releasedImage.position.point.y+model.system.releasedImage.position.dimension.height / 2);
 //		model.cache.releasedPoint = new Point(x, y);
-//		logger.info("releasedImage="+model.cache.releasedImage);
+//		logger.info("releasedImage="+model.system.releasedImage);
 //		logger.info("releasedPoint="+model.cache.releasedPoint);
 //		try {
 //			model.pattern.execute("moveShape");
@@ -191,7 +191,7 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 //		logger.info("shapeList="+model.document.getShapeList());
 //		logger.info("shape="+shape);
 //		assertNotNull(shape);
-//		assertEquals(model.cache.pressedShape.position.dimension.width, shape.position.dimension.width);
-//		assertEquals(model.cache.pressedShape.position.dimension.height, shape.position.dimension.height);
+//		assertEquals(model.system.pressedShape.position.dimension.width, shape.position.dimension.width);
+//		assertEquals(model.system.pressedShape.position.dimension.height, shape.position.dimension.height);
 //	}
 }

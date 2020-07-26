@@ -51,8 +51,8 @@ public class DocumentAddShapeTest {
 	public void addShapes() {
 		assertEquals(model.document.setIndex(0), true);
 		assertEquals(model.document.getPage().setIndex(0), true);
-		model.cache.pressedImage = model.document.getImage();
-		Position position = model.cache.pressedImage.position;
+		model.system.pressedImage = model.document.getImage();
+		Position position = model.system.pressedImage.position;
 		int width = (int)position.dimension.width;
 		int height = (int)position.dimension.height;
 		int widthQuotient = width/divisor;
@@ -72,8 +72,8 @@ public class DocumentAddShapeTest {
 		}
 		assertEquals(model.document.setIndex(1), true);
 		assertEquals(model.document.getPage().setIndex(0), true);
-		model.cache.pressedImage = model.document.getImage();
-		position = model.cache.pressedImage.position;
+		model.system.pressedImage = model.document.getImage();
+		position = model.system.pressedImage.position;
 		width = (int)position.dimension.width;
 		height = (int)position.dimension.height;
 		widthQuotient = width/divisor;
@@ -93,8 +93,8 @@ public class DocumentAddShapeTest {
 		}
 		assertEquals(model.document.setIndex(1), true);
 		assertEquals(model.document.getPage().setIndex(1), true);
-		model.cache.pressedImage = model.document.getImage();
-		position = model.cache.pressedImage.position;
+		model.system.pressedImage = model.document.getImage();
+		position = model.system.pressedImage.position;
 		width = (int)position.dimension.width;
 		height = (int)position.dimension.height;
 		widthQuotient = width/divisor;
@@ -114,8 +114,8 @@ public class DocumentAddShapeTest {
 		}
 		assertEquals(model.document.setIndex(2), true);
 		assertEquals(model.document.getPage().setIndex(0), true);
-		model.cache.pressedImage = model.document.getImage();
-		position = model.cache.pressedImage.position;
+		model.system.pressedImage = model.document.getImage();
+		position = model.system.pressedImage.position;
 		width = (int)position.dimension.width;
 		height = (int)position.dimension.height;
 		widthQuotient = width/divisor;
@@ -135,8 +135,8 @@ public class DocumentAddShapeTest {
 		}
 		assertEquals(model.document.setIndex(2), true);
 		assertEquals(model.document.getPage().setIndex(1), true);
-		model.cache.pressedImage = model.document.getImage();
-		position = model.cache.pressedImage.position;
+		model.system.pressedImage = model.document.getImage();
+		position = model.system.pressedImage.position;
 		width = (int)position.dimension.width;
 		height = (int)position.dimension.height;
 		widthQuotient = width/divisor;
@@ -156,8 +156,8 @@ public class DocumentAddShapeTest {
 		}
 		assertEquals(model.document.setIndex(2), true);
 		assertEquals(model.document.getPage().setIndex(2), true);
-		model.cache.pressedImage = model.document.getImage();
-		position = model.cache.pressedImage.position;
+		model.system.pressedImage = model.document.getImage();
+		position = model.system.pressedImage.position;
 		width = (int)position.dimension.width;
 		height = (int)position.dimension.height;
 		widthQuotient = width/divisor;

@@ -38,8 +38,8 @@ public class DocumentScalePageTest {
 	public void scale() {
 		assertEquals(model.document.setIndex(0), true);
 		assertEquals(model.document.getPage().setIndex(0), true);
-		model.cache.pressedImage = model.document.getImage();
-		source = new Dimension(model.cache.pressedImage.position.dimension);
+		model.system.pressedImage = model.document.getImage();
+		source = new Dimension(model.system.pressedImage.position.dimension);
 		model.cache.scaleOperator = '*';
 		model.cache.scaleFactor = 1.5;
 		try {
@@ -59,7 +59,7 @@ public class DocumentScalePageTest {
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		} 
-		sink = new Dimension(model.cache.pressedImage.position.dimension);
+		sink = new Dimension(model.system.pressedImage.position.dimension);
 	}
 	
 	@Test
@@ -73,8 +73,8 @@ public class DocumentScalePageTest {
 		model.pattern.undo();
 		model.pattern.undo();
 		model.pattern.undo();
-		assertEquals(source.width,model.cache.pressedImage.position.dimension.width);
-		assertEquals(source.height,model.cache.pressedImage.position.dimension.height);
+		assertEquals(source.width,model.system.pressedImage.position.dimension.width);
+		assertEquals(source.height,model.system.pressedImage.position.dimension.height);
 	}
 	
 	@Test
@@ -88,7 +88,7 @@ public class DocumentScalePageTest {
 		model.pattern.redo();
 		model.pattern.redo();
 		model.pattern.redo();
-		assertEquals(sink.width,model.cache.pressedImage.position.dimension.width);
-		assertEquals(sink.height,model.cache.pressedImage.position.dimension.height);
+		assertEquals(sink.width,model.system.pressedImage.position.dimension.width);
+		assertEquals(sink.height,model.system.pressedImage.position.dimension.height);
 	}
 }

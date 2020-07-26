@@ -39,9 +39,9 @@ public class DocumentAddShapeScalePageTest {
 	public void addShape() {
 		assertEquals(model.document.setIndex(0), true);
 		assertEquals(model.document.getPage().setIndex(0), true);
-		model.cache.pressedImage = model.document.getImage();
-		int x = (int) (model.cache.pressedImage.position.absoluteDimension.width / 2 - dimension / 2);
-		int y = (int) (model.cache.pressedImage.position.absoluteDimension.height / 2 - dimension / 2);
+		model.system.pressedImage = model.document.getImage();
+		int x = (int) (model.system.pressedImage.position.absoluteDimension.width / 2 - dimension / 2);
+		int y = (int) (model.system.pressedImage.position.absoluteDimension.height / 2 - dimension / 2);
 		int width = dimension;
 		int height = dimension;
 		model.cache.pressedPoint = new Point(x, y);
@@ -58,8 +58,8 @@ public class DocumentAddShapeScalePageTest {
 	public void scaleUp() {
 		assertEquals(model.document.setIndex(0), true);
 		assertEquals(model.document.getPage().setIndex(0), true);
-		model.cache.pressedImage = model.document.getImage();
-		origin = new Dimension(model.cache.pressedImage.position.dimension);
+		model.system.pressedImage = model.document.getImage();
+		origin = new Dimension(model.system.pressedImage.position.dimension);
 		model.cache.scaleOperator = '*';
 		model.cache.scaleFactor = 1.5;
 		try {
@@ -70,8 +70,8 @@ public class DocumentAddShapeScalePageTest {
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		} 
-		double x = model.cache.pressedImage.position.center.x;
-		double y = model.cache.pressedImage.position.center.y;
+		double x = model.system.pressedImage.position.center.x;
+		double y = model.system.pressedImage.position.center.y;
 		assertNotNull(model.document.getShape(new Point(x,y)));
 	}
 	
@@ -80,7 +80,7 @@ public class DocumentAddShapeScalePageTest {
 	public void scaleDown() {
 		assertEquals(model.document.setIndex(0), true);
 		assertEquals(model.document.getPage().setIndex(0), true);
-		model.cache.pressedImage = model.document.getImage();
+		model.system.pressedImage = model.document.getImage();
 		model.cache.scaleOperator = '/';
 		model.cache.scaleFactor = 1.5;
 		try {
@@ -91,8 +91,8 @@ public class DocumentAddShapeScalePageTest {
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		} 
-		double x = model.cache.pressedImage.position.center.x;
-		double y = model.cache.pressedImage.position.center.y;
+		double x = model.system.pressedImage.position.center.x;
+		double y = model.system.pressedImage.position.center.y;
 		Shape shape = model.document.getShape(new Point(x,y));
 		assertNotNull(shape);
 		assertEquals(shape.position.dimension.width,dimension);
@@ -112,8 +112,8 @@ public class DocumentAddShapeScalePageTest {
 		model.pattern.undo();
 		model.pattern.undo();
 		model.pattern.undo();
-		assertEquals(origin.width,model.cache.pressedImage.position.dimension.width);
-		assertEquals(origin.height,model.cache.pressedImage.position.dimension.height);
+		assertEquals(origin.width,model.system.pressedImage.position.dimension.width);
+		assertEquals(origin.height,model.system.pressedImage.position.dimension.height);
 		//undo add shape
 		model.pattern.undo();
 		assertEquals(model.document.getShapeList().size(),0);
