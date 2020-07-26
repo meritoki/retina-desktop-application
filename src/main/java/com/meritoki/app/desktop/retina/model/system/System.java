@@ -66,6 +66,18 @@ public class System {
 	@JsonIgnore
 	public boolean isConnected = false;
 	@JsonIgnore
+	public int pageIndex = 0;
+	@JsonIgnore
+	public int imageIndex = 0;
+	@JsonIgnore
+	public int shapeIndex = 0;
+	@JsonIgnore
+	public Page page;
+	@JsonIgnore
+	public Image image;
+	@JsonIgnore
+	public Shape shape;
+	@JsonIgnore
 	public Page pressedPage;
 	@JsonIgnore
 	public Image pressedImage;

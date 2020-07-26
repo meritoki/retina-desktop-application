@@ -15,6 +15,8 @@
  */
 package com.meritoki.app.desktop.retina.model.document;
 
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +33,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.meritoki.app.desktop.retina.controller.node.NodeController;
 
 /**
  * Class is used to manage reference to file in filesystem
@@ -202,59 +205,68 @@ public class Image {
 	}
 	
 //New Approach
-	@JsonIgnore
-	public BufferedImage getBufferedImage() {
-//		logger.info("getBufferedImage() this.bufferedImage="+this.bufferedImage);
-//		if(this.bufferedImage != null) {
-//			BufferedImage before = this.bufferedImage;
-//			int w = before.getWidth();
-//			int h = before.getHeight();
-//			BufferedImage after = new BufferedImage((int) (w * this.position.relativeScale),
-//					(int) (h * this.position.relativeScale), BufferedImage.TYPE_INT_ARGB);
-//			AffineTransform at = new AffineTransform();
-//			at.scale(this.position.relativeScale, this.position.relativeScale);
-//			AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-//			after = scaleOp.filter(before, after);
-//			this.bufferedImage = after;
-//			this.position.setAbsoluteDimension(new Dimension(this.bufferedImage.getWidth(), this.bufferedImage.getHeight()));
-//		}
-		return this.bufferedImage;
-	}
+//	@JsonIgnore
+//	public BufferedImage getBufferedImage() {
+////		logger.info("getBufferedImage() this.bufferedImage="+this.bufferedImage);
+////		if(this.bufferedImage != null) {
+////			BufferedImage before = this.bufferedImage;
+////			int w = before.getWidth();
+////			int h = before.getHeight();
+////			BufferedImage after = new BufferedImage((int) (w * this.position.relativeScale),
+////					(int) (h * this.position.relativeScale), BufferedImage.TYPE_INT_ARGB);
+////			AffineTransform at = new AffineTransform();
+////			at.scale(this.position.relativeScale, this.position.relativeScale);
+////			AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+////			after = scaleOp.filter(before, after);
+////			this.bufferedImage = after;
+////			this.position.setAbsoluteDimension(new Dimension(this.bufferedImage.getWidth(), this.bufferedImage.getHeight()));
+////		}
+//		return this.bufferedImage;
+//	}
 
 	
 //Original Revert to this state
-//	@JsonIgnore
-//	public BufferedImage getBufferedImage() {
-//		if (this.bufferedImage == null) {
+	@JsonIgnore
+	public BufferedImage getBufferedImage(String uuid) {
+		if (this.bufferedImage == null) {
 //			this.bufferedImage = NodeController.openBufferedImage(NodeController.getImageCache(),
 //					this.uuid + "." + this.getExtension());
-//			if (bufferedImage == null) {
-//				if (this.file != null) {
-//					bufferedImage = NodeController.openBufferedImage(this.file);
-//					if (bufferedImage != null) {
-//						this.setBufferedImage(bufferedImage);
-//						if (this.getExtension().equals("jpg") || this.getExtension().equals("jpeg")) {
-//							NodeController.saveJpg(NodeController.getImageCache(),
-//									this.uuid + "." + this.getExtension(), bufferedImage);
-//						}
-//					}
-//				}
-//			}
-//			BufferedImage before = this.bufferedImage;
-//			int w = before.getWidth();
-//			int h = before.getHeight();
-//			BufferedImage after = new BufferedImage((int) (w * this.position.relativeScale),
-//					(int) (h * this.position.relativeScale), BufferedImage.TYPE_INT_ARGB);
-//			AffineTransform at = new AffineTransform();
-//			at.scale(this.position.relativeScale, this.position.relativeScale);
-//			AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-//			after = scaleOp.filter(before, after);
-//			this.bufferedImage = after;
-//			this.position
-//					.setAbsoluteDimension(new Dimension(this.bufferedImage.getWidth(), this.bufferedImage.getHeight()));
-//		}
-//		return this.bufferedImage;
-//	}
+			BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getDocumentCache(uuid), this.uuid + "." + this.getExtension());
+			if (bufferedImage == null) {
+				if(file == null) {
+					file = new File(this.filePath+NodeController.getSeperator()+this.fileName);
+				}
+				if (this.file != null) {
+					bufferedImage = NodeController.openBufferedImage(this.file);
+					if (bufferedImage != null) {
+						this.setBufferedImage(bufferedImage);
+						if (this.getExtension().equals("jpg") || this.getExtension().equals("jpeg")) {
+							try {
+								NodeController.saveJpg(NodeController.getImageCache(),
+										this.uuid + "." + this.getExtension(), bufferedImage);
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+			}
+			BufferedImage before = bufferedImage;
+			int w = before.getWidth();
+			int h = before.getHeight();
+			BufferedImage after = new BufferedImage((int) (w * this.position.relativeScale),
+					(int) (h * this.position.relativeScale), BufferedImage.TYPE_INT_ARGB);
+			AffineTransform at = new AffineTransform();
+			at.scale(this.position.relativeScale, this.position.relativeScale);
+			AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+			after = scaleOp.filter(before, after);
+			this.bufferedImage = after;
+			this.position
+					.setAbsoluteDimension(new Dimension(this.bufferedImage.getWidth(), this.bufferedImage.getHeight()));
+		}
+		return this.bufferedImage;
+	}
 
 	/**
 	 * Function sets the current index selected by user.
@@ -289,7 +301,7 @@ public class Image {
 //New 
 	@JsonIgnore
 	public void setBufferedImage(BufferedImage bufferedImage) {
-		logger.debug("setBufferedImage(" + bufferedImage + ")");
+		logger.info("setBufferedImage(" + bufferedImage + ")");
 		this.bufferedImage = bufferedImage;
 		if (this.bufferedImage != null) {
 			this.position.absoluteDimension.width = this.bufferedImage.getWidth();

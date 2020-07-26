@@ -76,7 +76,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 	public ShapeDialog(java.awt.Frame parent, boolean modal) {
 		super(parent, modal);
 		this.setTitle("Shape");
-		this.mainFrame = (MainFrame) this.getParent();
+		this.mainFrame = (MainFrame) parent;
 		this.initComponents();
 		this.addKeyListener(this);
 		this.addMouseListener(this);
@@ -153,9 +153,9 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 				this.initGridShapeList(grid.getShapeList());
 				shape = grid.getShape();
 				if (shape != null)
-					this.setGridShapeListSelectedUUID(shape.uuid);
+					this.setGridListSelectedUUID(shape.uuid);
 				else
-					this.setGridShapeListSelectedIndex(0);
+					this.setGridListSelectedIndex(0);
 
 			} else {
 				this.initGridShapeList(new ArrayList<>());
@@ -362,12 +362,12 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 		this.shapeList.setSelectedIndex(index);
 	}
 
-	public void setGridShapeListSelectedUUID(String uuid) {
+	public void setGridListSelectedUUID(String uuid) {
 		this.gridShapeList.setSelectedValue(uuid, true);
 	}
 
-	public void setGridShapeListSelectedIndex(int index) {
-		logger.info("setGridShapeListSelectedIndex(" + index + ")");
+	public void setGridListSelectedIndex(int index) {
+		logger.info("setGridListSelectedIndex(" + index + ")");
 		this.gridShapeList.setSelectedIndex(index);
 	}
 
@@ -397,7 +397,6 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					switch (keyCode) {
 					case KeyEvent.VK_LEFT: {
 						logger.debug("keyEvent.VK_LEFT");
-//						model.cache.pressedShape = null;
 						setShapeListSelectedIndex(--index);
 						model.cache.shapeUUID = (String) shapeList.getSelectedValue();
 						try {
@@ -411,7 +410,6 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					}
 					case KeyEvent.VK_RIGHT: {
 						logger.debug("keyEvent.VK_RIGHT");
-//						model.cache.pressedShape = null;
 						setShapeListSelectedIndex(++index);
 						model.cache.shapeUUID = (String) shapeList.getSelectedValue();
 						try {
@@ -425,7 +423,6 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					}
 					case KeyEvent.VK_UP: {
 						logger.debug("keyEvent.VK_UP");
-//						model.cache.pressedShape = null;
 						setShapeListSelectedIndex(--index);
 						model.cache.shapeUUID = (String) shapeList.getSelectedValue();
 						try {
@@ -439,7 +436,6 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					}
 					case KeyEvent.VK_DOWN: {
 						logger.debug("keyEvent.VK_DOWN");
-//						model.cache.pressedShape = null;
 						setShapeListSelectedIndex(++index);
 						model.cache.shapeUUID = (String) shapeList.getSelectedValue();
 						try {
@@ -498,10 +494,10 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					switch (keyCode) {
 					case KeyEvent.VK_LEFT: {
 						logger.debug("keyEvent.VK_LEFT");
-						setGridShapeListSelectedIndex(--index);
+						setGridListSelectedIndex(--index);
 						model.cache.shapeUUID = (String) gridShapeList.getSelectedValue();
 						try {
-							model.pattern.execute("setGridShape");
+							model.pattern.execute("setGrid");
 							mainFrame.init();
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
@@ -511,10 +507,10 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					}
 					case KeyEvent.VK_RIGHT: {
 						logger.debug("keyEvent.VK_RIGHT");
-						setGridShapeListSelectedIndex(++index);
+						setGridListSelectedIndex(++index);
 						model.cache.shapeUUID = (String) gridShapeList.getSelectedValue();
 						try {
-							model.pattern.execute("setGridShape");
+							model.pattern.execute("setGrid");
 							mainFrame.init();
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
@@ -524,10 +520,10 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					}
 					case KeyEvent.VK_UP: {
 						logger.debug("keyEvent.VK_UP");
-						setGridShapeListSelectedIndex(--index);
+						setGridListSelectedIndex(--index);
 						model.cache.shapeUUID = (String) gridShapeList.getSelectedValue();
 						try {
-							model.pattern.execute("setGridShape");
+							model.pattern.execute("setGrid");
 							mainFrame.init();
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
@@ -537,10 +533,10 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					}
 					case KeyEvent.VK_DOWN: {
 						logger.debug("keyEvent.VK_DOWN");
-						setGridShapeListSelectedIndex(++index);
+						setGridListSelectedIndex(++index);
 						model.cache.shapeUUID = (String) gridShapeList.getSelectedValue();
 						try {
-							model.pattern.execute("setGridShape");
+							model.pattern.execute("setGrid");
 							mainFrame.init();
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
@@ -560,7 +556,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 			public void mouseClicked(MouseEvent me) {
 				model.cache.shapeUUID = (String) gridShapeList.getSelectedValue();
 				try {
-					model.pattern.execute("setGridShape");
+					model.pattern.execute("setGrid");
 					mainFrame.init();
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -1017,7 +1013,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 		try {
 			this.model.cache.row = Integer.parseInt(this.gridRowTextField.getText());
 			this.model.cache.column = Integer.parseInt(this.gridColumnTextField.getText());
-			this.model.pattern.execute("setGrid");
+			this.model.pattern.execute("addGrid");
 			mainFrame.init();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

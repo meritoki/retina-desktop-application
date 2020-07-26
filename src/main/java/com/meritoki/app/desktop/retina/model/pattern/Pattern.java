@@ -1,4 +1,4 @@
-package com.meritoki.app.desktop.retina.model.command;
+package com.meritoki.app.desktop.retina.model.pattern;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,6 +11,24 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.meritoki.app.desktop.retina.controller.client.ClientController;
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.command.AddPage;
+import com.meritoki.app.desktop.retina.model.command.AddShape;
+import com.meritoki.app.desktop.retina.model.command.Command;
+import com.meritoki.app.desktop.retina.model.command.ExecuteScript;
+import com.meritoki.app.desktop.retina.model.command.MoveShape;
+import com.meritoki.app.desktop.retina.model.command.Operation;
+import com.meritoki.app.desktop.retina.model.command.RemoveImage;
+import com.meritoki.app.desktop.retina.model.command.RemovePage;
+import com.meritoki.app.desktop.retina.model.command.RemoveShape;
+import com.meritoki.app.desktop.retina.model.command.ScaleImage;
+import com.meritoki.app.desktop.retina.model.command.ResizeShape;
+import com.meritoki.app.desktop.retina.model.command.ScalePage;
+import com.meritoki.app.desktop.retina.model.command.AddGrid;
+import com.meritoki.app.desktop.retina.model.command.SetGrid;
+import com.meritoki.app.desktop.retina.model.command.SetImage;
+import com.meritoki.app.desktop.retina.model.command.SetPage;
+import com.meritoki.app.desktop.retina.model.command.SetShape;
+import com.meritoki.app.desktop.retina.model.command.ShiftImage;
 import com.meritoki.app.desktop.retina.model.document.Grid;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
@@ -49,38 +67,50 @@ public class Pattern {
 	
 	@JsonIgnore
 	public void register() {
+		//Add
 		Command addPage = new AddPage(this.model);
-		Command setPage = new SetPage(this.model);
 		Command addShape = new AddShape(this.model);
-		Command setShape = new SetShape(this.model);
-		Command moveShape = new MoveShape(this.model);
-		Command removeShape = new RemoveShape(this.model);
-		Command resizeShape = new ResizeShape(this.model);
-		Command executeScript = new ExecuteScript(this.model);
-		Command removePage = new RemovePage(this.model);
-		Command resizeImage = new ResizeImage(this.model);
-		Command scalePage = new ScalePage(this.model);
-		Command shiftImage = new ShiftImage(this.model);
+		Command addGrid = new AddGrid(this.model);
+		//Set
+		Command setPage = new SetPage(this.model);
 		Command setImage = new SetImage(this.model);
-		Command removeImage = new RemoveImage(this.model);
+		Command setShape = new SetShape(this.model);
 		Command setGrid = new SetGrid(this.model);
-		Command setGridShape = new SetGridShape(this.model);
+		//Scale/Resize
+		Command scalePage = new ScalePage(this.model);
+		Command scaleImage = new ScaleImage(this.model);
+		Command resizeShape = new ResizeShape(this.model);
+		//Move/Shift
+		Command shiftImage = new ShiftImage(this.model);
+		Command moveShape = new MoveShape(this.model);
+		//Remove
+		Command removePage = new RemovePage(this.model);
+		Command removeImage = new RemoveImage(this.model);
+		Command removeShape = new RemoveShape(this.model);
+		//Execute
+		Command executeScript = new ExecuteScript(this.model);
+		//Add
 		this.register("addPage", addPage);
-		this.register("setPage", setPage);
 		this.register("addShape", addShape);
-		this.register("setShape", setShape);
-		this.register("moveShape", moveShape);
-		this.register("removeShape", removeShape);
-		this.register("resizeShape", resizeShape);
-		this.register("executeScript", executeScript);
-		this.register("removePage", removePage);
-		this.register("resizeImage", resizeImage);
-		this.register("scalePage", scalePage);
-		this.register("shiftImage", shiftImage);
+		this.register("addGrid", addGrid);
+		//Set
+		this.register("setPage", setPage);
 		this.register("setImage", setImage);
-		this.register("removeImage", removeImage);
+		this.register("setShape", setShape);
 		this.register("setGrid", setGrid);
-		this.register("setGridShape", setGridShape);
+		//Scale/Resize
+		this.register("scalePage", scalePage);
+		this.register("scaleImage", scaleImage);
+		this.register("resizeShape", resizeShape);
+		//Move/Shift
+		this.register("shiftImage", shiftImage);
+		this.register("moveShape", moveShape);
+		//Remove
+		this.register("removePage", removePage);
+		this.register("removeImage", removeImage);
+		this.register("removeShape", removeShape);
+		//Excute
+		this.register("executeScript", executeScript);
 	}
 
 	@JsonIgnore
@@ -95,10 +125,20 @@ public class Pattern {
 			throw new IllegalStateException("no command registered for " + commandName);
 		}
 		if(this.model.system.isConnected) {
+//			switch(commandName) {
+//			case "setPage": {
+//				
+//			}
+//			case "setImage": {
+//				
+//			}
+//			case "setSh
+//			}
+			
 			this.model.document = this.clientController.retinaClient.postDocumentCommand(this.model.document, command, this.model.cache);
-			for(Shape s: this.model.document.getShapeList(false)) {
-				System.out.println(s.position);
-			}
+//			this.model.document.setIndex(this.model.system.pageIndex);
+//			this.model.document.getPage().setIndex(this.model.system.imageIndex);
+//			this.model.document.getImage().setIndex(this.model.system.shapeIndex);
 		} else {
 			command.execute();
 			Command newCommand = new Command(this.model, command.name);
@@ -261,14 +301,17 @@ public class Pattern {
 				}
 				break;
 			}
-			case "resizeImage":{
+			case "scaleImage":{
 				for(Operation o: command.operationList) {
 					if(o.sign == 0) {
-						if(o.object instanceof Double) {
-//							this.model.document.getPage().setBufferedImage(null);
-//							this.model.document.getImage().setBufferedImage(null);
-							this.model.document.getImage().setRelativeScale((double)o.object);
-							this.model.document.setBufferedImage(this.model.document.getPage());
+						if(o.object instanceof Object[]) {
+							Object[] objectArray = (Object[])o.object;
+							this.model.document.setImage((String)objectArray[1]);
+							this.model.document.setPage((String)objectArray[2]);
+							this.model.document.getPage().setBufferedImage(null);
+							this.model.document.getImage().setBufferedImage(null);
+							this.model.document.getImage().setRelativeScale((double)objectArray[0]);
+//							this.model.document.setBufferedImage(this.model.document.getPage());
 							
 						}
 					}
@@ -299,7 +342,7 @@ public class Pattern {
 					}
 				}
 			}
-			case "setGrid": {
+			case "addGrid": {
 				for(Operation o: command.operationList) {
 					if(o.sign == 0) {
 						if(o.object instanceof Shape) {
@@ -311,7 +354,7 @@ public class Pattern {
 				}
 				break;
 			}
-			case "setGridShape": {
+			case "setGrid": {
 				for(Operation o: command.operationList) {
 					if(o.sign == 0) {
 						if(o.object instanceof String) {
@@ -462,7 +505,7 @@ public class Pattern {
 				}
 				break;
 			}
-			case "resizeImage":{
+			case "scaleImage":{
 				for(Operation o: command.operationList) {
 					if(o.sign == 1) {
 						if(o.object instanceof Double) {
@@ -516,7 +559,7 @@ public class Pattern {
 				}
 				break;
 			}
-			case "setGrid": {
+			case "addGrid": {
 				for(Operation o: command.operationList) {
 					if(o.sign == 1) {
 						if(o.object instanceof Grid) {
@@ -528,7 +571,7 @@ public class Pattern {
 				}
 				break;
 			}
-			case "setGridShape": {
+			case "setGrid": {
 				for(Operation o: command.operationList) {
 					if(o.sign == 1) {
 						if(o.object instanceof String) {

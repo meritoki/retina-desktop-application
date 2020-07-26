@@ -25,8 +25,6 @@ public class Command implements CommandInterface {
 	public User user;
 	@JsonProperty
     public LinkedList<Operation> operationList = new LinkedList<>();
-	@JsonIgnore
-//	public ClientController clientController;
 	
 	public Command() {
 	}
@@ -35,7 +33,6 @@ public class Command implements CommandInterface {
 		this.model = model;
 		this.date = new Date();
 		this.name = name;
-//		this.clientController = new ClientController(this.model);
 	}
 	
 	@Override

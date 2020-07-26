@@ -182,7 +182,7 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
 					if (this.model.document.setIndex(i)) {
 						Page p = this.model.document.getPage();
 						if (p != null) {
-							shapeList = p.getGridShapeList(true);
+							shapeList = p.getGridShapeList();
 						}
 					}
 				}

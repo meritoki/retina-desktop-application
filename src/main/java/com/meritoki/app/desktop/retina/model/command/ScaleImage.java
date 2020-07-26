@@ -9,11 +9,11 @@ import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 
-public class ResizeImage extends Command {
-	private static Logger logger = LogManager.getLogger(ResizeImage.class.getName());
+public class ScaleImage extends Command {
+	private static Logger logger = LogManager.getLogger(ScaleImage.class.getName());
 	
-	public ResizeImage(Model document) {
-		super(document, "resizeImage");
+	public ScaleImage(Model document) {
+		super(document, "scaleImage");
 	}
 	
     @Override // Command
@@ -29,8 +29,12 @@ public class ResizeImage extends Command {
     	double scaleFactor = this.model.cache.scaleFactor;
     	char scaleOperator = this.model.cache.scaleOperator;
     	//undo
+    	Object[] objectArray = new Object[3];
+    	objectArray[0] = pressedImage.position.relativeScale;
+    	objectArray[1] = pressedImageUUID;
+    	objectArray[2] = pressedPageUUID;
     	Operation operation = new Operation();
-		operation.object = pressedImage.position.relativeScale;
+		operation.object = objectArray;//pressedImage.position.relativeScale;
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);
@@ -53,10 +57,8 @@ public class ResizeImage extends Command {
 		}
 		pressedImage.setRelativeScale(relativeScale);
 		
-		this.model.document.setBufferedImage(page);
-		
-////		this.document.setBufferedImage(pressedImage);
-//		page.getBufferedImage();
+//		this.model.document.setBufferedImage(page);
+
 		//Redo
 		operation = new Operation();
 		operation.object = pressedImage.position.relativeScale;

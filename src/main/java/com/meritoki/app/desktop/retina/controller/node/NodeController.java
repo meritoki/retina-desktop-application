@@ -70,9 +70,9 @@ public class NodeController {
 //		return getDocumentCache(uuid) + getSeperator() + "image";
 //	}
 
-//	public static String getImageCache() {
-//		return getRetinaHome()+getSeperator()+"image";
-//	}
+	public static String getImageCache() {
+		return getRetinaHome()+getSeperator()+"image";
+	}
 
 	public static String getPanoptesHome() {
 		return getUserHome() + getSeperator() + ".panoptes";
@@ -83,7 +83,7 @@ public class NodeController {
 	}
 
 	public static BufferedImage openBufferedImage(String filePath, String fileName) {
-		logger.debug("openBufferedImage(" + filePath + ", " + fileName + ")");
+		logger.info("openBufferedImage(" + filePath + ", " + fileName + ")");
 		return openBufferedImage(new java.io.File(filePath + getSeperator() + fileName));
 	}
 

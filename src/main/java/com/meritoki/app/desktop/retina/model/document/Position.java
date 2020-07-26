@@ -198,10 +198,10 @@ public class Position {
 
 	@JsonIgnore
 	public void scale() {
-		logger.info("scale() addScale="+addScale);
-		logger.info("scale() scale="+scale);
-		logger.info("scale() addRelativeScale="+addRelativeScale);
-		logger.info("scale() relativeScale="+relativeScale);
+//		logger.info("scale() addScale="+addScale);
+//		logger.info("scale() scale="+scale);
+//		logger.info("scale() addRelativeScale="+addRelativeScale);
+//		logger.info("scale() relativeScale="+relativeScale);
 		if (this.relative) {
 //			logger.info("scale() absolutePoint="+absolutePoint);
 			this.point.x = this.relativePoint.x*this.relativeScale + this.offset * addScale;

@@ -24,8 +24,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.command.Command;
-import com.meritoki.app.desktop.retina.model.command.Pattern;
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.pattern.Pattern;
 
 /**
  *

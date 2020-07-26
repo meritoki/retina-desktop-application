@@ -76,10 +76,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 		if (this.model != null) {
 			Graphics2D graphics2D = (Graphics2D) graphics.create();
 			Document document = (this.model != null) ? this.model.document : null;
-			Page page = (document != null) ? document.getPage() : null;
-			if (page != null) {
-				page.paint(graphics2D);
-			}
+			document.pagePaint(graphics2D);
 		}
 	}
 
@@ -275,7 +272,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 					this.model.cache.pressedImageUUID = this.model.document.getImage().uuid;
 					this.model.cache.scaleOperator = '/';
 					this.model.cache.scaleFactor = 1.01;
-					this.model.pattern.execute("resizeImage");
+					this.model.pattern.execute("scaleImage");
 					this.mainFrame.init();
 				}
 				catch(NullPointerException e) {
@@ -293,7 +290,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 					this.model.cache.pressedImageUUID = this.model.document.getImage().uuid;
 					this.model.cache.scaleOperator = '*';
 					this.model.cache.scaleFactor = 1.01;
-					this.model.pattern.execute("resizeImage");
+					this.model.pattern.execute("scaleImage");
 					this.mainFrame.init();
 				} 
 				catch(NullPointerException e) {

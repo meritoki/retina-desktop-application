@@ -29,7 +29,7 @@ public class ShiftImage extends Command {
 		char shiftOperator = this.model.cache.shiftOperator;
 		//undo
 		Operation operation = new Operation();
-		operation.object = margin;
+		operation.object = new Double(margin);
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);

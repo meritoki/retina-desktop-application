@@ -26,11 +26,11 @@ import com.meritoki.app.desktop.retina.controller.document.DocumentController;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.controller.user.UserController;
 import com.meritoki.app.desktop.retina.model.cache.Cache;
-import com.meritoki.app.desktop.retina.model.command.Pattern;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.user.User;
+import com.meritoki.app.desktop.retina.model.pattern.Pattern;
 import com.meritoki.app.desktop.retina.model.resource.Resource;
 import com.meritoki.app.desktop.retina.model.system.System;
 
