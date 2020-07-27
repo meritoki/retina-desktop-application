@@ -12,5 +12,9 @@ data/
 task/
 process/
 output/
-nb-configuration.xml
+.classpath
 .project
+nb-configuration.xml
+.pydevproject
+.settings/
+
