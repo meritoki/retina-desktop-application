@@ -12,3 +12,6 @@ data/
 task/
 process/
 output/
+.classpath
+.project
+nb-configuration.xml
