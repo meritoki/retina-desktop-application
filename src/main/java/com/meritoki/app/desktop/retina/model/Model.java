@@ -26,6 +26,9 @@ import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.controller.user.UserController;
 import com.meritoki.app.desktop.retina.model.cache.Cache;
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Image;
+import com.meritoki.app.desktop.retina.model.document.Page;
+import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 import com.meritoki.app.desktop.retina.model.pattern.Pattern;
 import com.meritoki.app.desktop.retina.model.resource.Resource;
@@ -118,5 +121,33 @@ public class Model {
 	public void logoutUser() {
 		this.system.loggedIn = false;
 		this.system.initUsers();
+	}
+	
+	public void setPage(String uuid) {
+		this.system.page = this.document.getPage(uuid);
+	}
+	
+	public void setImage(String uuid) {
+		this.system.image = this.document.getImage(uuid);
+	}
+	
+	public void setShape(String uuid) {
+		this.system.shape = this.document.getShape(uuid);
+	}
+	
+	public void setGrid(String uuid) {
+		
+	}
+	
+	public Page getPage() {
+		return this.system.page;
+	}
+	
+	public Image getImage() {
+		return this.system.image;
+	}
+	
+	public Shape getShape() {
+		return this.system.shape;
 	}
 }

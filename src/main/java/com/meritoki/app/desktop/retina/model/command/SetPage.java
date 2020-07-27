@@ -22,20 +22,16 @@ public class SetPage extends Command {
     	logger.info("execute()");
     	//variables
     	String pageUUID = model.cache.pageUUID;
-    	int pageIndex = model.cache.pageIndex;
-    	Page page = model.document.getPage();
+    	Page currentPage = model.getPage();
     	//undo
     	Operation operation = new Operation();
-		operation.object = (page != null)?page.uuid:null;
+		operation.object = (currentPage != null)?currentPage.uuid:null;
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);
 		//logic
     	if (pageUUID != null) {
-    		this.model.document.setPage(pageUUID);
-    	} else if(pageIndex >  -1) {
-    		this.model.document.setIndex(pageIndex);
-    		pageUUID = this.model.document.getPage().uuid;
+    		this.model.setPage(pageUUID);
     	}
     	//redo
     	operation = new Operation();
@@ -46,3 +42,8 @@ public class SetPage extends Command {
 		MemoryController.log();
     }
 }
+//int pageIndex = model.cache.pageIndex;
+//else if(pageIndex >  -1) {
+//this.model.document.setIndex(pageIndex);
+//pageUUID = this.model.document.getPage().uuid;
+//}

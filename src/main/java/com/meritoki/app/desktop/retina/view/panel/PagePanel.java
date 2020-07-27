@@ -69,8 +69,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 	@Override
 	public Dimension getPreferredSize() {
 		Dimension dimension = new Dimension(1028, 512);
-		Document document = (this.model != null) ? this.model.document : null;
-		Page page = (document != null) ? document.getPage() : null;
+//		Document document = (this.model != null) ? this.model.document : null;
+//		Page page = (document != null) ? document.getPage() : null;
+		Page page = this.model.getPage();
 		if (page != null) {
 			dimension.setSize(page.position.dimension.width, page.position.dimension.height);
 		}

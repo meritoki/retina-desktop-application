@@ -125,16 +125,23 @@ public class Pattern {
 			throw new IllegalStateException("no command registered for " + commandName);
 		}
 		if(this.model.system.isConnected) {
-//			switch(commandName) {
-//			case "setPage": {
-//				
-//			}
-//			case "setImage": {
-//				
-//			}
-//			case "setSh
-//			}
-			
+			switch(commandName) {
+			case "setPage": {
+				
+				break;
+			}
+			case "setImage": {
+				
+				break;
+			}
+			case "setShape": {
+				
+				break;
+			}
+			case "setGrid": {
+				
+			}
+			}
 			this.model.document = this.clientController.retinaClient.postDocumentCommand(this.model.document, command, this.model.cache);
 //			this.model.document.setIndex(this.model.system.pageIndex);
 //			this.model.document.getPage().setIndex(this.model.system.imageIndex);

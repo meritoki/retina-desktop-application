@@ -57,8 +57,8 @@ public class Document {
 	static Logger logger = LogManager.getLogger(Document.class.getName());
 	@JsonProperty
 	public String uuid;
-	@JsonIgnore
-	public int index = 0;
+//	@JsonIgnore
+//	public int index = 0;
 	@JsonProperty
 	public List<Page> pageList = new ArrayList<>();
 	@JsonProperty
@@ -68,25 +68,49 @@ public class Document {
 		this.uuid = UUID.randomUUID().toString();
 	}
 
-	@JsonIgnore
-	public Image getImage() {
-		Image image = null;
-		if (this.getPage() != null) {
-			image = this.getPage().getImage();
-		}
-		logger.info("getImage() image=" + image);
-		return image;
-	}
+//	@JsonIgnore
+//	public Image getImage() {
+//		Image image = null;
+//		if (this.getPage() != null) {
+//			image = this.getPage().getImage();
+//		}
+//		logger.info("getImage() image=" + image);
+//		return image;
+//	}
 
-	@JsonIgnore
-	public Image getImage(Point point) {
-		Image image = null;
-		if (this.getPage() != null) {
-			image = this.getPage().getImage(point);
+//	@JsonIgnore
+//	public Image getImage(Point point) {
+//		Image image = null;
+//		if (this.getPage() != null) {
+//			image = this.getPage().getImage(point);
+//		}
+//		logger.info("getImage(" + point + ") image=" + image);
+//		return image;
+//	}
+
+	//	/**
+	//	 * Get the index of the current Page, used by Dialogs
+	//	 * 
+	//	 * @return
+	//	 */
+	//	@JsonIgnore
+	//	public int getIndex() {
+	//		return this.index;
+	//	}
+	
+		@JsonIgnore
+		public int getIndex(String uuid) {
+			int index = 0;
+			Page page;
+			for (int i = 0; i < this.pageList.size(); i++) {
+				page = this.pageList.get(i);
+				if (page.uuid.equals(uuid)) {
+					index = i;
+					break;
+				}
+			}
+			return index;
 		}
-		logger.info("getImage(" + point + ") image=" + image);
-		return image;
-	}
 
 	@JsonIgnore
 	public Image getImage(String uuid) {
@@ -102,20 +126,20 @@ public class Document {
 		return image;
 	}
 
-	@JsonIgnore
-	public Shape getShape() {
-		return getPage().getShape();
-	}
+//	@JsonIgnore
+//	public Shape getShape() {
+//		return getPage().getShape();
+//	}
 
-	@JsonIgnore
-	public Shape getShape(Point point) {
-		Shape shape = null;
-		if (this.getPage() != null) {
-			shape = this.getPage().getShape(point);
-		}
-		logger.info("getShape(" + point + ") shape=" + shape);
-		return shape;
-	}
+//	@JsonIgnore
+//	public Shape getShape(Point point) {
+//		Shape shape = null;
+//		if (this.getPage() != null) {
+//			shape = this.getPage().getShape(point);
+//		}
+//		logger.info("getShape(" + point + ") shape=" + shape);
+//		return shape;
+//	}
 
 	@JsonIgnore
 	public Shape getShape(String uuid) {
@@ -133,42 +157,30 @@ public class Document {
 		return shape;
 	}
 
-	/**
-	 * Get the index of the current Page, used by Dialogs
-	 * 
-	 * @return
-	 */
-	@JsonIgnore
-	public int getIndex() {
-		return this.index;
-	}
+//	/**
+//	 * Get the index of the current Page, used by Dialogs
+//	 * 
+//	 * @return
+//	 */
+//	@JsonIgnore
+//	public int getIndex() {
+//		return this.index;
+//	}
 
-	@JsonIgnore
-	public int getIndex(String uuid) {
-		int index = 0;
-		Page page;
-		for (int i = 0; i < this.pageList.size(); i++) {
-			page = this.pageList.get(i);
-			if (page.uuid.equals(uuid)) {
-				index = i;
-				break;
-			}
-		}
-		return index;
-	}
+	
 
-	/**
-	 * Functions gets Page object at current index from Page List
-	 * 
-	 * @return Page
-	 */
-	@JsonIgnore
-	public Page getPage() {
-		int size = this.pageList.size();
-		Page page = (this.index < size && size > 0) ? this.pageList.get(this.index) : null;
-//		this.setBufferedImage(page);
-		return page;
-	}
+//	/**
+//	 * Functions gets Page object at current index from Page List
+//	 * 
+//	 * @return Page
+//	 */
+//	@JsonIgnore
+//	public Page getPage() {
+//		int size = this.pageList.size();
+//		Page page = (this.index < size && size > 0) ? this.pageList.get(this.index) : null;
+////		this.setBufferedImage(page);
+//		return page;
+//	}
 
 	@JsonIgnore
 	public Page getPage(int index) {
@@ -200,31 +212,31 @@ public class Document {
 		return this.pageList;
 	}
 
-	@JsonIgnore
-	public boolean setIndex(int index) {
-		boolean flag = false;
-		if (index >= 0 && index < this.pageList.size()) {
-			this.index = index;
-			flag = true;
-		}
-		return flag;
-	}
+//	@JsonIgnore
+//	public boolean setIndex(int index) {
+//		boolean flag = false;
+//		if (index >= 0 && index < this.pageList.size()) {
+//			this.index = index;
+//			flag = true;
+//		}
+//		return flag;
+//	}
 
-	@JsonIgnore
-	public void setPage(String uuid) {
-		logger.info("setPage(" + uuid + ")");
-		if (uuid != null) {
-			Page page = null;
-			for (int i = 0; i < this.pageList.size(); i++) {
-				page = this.pageList.get(i);
-				if (page.uuid.equals(uuid)) {
-					this.setIndex(i);
-				} else {
-					page.setBufferedImageNull();
-				}
-			}
-		}
-	}
+//	@JsonIgnore
+//	public void setPage(String uuid) {
+//		logger.info("setPage(" + uuid + ")");
+//		if (uuid != null) {
+//			Page page = null;
+//			for (int i = 0; i < this.pageList.size(); i++) {
+//				page = this.pageList.get(i);
+//				if (page.uuid.equals(uuid)) {
+//					this.setIndex(i);
+//				} else {
+//					page.setBufferedImageNull();
+//				}
+//			}
+//		}
+//	}
 
 	@JsonIgnore
 	public void setPageList(List<Page> pageList) {
@@ -232,21 +244,21 @@ public class Document {
 		this.pageList = pageList;
 	}
 
-	@JsonIgnore
-	public void setImage(int index) {
-		logger.debug("setImage(" + index + ")");
-		if (this.getPage() != null) {
-			this.getPage().setIndex(index);
-		}
-	}
+//	@JsonIgnore
+//	public void setImage(int index) {
+//		logger.debug("setImage(" + index + ")");
+//		if (this.getPage() != null) {
+//			this.getPage().setIndex(index);
+//		}
+//	}
 
-	@JsonIgnore
-	public void setImage(String uuid) {
-		logger.info("setImage(" + uuid + ")");
-		if (this.getPage() != null) {
-			this.getPage().setImage(uuid);
-		}
-	}
+//	@JsonIgnore
+//	public void setImage(String uuid) {
+//		logger.info("setImage(" + uuid + ")");
+//		if (this.getPage() != null) {
+//			this.getPage().setImage(uuid);
+//		}
+//	}
 
 	@JsonIgnore
 	public void addPage(Page page) {
@@ -255,14 +267,14 @@ public class Document {
 		this.pageList.add(page);
 	}
 
-	@JsonIgnore
-	public void addShape(Shape shape) {
-		logger.info("addShape(" + shape + ")");
-		Page page = this.getPage();
-		if (page != null) {
-			page.addShape(shape);
-		}
-	}
+//	@JsonIgnore
+//	public void addShape(Shape shape) {
+//		logger.info("addShape(" + shape + ")");
+//		Page page = this.getPage();
+//		if (page != null) {
+//			page.addShape(shape);
+//		}
+//	}
 
 	@JsonIgnore
 	public List<Shape> getShapeList() {

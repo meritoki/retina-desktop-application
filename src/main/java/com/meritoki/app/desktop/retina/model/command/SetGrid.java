@@ -21,21 +21,20 @@ public class SetGrid extends Command {
 		logger.info("execute()");
 		// variables
 		String shapeUUID = model.cache.shapeUUID;
-		Shape shape = this.model.document.getPage().getShape();
-		Grid grid = null;
-		if(shape instanceof Grid) {
-			grid = (Grid)shape;
-			shape = grid.getShape();
+		Shape currentShape = this.model.getShape();
+		if(currentShape instanceof Grid) {
+			Grid grid = (Grid)currentShape;
+			currentShape = grid.getShape();
 		}
 //		//undo
 		Operation operation = new Operation();
-		operation.object = (shape != null)?shape.uuid:null;
+		operation.object = (currentShape != null)?currentShape.uuid:null;
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);
 		//logic
 		if(shapeUUID != null) {
-			this.model.document.getPage().setGridShape(shapeUUID);
+			this.model.setGrid(shapeUUID);
 		}
 		//redo
 		operation = new Operation();

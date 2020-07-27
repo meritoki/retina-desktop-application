@@ -196,7 +196,6 @@ public class Image {
 //Original Revert to this state
 	@JsonIgnore
 	public BufferedImage getBufferedImage(Model model) {
-
 		if (this.bufferedImage == null) {
 			File directory = new File(NodeController.getDocumentCache(model.document.uuid));
 			if(!directory.exists()) {
