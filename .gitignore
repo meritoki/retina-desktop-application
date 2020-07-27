@@ -15,3 +15,5 @@ output/
 .classpath
 .project
 nb-configuration.xml
+.pydevproject
+.settings/
