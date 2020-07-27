@@ -1,5 +1,6 @@
-theme: jekyll-theme-minimal
-title: Welcome to Meritoki's Retina homepage!
-description: Meritoki Retina is a desktop application for data rescue
+
+title: Meritoki Retina
 logo: ./Splash.png
+description: Meritoki Retina is a desktop application for data rescue
 show_dowloads: true
+theme: jekyll-theme-minimal
