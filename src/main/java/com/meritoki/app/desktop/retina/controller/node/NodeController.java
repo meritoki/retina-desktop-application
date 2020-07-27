@@ -97,17 +97,6 @@ public class NodeController {
 		return bufferedImage;
 	}
 
-	public static void saveJpg(String filePath, String fileName, BufferedImage bufferedImage) throws Exception {
-//		logger.info("saveJpg"+filePath + ", " + fileName + ", " + bufferedImage);
-		saveJpg(new File(filePath + getSeperator() + fileName), bufferedImage);
-	}
-
-	@JsonIgnore
-	public static void saveJpg(File file, BufferedImage bufferedImage) throws Exception {
-		logger.info("saveJpg(" + file + ", " + bufferedImage + ")");
-		ImageIO.write(bufferedImage, "jpg", file);
-	}
-
 	@JsonIgnore
 	public static Object openJson(java.io.File file, Class className) {
 		logger.debug("openJson(" + file + ", " + className + ")");
@@ -141,17 +130,30 @@ public class NodeController {
 		return object;
 	}
 	
-
-
-	@JsonIgnore
-	public static Properties openProperties(String fileName) {
-		Properties properties = new Properties();
-		try (InputStream input = new FileInputStream(fileName)) {
-			properties.load(input);
+	public static Properties openProperties(String filePath, String fileName) {
+		final Properties properties = new Properties();
+		try {
+			final FileInputStream fileInputStream = new FileInputStream(filePath+getSeperator()+fileName);
+			properties.loadFromXML(fileInputStream);
+			fileInputStream.close();
+		} catch (FileNotFoundException e) {
+			logger.error("FileNotFoundExcetion "+e.getMessage());
 		} catch (IOException e) {
 			logger.error("IOException "+e.getMessage());
 		}
 		return properties;
+	}
+	
+	public static void saveProperties(Properties properties, String filePath, String fileName) {
+		OutputStream outputStream = null;
+		try {
+			outputStream = new FileOutputStream(filePath+getSeperator()+fileName);
+			properties.storeToXML(outputStream, "retina");
+		} catch (FileNotFoundException e) {
+			logger.error("FileNotFoundExcetion "+e.getMessage());
+		} catch (IOException e) {
+			logger.error("IOException "+e.getMessage());
+		}
 	}
 
 	@JsonIgnore
@@ -168,6 +170,17 @@ public class NodeController {
 			e.printStackTrace();
 		}
 		return stringArrayList;
+	}
+
+	public static void saveJpg(String filePath, String fileName, BufferedImage bufferedImage) throws Exception {
+	//		logger.info("saveJpg"+filePath + ", " + fileName + ", " + bufferedImage);
+			saveJpg(new File(filePath + getSeperator() + fileName), bufferedImage);
+		}
+
+	@JsonIgnore
+	public static void saveJpg(File file, BufferedImage bufferedImage) throws Exception {
+		logger.info("saveJpg(" + file + ", " + bufferedImage + ")");
+		ImageIO.write(bufferedImage, "jpg", file);
 	}
 
 	@JsonIgnore
@@ -218,14 +231,19 @@ public class NodeController {
 	@JsonIgnore
 	public static void saveCsv(String filePath, String fileName, Object object) {
 		logger.info("saveCsv(" + filePath + ", " + fileName + ", object)");
-		try (PrintWriter writer = new PrintWriter(new File(filePath + getSeperator() + fileName))) {
+		saveCsv(new File(filePath+getSeperator()+fileName),object);
+	}
+	
+	@JsonIgnore
+	public static void saveCsv(File file, Object object) {
+		logger.info("saveCsv(" + file + ", object)");
+		try (PrintWriter writer = new PrintWriter(file)) {
 			if (object instanceof StringBuilder)
 				writer.write(((StringBuilder) object).toString());
 			else if (object instanceof List) {
 				String objectsCommaSeparated = String.join(",", (List<String>) object);
 				writer.write(objectsCommaSeparated);
 			}
-
 		} catch (FileNotFoundException e) {
 			System.out.println(e.getMessage());
 		}

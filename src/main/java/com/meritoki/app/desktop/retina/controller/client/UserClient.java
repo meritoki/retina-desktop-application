@@ -98,7 +98,7 @@ public class UserClient {
 			try {
 				Token token = mapper.readValue(responseJson, Token.class);
 				this.properties.setProperty("token", token.token);
-				NodeController.saveProperties("./", "retina.properties", this.properties);
+				NodeController.saveProperties(".", "retina.xml", this.properties);
 				flag = true;
 			} catch (JsonParseException e) {
 				e.printStackTrace();

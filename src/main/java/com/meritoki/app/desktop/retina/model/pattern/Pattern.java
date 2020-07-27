@@ -310,9 +310,7 @@ public class Pattern {
 							this.model.document.setPage((String)objectArray[2]);
 							this.model.document.getPage().setBufferedImage(null);
 							this.model.document.getImage().setBufferedImage(null);
-							this.model.document.getImage().setRelativeScale((double)objectArray[0]);
-//							this.model.document.setBufferedImage(this.model.document.getPage());
-							
+							this.model.document.getImage().setRelativeScale((double)objectArray[0]);							
 						}
 					}
 				}

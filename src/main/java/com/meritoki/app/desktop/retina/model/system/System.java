@@ -107,6 +107,9 @@ public class System {
 		if(!new File(NodeController.getDocumentCache()).exists()) {
 			new File(NodeController.getDocumentCache()).mkdirs();
 		}
+		if(!new File(NodeController.getResourceCache()).exists()) {
+			new File(NodeController.getResourceCache()).mkdirs();
+		}
 	}
 	
 	public void initUsers() {
@@ -122,7 +125,7 @@ public class System {
 	}
 	
 	public void initProperties() {
-		this.properties = NodeController.openProperties("./retina.properties");
+		this.properties = NodeController.openProperties(".","retina.xml");
 	}
 	
 	public void initProviders() {

@@ -196,7 +196,12 @@ public class Image {
 //Original Revert to this state
 	@JsonIgnore
 	public BufferedImage getBufferedImage(Model model) {
+
 		if (this.bufferedImage == null) {
+			File directory = new File(NodeController.getDocumentCache(model.document.uuid));
+			if(!directory.exists()) {
+				directory.mkdirs();
+			}
 			BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getDocumentCache(model.document.uuid), this.uuid + "." + this.getExtension());
 			if (bufferedImage == null) {
 				if(file == null) {
@@ -207,8 +212,9 @@ public class Image {
 					if (bufferedImage != null) {
 						this.setBufferedImage(bufferedImage);
 						if (this.getExtension().equals("jpg") || this.getExtension().equals("jpeg")) {
+							
 							try {
-								NodeController.saveJpg(NodeController.getImageCache(),
+								NodeController.saveJpg(NodeController.getDocumentCache(model.document.uuid),
 										this.uuid + "." + this.getExtension(), bufferedImage);
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
