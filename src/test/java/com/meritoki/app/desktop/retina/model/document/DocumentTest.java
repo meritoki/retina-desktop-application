@@ -15,10 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.meritoki.app.desktop.retina.controller.document.DocumentController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Zooniverse;
-import com.meritoki.library.controller.node.NodeController;
+import com.meritoki.app.desktop.retina.controller.node.NodeController;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class DocumentTest {
@@ -613,13 +612,13 @@ class DocumentTest {
 	@Test
 	@Order(11)
 	public void save() {
-		DocumentController.save(new java.io.File("./test/document-test-a.json"), model.document);
+		NodeController.saveDocument(new java.io.File("./test/document-test-a.json"), model.document);
 	}
 
 	@Test
 	@Order(12)
 	public void open() {
-		model.document = DocumentController.open(new java.io.File("./test/document-test-a.json"));
+		model.document = NodeController.openDocument(new java.io.File("./test/document-test-a.json"));
 		assertNotNull(model.document);
 	}
 	
@@ -726,13 +725,13 @@ class DocumentTest {
 	@Test
 	@Order(14)
 	public void saveShapeData() {
-		DocumentController.save(new java.io.File("./test/document-test-b.json"), model.document);
+		NodeController.saveDocument(new java.io.File("./test/document-test-b.json"), model.document);
 	}
 	
 	@Test
 	@Order(15)
 	public void openShapeData() {
-		model.document = DocumentController.open(new java.io.File("./test/document-test-b.json"));
+		model.document = NodeController.openDocument(new java.io.File("./test/document-test-b.json"));
 		assertEquals(model.document.setIndex(0), true);
 		assertEquals(model.document.getPage().setIndex(0),true);
 		for(Image image: model.document.getPage().getImageList()) {

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import com.meritoki.app.desktop.retina.controller.document.DocumentController;
+import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.Model;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -180,6 +180,6 @@ public class DocumentAddShapeTest {
 	@Test
 	@Order(2)
 	public void saveShapes() {
-		DocumentController.save(new java.io.File("./test/document-many-shape-test-a.json"), model.document);
+		NodeController.saveDocument(new java.io.File("./test/document-many-shape-test-a.json"), model.document);
 	}
 }
