@@ -81,8 +81,7 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 	@Override
 	public Dimension getPreferredSize() {
 		Dimension dimension = new Dimension(1028, 512);
-		Document document = (this.model != null) ? this.model.document : null;
-		Page page = (document != null) ? document.getPage() : null;
+		Page page = (this.model != null) ? this.model.getPage() : null;
 		Matrix matrix = (page != null) ? page.getMatrix() : null;
 		if (matrix != null) {
 			dimension.setSize(matrix.position.dimension.width, matrix.position.dimension.height);
@@ -96,8 +95,7 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 		graphics.setColor(Color.white);
 		graphics.fillRect(0, 0, this.getWidth(), this.getHeight());
 		if (this.model != null) {
-			Document document = (this.model != null) ? this.model.document : null;
-			Page page = (document != null) ? document.getPage() : null;
+			Page page = (this.model != null) ? this.model.getPage() : null;
 			Matrix matrix = (page != null) ? page.getMatrix() : null;
 			if (matrix != null) {
 				graphics.setColor(Color.black);
@@ -109,8 +107,8 @@ public class MatrixPanel extends JPanel implements MouseListener, MouseWheelList
 				int heightIndex = 0;
 				graphics.setFont(new Font("default", Font.BOLD, (int) (8 * matrix.position.scale)));
 				Data data;
-				Shape shape = this.model.document.getPage().getShape();
-				Shape gridShape = this.model.document.getPage().getGridShape();
+				Shape shape = null;//this.model.getPage().getShape();
+				Shape gridShape = null;//this.model.getPage().getGridShape();
 				Shape s;
 				for (int i = 0; i < rowList.size(); i++) {
 					shapeList = rowList.get(i);

@@ -22,7 +22,7 @@ public class AddGrid extends Command {
 		int row = model.cache.row;
 		int column = model.cache.column;
 		String shapeUUID = model.cache.shapeUUID;
-		Shape shape = this.model.document.getPage().getShape();
+		Shape shape = this.model.getShape();
 		Grid grid = null;
 		// undo
 		if (row > 1 || column > 1) {

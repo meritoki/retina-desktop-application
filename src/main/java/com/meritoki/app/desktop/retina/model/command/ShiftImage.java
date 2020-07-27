@@ -22,8 +22,8 @@ public class ShiftImage extends Command {
 		//variables
 //		Page page = this.model.document.getPage();
 //		Image pressedImage = this.model.document.getImage(this.model.cache.pressedImage.uuid);
-		Page pressedPage = this.model.document.getPage(this.model.cache.pressedPageUUID);
-		Image pressedImage = this.model.document.getImage(this.model.cache.pressedImageUUID);
+		Page pressedPage = this.model.getPage(this.model.cache.pressedPageUUID);
+		Image pressedImage = this.model.getImage(this.model.cache.pressedImageUUID);
 		double margin = pressedImage.position.margin;
 		double shiftFactor = this.model.cache.shiftFactor;
 		char shiftOperator = this.model.cache.shiftOperator;

@@ -28,6 +28,8 @@ import com.meritoki.app.desktop.retina.model.cache.Cache;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
+import com.meritoki.app.desktop.retina.model.document.Point;
+import com.meritoki.app.desktop.retina.model.document.Selection;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 import com.meritoki.app.desktop.retina.model.pattern.Pattern;
@@ -124,15 +126,32 @@ public class Model {
 	}
 	
 	public void setPage(String uuid) {
-		this.system.page = this.document.getPage(uuid);
+		logger.info("setPage("+uuid+")");
+		this.system.page = this.getPage(uuid);
 	}
 	
 	public void setImage(String uuid) {
-		this.system.image = this.document.getImage(uuid);
+		logger.info("setImage("+uuid+")");
+		this.system.image = this.getImage(uuid);
 	}
 	
 	public void setShape(String uuid) {
-		this.system.shape = this.document.getShape(uuid);
+//		logger.info();
+		this.system.shape = this.getShape(uuid);
+	}
+	
+	public Page getPage(String uuid) {
+		logger.info("getPage("+uuid+")");
+		return this.document.getPage(uuid);
+	}
+	
+	public Image getImage(String uuid) {
+		logger.info("getImage("+uuid+")");
+		return this.document.getImage(uuid);
+	}
+	
+	public Shape getShape(String uuid) {
+		return this.document.getShape(uuid);
 	}
 	
 	public void setGrid(String uuid) {
@@ -140,6 +159,14 @@ public class Model {
 	}
 	
 	public Page getPage() {
+		if(this.system.page != null) {
+			this.system.page.getBufferedImage(this);
+		} else {
+			this.system.page = this.document.getPage(0);
+			if(this.system.page != null) {
+				this.system.page.getBufferedImage(this);
+			}
+		}
 		return this.system.page;
 	}
 	
@@ -149,5 +176,39 @@ public class Model {
 	
 	public Shape getShape() {
 		return this.system.shape;
+	}
+	
+	public Image getImage(Point point) {
+		return this.getPage().getImage(point);
+	}
+	
+	public Shape getShape(Point point) {
+		logger.info("getShape("+point+")");
+		return this.getImage().getShape(point);
+	}
+	
+	public Selection intersectShape(Point point) {
+		Selection selection = null;
+		Image image = this.getImage();
+		if (image != null) {
+			selection = image.intersectShape(point);
+		}
+		return selection;
+	}
+	
+	public void addShape(Shape shape) {
+		logger.info("addShape(" + shape + ")");
+		Page page = this.getPage();
+		if (page != null) {
+			page.addShape(shape);
+		}
+	}
+	
+	public void removeShape(Shape shape) {
+		logger.info("removeShape(" + shape + ")");
+		Page page = this.getPage();
+		if (page != null) {
+			page.removeShape(shape);
+		}
 	}
 }

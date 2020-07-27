@@ -63,9 +63,8 @@ public class ShapePanel extends JPanel {
 		super.paint(graphics);
 		if (this.model != null) {
 			Graphics2D graphics2D = (Graphics2D) graphics.create();
-			Document document = (this.model != null) ? this.model.document : null;
-			Page page = (document != null)?document.getPage():null;
-			Shape shape = (page != null) ? page.getShape(): null;
+			Page page = (this.model != null) ? this.model.getPage() : null;
+			Shape shape = null;//(page != null) ? page.getShape(): null;
 			if (shape != null) {
 				if(shape instanceof Grid) {
 					Grid grid = (Grid)shape;

@@ -68,8 +68,8 @@ public final class MainFrame extends JFrame {
 	public UserLoginDialog loginDialog = new UserLoginDialog(this, false);
 	public OpenDialog openDialog = null;
 	public SaveAsDialog saveAsDialog = null;
-	public PageDialog pageDialog = new PageDialog(this, false);
-	public ShapeDialog shapeDialog = new ShapeDialog(this, false);
+	//public PageDialog pageDialog = new PageDialog(this, false);
+	//public ShapeDialog shapeDialog = new ShapeDialog(this, false);
 	public RecognitionDialog recognitionDialog = new RecognitionDialog(this, false);
 	public CommandDialog commandDialog = new CommandDialog(this, false);
 	public AttributionDialog attributionDialog = new AttributionDialog(this, false);
@@ -116,8 +116,8 @@ public final class MainFrame extends JFrame {
 		this.archivePanel.setModel(this.model);
 		this.attributionDialog.setModel(this.model);
 		this.commandDialog.setModel(this.model);
-		this.pageDialog.setModel(this.model);
-		this.shapeDialog.setModel(this.model);
+		//this.pageDialog.setModel(this.model);
+		//this.shapeDialog.setModel(this.model);
 		this.zooniverseExportDialog.setModel(this.model);
 		this.zooniverseImportDialog.setModel(this.model);
 		this.microsoftExportDialog.setModel(this.model);
@@ -132,7 +132,7 @@ public final class MainFrame extends JFrame {
 		} else if (this.model.system.loginUser) {
 //			this.loginDialog.setVisible(true);
 		}
-		this.shapeDialog.setVisible(true);
+//		this.shapeDialog.setVisible(true);
 //		this.pageDialog.setVisible(true);
 	}
 
@@ -143,8 +143,8 @@ public final class MainFrame extends JFrame {
 		this.matrixPanel.init();
 		this.tablePanel.init();
 		this.archivePanel.init();
-		this.pageDialog.init();
-		this.shapeDialog.init();
+//		this.pageDialog.init();
+//		this.shapeDialog.init();
 		this.commandDialog.init();
 		this.attributionDialog.init();
 		if (this.model.system.loggedIn) {
@@ -582,11 +582,11 @@ public final class MainFrame extends JFrame {
 	}// GEN-LAST:event_openMenuItemActionPerformed
 
 	private void pageMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_pageMenuItemActionPerformed
-		this.pageDialog.setVisible(true);
+//		this.pageDialog.setVisible(true);
 	}// GEN-LAST:event_pageMenuItemActionPerformed
 
 	private void selectionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_selectionMenuItemActionPerformed
-		this.shapeDialog.setVisible(true);
+//		this.shapeDialog.setVisible(true);
 	}// GEN-LAST:event_selectionMenuItemActionPerformed
 
 	private void zooniverseExportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_zooniverseExportMenuItemActionPerformed

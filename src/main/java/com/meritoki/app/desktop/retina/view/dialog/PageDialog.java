@@ -235,7 +235,7 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
 	
 	public void initTextField() {
 		Document document = (this.model != null) ? this.model.document : null;
-		Page page = (document != null) ? document.getPage() : null;
+		Page page = (this.model != null) ? this.model.getPage() : null;
 		if(page != null) {
 			double threshold = page.threshold;
 			this.pageThresholdTextField.setText(String.valueOf(threshold));
@@ -247,7 +247,7 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
 		if(document != null) {
 			this.pageListSizeValueLabel.setText(document.pageList.size()+"");
 		}
-		Page page = (document != null) ? document.getPage() : null;
+		Page page = (this.model != null) ? this.model.getPage() : null;
 		int pageIndex = (document != null) ? document.getIndex() : 0;
 		Image image = (page != null) ? page.getImage() : null;
 		int imageIndex = (page != null) ? page.getIndex() : 0;
@@ -270,7 +270,7 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
 		List<Page> pageList = (document != null) ? document.getPageList() : null;
 		this.initPageList(pageList);
 		this.setPageListSelectedIndex(pageIndex);
-		Page page = (document != null) ? document.getPage() : null;
+		Page page = (this.model != null) ? this.model.getPage() : null;
 		int imageIndex = (page != null) ? page.getIndex() : 0;
 		List<Image> imageList = (page != null) ? page.getImageList() : null;
 		this.initImageList(imageList);
@@ -690,7 +690,7 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
 
 	private void removeImageButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_removeImageButtonActionPerformed
 		Document document = (this.model != null) ? this.model.document : null;
-		Page page = (document != null) ? document.getPage() : null;
+		Page page = (this.model != null) ? this.model.getPage() : null;
 		Image image = (page != null) ? page.getImage() : null;
 		try {
 			this.model.cache.pressedPageUUID = page.uuid;

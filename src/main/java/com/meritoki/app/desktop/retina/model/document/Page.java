@@ -59,11 +59,11 @@ public class Page {
 	 */
 	@JsonProperty
 	public List<Image> imageList = new ArrayList<>();
-	/**
-	 * Current Image index selected. Default is zero.
-	 */
-	@JsonIgnore
-	public int index = 0;
+//	/**
+//	 * Current Image index selected. Default is zero.
+//	 */
+//	@JsonIgnore
+//	public int index = 0;
 	/**
 	 * Cached copy of joined bufferedImage from one or more Images.
 	 */
@@ -98,7 +98,7 @@ public class Page {
 	public Page(Image image) {
 		this.uuid = UUID.randomUUID().toString();
 		this.addImage(image);
-		this.index = 0;
+//		this.index = 0;
 	}
 
 	/**
@@ -111,7 +111,7 @@ public class Page {
 		for (Image image : page.imageList) {
 			this.imageList.add(new Image(image));
 		}
-		this.index = page.index;
+//		this.index = page.index;
 		this.position = new Position(page.position);
 	}
 
@@ -120,10 +120,10 @@ public class Page {
 	 *
 	 * @return this.index
 	 */
-	@JsonIgnore
-	public int getIndex() {
-		return this.index;
-	}
+//	@JsonIgnore
+//	public int getIndex() {
+////		return this.index;
+//	}
 
 	@JsonIgnore
 	public int getIndex(String uuid) {
@@ -144,18 +144,18 @@ public class Page {
 		return threshold;
 	}
 
-	/**
-	 * Function returns Image using index
-	 *
-	 * @return file
-	 */
-	@JsonIgnore
-	public Image getImage() {
-		int size = this.imageList.size();
-		Image image = (this.index < size && size > 0) ? this.imageList.get(this.index) : null;
-		logger.debug("getImage() image=" + image);
-		return image;
-	}
+//	/**
+//	 * Function returns Image using index
+//	 *
+//	 * @return file
+//	 */
+//	@JsonIgnore
+//	public Image getImage() {
+//		int size = this.imageList.size();
+//		Image image = (this.index < size && size > 0) ? this.imageList.get(this.index) : null;
+//		logger.debug("getImage() image=" + image);
+//		return image;
+//	}
 
 	@JsonIgnore
 	public Image getImage(int index) {
@@ -209,27 +209,27 @@ public class Page {
 		return s;
 	}
 
-	/**
-	 * Function returns the Shape at the current index in Image
-	 *
-	 * @return shape
-	 */
-	@JsonIgnore
-	public Shape getShape() {
-		Image image = this.getImage();
-		Shape shape = (image != null) ? image.getShape() : null;
-		return shape;
-	}
+//	/**
+//	 * Function returns the Shape at the current index in Image
+//	 *
+//	 * @return shape
+//	 */
+//	@JsonIgnore
+//	public Shape getShape() {
+//		Image image = this.getImage();
+//		Shape shape = (image != null) ? image.getShape() : null;
+//		return shape;
+//	}
 
-	@JsonIgnore
-	public Shape getGridShape() {
-		Shape shape = this.getShape();
-		if (shape instanceof Grid) {
-			Grid grid = (Grid) shape;
-			shape = grid.getShape();
-		}
-		return shape;
-	}
+//	@JsonIgnore
+//	public Shape getGridShape() {
+//		Shape shape = this.getShape();
+//		if (shape instanceof Grid) {
+//			Grid grid = (Grid) shape;
+//			shape = grid.getShape();
+//		}
+//		return shape;
+//	}
 
 	@JsonIgnore
 	public List<Shape> getShapeList() {
@@ -323,34 +323,34 @@ public class Page {
 		}
 	}
 
-	/**
-	 * Function sets the current index selected by user.
-	 *
-	 * @param index
-	 */
-	@JsonIgnore
-	public boolean setIndex(int index) {
-		boolean flag = false;
-		if (index >= 0 && index < this.imageList.size()) {
-			this.index = index;
-			flag = true;
-		}
-		return flag;
-	}
+//	/**
+//	 * Function sets the current index selected by user.
+//	 *
+//	 * @param index
+//	 */
+//	@JsonIgnore
+//	public boolean setIndex(int index) {
+//		boolean flag = false;
+//		if (index >= 0 && index < this.imageList.size()) {
+//			this.index = index;
+//			flag = true;
+//		}
+//		return flag;
+//	}
 
-	@JsonIgnore
-	public void setImage(String uuid) {
-		logger.debug("setImage(" + uuid + ")");
-		Image image = null;
-		List<Image> imageList = this.getImageList();
-		for (int i = 0; i < imageList.size(); i++) {
-			image = imageList.get(i);
-			if (image.uuid.equals(uuid)) {
-				this.setIndex(i);
-				break;
-			}
-		}
-	}
+//	@JsonIgnore
+//	public void setImage(String uuid) {
+//		logger.debug("setImage(" + uuid + ")");
+//		Image image = null;
+//		List<Image> imageList = this.getImageList();
+//		for (int i = 0; i < imageList.size(); i++) {
+//			image = imageList.get(i);
+//			if (image.uuid.equals(uuid)) {
+//				this.setIndex(i);
+//				break;
+//			}
+//		}
+//	}
 
 	/**
 	 * Function sets scale for page and all files in fileList
@@ -366,30 +366,30 @@ public class Page {
 		}
 	}
 
-	/**
-	 * Function sets current shape and file using uuid
-	 *
-	 * @param uuid
-	 */
-	@JsonIgnore
-	public void setShape(String uuid) {
-		for (Image image : this.getImageList()) {
-			if (image.setShape(uuid)) {
-				this.setImage(image.uuid);
-				break;
-			}
-		}
-	}
+//	/**
+//	 * Function sets current shape and file using uuid
+//	 *
+//	 * @param uuid
+//	 */
+//	@JsonIgnore
+//	public void setShape(String uuid) {
+//		for (Image image : this.getImageList()) {
+//			if (image.setShape(uuid)) {
+//				this.setImage(image.uuid);
+//				break;
+//			}
+//		}
+//	}
 
-	@JsonIgnore
-	public void setGridShape(String uuid) {
-		for (Image image : this.getImageList()) {
-			if (image.setGridShape(uuid)) {
-				this.setImage(image.uuid);
-				break;
-			}
-		}
-	}
+//	@JsonIgnore
+//	public void setGridShape(String uuid) {
+//		for (Image image : this.getImageList()) {
+//			if (image.setGridShape(uuid)) {
+//				this.setImage(image.uuid);
+//				break;
+//			}
+//		}
+//	}
 
 	@JsonIgnore
 	public void addImage(Image image) {
@@ -425,7 +425,7 @@ public class Page {
 		for (Image image : this.getImageList()) {
 			if (image.containsShape(shape)) {
 				image.addShape(shape);
-				this.setShape(shape.uuid);
+//				this.setShape(shape.uuid);
 				break;
 			}
 		}
@@ -471,15 +471,15 @@ public class Page {
 		return s;
 	}
 
-	@JsonIgnore
-	public Selection intersectShape(Point point) {
-		Selection selection = null;
-		Image image = this.getImage();
-		if (image != null) {
-			selection = image.intersectShape(point);
-		}
-		return selection;
-	}
+//	@JsonIgnore
+//	public Selection intersectShape(Point point) {
+//		Selection selection = null;
+//		Image image = this.getImage();
+//		if (image != null) {
+//			selection = image.intersectShape(point);
+//		}
+//		return selection;
+//	}
 
 	@JsonIgnore
 	public boolean contains(Point point) {

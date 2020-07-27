@@ -62,8 +62,7 @@ public class ArchivePanel extends javax.swing.JPanel {
     
     public void paint(Graphics graphics) {
     	super.paint(graphics);
-		Document document = (this.model != null) ? this.model.document : null;
-		Page page = (document != null) ? document.getPage() : null;
+		Page page = (this.model != null) ? this.model.getPage() : null;
 		Archive archive = (page != null)? page.getArchive(): null;
 		if(archive != null) {
 			this.archiveTextArea.setText(null);

@@ -29,6 +29,6 @@ public class RemoveShape extends Command {
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);
 		//logic
-		this.model.document.getPage().removeShape(pressedShape);
+		this.model.removeShape(pressedShape);
     }
 }

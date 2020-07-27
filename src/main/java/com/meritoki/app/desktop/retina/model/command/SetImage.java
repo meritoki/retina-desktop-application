@@ -19,8 +19,8 @@ public class SetImage extends Command {
 	public void execute() {
 		logger.info("execute()");
 		//variables
-    	String imageUUID = model.cache.imageUUID;
-    	Image currentImage = model.getImage();
+    	String imageUUID = this.model.cache.imageUUID;
+    	Image currentImage = this.model.getImage();
     	//undo
 		Operation operation = new Operation();
 		operation.object = (currentImage != null)?currentImage.uuid:null;
@@ -29,7 +29,7 @@ public class SetImage extends Command {
 		this.operationList.add(operation);
 		//logic
 		if(imageUUID != null) {
-			model.setImage(imageUUID);
+			this.model.setImage(imageUUID);
 		}
 		//redo
 		operation = new Operation();

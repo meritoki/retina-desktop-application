@@ -32,22 +32,20 @@ public class AddShape extends Command {
 		ShapeType type = this.model.cache.type;
 		Point pressedPoint = this.model.cache.pressedPoint;
 		Point releasedPoint = this.model.cache.releasedPoint;
-		
 		double scale = page.position.scale;
 		Shape shape = new Shape();
-//		if (this.minimumSize(pressedPoint, releasedPoint, scale)) {
 		shape.type = type;
 		shape.position = new Position(new Point(pressedPoint), new Point(releasedPoint),
 				pressedImage.position.relativeScale, scale, pressedImage.position.offset, pressedImage.position.margin);
-		this.model.document.addShape(shape);
+		this.model.addShape(shape);
+		this.model.setShape(shape.uuid);
+		//redo
 		Operation operation = new Operation();
 		operation.object = new Shape(shape, true);
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);
-//		} else {
-//			throw new Exception("Shape too small");
-//		}
+
 	}
 
 	public boolean minimumSize(Point a, Point b, double scale) {
@@ -61,3 +59,9 @@ public class AddShape extends Command {
 		return flag;
 	}
 }
+
+//if (this.minimumSize(pressedPoint, releasedPoint, scale)) {
+
+//} else {
+//throw new Exception("Shape too small");
+//}
