@@ -34,8 +34,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.meritoki.app.desktop.retina.controller.client.ClientController;
-import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.controller.node.NodeController;
 
 /**
  * Class is used to manage reference to file in filesystem

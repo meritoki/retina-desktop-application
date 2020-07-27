@@ -9,11 +9,11 @@ import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.meritoki.app.desktop.retina.controller.Controller;
 import com.meritoki.app.desktop.retina.controller.client.ClientController;
-import com.meritoki.app.desktop.retina.controller.node.NodeController;
-import com.meritoki.app.desktop.retina.controller.security.SecurityController;
 import com.meritoki.app.desktop.retina.model.system.System;
+import com.meritoki.app.desktop.retina.controller.node.NodeController;
+import com.meritoki.library.controller.Controller;
+import com.meritoki.library.controller.security.SecurityController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 
@@ -37,7 +37,7 @@ public class UserController extends Controller {
 //	}
 
 	private static Logger logger = LogManager.getLogger(UserController.class.getName());
-	public static String filePath = NodeController.getRetinaHome() + NodeController.getSeperator();
+	public static String filePath = NodeController.getSystemHome() + NodeController.getSeperator();
 	public static String fileName = "users.json";
 	private System system;
 

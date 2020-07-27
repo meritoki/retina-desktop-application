@@ -7,11 +7,11 @@ import java.util.UUID;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.controller.memory.MemoryController;
-import com.meritoki.app.desktop.retina.controller.pdf.PDFController;
+import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
+import com.meritoki.library.controller.memory.MemoryController;
 
 public class AddPage extends Command {
 	
@@ -35,7 +35,7 @@ public class AddPage extends Command {
     	for(String f: fileArray) {
     		File file = new File(f);
     		if(file.getName().contains(".pdf")) {
-    			File[] pageArray = PDFController.openPDF(file, this.model.document.uuid);
+    			File[] pageArray = NodeController.openPDF(NodeController.getDocumentCache(this.model.document.uuid),file);
     			for(File p:pageArray) {
     				Page page = new Page();
     				page.imageList.add(new Image(p));

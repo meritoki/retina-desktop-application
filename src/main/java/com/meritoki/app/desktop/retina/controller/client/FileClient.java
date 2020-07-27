@@ -40,9 +40,9 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meritoki.app.desktop.retina.controller.json.JsonController;
-import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.library.controller.json.JsonController;
+import com.meritoki.library.controller.node.NodeController;
 
 public class FileClient {
 

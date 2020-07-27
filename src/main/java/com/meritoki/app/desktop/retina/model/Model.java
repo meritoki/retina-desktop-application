@@ -22,13 +22,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.controller.client.ClientController;
-import com.meritoki.app.desktop.retina.controller.document.DocumentController;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.controller.user.UserController;
 import com.meritoki.app.desktop.retina.model.cache.Cache;
 import com.meritoki.app.desktop.retina.model.document.Document;
-import com.meritoki.app.desktop.retina.model.document.Image;
-import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 import com.meritoki.app.desktop.retina.model.pattern.Pattern;
 import com.meritoki.app.desktop.retina.model.resource.Resource;
@@ -79,7 +76,7 @@ public class Model {
 	public void openDocument(File file) {
 		logger.info("openDocument("+file+")");
 		this.system.file = file;
-		this.document = (DocumentController.open(this.system.file));
+		this.document = NodeController.openDocument(this.system.file);
 		this.system.newDocument = false;
 		this.resource.addRecent(this.system.file.getAbsolutePath());
 		File directory = new File(NodeController.getDocumentCache(this.document.uuid));
@@ -92,14 +89,14 @@ public class Model {
 		logger.info("saveDocument("+file+")");
 		this.system.file = file;
 		this.pattern.save();
-		DocumentController.save(this.system.file, this.document);
+		NodeController.saveDocument(this.system.file, this.document);
 		this.resource.addRecent(this.system.file.getAbsolutePath());
 		this.system.newDocument = false;
 	}
 	public void saveDocument() {
 		logger.info("saveDocument()");
 		this.pattern.save();
-		DocumentController.save(this.system.file, this.document);
+		NodeController.saveDocument(this.system.file, this.document);
 		this.resource.addRecent(this.system.file.getAbsolutePath());
 		this.system.newDocument = false;
 	}

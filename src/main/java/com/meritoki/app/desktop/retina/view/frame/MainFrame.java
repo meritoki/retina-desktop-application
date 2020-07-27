@@ -31,7 +31,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.controller.client.ClientController;
-import com.meritoki.app.desktop.retina.controller.document.DocumentController;
 import com.meritoki.app.desktop.retina.controller.module.ModuleController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;

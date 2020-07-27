@@ -29,12 +29,12 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.meritoki.app.desktop.retina.controller.json.JsonController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.cache.Cache;
 import com.meritoki.app.desktop.retina.model.command.Command;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.user.User;
+import com.meritoki.library.controller.json.JsonController;
 
 public class RetinaClient {
 

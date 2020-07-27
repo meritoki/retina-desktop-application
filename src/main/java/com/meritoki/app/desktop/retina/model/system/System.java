@@ -25,7 +25,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.controller.user.UserController;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
@@ -38,6 +37,7 @@ import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Zooniverse;
 import com.meritoki.app.desktop.retina.model.vendor.Vendor;
 import com.meritoki.app.desktop.retina.model.vendor.microsoft.Microsoft;
+import com.meritoki.app.desktop.retina.controller.node.NodeController;
 
 public class System {
 	private static final Logger logger = LogManager.getLogger(System.class.getName());
@@ -101,8 +101,8 @@ public class System {
 	}
 	
 	public void initDirectories() {
-		if(!new File(NodeController.getRetinaHome()).exists()) {
-			new File(NodeController.getRetinaHome()).mkdirs();
+		if(!new File(NodeController.getSystemHome()).exists()) {
+			new File(NodeController.getSystemHome()).mkdirs();
 		}
 		if(!new File(NodeController.getDocumentCache()).exists()) {
 			new File(NodeController.getDocumentCache()).mkdirs();

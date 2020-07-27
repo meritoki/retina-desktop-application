@@ -29,6 +29,11 @@
 			<artifactId>module</artifactId>
 			<version>0.4.202005</version>
 		</dependency>
+		<dependency>
+			<groupId>com.meritoki.library</groupId>
+			<artifactId>controller</artifactId>
+			<version>0.1.202007</version>
+		</dependency>
 		<!-- logging -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -50,12 +55,6 @@
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.6.4</version>
 		</dependency>
-		<!-- yaml -->
-		<dependency>
-			<groupId>org.yaml</groupId>
-			<artifactId>snakeyaml</artifactId>
-			<version>1.24</version>
-		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
@@ -70,11 +69,6 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
 			<version>4.1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.pdfbox</groupId>
-			<artifactId>pdfbox</artifactId>
-			<version>1.8.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -105,11 +99,7 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.6</version>
 		</dependency>
-		<dependency>
-			<groupId>org.mindrot</groupId>
-			<artifactId>jbcrypt</artifactId>
-			<version>0.4</version>
-		</dependency>
+
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>

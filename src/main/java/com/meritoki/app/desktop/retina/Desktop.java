@@ -15,11 +15,10 @@
  */
 package com.meritoki.app.desktop.retina;
 
-import com.meritoki.app.desktop.retina.controller.document.DocumentController;
-import com.meritoki.app.desktop.retina.model.Model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 import com.meritoki.app.desktop.retina.view.window.SplashWindow;
 

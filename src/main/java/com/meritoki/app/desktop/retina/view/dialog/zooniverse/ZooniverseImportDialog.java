@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,6 +34,7 @@ import com.meritoki.app.desktop.retina.model.provider.zooniverse.Project;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Zooniverse;
 import com.meritoki.app.desktop.retina.view.dialog.LoadDialog;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
+
 
 /**
  *
@@ -100,7 +100,7 @@ public class ZooniverseImportDialog extends javax.swing.JDialog {
     }
     
     public String getClassificationPath() {
-    	return NodeController.getRetinaHome()+NodeController.getSeperator()+"provider"+NodeController.getSeperator()+"zooniverse"+NodeController.getSeperator()+"classification"+NodeController.getSeperator();
+    	return NodeController.getSystemHome()+NodeController.getSeperator()+"provider"+NodeController.getSeperator()+"zooniverse"+NodeController.getSeperator()+"classification"+NodeController.getSeperator();
     }
 
     /**

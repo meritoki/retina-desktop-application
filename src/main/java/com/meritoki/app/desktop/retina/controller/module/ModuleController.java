@@ -1,7 +1,7 @@
 package com.meritoki.app.desktop.retina.controller.module;
 
-import com.meritoki.app.desktop.retina.controller.Controller;
 import com.meritoki.app.desktop.retina.model.system.System;
+import com.meritoki.library.controller.Controller;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.module.Recognition;
 

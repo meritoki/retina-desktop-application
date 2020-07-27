@@ -25,7 +25,6 @@ import javax.swing.JPanel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Grid;
@@ -35,6 +34,7 @@ import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Position;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
+import com.meritoki.library.controller.node.NodeController;
 
 public class PagePanel extends JPanel implements MouseListener, KeyListener {
 

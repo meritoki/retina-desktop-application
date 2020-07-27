@@ -39,12 +39,12 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.command.Command;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Output;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Annotation;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Data;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Subject;
+import com.meritoki.library.controller.node.NodeController;
 
 /**
  * Document

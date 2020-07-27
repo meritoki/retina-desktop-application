@@ -12,3 +12,5 @@ data/
 task/
 process/
 output/
+nb-configuration.xml
+.project

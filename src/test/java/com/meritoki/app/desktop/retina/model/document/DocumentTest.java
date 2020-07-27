@@ -16,9 +16,9 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.meritoki.app.desktop.retina.controller.document.DocumentController;
-import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Zooniverse;
+import com.meritoki.library.controller.node.NodeController;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class DocumentTest {

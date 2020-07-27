@@ -9,6 +9,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 
+
 public class Resource {
 	@JsonIgnore
 	public List<String> emptyList = new ArrayList<>();
