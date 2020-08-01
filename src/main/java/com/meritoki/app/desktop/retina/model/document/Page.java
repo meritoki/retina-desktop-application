@@ -62,7 +62,7 @@ public class Page {
 	/**
 	 * Current Image index selected. Default is zero.
 	 */
-	@JsonIgnore
+	@JsonProperty
 	public int index = 0;
 	/**
 	 * Cached copy of joined bufferedImage from one or more Images.

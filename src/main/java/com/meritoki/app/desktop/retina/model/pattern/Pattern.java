@@ -125,20 +125,32 @@ public class Pattern {
 			throw new IllegalStateException("no command registered for " + commandName);
 		}
 		if(this.model.system.isConnected) {
-//			switch(commandName) {
-//			case "setPage": {
-//				
-//			}
-//			case "setImage": {
-//				
-//			}
-//			case "setSh
-//			}
-			
-			this.model.document = this.clientController.retinaClient.postDocumentCommand(this.model.document, command, this.model.cache);
-//			this.model.document.setIndex(this.model.system.pageIndex);
-//			this.model.document.getPage().setIndex(this.model.system.imageIndex);
-//			this.model.document.getImage().setIndex(this.model.system.shapeIndex);
+			switch(commandName) {
+			case "setPage": {
+				command.execute();
+				break;
+			}
+			case "setImage": {
+				command.execute();
+				break;
+			}
+			case "setShape": {
+				command.execute();
+				break;
+			}
+			case "setGrid": {
+				command.execute();
+				break;
+			}
+			default: {
+				this.model.system.page = this.model.document.getPage();
+				this.model.system.image = this.model.document.getImage();
+				this.model.system.shape = this.model.document.getShape();
+				this.model.document = this.clientController.retinaClient.postDocumentCommand(this.model.document, command, this.model.cache);
+				this.model.document.setPage(this.model.system.page.uuid);
+				this.model.document.setImage(this.model.system.image.uuid);
+			}
+			}
 		} else {
 			command.execute();
 			Command newCommand = new Command(this.model, command.name);

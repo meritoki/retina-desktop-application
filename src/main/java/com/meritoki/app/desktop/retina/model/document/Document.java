@@ -57,7 +57,7 @@ public class Document {
 	static Logger logger = LogManager.getLogger(Document.class.getName());
 	@JsonProperty
 	public String uuid;
-	@JsonIgnore
+	@JsonProperty
 	public int index = 0;
 	@JsonProperty
 	public List<Page> pageList = new ArrayList<>();
