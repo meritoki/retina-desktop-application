@@ -330,17 +330,20 @@ public class Page {
 	}
 
 	@JsonIgnore
-	public void setImage(String uuid) {
+	public boolean setImage(String uuid) {
 		logger.debug("setImage(" + uuid + ")");
+		boolean flag = false;
 		Image image = null;
 		List<Image> imageList = this.getImageList();
 		for (int i = 0; i < imageList.size(); i++) {
 			image = imageList.get(i);
 			if (image.uuid.equals(uuid)) {
+				flag = true;
 				this.setIndex(i);
 				break;
 			}
 		}
+		return flag;
 	}
 
 	/**

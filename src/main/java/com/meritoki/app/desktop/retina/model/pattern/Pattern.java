@@ -124,7 +124,7 @@ public class Pattern {
 		if (command == null) {
 			throw new IllegalStateException("no command registered for " + commandName);
 		}
-		if(this.model.system.isConnected) {
+		if(this.model.system.multiUser && this.model.system.isConnected) {
 			switch(commandName) {
 			case "setPage": {
 				command.execute();
@@ -147,8 +147,15 @@ public class Pattern {
 				this.model.system.image = this.model.document.getImage();
 				this.model.system.shape = this.model.document.getShape();
 				this.model.document = this.clientController.retinaClient.postDocumentCommand(this.model.document, command, this.model.cache);
-				this.model.document.setPage(this.model.system.page.uuid);
-				this.model.document.setImage(this.model.system.image.uuid);
+				if(this.model.document.setPage(this.model.system.page.uuid)) {
+					if(this.model.document.setImage(this.model.system.image.uuid)) {
+						
+					} else {
+						this.model.document.getPage().setIndex(0);
+					}
+				} else {
+					this.model.document.setIndex(0);
+				}
 			}
 			}
 		} else {

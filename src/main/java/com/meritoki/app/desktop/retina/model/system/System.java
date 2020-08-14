@@ -56,6 +56,8 @@ public class System {
 	@JsonIgnore
 	public String defaultFileName = "Untitled.json";
 	@JsonIgnore
+	public boolean multiUser = false;
+	@JsonIgnore
 	public boolean newUser = false;
 	@JsonIgnore
 	public boolean loginUser = false;
@@ -125,7 +127,7 @@ public class System {
 	}
 	
 	public void initProperties() {
-		this.properties = NodeController.openProperties(".","retina.xml");
+		this.properties = NodeController.openPropertiesXML(".","retina.xml");
 	}
 	
 	public void initProviders() {

@@ -103,7 +103,7 @@ public class Model {
 	
 	public boolean loginUser(String name, String password) {
 		UserController userController = new UserController(this.system);
-		if(this.system.isConnected) {
+		if(this.system.multiUser && this.system.isConnected) {
 			ClientController clientController = new ClientController(this);
 			User user = new User();
 			user.name = name;

@@ -156,7 +156,7 @@ public final class MainFrame extends JFrame {
 	}
 
 	public void initMenu() {
-		if (this.model.system.isConnected) {
+		if (this.model.system.multiUser && this.model.system.isConnected) {
 			List<String> uuidList = this.model.getDocumentList();
 			this.openRecentMenu.removeAll();
 			Iterator<String> uuidIterator = uuidList.iterator();
@@ -182,6 +182,7 @@ public final class MainFrame extends JFrame {
 			});
 			this.fileMenu.add(this.shareMenuItem);
 		} else {
+			this.fileMenu.remove(this.connectMenuItem);
 			List<String> recentList = this.model.resource.recentList;
 			this.openRecentMenu.removeAll();
 			Iterator<String> recentIterator = recentList.iterator();
@@ -526,16 +527,18 @@ public final class MainFrame extends JFrame {
 	}// GEN-LAST:event_zooniverseCSVImportMenuItemActionPerformed
 
 	private void connectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_connectMenuItemActionPerformed
-		ClientController clientController = new ClientController(this.model);
-		boolean fileFlag = clientController.fileClient.checkHealth();
-		boolean userFlag = clientController.userClient.checkHealth();
-		boolean retinaFlag = clientController.retinaClient.checkHealth();
-		if (fileFlag && userFlag && retinaFlag) {
-			this.model.system.isConnected = true;
-			JOptionPane.showMessageDialog(this, "Connected", "Message", JOptionPane.INFORMATION_MESSAGE);
-			this.init();
-		} else {
-			JOptionPane.showMessageDialog(this, "Services Unavailable", "Error", JOptionPane.ERROR_MESSAGE);
+		if(this.model.system.multiUser) {
+			ClientController clientController = new ClientController(this.model);
+			boolean fileFlag = clientController.fileClient.checkHealth();
+			boolean userFlag = clientController.userClient.checkHealth();
+			boolean retinaFlag = clientController.retinaClient.checkHealth();
+			if (fileFlag && userFlag && retinaFlag) {
+				this.model.system.isConnected = true;
+				JOptionPane.showMessageDialog(this, "Connected", "Message", JOptionPane.INFORMATION_MESSAGE);
+				this.init();
+			} else {
+				JOptionPane.showMessageDialog(this, "Services Unavailable", "Error", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}// GEN-LAST:event_connectMenuItemActionPerformed
 

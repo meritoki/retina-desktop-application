@@ -211,19 +211,22 @@ public class Document {
 	}
 
 	@JsonIgnore
-	public void setPage(String uuid) {
+	public boolean setPage(String uuid) {
 		logger.info("setPage(" + uuid + ")");
+		boolean flag = false;
 		if (uuid != null) {
 			Page page = null;
 			for (int i = 0; i < this.pageList.size(); i++) {
 				page = this.pageList.get(i);
 				if (page.uuid.equals(uuid)) {
+					flag = true;
 					this.setIndex(i);
 				} else {
 					page.setBufferedImageNull();
 				}
 			}
 		}
+		return flag;
 	}
 
 	@JsonIgnore
@@ -241,11 +244,13 @@ public class Document {
 	}
 
 	@JsonIgnore
-	public void setImage(String uuid) {
+	public boolean setImage(String uuid) {
 		logger.info("setImage(" + uuid + ")");
+		boolean flag = false;
 		if (this.getPage() != null) {
-			this.getPage().setImage(uuid);
+			flag = this.getPage().setImage(uuid);
 		}
+		return flag;
 	}
 
 	@JsonIgnore
