@@ -3,30 +3,24 @@ package com.meritoki.app.desktop.retina.model.module;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.meritoki.app.desktop.retina.model.Model;
 //import com.meritoki.app.desktop.retina.model.document.Data;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Input;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
-import com.meritoki.library.controller.node.NodeController;
 import com.meritoki.library.cortex.model.Concept;
-import com.meritoki.module.library.model.Data;
 import com.meritoki.module.library.model.Module;
 import com.meritoki.module.library.model.Node;
+import com.meritoki.module.library.model.State;
+import com.meritoki.module.library.model.data.Data;
+import com.meritoki.module.library.model.data.DataType;
 
 public class Train extends Node {
-	public static final int WAIT = 1;
-	public static final int SEARCH = 2;
-	public static final int SCAN = 3;
 	private Model model;
 	private Meritoki meritoki;
 	private boolean scan = false;
@@ -43,13 +37,10 @@ public class Train extends Node {
 				this.meritoki = (Meritoki) provider;
 			}
 		}
-		this.stateMap.put(WAIT, "WAIT");
-		this.stateMap.put(SEARCH, "SEARCH");
-		this.stateMap.put(SCAN, "SCAN");
-		this.setState(SEARCH);
+		this.setState(State.SEARCH);
 	}
 
-	protected void machine(int state, Object object) {
+	protected void machine(State state, Object object) {
 		switch (state) {
 		case SEARCH: {
 			this.search(object);
@@ -63,16 +54,18 @@ public class Train extends Node {
 			this.wait(object);
 			break;
 		}
+		default: {
+			super.machine(state, object);
 		}
-		super.machine(state, object);
+		}
 	}
 
 	private void wait(Object object) {
 		if (object instanceof Data) {
 			Data data = (Data) object;
 			switch (data.getType()) {
-			case Data.UNBLOCK: {
-				this.setState(SEARCH);
+			case UNBLOCK: {
+				this.setState(State.SEARCH);
 				this.setDelay(this.newDelay(this.inputDelay));
 				break;
 			}
@@ -114,7 +107,7 @@ public class Train extends Node {
 				}
 			}
 			if (this.scan) {
-				this.setState(SCAN);
+				this.setState(State.SCAN);
 			}
 			this.setDelay(this.newDelay(this.inputDelay));
 		}
@@ -130,9 +123,9 @@ public class Train extends Node {
 			}
 			this.meritoki.saveInput();
 			this.meritoki.saveCortex();
-			this.rootAdd(new Data(2, this.id, Data.UNBLOCK, 0, null, this.objectList));
+			this.rootAdd(new Data(2, this.id, DataType.UNBLOCK, 0, null, this.objectList));
 			this.setDelay(this.newDelay(this.inputDelay));
-			this.setState(WAIT);
+			this.setState(State.WAIT);
 		}
 	}
 

@@ -27,7 +27,7 @@
 		<dependency>
 			<groupId>com.meritoki.library</groupId>
 			<artifactId>module</artifactId>
-			<version>0.4.202005</version>
+			<version>0.5.202008</version>
 		</dependency>
 		<dependency>
 			<groupId>com.meritoki.library</groupId>
