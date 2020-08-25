@@ -56,6 +56,7 @@ public class DocumentExecuteScriptTest {
 	@Order(1)
 	public void addShapes() {
 		assertEquals(model.document.setIndex(0), true);
+		model.document.getPage().getBufferedImage(model);
 		assertEquals(model.document.getPage().setIndex(0),true);
 		model.system.pressedImage = model.document.getImage();
 		int x = (int)(model.system.pressedImage.position.absoluteDimension.width/2 - dimension/2);
@@ -65,11 +66,14 @@ public class DocumentExecuteScriptTest {
 		model.cache.pressedPoint = new Point(x,y);
 		model.cache.releasedPoint = new Point(x+width, y+height);
     	try {
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
+			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
 			model.pattern.execute("addShape");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
 		assertEquals(model.document.setIndex(1), true);
+		model.document.getPage().getBufferedImage(model);
 		model.system.pressedImage = model.document.getImage();
 		x = (int)(model.system.pressedImage.position.absoluteDimension.width/2 - dimension/2);
 		y = (int)(model.system.pressedImage.position.absoluteDimension.height/2 - dimension/2);
@@ -78,12 +82,15 @@ public class DocumentExecuteScriptTest {
 		model.cache.pressedPoint = new Point(x,y);
 		model.cache.releasedPoint = new Point(x+width, y+height);
     	try {
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
+			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
 			model.pattern.execute("addShape");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
     	
 		assertEquals(model.document.setIndex(2), true);
+		model.document.getPage().getBufferedImage(model);
 		model.system.pressedImage = model.document.getImage();
 		x = (int)(model.system.pressedImage.position.absoluteDimension.width/2 - dimension/2);
 		y = (int)(model.system.pressedImage.position.absoluteDimension.height/2 - dimension/2);
@@ -92,12 +99,15 @@ public class DocumentExecuteScriptTest {
 		model.cache.pressedPoint = new Point(x,y);
 		model.cache.releasedPoint = new Point(x+width, y+height);
     	try {
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
+			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
 			model.pattern.execute("addShape");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
     	
 		assertEquals(model.document.setIndex(3), true);
+		model.document.getPage().getBufferedImage(model);
 		model.system.pressedImage = model.document.getImage();
 		x = (int)(model.system.pressedImage.position.absoluteDimension.width/2 - dimension/2);
 		y = (int)(model.system.pressedImage.position.absoluteDimension.height/2 - dimension/2);
@@ -106,6 +116,8 @@ public class DocumentExecuteScriptTest {
 		model.cache.pressedPoint = new Point(x,y);
 		model.cache.releasedPoint = new Point(x+width, y+height);
     	try {
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
+			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
 			model.pattern.execute("addShape");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());

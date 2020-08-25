@@ -27,6 +27,7 @@ public class AddShape extends Command {
 		// variable
 		String pressedPageUUID = this.model.cache.pressedPageUUID;
 		String pressedImageUUID = this.model.cache.pressedImageUUID;
+		
 		Page page = this.model.document.getPage(pressedPageUUID);
 		Image pressedImage = this.model.document.getImage(pressedImageUUID);
 		ShapeType type = this.model.cache.type;

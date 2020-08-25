@@ -22,12 +22,12 @@ public class ScaleImage extends Command {
 		//variable
     	String pressedPageUUID = this.model.cache.pressedPageUUID;
     	String pressedImageUUID = this.model.cache.pressedImageUUID;
+    	double scaleFactor = this.model.cache.scaleFactor;
+    	char scaleOperator = this.model.cache.scaleOperator;
     	
     	Page page = this.model.document.getPage(pressedPageUUID);
     	Image pressedImage = this.model.document.getImage(pressedImageUUID);
     	double scale = page.position.scale;
-    	double scaleFactor = this.model.cache.scaleFactor;
-    	char scaleOperator = this.model.cache.scaleOperator;
     	//undo
     	Object[] objectArray = new Object[3];
     	objectArray[0] = pressedImage.position.relativeScale;
@@ -56,6 +56,7 @@ public class ScaleImage extends Command {
 		}
 		}
 		pressedImage.setRelativeScale(relativeScale);
+		page.getBufferedImage(model);
 		
 //		this.model.document.setBufferedImage(page);
 

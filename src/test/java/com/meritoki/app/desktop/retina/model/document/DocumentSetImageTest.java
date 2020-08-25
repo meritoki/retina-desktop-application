@@ -40,22 +40,28 @@ public class DocumentSetImageTest {
 	@Test
 	@Order(1)
 	public void setImage() {
-		model.cache.imageUUID = imageZero.uuid;
+		
 		try {
+			model.cache.imageUUID = imageZero.uuid;
+			model.cache.pressedImageUUID = imageZero.uuid;
 			model.pattern.execute("setImage");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
 		assertEquals(model.document.getImage().uuid, imageZero.uuid);
-		model.cache.imageUUID = imageOne.uuid;
+		
 		try {
+			model.cache.pressedImageUUID = imageOne.uuid;
+			model.cache.imageUUID = imageZero.uuid;
 			model.pattern.execute("setImage");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
 		assertEquals(model.document.getImage().uuid, imageOne.uuid);
-		model.cache.imageUUID = imageTwo.uuid;
+		
 		try {
+			model.cache.pressedImageUUID = imageTwo.uuid;
+			model.cache.imageUUID = imageOne.uuid;
 			model.pattern.execute("setImage");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());

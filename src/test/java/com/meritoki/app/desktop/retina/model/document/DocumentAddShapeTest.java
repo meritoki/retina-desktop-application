@@ -92,6 +92,7 @@ public class DocumentAddShapeTest {
 			}
 		}
 		assertEquals(model.document.setIndex(1), true);
+		model.document.getPage().getBufferedImage(model);
 		assertEquals(model.document.getPage().setIndex(1), true);
 		model.system.pressedImage = model.document.getImage();
 		position = model.system.pressedImage.position;
@@ -113,6 +114,7 @@ public class DocumentAddShapeTest {
 			}
 		}
 		assertEquals(model.document.setIndex(2), true);
+		model.document.getPage().getBufferedImage(model);
 		assertEquals(model.document.getPage().setIndex(0), true);
 		model.system.pressedImage = model.document.getImage();
 		position = model.system.pressedImage.position;
@@ -127,6 +129,8 @@ public class DocumentAddShapeTest {
 				model.cache.pressedPoint = new Point(x, y);
 				model.cache.releasedPoint = new Point(x + divisor, y + divisor);
 				try {
+					model.cache.pressedPageUUID = model.document.getPage().uuid;
+					model.cache.pressedImageUUID = model.system.pressedImage.uuid;
 					model.pattern.execute("addShape");
 				} catch (Exception e) {
 					logger.error("Exception " + e.getMessage());
@@ -134,6 +138,7 @@ public class DocumentAddShapeTest {
 			}
 		}
 		assertEquals(model.document.setIndex(2), true);
+		model.document.getPage().getBufferedImage(model);
 		assertEquals(model.document.getPage().setIndex(1), true);
 		model.system.pressedImage = model.document.getImage();
 		position = model.system.pressedImage.position;
@@ -148,6 +153,8 @@ public class DocumentAddShapeTest {
 				model.cache.pressedPoint = new Point(x, y);
 				model.cache.releasedPoint = new Point(x + divisor, y + divisor);
 				try {
+					model.cache.pressedPageUUID = model.document.getPage().uuid;
+					model.cache.pressedImageUUID = model.system.pressedImage.uuid;
 					model.pattern.execute("addShape");
 				} catch (Exception e) {
 					logger.error("Exception " + e.getMessage());
@@ -155,6 +162,7 @@ public class DocumentAddShapeTest {
 			}
 		}
 		assertEquals(model.document.setIndex(2), true);
+		model.document.getPage().getBufferedImage(model);
 		assertEquals(model.document.getPage().setIndex(2), true);
 		model.system.pressedImage = model.document.getImage();
 		position = model.system.pressedImage.position;
@@ -169,6 +177,8 @@ public class DocumentAddShapeTest {
 				model.cache.pressedPoint = new Point(x, y);
 				model.cache.releasedPoint = new Point(x + divisor, y + divisor);
 				try {
+					model.cache.pressedPageUUID = model.document.getPage().uuid;
+					model.cache.pressedImageUUID = model.system.pressedImage.uuid;
 					model.pattern.execute("addShape");
 				} catch (Exception e) {
 					logger.error("Exception " + e.getMessage());

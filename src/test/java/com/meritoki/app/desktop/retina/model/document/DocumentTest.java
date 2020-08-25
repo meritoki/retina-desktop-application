@@ -73,6 +73,7 @@ class DocumentTest {
 	@Order(2)
 	public void getImage() {
 		assertEquals(model.document.setIndex(0), true);
+		model.document.getPage().getBufferedImage(model);
 		assertNotNull(model.document.getPage());
 		for (Image image : model.document.getPage().imageList) {
 			Point point = new Point(image.position.point);
@@ -82,6 +83,7 @@ class DocumentTest {
 			assertEquals(model.document.getImage(point).uuid, image.uuid);
 		}
 		assertEquals(model.document.setIndex(1), true);
+		model.document.getPage().getBufferedImage(model);
 		assertNotNull(model.document.getPage());
 		for (Image image : model.document.getPage().imageList) {
 			Point point = new Point(image.position.point);
@@ -91,6 +93,7 @@ class DocumentTest {
 			assertEquals(model.document.getImage(point).uuid, image.uuid);
 		}
 		assertEquals(model.document.setIndex(2), true);
+		model.document.getPage().getBufferedImage(model);
 		assertNotNull(model.document.getPage());
 		for (Image image : model.document.getPage().imageList) {
 			Point point = new Point(image.position.point);
@@ -200,9 +203,11 @@ class DocumentTest {
 		int y = (int) (model.system.pressedImage.position.dimension.height / 2 - dimension / 2);
 		int width = dimension;
 		int height = dimension;
-		model.cache.pressedPoint = new Point(x, y);
-		model.cache.releasedPoint = new Point(x + width, y + height);
 		try {
+			model.cache.pressedPoint = new Point(x, y);
+			model.cache.releasedPoint = new Point(x + width, y + height);
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
+			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
 			model.pattern.execute("addShape");
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
@@ -213,9 +218,11 @@ class DocumentTest {
 		y = (int) (model.system.pressedImage.position.dimension.height / 2 - dimension / 2);
 		width = dimension;
 		height = dimension;
-		model.cache.pressedPoint = new Point(x, y);
-		model.cache.releasedPoint = new Point(x + width, y + height);
 		try {
+			model.cache.pressedPoint = new Point(x, y);
+			model.cache.releasedPoint = new Point(x + width, y + height);
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
+			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
 			model.pattern.execute("addShape");
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
@@ -227,9 +234,11 @@ class DocumentTest {
 		y = (int) (model.system.pressedImage.position.dimension.height / 2 - dimension / 2);
 		width = dimension;
 		height = dimension;
-		model.cache.pressedPoint = new Point(x, y);
-		model.cache.releasedPoint = new Point(x + width, y + height);
 		try {
+			model.cache.pressedPoint = new Point(x, y);
+			model.cache.releasedPoint = new Point(x + width, y + height);
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
+			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
 			model.pattern.execute("addShape");
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
@@ -241,9 +250,11 @@ class DocumentTest {
 		y = (int) (model.system.pressedImage.position.dimension.height / 2 - dimension / 2);
 		width = dimension;
 		height = dimension;
-		model.cache.pressedPoint = new Point(x, y);
-		model.cache.releasedPoint = new Point(x + width, y + height);
 		try {
+			model.cache.pressedPoint = new Point(x, y);
+			model.cache.releasedPoint = new Point(x + width, y + height);
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
+			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
 			model.pattern.execute("addShape");
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
@@ -511,8 +522,10 @@ class DocumentTest {
 	@Order(9)
 	public void getShapeBufferedImageAfterJoin() {
 		assertEquals(model.document.setIndex(0), true);
+		model.document.getPage().getBufferedImage(model);
 		List<Shape> shapeList = model.document.getPage().getShapeList();
 		for (Shape s : shapeList) {
+			s.bufferedImage = model.document.getShapeBufferedImage(model.document.getPage().getScaledBufferedImage(model), s);
 			assertNotNull(s.bufferedImage);
 		}
 		Zooniverse zooniverse = new Zooniverse();
@@ -783,6 +796,7 @@ class DocumentTest {
 		assertEquals(model.document.setIndex(0), true);
 		List<Shape> shapeList = model.document.getPage().getGridShapeList();
 		for(Shape s: shapeList) {
+			s.bufferedImage = model.document.getShapeBufferedImage(model.document.getPage().getScaledBufferedImage(model), s);
 			assertNotNull(s.bufferedImage);
 		}
 		Zooniverse zooniverse = new Zooniverse();

@@ -16,9 +16,9 @@ import org.junit.jupiter.api.TestMethodOrder;
 import com.meritoki.app.desktop.retina.model.Model;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class DocumentAddShapeResizeImageMoveShapeTest {
+public class DocumentAddShapeScaleImageMoveShapeTest {
 
-	static Logger logger = LogManager.getLogger(DocumentAddShapeMoveShapeResizeImageTest.class.getName());
+	static Logger logger = LogManager.getLogger(DocumentAddShapeMoveShapeScaleImageTest.class.getName());
 	static Model model = new Model();
 	static int dimension = 16;
 
@@ -36,6 +36,7 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 	@Order(1)
 	public void addShape() {
 		assertEquals(model.document.setIndex(0), true);
+		model.document.getPage().getBufferedImage(model);
 		assertEquals(model.document.getPage().setIndex(0), true);
 		model.system.pressedImage = model.document.getImage();
 		double x = (model.system.pressedImage.position.center.x - dimension / 2);
@@ -45,6 +46,8 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 		model.cache.pressedPoint = new Point(x, y);
 		model.cache.releasedPoint = new Point(x + width, y + height);
 		try {
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
+			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
 			model.pattern.execute("addShape");
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
@@ -59,7 +62,7 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 	
 	@Test
 	@Order(2)
-	public void resizeImage() {
+	public void scaleImage() {
 		assertEquals(model.document.setIndex(0), true);
 		assertEquals(model.document.getPage().setIndex(0), true);
 		model.system.pressedPage = model.document.getPage();
@@ -67,13 +70,15 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 		model.cache.scaleOperator = '/';
 		model.cache.scaleFactor = 1.01;
 		try {
-			model.pattern.execute("resizeImage");
-			model.pattern.execute("resizeImage");
-			model.pattern.execute("resizeImage");
-			model.pattern.execute("resizeImage");
-			model.pattern.execute("resizeImage");
-			model.pattern.execute("resizeImage");
-			model.pattern.execute("resizeImage");
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
+			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
+			model.pattern.execute("scaleImage");
+			model.pattern.execute("scaleImage");
+			model.pattern.execute("scaleImage");
+			model.pattern.execute("scaleImage");
+			model.pattern.execute("scaleImage");
+			model.pattern.execute("scaleImage");
+			model.pattern.execute("scaleImage");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
@@ -91,6 +96,7 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 	@Order(3)
 	public void moveShape() {
 		assertEquals(model.document.setIndex(0), true);
+		model.document.getPage().getBufferedImage(model);
 		assertEquals(model.document.getPage().setIndex(0), true);
 		model.system.pressedImage = model.document.getPage().getImage();
 		assertEquals(model.document.getPage().setIndex(1), true);
@@ -109,6 +115,10 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 		logger.info("releasedImage="+model.system.releasedImage);
 		logger.info("releasedPoint="+model.cache.releasedPoint);
 		try {
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
+			model.cache.pressedShapeUUID = model.system.pressedShape.uuid;
+			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
+			model.cache.releasedImageUUID = model.system.releasedImage.uuid;
 			model.pattern.execute("moveShape");
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
@@ -120,78 +130,4 @@ public class DocumentAddShapeResizeImageMoveShapeTest {
 		assertEquals(model.system.pressedShape.position.dimension.width, shape.position.dimension.width);
 		assertEquals(model.system.pressedShape.position.dimension.height, shape.position.dimension.height);
 	}
-	
-	@Test
-	@Order(4)
-	public void undo() {
-		
-	}
-	
-	@Test
-	@Order(5) 
-	public void redo() {
-		
-	}
-//	@Test
-//	@Order(4)
-//	public void resizeImageOne() {
-//		assertEquals(model.document.setIndex(0), true);
-//		assertEquals(model.document.getPage().setIndex(1), true);
-//		model.cache.pressedPage = model.document.getPage();
-//		model.system.pressedImage = model.document.getImage();
-//		model.cache.scaleOperator = '/';
-//		model.cache.scaleFactor = 1.01;
-//		try {
-//			model.pattern.execute("resizeImage");
-//			model.pattern.execute("resizeImage");
-//			model.pattern.execute("resizeImage");
-//			model.pattern.execute("resizeImage");
-//			model.pattern.execute("resizeImage");
-//			model.pattern.execute("resizeImage");
-//			model.pattern.execute("resizeImage");
-//		} catch (Exception e) {
-//			logger.error("Exception "+e.getMessage());
-//		}
-//		int x = (int) (model.system.pressedImage.position.point.x+model.system.pressedImage.position.dimension.width / 2);
-//		int y = (int) (model.system.pressedImage.position.point.y+model.system.pressedImage.position.dimension.height / 2);
-//		logger.info("shapeList="+model.document.getShapeList());
-//		Shape shape =model.document.getShape(new Point(x, y));
-//		logger.info("shapeList="+model.document.getShapeList());
-//		logger.info("shape="+shape);
-//		assertNotNull(shape);
-//	}
-//	
-//	@Test
-//	@Order(5)
-//	public void moveShapeOne() {
-//		assertEquals(model.document.setIndex(0), true);
-//		assertEquals(model.document.getPage().setIndex(1), true);
-//		model.system.pressedImage = model.document.getPage().getImage();
-//		assertEquals(model.document.getPage().setIndex(0), true);
-//		model.system.releasedImage = model.document.getPage().getImage();
-//		int x = (int) (model.system.pressedImage.position.point.x+model.system.pressedImage.position.dimension.width / 2);
-//		int y = (int) (model.system.pressedImage.position.point.y+model.system.pressedImage.position.dimension.height / 2);
-//		model.cache.pressedPoint = new Point(x, y);
-//		logger.info("pressedImage="+model.system.pressedImage);
-//		logger.info("pressedPoint="+model.cache.pressedPoint);
-//		model.system.pressedShape = model.document.getPage().getShape(model.cache.pressedPoint);
-//		logger.info("pressedShape="+model.system.pressedShape);
-//		assertNotNull(model.system.pressedShape);
-//		x = (int) (model.system.releasedImage.position.point.x+model.system.releasedImage.position.dimension.width / 2);
-//		y = (int) (model.system.releasedImage.position.point.y+model.system.releasedImage.position.dimension.height / 2);
-//		model.cache.releasedPoint = new Point(x, y);
-//		logger.info("releasedImage="+model.system.releasedImage);
-//		logger.info("releasedPoint="+model.cache.releasedPoint);
-//		try {
-//			model.pattern.execute("moveShape");
-//		} catch (Exception e) {
-//			logger.error("Exception " + e.getMessage());
-//		}
-//		Shape shape =model.document.getShape(new Point(x, y));
-//		logger.info("shapeList="+model.document.getShapeList());
-//		logger.info("shape="+shape);
-//		assertNotNull(shape);
-//		assertEquals(model.system.pressedShape.position.dimension.width, shape.position.dimension.width);
-//		assertEquals(model.system.pressedShape.position.dimension.height, shape.position.dimension.height);
-//	}
 }

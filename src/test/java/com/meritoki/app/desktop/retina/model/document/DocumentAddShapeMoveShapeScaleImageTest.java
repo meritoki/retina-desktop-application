@@ -16,11 +16,10 @@ import org.junit.jupiter.api.TestMethodOrder;
 import com.meritoki.app.desktop.retina.model.Model;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class DocumentAddShapeMoveShapeResizeImageTest {
+public class DocumentAddShapeMoveShapeScaleImageTest {
 	
-	static Logger logger = LogManager.getLogger(DocumentAddShapeMoveShapeResizeImageTest.class.getName());
+	static Logger logger = LogManager.getLogger(DocumentAddShapeMoveShapeScaleImageTest.class.getName());
 	static Model model = new Model();
-//	static Document document = null;
 	static int dimension = 4;
 
 	@BeforeAll
@@ -37,6 +36,7 @@ public class DocumentAddShapeMoveShapeResizeImageTest {
 	@Order(1)
 	public void addShape() {
 		assertEquals(model.document.setIndex(0), true);
+		model.document.getPage().getBufferedImage(model);
 		assertEquals(model.document.getPage().setIndex(0), true);
 		model.system.pressedImage = model.document.getImage();
 		double x = (model.system.pressedImage.position.center.x - dimension / 2);
@@ -46,8 +46,8 @@ public class DocumentAddShapeMoveShapeResizeImageTest {
 		model.cache.pressedPoint = new Point(x, y);
 		model.cache.releasedPoint = new Point(x + width, y + height);
 		try {
-			model.cache.pressedPageUUID = this.model.document.getPage().uuid;
-			model.cache.pressedImageUUID = this.model.system.pressedImage.uuid;
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
+			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
 			model.pattern.execute("addShape");
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
@@ -62,6 +62,7 @@ public class DocumentAddShapeMoveShapeResizeImageTest {
 	@Order(2)
 	public void moveShape() {
 		assertEquals(model.document.setIndex(0), true);
+		model.document.getPage().getBufferedImage(model);
 		assertEquals(model.document.getPage().setIndex(0), true);
 		model.system.pressedImage = model.document.getPage().getImage();
 		assertEquals(model.document.getPage().setIndex(1), true);
@@ -74,10 +75,10 @@ public class DocumentAddShapeMoveShapeResizeImageTest {
 		y = (int) (model.system.releasedImage.position.center.y);
 		model.cache.releasedPoint = new Point(x, y);
 		try {
-			model.cache.pressedPageUUID = this.model.document.getPage().uuid;
-			model.cache.pressedShapeUUID = this.model.system.pressedShape.uuid;
-			model.cache.pressedImageUUID = this.model.system.pressedImage.uuid;
-			model.cache.releasedImageUUID = this.model.system.releasedImage.uuid;
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
+			model.cache.pressedShapeUUID = model.system.pressedShape.uuid;
+			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
+			model.cache.releasedImageUUID = model.system.releasedImage.uuid;
 			model.pattern.execute("moveShape");
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
@@ -90,12 +91,13 @@ public class DocumentAddShapeMoveShapeResizeImageTest {
 	@Order(3)
 	public void scaleImage() {
 		assertEquals(model.document.setIndex(0), true);
+		model.document.getPage().getBufferedImage(model);
 		assertEquals(model.document.getPage().setIndex(1), true);
 		model.system.pressedPage = model.document.getPage();
 		model.system.pressedImage = model.document.getImage();
-		model.cache.scaleOperator = '/';
-		model.cache.scaleFactor = 1.01;
 		try {
+			model.cache.scaleOperator = '/';
+			model.cache.scaleFactor = 1.01;
 			model.cache.pressedPageUUID = model.system.pressedPage.uuid;
 			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
 			model.pattern.execute("scaleImage");
@@ -113,34 +115,34 @@ public class DocumentAddShapeMoveShapeResizeImageTest {
 		int y = (int) (model.system.pressedImage.position.center.y);
 		assertNotNull(model.document.getShape(new Point(x,y)));
 	}
-	
-	@Test
-	@Order(4) 
-	public void undo() {
-		model.pattern.undo();
-		model.pattern.undo();
-		model.pattern.undo();
-		model.pattern.undo();
-		model.pattern.undo();
-		model.pattern.undo();
-		model.pattern.undo();
-		model.pattern.undo();
-		model.pattern.undo();
-		model.pattern.undo();
-	}
-	
-	@Test
-	@Order(5) 
-	public void redo() {
-		model.pattern.redo();
-		model.pattern.redo();
-		model.pattern.redo();
-		model.pattern.redo();
-		model.pattern.redo();
-		model.pattern.redo();
-		model.pattern.redo();
-		model.pattern.redo();
-		model.pattern.redo();
-		model.pattern.redo();
-	}
+//	
+//	@Test
+//	@Order(4) 
+//	public void undo() {
+//		model.pattern.undo();
+//		model.pattern.undo();
+//		model.pattern.undo();
+//		model.pattern.undo();
+//		model.pattern.undo();
+//		model.pattern.undo();
+//		model.pattern.undo();
+//		model.pattern.undo();
+//		model.pattern.undo();
+//		model.pattern.undo();
+//	}
+//	
+//	@Test
+//	@Order(5) 
+//	public void redo() {
+//		model.pattern.redo();
+//		model.pattern.redo();
+//		model.pattern.redo();
+//		model.pattern.redo();
+//		model.pattern.redo();
+//		model.pattern.redo();
+//		model.pattern.redo();
+//		model.pattern.redo();
+//		model.pattern.redo();
+//		model.pattern.redo();
+//	}
 }

@@ -20,10 +20,13 @@ public class ScalePage extends Command {
     public void execute() {
     	logger.info("execute()");
     	//Variables
-    	Page page = this.model.document.getPage();
-		double scale = page.position.scale;
+    	String pressedPageUUID = this.model.cache.pressedPageUUID;
 		double scaleFactor = this.model.cache.scaleFactor;
 		char scaleOperator = this.model.cache.scaleOperator;
+    	
+    	Page page = this.model.document.getPage(pressedPageUUID);
+		double scale = page.position.scale;
+
     	//Undo
     	Operation operation = new Operation();
 		operation.object = scale;

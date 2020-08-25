@@ -20,8 +20,8 @@ public class SetImage extends Command {
 		logger.info("execute()");
 		//variables
 //		Point pressedPoint = document.cache.pressedPoint;
-    	String pressedImageUUID = model.cache.pressedImageUUID;
-    	String imageUUID = model.cache.imageUUID;
+    	String pressedImageUUID = model.cache.pressedImageUUID;//for redo
+    	String imageUUID = model.cache.imageUUID;//for undo
     	Image image = model.document.getImage(imageUUID);
     	//undo
 		Operation operation = new Operation();

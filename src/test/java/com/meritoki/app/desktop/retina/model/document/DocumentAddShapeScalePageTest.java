@@ -38,6 +38,7 @@ public class DocumentAddShapeScalePageTest {
 	@Order(1)
 	public void addShape() {
 		assertEquals(model.document.setIndex(0), true);
+		model.document.getPage().getBufferedImage(model);
 		assertEquals(model.document.getPage().setIndex(0), true);
 		model.system.pressedImage = model.document.getImage();
 		int x = (int) (model.system.pressedImage.position.absoluteDimension.width / 2 - dimension / 2);
@@ -47,6 +48,8 @@ public class DocumentAddShapeScalePageTest {
 		model.cache.pressedPoint = new Point(x, y);
 		model.cache.releasedPoint = new Point(x + width, y + height);
 		try {
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
+			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
 			model.pattern.execute("addShape");
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
@@ -57,12 +60,14 @@ public class DocumentAddShapeScalePageTest {
 	@Order(2)
 	public void scaleUp() {
 		assertEquals(model.document.setIndex(0), true);
+		
 		assertEquals(model.document.getPage().setIndex(0), true);
 		model.system.pressedImage = model.document.getImage();
 		origin = new Dimension(model.system.pressedImage.position.dimension);
 		model.cache.scaleOperator = '*';
 		model.cache.scaleFactor = 1.5;
 		try {
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
 			model.pattern.execute("scalePage");
 			model.pattern.execute("scalePage");
 			model.pattern.execute("scalePage");
@@ -84,6 +89,7 @@ public class DocumentAddShapeScalePageTest {
 		model.cache.scaleOperator = '/';
 		model.cache.scaleFactor = 1.5;
 		try {
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
 			model.pattern.execute("scalePage");
 			model.pattern.execute("scalePage");
 			model.pattern.execute("scalePage");
@@ -117,11 +123,5 @@ public class DocumentAddShapeScalePageTest {
 		//undo add shape
 		model.pattern.undo();
 		assertEquals(model.document.getShapeList().size(),0);
-	}
-	
-	@Test
-	@Order(5)
-	public void redo() {
-		
 	}
 }

@@ -36,6 +36,7 @@ public class DocumentShiftImageMoveShapeTest {
 	@Order(1) 
 	public void addShape() {
 		assertEquals(model.document.setIndex(0), true);
+		model.document.getPage().getBufferedImage(model);
 		//add right
 		assertEquals(model.document.getPage().setIndex(1), true);
 		model.system.pressedImage = model.document.getImage();
@@ -46,6 +47,8 @@ public class DocumentShiftImageMoveShapeTest {
 		model.cache.pressedPoint = new Point(x, y);
 		model.cache.releasedPoint = new Point(x + width, y + height);
 		try {
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
+			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
 			model.pattern.execute("addShape");
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
@@ -59,11 +62,15 @@ public class DocumentShiftImageMoveShapeTest {
 	@Order(2)
 	public void marginShift() {
 		assertEquals(model.document.setIndex(0), true);
+		model.document.getPage().getBufferedImage(model);
 		assertEquals(model.document.getPage().setIndex(1), true);
+		model.system.pressedPage = model.document.getPage();
 		model.system.pressedImage = model.document.getImage();
 		model.cache.shiftOperator = '+';
 		model.cache.shiftFactor = 10;
 		try {
+			model.cache.pressedPageUUID = model.system.pressedPage.uuid;
+			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
 			model.pattern.execute("shiftImage");
 			model.pattern.execute("shiftImage");
 			model.pattern.execute("shiftImage");
@@ -83,6 +90,7 @@ public class DocumentShiftImageMoveShapeTest {
 	@Order(3)
 	public void moveShape() {
 		assertEquals(model.document.setIndex(0), true);
+		model.document.getPage().getBufferedImage(model);
 		assertEquals(model.document.getPage().setIndex(1), true);
 		model.system.pressedImage = model.document.getPage().getImage();
 		assertEquals(model.document.getPage().setIndex(0), true);
@@ -95,6 +103,10 @@ public class DocumentShiftImageMoveShapeTest {
 		y = (int) (model.system.releasedImage.position.center.y);
 		model.cache.releasedPoint = new Point(x, y);
 		try {
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
+			model.cache.pressedShapeUUID = model.system.pressedShape.uuid;
+			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
+			model.cache.releasedImageUUID = model.system.releasedImage.uuid;
 			model.pattern.execute("moveShape");
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());

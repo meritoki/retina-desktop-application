@@ -1,4 +1,4 @@
-package com.meritoki.app.desktop.retina.model.document;
+package com.meritoki.app.desktop.retina.model.document.bak;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -14,6 +14,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.DocumentShiftImageMoveShapeTest;
+import com.meritoki.app.desktop.retina.model.document.Image;
+import com.meritoki.app.desktop.retina.model.document.Page;
+import com.meritoki.app.desktop.retina.model.document.Point;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DocumentResizeImageTest2 {

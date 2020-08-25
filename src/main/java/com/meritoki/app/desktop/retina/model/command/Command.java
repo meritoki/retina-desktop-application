@@ -23,7 +23,7 @@ public class Command implements CommandInterface {
 	public String name;
 	@JsonProperty
 	public User user;
-	@JsonProperty
+	@JsonIgnore
     public LinkedList<Operation> operationList = new LinkedList<>();
 	
 	public Command() {
