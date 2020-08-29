@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 osvaldo.rodriguez.
+ * Copyright 2020 Joaquin Osvaldo Rodriguez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 package com.meritoki.app.desktop.retina.view.panel;
-
-import java.awt.Graphics;
-
-import javax.swing.table.DefaultTableModel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
