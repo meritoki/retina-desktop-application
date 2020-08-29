@@ -17,6 +17,6 @@ output/
 nb-configuration.xml
 .pydevproject
 .settings/
-/bin/
+bin/
 retina.sh
 archive/
