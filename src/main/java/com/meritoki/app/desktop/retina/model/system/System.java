@@ -127,7 +127,10 @@ public class System {
 	}
 	
 	public void initProperties() {
-		this.properties = NodeController.openPropertiesXML(".","retina.xml");
+		if(multiUser)
+			this.properties = NodeController.openPropertiesXML(".","retina.xml");
+		else 
+			this.properties = new Properties();
 	}
 	
 	public void initProviders() {

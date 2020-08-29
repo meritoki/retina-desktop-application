@@ -9,6 +9,7 @@ import com.meritoki.app.desktop.retina.model.provider.Provider;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.module.library.model.Module;
 import com.meritoki.module.library.model.Node;
+import com.meritoki.module.library.model.State;
 
 public class Recognition extends Node {
 	public String name = "Recognition";
@@ -34,6 +35,7 @@ public class Recognition extends Node {
             }
         }
         this.filter = false;
+        this.setState(State.DEFAULT);
 	}
 
 	public String about() {
