@@ -12,7 +12,7 @@ The implemenation of Retina can be installed, configured, and used following the
 7. Export and Import to and from [Zooniverse](https://www.zooniverse.org/)
 8. Export to Microsoft Word and Excel
 9. Export Audio generate with Text-to-speech
-10. Implementation of Hierarchical Temporal Memory (HTM) Algorithm for OCR/ICR/IWR
+10. Implementation of [Hierarchical Temporal Memory (HTM)](https://en.wikipedia.org/wiki/Hierarchical_temporal_memory) Algorithm for OCR/ICR/IWR
 11. Modifiable interface for implementation of any Machine Learning Algorithm
 
 ## Products and Services
