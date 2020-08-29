@@ -22,11 +22,14 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+//@JsonDeserialize(converter=PositionSanitizer.class)
 public class Position {
 	@JsonIgnore
 	private static Logger logger = LogManager.getLogger(Position.class.getName());
@@ -56,7 +59,10 @@ public class Position {
 	public Dimension dimension = new Dimension();
 	@JsonProperty
 	public Dimension absoluteDimension = new Dimension();
+	
+	@JsonCreator
 	public Position() {
+		this.scale();
 	}
 
 	public Position(int x, int y, int width, int height) {
@@ -422,6 +428,9 @@ public class Position {
 		return string;
 	}
 }
+
+
+
 
 //@JsonIgnore
 //public boolean intersectPoint(Point point) {

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.File;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,74 +13,79 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import java.util.concurrent.ThreadLocalRandom;
 
-import com.meritoki.app.desktop.retina.model.document.Document;
-import com.meritoki.app.desktop.retina.model.document.Image;
-import com.meritoki.app.desktop.retina.model.document.Page;
-import com.meritoki.app.desktop.retina.model.document.Point;
-import com.meritoki.app.desktop.retina.model.document.Position;
+import com.meritoki.app.desktop.retina.model.Model;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DocumentAddShapeMoveShapeTest {
 
 	static Logger logger = LogManager.getLogger(DocumentAddShapeMoveShapeShiftImageTest.class.getName());
-	static Document document = null;
+	static Model model = new Model();
 	static int dimension = 2;
 	static int limit = 10000;
 
 	@BeforeAll
 	public static void initialize() {
-		document = new Document();
+		model.document = new Document();
 		Page page = new Page();
 		page.addImage(new Image(new File("./data/image/01.jpg")));
 		page.addImage(new Image(new File("./data/image/02.jpg")));
 		page.addImage(new Image(new File("./data/image/03.jpg")));
-		document.addPage(page);
-		assertEquals(document.pageList.size(), 1);
+		model.document.addPage(page);
+		assertEquals(model.document.pageList.size(), 1);
 	}
 	
 	@Test
 	@Order(1)
 	public void addShape() {
-		assertEquals(document.setIndex(0), true);
-		assertEquals(document.getPage().setIndex(0), true);
-		document.cache.pressedImage = document.getImage();
-		double x = (int) (document.cache.pressedImage.position.center.x - dimension / 2);
-		double y = (int) (document.cache.pressedImage.position.center.y - dimension / 2);
+		assertEquals(model.document.setIndex(0), true);
+		model.document.getPage().getBufferedImage(model);
+		assertEquals(model.document.getPage().setIndex(0), true);
+		model.system.pressedImage = model.document.getImage();
+		double x = (int) (model.system.pressedImage.position.center.x - dimension / 2);
+		double y = (int) (model.system.pressedImage.position.center.y - dimension / 2);
 		int width = dimension;
 		int height = dimension;
-		document.cache.pressedPoint = new Point(x, y);
-		document.cache.releasedPoint = new Point(x + width, y + height);
+		model.cache.pressedPoint = new Point(x, y);
+		model.cache.releasedPoint = new Point(x + width, y + height);
 		try {
-			document.pattern.execute("addShape");
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
+			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
+			model.pattern.execute("addShape");
 		} catch (Exception e) {
 			logger.error("Exception " + e.getMessage());
 		}
-		assertNotNull(document.getShape(new Point(document.cache.pressedImage.position.center.x, document.cache.pressedImage.position.center.y)));
+		assertNotNull(model.document.getShape(new Point(model.system.pressedImage.position.center.x, model.system.pressedImage.position.center.y)));
 	}
 	
 	@Test
 	@Order(2)
 	public void moveShape() {
-		assertEquals(document.setIndex(0), true);
-		Page page = document.getPage();
+		assertEquals(model.document.setIndex(0), true);
+		model.document.getPage().getBufferedImage(model);
+		Page page = model.document.getPage();
+		model.system.pressedImage = model.document.getImage();
+		model.system.releasedImage = model.document.getImage();
 		Position position = page.position;
-		Point startPoint = new Point(document.cache.pressedImage.position.center.x, document.cache.pressedImage.position.center.y);
+		Point startPoint = new Point(model.system.pressedImage.position.center.x, model.system.pressedImage.position.center.y);
 		Point previousPoint = startPoint;
 		Point newPoint;
 		int count = limit;
 		while(count > 0) {
 			newPoint = getRandomPoint(position);
-			document.cache.pressedPoint = previousPoint;
-			document.cache.pressedShape = document.getPage().getShape(document.cache.pressedPoint);
-			document.cache.releasedPoint = newPoint;
+			model.cache.pressedPoint = previousPoint;
+			model.system.pressedShape = model.document.getPage().getShape(model.cache.pressedPoint);
+			model.cache.releasedPoint = newPoint;
 			try {
-				document.pattern.execute("moveShape");
+				model.cache.pressedPageUUID = model.document.getPage().uuid;
+				model.cache.pressedShapeUUID = model.system.pressedShape.uuid;
+				model.cache.pressedImageUUID = model.system.pressedImage.uuid;
+				model.cache.releasedImageUUID = model.system.releasedImage.uuid;
+				model.pattern.execute("moveShape");
 			} catch (Exception e) {
 				logger.error("Exception " + e.getMessage());
 			}
-			assertNotNull(document.getPage().getShape(newPoint));
+			assertNotNull(model.document.getPage().getShape(newPoint));
 			previousPoint = newPoint;
 			count--;
 		}
@@ -90,10 +96,10 @@ public class DocumentAddShapeMoveShapeTest {
 	public void undo() {
 		int count = limit;
 		while(count > 0) {
-			document.pattern.undo();
+			model.pattern.undo();
 			count--;
 		}
-		assertNotNull(document.getShape(new Point(document.cache.pressedImage.position.center.x, document.cache.pressedImage.position.center.y)));
+		assertNotNull(model.document.getShape(new Point(model.system.pressedImage.position.center.x, model.system.pressedImage.position.center.y)));
 	}
 	
 	public static Point getRandomPoint(Position position) {

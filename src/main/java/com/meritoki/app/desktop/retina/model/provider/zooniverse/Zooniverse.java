@@ -23,14 +23,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JOptionPane;
-
 import org.apache.logging.log4j.LogManager;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
+
 
 /**
  *
@@ -53,7 +52,7 @@ public class Zooniverse extends Provider {
 	}
 
 	public String getSubjectSetPath() {
-		return NodeController.getRetinaHome() + NodeController.getSeperator() + "provider"
+		return NodeController.getSystemHome() + NodeController.getSeperator() + "provider"
 				+ NodeController.getSeperator() + "zooniverse" + NodeController.getSeperator() + "subject-set"
 				+ NodeController.getSeperator();
 	}
@@ -145,7 +144,7 @@ public class Zooniverse extends Provider {
 	}
 
 	public String getConfigPath() {
-		return NodeController.getRetinaHome() + NodeController.getSeperator() + "provider"
+		return NodeController.getSystemHome() + NodeController.getSeperator() + "provider"
 				+ NodeController.getSeperator() + "zooniverse";
 	}
 

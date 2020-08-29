@@ -10,10 +10,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import com.meritoki.app.desktop.retina.controller.document.DocumentController;
-import com.meritoki.app.desktop.retina.model.document.Document;
-import com.meritoki.app.desktop.retina.model.document.Image;
-import com.meritoki.app.desktop.retina.model.document.Page;
+import com.meritoki.app.desktop.retina.controller.node.NodeController;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DocumentManyImageTest {
@@ -40,6 +37,6 @@ public class DocumentManyImageTest {
 	@Test
 	@Order(2)
 	public void savePages() {
-		DocumentController.save(new java.io.File("./test/document-many-image-test.json"), document);
+		NodeController.saveDocument(new java.io.File("./test/document-many-image-test.json"), document);
 	}
 }

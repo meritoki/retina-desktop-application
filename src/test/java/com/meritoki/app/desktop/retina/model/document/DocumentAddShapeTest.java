@@ -12,12 +12,13 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import com.meritoki.app.desktop.retina.controller.document.DocumentController;
+import com.meritoki.app.desktop.retina.controller.node.NodeController;
+import com.meritoki.app.desktop.retina.model.Model;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DocumentAddShapeTest {
 	static Logger logger = LogManager.getLogger(DocumentAddShapeTest.class.getName());
-	static Document document = null;
+	static Model model = new Model();
 	static String pageZeroUUID = null;
 	static String pageOneUUID = null;
 	static String pageTwoUUID = null;
@@ -26,32 +27,32 @@ public class DocumentAddShapeTest {
 
 	@BeforeAll
 	public static void initialize() {
-		document = new Document();
+		model.document = new Document();
 		Page page = new Page();
 		page = new Page(new Image(new File("./data/image/01.jpg")));
 		pageZeroUUID = page.uuid;
-		document.addPage(page);
+		model.document.addPage(page);
 		page = new Page();
 		page.addImage(new Image(new File("./data/image/01.jpg")));
 		page.addImage(new Image(new File("./data/image/02.jpg")));
 		pageOneUUID = page.uuid;
-		document.addPage(page);
+		model.document.addPage(page);
 		page = new Page();
 		page.addImage(new Image(new File("./data/image/01.jpg")));
 		page.addImage(new Image(new File("./data/image/02.jpg")));
 		page.addImage(new Image(new File("./data/image/03.jpg")));
 		pageTwoUUID = page.uuid;
-		document.addPage(page);
-		assertEquals(document.pageList.size(), 3);
+		model.document.addPage(page);
+		assertEquals(model.document.pageList.size(), 3);
 	}
 	
 	@Test
 	@Order(1)
 	public void addShapes() {
-		assertEquals(document.setIndex(0), true);
-		assertEquals(document.getPage().setIndex(0), true);
-		document.cache.pressedImage = document.getImage();
-		Position position = document.cache.pressedImage.position;
+		assertEquals(model.document.setIndex(0), true);
+		assertEquals(model.document.getPage().setIndex(0), true);
+		model.system.pressedImage = model.document.getImage();
+		Position position = model.system.pressedImage.position;
 		int width = (int)position.dimension.width;
 		int height = (int)position.dimension.height;
 		int widthQuotient = width/divisor;
@@ -60,19 +61,19 @@ public class DocumentAddShapeTest {
 			for(int j=0;j<heightQuotient;j++) {
 				int x = (int)(position.point.x+(i*divisor));
 				int y = (int)(position.point.y+(j*divisor));
-				document.cache.pressedPoint = new Point(x, y);
-				document.cache.releasedPoint = new Point(x + divisor, y + divisor);
+				model.cache.pressedPoint = new Point(x, y);
+				model.cache.releasedPoint = new Point(x + divisor, y + divisor);
 				try {
-					document.pattern.execute("addShape");
+					model.pattern.execute("addShape");
 				} catch (Exception e) {
 					logger.error("Exception " + e.getMessage());
 				}
 			}
 		}
-		assertEquals(document.setIndex(1), true);
-		assertEquals(document.getPage().setIndex(0), true);
-		document.cache.pressedImage = document.getImage();
-		position = document.cache.pressedImage.position;
+		assertEquals(model.document.setIndex(1), true);
+		assertEquals(model.document.getPage().setIndex(0), true);
+		model.system.pressedImage = model.document.getImage();
+		position = model.system.pressedImage.position;
 		width = (int)position.dimension.width;
 		height = (int)position.dimension.height;
 		widthQuotient = width/divisor;
@@ -81,19 +82,20 @@ public class DocumentAddShapeTest {
 			for(int j=0;j<heightQuotient;j++) {
 				int x = (int)(position.point.x+(i*divisor));
 				int y = (int)(position.point.y+(j*divisor));
-				document.cache.pressedPoint = new Point(x, y);
-				document.cache.releasedPoint = new Point(x + divisor, y + divisor);
+				model.cache.pressedPoint = new Point(x, y);
+				model.cache.releasedPoint = new Point(x + divisor, y + divisor);
 				try {
-					document.pattern.execute("addShape");
+					model.pattern.execute("addShape");
 				} catch (Exception e) {
 					logger.error("Exception " + e.getMessage());
 				}
 			}
 		}
-		assertEquals(document.setIndex(1), true);
-		assertEquals(document.getPage().setIndex(1), true);
-		document.cache.pressedImage = document.getImage();
-		position = document.cache.pressedImage.position;
+		assertEquals(model.document.setIndex(1), true);
+		model.document.getPage().getBufferedImage(model);
+		assertEquals(model.document.getPage().setIndex(1), true);
+		model.system.pressedImage = model.document.getImage();
+		position = model.system.pressedImage.position;
 		width = (int)position.dimension.width;
 		height = (int)position.dimension.height;
 		widthQuotient = width/divisor;
@@ -102,19 +104,20 @@ public class DocumentAddShapeTest {
 			for(int j=0;j<heightQuotient;j++) {
 				int x = (int)(position.point.x+(i*divisor));
 				int y = (int)(position.point.y+(j*divisor));
-				document.cache.pressedPoint = new Point(x, y);
-				document.cache.releasedPoint = new Point(x + divisor, y + divisor);
+				model.cache.pressedPoint = new Point(x, y);
+				model.cache.releasedPoint = new Point(x + divisor, y + divisor);
 				try {
-					document.pattern.execute("addShape");
+					model.pattern.execute("addShape");
 				} catch (Exception e) {
 					logger.error("Exception " + e.getMessage());
 				}
 			}
 		}
-		assertEquals(document.setIndex(2), true);
-		assertEquals(document.getPage().setIndex(0), true);
-		document.cache.pressedImage = document.getImage();
-		position = document.cache.pressedImage.position;
+		assertEquals(model.document.setIndex(2), true);
+		model.document.getPage().getBufferedImage(model);
+		assertEquals(model.document.getPage().setIndex(0), true);
+		model.system.pressedImage = model.document.getImage();
+		position = model.system.pressedImage.position;
 		width = (int)position.dimension.width;
 		height = (int)position.dimension.height;
 		widthQuotient = width/divisor;
@@ -123,19 +126,22 @@ public class DocumentAddShapeTest {
 			for(int j=0;j<heightQuotient;j++) {
 				int x = (int)(position.point.x+(i*divisor));
 				int y = (int)(position.point.y+(j*divisor));
-				document.cache.pressedPoint = new Point(x, y);
-				document.cache.releasedPoint = new Point(x + divisor, y + divisor);
+				model.cache.pressedPoint = new Point(x, y);
+				model.cache.releasedPoint = new Point(x + divisor, y + divisor);
 				try {
-					document.pattern.execute("addShape");
+					model.cache.pressedPageUUID = model.document.getPage().uuid;
+					model.cache.pressedImageUUID = model.system.pressedImage.uuid;
+					model.pattern.execute("addShape");
 				} catch (Exception e) {
 					logger.error("Exception " + e.getMessage());
 				}
 			}
 		}
-		assertEquals(document.setIndex(2), true);
-		assertEquals(document.getPage().setIndex(1), true);
-		document.cache.pressedImage = document.getImage();
-		position = document.cache.pressedImage.position;
+		assertEquals(model.document.setIndex(2), true);
+		model.document.getPage().getBufferedImage(model);
+		assertEquals(model.document.getPage().setIndex(1), true);
+		model.system.pressedImage = model.document.getImage();
+		position = model.system.pressedImage.position;
 		width = (int)position.dimension.width;
 		height = (int)position.dimension.height;
 		widthQuotient = width/divisor;
@@ -144,19 +150,22 @@ public class DocumentAddShapeTest {
 			for(int j=0;j<heightQuotient;j++) {
 				int x = (int)(position.point.x+(i*divisor));
 				int y = (int)(position.point.y+(j*divisor));
-				document.cache.pressedPoint = new Point(x, y);
-				document.cache.releasedPoint = new Point(x + divisor, y + divisor);
+				model.cache.pressedPoint = new Point(x, y);
+				model.cache.releasedPoint = new Point(x + divisor, y + divisor);
 				try {
-					document.pattern.execute("addShape");
+					model.cache.pressedPageUUID = model.document.getPage().uuid;
+					model.cache.pressedImageUUID = model.system.pressedImage.uuid;
+					model.pattern.execute("addShape");
 				} catch (Exception e) {
 					logger.error("Exception " + e.getMessage());
 				}
 			}
 		}
-		assertEquals(document.setIndex(2), true);
-		assertEquals(document.getPage().setIndex(2), true);
-		document.cache.pressedImage = document.getImage();
-		position = document.cache.pressedImage.position;
+		assertEquals(model.document.setIndex(2), true);
+		model.document.getPage().getBufferedImage(model);
+		assertEquals(model.document.getPage().setIndex(2), true);
+		model.system.pressedImage = model.document.getImage();
+		position = model.system.pressedImage.position;
 		width = (int)position.dimension.width;
 		height = (int)position.dimension.height;
 		widthQuotient = width/divisor;
@@ -165,10 +174,12 @@ public class DocumentAddShapeTest {
 			for(int j=0;j<heightQuotient;j++) {
 				int x = (int)(position.point.x+(i*divisor));
 				int y = (int)(position.point.y+(j*divisor));
-				document.cache.pressedPoint = new Point(x, y);
-				document.cache.releasedPoint = new Point(x + divisor, y + divisor);
+				model.cache.pressedPoint = new Point(x, y);
+				model.cache.releasedPoint = new Point(x + divisor, y + divisor);
 				try {
-					document.pattern.execute("addShape");
+					model.cache.pressedPageUUID = model.document.getPage().uuid;
+					model.cache.pressedImageUUID = model.system.pressedImage.uuid;
+					model.pattern.execute("addShape");
 				} catch (Exception e) {
 					logger.error("Exception " + e.getMessage());
 				}
@@ -179,6 +190,6 @@ public class DocumentAddShapeTest {
 	@Test
 	@Order(2)
 	public void saveShapes() {
-		DocumentController.save(new java.io.File("./test/document-many-shape-test-a.json"), document);
+		NodeController.saveDocument(new java.io.File("./test/document-many-shape-test-a.json"), model.document);
 	}
 }

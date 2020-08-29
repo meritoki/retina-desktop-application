@@ -7,14 +7,19 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Grid extends Shape {
 	
 	@JsonIgnore
 	static Logger logger = LogManager.getLogger(Grid.class.getName());
+	@JsonProperty
 	public int row = 1;
+	@JsonProperty
 	public int column = 1;
+	@JsonProperty
 	public Shape[][] matrix = new Shape[row][column];
+	@JsonProperty
 	public int index = 0;
 	
 	public Grid() {

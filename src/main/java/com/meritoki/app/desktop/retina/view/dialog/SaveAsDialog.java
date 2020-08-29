@@ -22,7 +22,6 @@ import javax.swing.JFileChooser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.meritoki.app.desktop.retina.controller.document.DocumentController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
@@ -55,12 +54,9 @@ public class SaveAsDialog extends javax.swing.JDialog {
 	public void result() {
 		int result = this.saveFileChooser.showSaveDialog(null);
 		if (result == JFileChooser.APPROVE_OPTION) {
-			this.model.system.file = this.saveFileChooser.getSelectedFile();
-			model.document.save();
-			DocumentController.save(this.model.system.file, model.document);
-			this.model.resource.addRecent(this.model.system.file.getAbsolutePath());
-			mainFrame.init();
-			this.model.system.newDocument = false;
+			File file = this.saveFileChooser.getSelectedFile();
+			this.model.saveDocument(file);
+			this.mainFrame.init();
 			this.setVisible(false);
 		} else if (result == JFileChooser.CANCEL_OPTION) {
 			logger.info("Cancel");

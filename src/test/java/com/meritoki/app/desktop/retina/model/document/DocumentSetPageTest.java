@@ -12,122 +12,120 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import com.meritoki.app.desktop.retina.model.document.Document;
-import com.meritoki.app.desktop.retina.model.document.Image;
-import com.meritoki.app.desktop.retina.model.document.Page;
+import com.meritoki.app.desktop.retina.model.Model;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DocumentSetPageTest {
 
 	
 	static Logger logger = LogManager.getLogger(DocumentSetImageTest.class.getName());
-	static Document document = null;
+	static Model model = new Model();
 	static Page pageZero;
 	static Page pageOne;
 	static Page pageTwo;
 	
 	@BeforeAll
 	public static void initialize() {
-		document = new Document();
+		model.document = new Document();
 		Page page = new Page(new Image(new File("./data/image/01.jpg")));
-		document.addPage(page);
+		model.document.addPage(page);
 		page = new Page(new Image(new File("./data/image/02.jpg")));
-		document.addPage(page);
+		model.document.addPage(page);
 		page = new Page(new Image(new File("./data/image/03.jpg")));
-		document.addPage(page);
-		pageZero = document.getPage(0);
-		pageOne = document.getPage(1);
-		pageTwo = document.getPage(2);
-		assertEquals(document.pageList.size(),3);
+		model.document.addPage(page);
+		pageZero = model.document.getPage(0);
+		pageOne = model.document.getPage(1);
+		pageTwo = model.document.getPage(2);
+		assertEquals(model.document.pageList.size(),3);
 	}
 	
 	@Test
 	@Order(1)
 	public void setPage() {
-		document.cache.pageIndex = 0;
+		model.cache.pageIndex = 0;
 		try {
-			document.pattern.execute("setPage");
+			model.pattern.execute("setPage");
 		} catch(Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
-		assertEquals(document.getPage().uuid,pageZero.uuid);
+		assertEquals(model.document.getPage().uuid,pageZero.uuid);
 		
-		document.cache.pageIndex = 1;
+		model.cache.pageIndex = 1;
 		try {
-			document.pattern.execute("setPage");
+			model.pattern.execute("setPage");
 		} catch(Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
-		assertEquals(document.getPage().uuid,pageOne.uuid);
+		assertEquals(model.document.getPage().uuid,pageOne.uuid);
 		
-		document.cache.pageIndex = 2;
+		model.cache.pageIndex = 2;
 		try {
-			document.pattern.execute("setPage");
+			model.pattern.execute("setPage");
 		} catch(Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
-		assertEquals(document.getPage().uuid,pageTwo.uuid);
+		assertEquals(model.document.getPage().uuid,pageTwo.uuid);
 		
-		document.cache.pageIndex = -1;
-		document.cache.pageUUID = pageZero.uuid;
+		model.cache.pageIndex = -1;
+		model.cache.pageUUID = pageZero.uuid;
 		try {
-			document.pattern.execute("setPage");
+			model.pattern.execute("setPage");
 		} catch(Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
-		assertEquals(document.getPage().uuid,pageZero.uuid);
+		assertEquals(model.document.getPage().uuid,pageZero.uuid);
 		
-		document.cache.pageIndex = -1;
-		document.cache.pageUUID = pageOne.uuid;
+		model.cache.pageIndex = -1;
+		model.cache.pageUUID = pageOne.uuid;
 		try {
-			document.pattern.execute("setPage");
+			model.pattern.execute("setPage");
 		} catch(Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
-		assertEquals(document.getPage().uuid,pageOne.uuid);
+		assertEquals(model.document.getPage().uuid,pageOne.uuid);
 		
-		document.cache.pageIndex = -1;
-		document.cache.pageUUID = pageTwo.uuid;
+		model.cache.pageIndex = -1;
+		model.cache.pageUUID = pageTwo.uuid;
 		try {
-			document.pattern.execute("setPage");
+			model.pattern.execute("setPage");
 		} catch(Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
-		assertEquals(document.getPage().uuid,pageTwo.uuid);
+		assertEquals(model.document.getPage().uuid,pageTwo.uuid);
 	}
 
 	@Test
 	@Order(2)
 	public void undo() {
-		assertEquals(document.getPage().uuid,pageTwo.uuid);
-		document.pattern.undo();
-		assertEquals(document.getPage().uuid,pageOne.uuid);
-		document.pattern.undo();
-		assertEquals(document.getPage().uuid,pageZero.uuid);
-		document.pattern.undo();
-		assertEquals(document.getPage().uuid,pageTwo.uuid);
-		document.pattern.undo();
-		assertEquals(document.getPage().uuid,pageOne.uuid);
-		document.pattern.undo();
-		assertEquals(document.getPage().uuid,pageZero.uuid);
-		document.pattern.undo();
+		assertEquals(model.document.getPage().uuid,pageTwo.uuid);
+		model.pattern.undo();
+		assertEquals(model.document.getPage().uuid,pageOne.uuid);
+		model.pattern.undo();
+		assertEquals(model.document.getPage().uuid,pageZero.uuid);
+		model.pattern.undo();
+		assertEquals(model.document.getPage().uuid,pageTwo.uuid);
+		model.pattern.undo();
+		assertEquals(model.document.getPage().uuid,pageOne.uuid);
+		model.pattern.undo();
+		assertEquals(model.document.getPage().uuid,pageZero.uuid);
+		model.pattern.undo();
 		
 	}
 	
 	@Test
 	@Order(3)
 	public void redo() {
-		document.pattern.redo();
-		assertEquals(document.getPage().uuid,pageZero.uuid);
-		document.pattern.redo();
-		assertEquals(document.getPage().uuid,pageOne.uuid);
-		document.pattern.redo();
-		assertEquals(document.getPage().uuid,pageTwo.uuid);
-		document.pattern.redo();
-		assertEquals(document.getPage().uuid,pageZero.uuid);
-		document.pattern.redo();
-		assertEquals(document.getPage().uuid,pageOne.uuid);
-		document.pattern.redo();
-		assertEquals(document.getPage().uuid,pageTwo.uuid);
+		model.pattern.redo();
+		assertEquals(model.document.getPage().uuid,pageZero.uuid);
+		model.pattern.redo();
+		assertEquals(model.document.getPage().uuid,pageOne.uuid);
+		model.pattern.redo();
+		assertEquals(model.document.getPage().uuid,pageTwo.uuid);
+		model.pattern.redo();
+		assertEquals(model.document.getPage().uuid,pageZero.uuid);
+		model.pattern.redo();
+		assertEquals(model.document.getPage().uuid,pageOne.uuid);
+		model.pattern.redo();
+		assertEquals(model.document.getPage().uuid,pageTwo.uuid);
 	}
 }

@@ -29,9 +29,9 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.user.User;
+import com.meritoki.library.controller.node.NodeController;
 
 /**
  *
@@ -98,7 +98,7 @@ public class UserClient {
 			try {
 				Token token = mapper.readValue(responseJson, Token.class);
 				this.properties.setProperty("token", token.token);
-				NodeController.saveProperties("./", "retina.properties", this.properties);
+				NodeController.saveProperties(".", "retina.xml", this.properties);
 				flag = true;
 			} catch (JsonParseException e) {
 				e.printStackTrace();

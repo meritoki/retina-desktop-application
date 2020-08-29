@@ -37,12 +37,14 @@ public class ImageImportDialog extends javax.swing.JDialog {
 	private static final long serialVersionUID = 3779061389380871856L;
 	private static Logger logger = LogManager.getLogger(ImageImportDialog.class.getName());
 	private Model model;
+	private MainFrame mainFrame;
 
 	/**
 	 * Creates new form Import
 	 */
 	public ImageImportDialog(java.awt.Frame parent, boolean flag, Model model) {
 		super(parent, flag);
+		this.mainFrame = (MainFrame) parent;
 		this.model = model;
 		this.initComponents();
 		this.result();
@@ -53,16 +55,20 @@ public class ImageImportDialog extends javax.swing.JDialog {
 		int result = this.imageFileChooser.showOpenDialog(null);
 		if (result == JFileChooser.APPROVE_OPTION) {
 			File[] files = this.imageFileChooser.getSelectedFiles();
-			if (model != null) {
-				model.document.cache.fileArray = files;
+			if (this.model != null) {
+				String[] fileArray = new String[files.length];
+				for (int i = 0; i < files.length; i++) {
+				   fileArray[i] = files[i].getAbsolutePath();
+				}
+				this.model.cache.fileArray = fileArray;
 				try {
-					model.document.pattern.execute("addPage");
+					this.model.pattern.execute("addPage");
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				((MainFrame) this.getParent()).init();
-				((MainFrame) this.getParent()).repaint();
+				this.mainFrame.init();
+//				this.mainFrame.repaint();
 			}
 			this.setVisible(false);
 		} else if (result == JFileChooser.CANCEL_OPTION) {

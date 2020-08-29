@@ -23,9 +23,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.command.Command;
 import com.meritoki.app.desktop.retina.model.document.Document;
-import com.meritoki.app.desktop.retina.model.document.command.Command;
-import com.meritoki.app.desktop.retina.model.document.command.Pattern;
+import com.meritoki.app.desktop.retina.model.pattern.Pattern;
 
 /**
  *
@@ -67,14 +67,13 @@ public class AttributionDialog extends javax.swing.JDialog {
     
     public void initTextArea() {
     	Document document = (this.model != null)?this.model.document:null;
-    	Pattern pattern = (document != null)?document.pattern:null;
     	List<Command> undoStack;
     	List<Command> logStack;
-    	if(pattern != null) {
+    	if(document != null) {
     		userCountMap = new HashMap<>();
     		String userName;
     		Integer count;
-       		logStack = pattern.logStack;
+       		logStack = document.logStack;
     		for(Command c: logStack) {
     			userName = c.user.name;
     			count = userCountMap.get(userName);
@@ -85,7 +84,7 @@ public class AttributionDialog extends javax.swing.JDialog {
     			}
     			userCountMap.put(userName,count);
     		}
-       		undoStack = pattern.undoStack;
+       		undoStack = this.model.pattern.undoStack;
     		for(Command c: undoStack) {
     			userName = c.user.name;
     			count = userCountMap.get(userName);

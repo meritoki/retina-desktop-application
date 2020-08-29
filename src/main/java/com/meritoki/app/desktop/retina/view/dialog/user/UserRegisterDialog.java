@@ -17,10 +17,10 @@ package com.meritoki.app.desktop.retina.view.dialog.user;
 
 import javax.swing.JOptionPane;
 
-import com.meritoki.app.desktop.retina.controller.security.SecurityController;
 import com.meritoki.app.desktop.retina.controller.user.UserController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.user.User;
+import com.meritoki.library.controller.security.SecurityController;
 
 /**
  *

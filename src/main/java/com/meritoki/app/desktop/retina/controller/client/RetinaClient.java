@@ -15,143 +15,203 @@
  */
 package com.meritoki.app.desktop.retina.controller.client;
 
-import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.cache.Cache;
+import com.meritoki.app.desktop.retina.model.command.Command;
 import com.meritoki.app.desktop.retina.model.document.Document;
-import com.meritoki.app.desktop.retina.model.document.Point;
-import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.user.User;
+import com.meritoki.library.controller.json.JsonController;
 
 public class RetinaClient {
 
 	private static Logger logger = LogManager.getLogger(RetinaClient.class.getName());
 	private String url = null;
-	private Token token = null;
 	private Properties properties;
-	
+
 	public RetinaClient(Model model) {
 		this.properties = model.system.properties;
 		boolean gateway = Boolean.parseBoolean((String) this.properties.get("gateway"));
-		if(gateway) {
-			this.url = this.properties.getProperty("service.web.gateway.url")+"/model";
+		if (gateway) {
+			this.url = this.properties.getProperty("service.web.gateway.url") + "/retina";
 		} else {
-			this.url = this.properties.getProperty("service.web.model.url");
+			this.url = this.properties.getProperty("service.web.retina.url");
 		}
 	}
 
+	public HttpHeaders getApplicationJsonAuthorizationBearerHttpHeaders() {
+		String token = this.properties.getProperty("token");
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+		httpHeaders.set("Authorization", "Bearer " + token);
+		return httpHeaders;
+	}
+
 	public boolean checkHealth() {
+		logger.info("checkHealth()");
 		boolean flag = false;
-		Status status = null;
 		try {
 			RestTemplate restTemplate = new RestTemplate();
 			String uri = new String(url + "/actuator/health");
-			String responseJson = restTemplate.getForObject(uri, String.class);
-			ObjectMapper mapper = new ObjectMapper();
-			try {
-				status = mapper.readValue(responseJson, Status.class);
-			} catch (JsonParseException e) {
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+			String response = restTemplate.getForObject(uri, String.class);
+			Status status = (Status) JsonController.getObject(response, Status.class);
+			if (status != null && status.status.equals("UP")) {
+				flag = true;
 			}
 		} catch (ResourceAccessException e) {
-			logger.error("ResourceAccessException");
-		}
-		if (status != null && status.status.equals("UP")) {
-			flag = true;
+			logger.error("ResourceAccessException " + e.getMessage());
 		}
 		return flag;
 	}
 
-	public void login(User user) {
-		RestTemplate restTemplate = new RestTemplate();
-		String uri = new String(url + "/authenticate");
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		String body = "{\"username\":\"" + user.name + "\", \"password\":\"" + user.password + "\"}";
-		logger.info(body);
-		HttpEntity<String> entity = new HttpEntity<String>(body, headers);
+	public boolean postDocument(Document document) {
+		logger.info("postDocument(" + document + ")");
+		boolean flag = false;
 		try {
-			String responseJson = restTemplate.postForObject(uri, entity, String.class);
-			ObjectMapper mapper = new ObjectMapper();
-			try {
-				this.token = mapper.readValue(responseJson, Token.class);
-				logger.info("login(user) token.token = "+token.token);
-			} catch (JsonParseException e) {
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+			String json = JsonController.getJson(document);
+			RestTemplate restTemplate = new RestTemplate();
+			String uri = new String(url + "/document");
+			HttpHeaders httpHeaders = this.getApplicationJsonAuthorizationBearerHttpHeaders();
+			HttpEntity<String> httpEntity = new HttpEntity<String>(json, httpHeaders);
+			String response = restTemplate.postForObject(uri, httpEntity, String.class);
+			Status status = (Status) JsonController.getObject(response, Status.class);
+			if (status.message.equals("imported")) {
+				flag = true;
+			}
+		} catch (ResourceAccessException e) {
+			logger.error("ResourceAccessException " + e.getMessage());
+		}
+		return flag;
+	}
+	
+	public Document postDocumentCommand(Document document, Command command, Cache cache) {
+		logger.info("postDocumentCommand(" + document + ", "+command+")");
+		Document d = null;
+		try {
+			String json = JsonController.getJson(cache);
+			RestTemplate restTemplate = new RestTemplate();
+			String uri = new String(url + "/document/"+document.uuid+"/command/"+command.name);
+			HttpHeaders httpHeaders = this.getApplicationJsonAuthorizationBearerHttpHeaders();
+			HttpEntity<String> httpEntity = new HttpEntity<String>(json, httpHeaders);
+			String response = restTemplate.postForObject(uri, httpEntity, String.class);
+			Status status = (Status) JsonController.getObject(response, Status.class);
+			if (status.message.equals("success")) {
+				d = (Document) JsonController.getObject(status.data.toString(), Document.class);
+			}
+		} catch (ResourceAccessException e) {
+			logger.error("ResourceAccessException " + e.getMessage());
+		}
+		return d;
+	}
+
+	public boolean postDocumentShare(Document document, User user) {
+		boolean flag = false;
+		try {
+			String json = JsonController.getJson(user);
+			RestTemplate restTemplate = new RestTemplate();
+			String uri = new String(url + "/document/"+document.uuid+"/share");
+			HttpHeaders httpHeaders = this.getApplicationJsonAuthorizationBearerHttpHeaders();
+			HttpEntity<String> httpEntity = new HttpEntity<String>(json, httpHeaders);
+			String response = restTemplate.postForObject(uri, httpEntity, String.class);
+			Status status = (Status) JsonController.getObject(response, Status.class);
+			if (status.message.equals("shared")) {
+				flag = true;
+			} else if (status.message.equals("already shared")) {
+				flag = true;
+			}
+		} catch (ResourceAccessException e) {
+			logger.error("ResourceAccessException " + e.getMessage());
+		}
+		return flag;
+	}
+	
+	public boolean deleteDocument(Document document) {
+		boolean flag = false;
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+			String uri = new String(url + "/document/"+document.uuid);
+			HttpHeaders httpHeaders = this.getApplicationJsonAuthorizationBearerHttpHeaders();
+			HttpEntity httpEntity = new HttpEntity(httpHeaders);
+			ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.DELETE, httpEntity, String.class);
+			Status status = (Status) JsonController.getObject(response.getBody(), Status.class);
+			if (status.message.equals("success")) {
+				flag = true;
 			}
 		} catch (ResourceAccessException e) {
 			logger.error("ResourceAccessException");
 		}
+		return flag;
 	}
 
-	public void uploadDocument(Document document) {
-		logger.info("uploadDocument(" + document + ")");
-		ObjectMapper mapper = new ObjectMapper();
-		String documentJson;
+	public List<String> getDocumentList() {
+		List<String> stringList = null;
 		try {
-			documentJson = mapper.writeValueAsString(document);
 			RestTemplate restTemplate = new RestTemplate();
-			String uri = new String(url + "/import");
-			HttpHeaders headers = new HttpHeaders();
-			headers.setContentType(MediaType.APPLICATION_JSON);
-			headers.set("Authorization", "Bearer " + this.token.token);
-			HttpEntity<String> entity = new HttpEntity<String>(documentJson, headers);
-			String string = restTemplate.postForObject(uri, entity, String.class);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
+			String uri = new String(url + "/document/");
+			HttpHeaders httpHeaders = this.getApplicationJsonAuthorizationBearerHttpHeaders();
+			HttpEntity httpEntity = new HttpEntity(httpHeaders);
+			ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, httpEntity, String.class);
+			Status status = (Status) JsonController.getObject(response.getBody(), Status.class);
+			if (status.message.equals("success")) {
+				stringList = (List<String>) JsonController.getObject(status.data.toString(),
+						new TypeReference<List<String>>() {
+						});
+			}
+		} catch (ResourceAccessException e) {
+			logger.error("ResourceAccessException");
+		}
+		return stringList;
+	}
+
+	public Document getDocument(String uuid) {
+		Document document = null;
+		try {
+			RestTemplate restTemplate = new RestTemplate();
+			String uri = new String(url + "/document/" + uuid);
+			HttpHeaders httpHeaders = this.getApplicationJsonAuthorizationBearerHttpHeaders();
+			HttpEntity httpEntity = new HttpEntity(httpHeaders);
+			ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, httpEntity, String.class);
+			Status status = (Status) JsonController.getObject(response.getBody(), Status.class);
+			if (status.message.equals("success")) {
+				document = (Document) JsonController.getObject(status.data.toString(), Document.class);
+			}
+		} catch (ResourceAccessException e) {
+			logger.error("ResourceAccessException");
+		}
+		return document;
+	}
+
+	public static void main(String args[]) {
+		RetinaClient rc = new RetinaClient(new Model());
+		List<String> stringList = rc.getDocumentList();
+		if(stringList != null) {
+		for (String string : stringList) {
+			System.out.println(string);
+			Document document = rc.getDocument(string);
+			System.out.println(document);
+			
+		}
+		}
+		Document d = rc.getDocument("b2327d35-3940-47b4-aa10-1d8e820399b8");
+		if(d != null) {
+		System.out.println(d);
+		User user = new User();
+		user.name = "jorodriguez1988@yahoo.com";
+		System.out.println(rc.postDocumentShare(d, user));
+//		System.out.println(rc.deleteDocument(d));
 		}
 	}
-
-	public String downloadProject(String uuid) {
-		String string = null;
-		RestTemplate restTemplate = new RestTemplate();
-		String uri = new String(url + "/project/" + uuid);
-		string = restTemplate.getForObject(uri, String.class);
-		return string;
-	}
-	
-	public Shape getShape(Point point) {
-//		RestTemplate restTemplate = new RestTemplate();
-//		String uri = new String(url + "/project/");
-//		HttpHeaders headers = new HttpHeaders();
-//		headers.setContentType(MediaType.APPLICATION_JSON);
-//		headers.set("Authorization", "Bearer " + this.token.token);
-//		HttpEntity<String> entity = new HttpEntity<String>(project, headers);
-//		String string = restTemplate.postForObject(uri, entity, String.class);
-//		System.out.println(string);
-		
-		return null;
-	}
-
-//    public static void main(String args[]) {
-//        Map<String, String> vars = new HashMap<String, String>();
-//        vars.put("uuid", "123");
-//        RestTemplate rt = new RestTemplate();
-//        String uri = new String("http://localhost:8080/machine/register");
-//        FileTest u = new FileTest();
-//        u.uuid = "123";
-//        String returns = rt.postForObject(uri, u, String.class, vars);
-//        System.out.println(returns);
-//    }
 }

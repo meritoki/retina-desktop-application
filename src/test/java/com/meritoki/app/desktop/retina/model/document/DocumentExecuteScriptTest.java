@@ -12,16 +12,13 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import com.meritoki.app.desktop.retina.model.document.Document;
-import com.meritoki.app.desktop.retina.model.document.Image;
-import com.meritoki.app.desktop.retina.model.document.Page;
-import com.meritoki.app.desktop.retina.model.document.Point;
+import com.meritoki.app.desktop.retina.model.Model;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DocumentExecuteScriptTest {
 
 	static Logger logger = LogManager.getLogger(DocumentExecuteScriptTest.class.getName());
-	static Document document = null;
+	static Model model = new Model();
 	static String pageZeroUUID = null;
 	static String pageOneUUID = null;
 	static String pageTwoUUID = null;
@@ -32,84 +29,96 @@ public class DocumentExecuteScriptTest {
 	
 	@BeforeAll
 	public static void initialize() {
-		document = new Document();
+		model.document = new Document();
 		Page page = new Page();
 		page = new Page(new Image(new File("./data/image/01.jpg")));
 		pageZeroUUID = page.uuid;
-		document.addPage(page);
+		model.document.addPage(page);
 		page = new Page();
 		page.addImage(new Image(new File("./data/image/02.jpg")));
 		pageOneUUID = page.uuid;
-		document.addPage(page);
+		model.document.addPage(page);
 		page = new Page();
 		page.addImage(new Image(new File("./data/image/03.jpg")));
 		page.addImage(new Image(new File("./data/image/04.jpg")));
 		pageTwoUUID = page.uuid;
-		document.addPage(page);
+		model.document.addPage(page);
 		page = new Page();
 		page.addImage(new Image(new File("./data/image/05.jpg")));
 		page.addImage(new Image(new File("./data/image/06.jpg")));
 		page.addImage(new Image(new File("./data/image/07.jpg")));
 		pageThreeUUID = page.uuid;
-		document.addPage(page);
-		assertEquals(document.pageList.size(),4);
+		model.document.addPage(page);
+		assertEquals(model.document.pageList.size(),4);
 	}
 	
 	@Test
 	@Order(1)
 	public void addShapes() {
-		assertEquals(document.setIndex(0), true);
-		assertEquals(document.getPage().setIndex(0),true);
-		document.cache.pressedImage = document.getImage();
-		int x = (int)(document.cache.pressedImage.position.absoluteDimension.width/2 - dimension/2);
-		int y = (int)(document.cache.pressedImage.position.absoluteDimension.height/2 - dimension/2);
+		assertEquals(model.document.setIndex(0), true);
+		model.document.getPage().getBufferedImage(model);
+		assertEquals(model.document.getPage().setIndex(0),true);
+		model.system.pressedImage = model.document.getImage();
+		int x = (int)(model.system.pressedImage.position.absoluteDimension.width/2 - dimension/2);
+		int y = (int)(model.system.pressedImage.position.absoluteDimension.height/2 - dimension/2);
 		int width = dimension;
 		int height = dimension;
-		document.cache.pressedPoint = new Point(x,y);
-		document.cache.releasedPoint = new Point(x+width, y+height);
+		model.cache.pressedPoint = new Point(x,y);
+		model.cache.releasedPoint = new Point(x+width, y+height);
     	try {
-			document.pattern.execute("addShape");
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
+			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
+			model.pattern.execute("addShape");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
-		assertEquals(document.setIndex(1), true);
-		document.cache.pressedImage = document.getImage();
-		x = (int)(document.cache.pressedImage.position.absoluteDimension.width/2 - dimension/2);
-		y = (int)(document.cache.pressedImage.position.absoluteDimension.height/2 - dimension/2);
+		assertEquals(model.document.setIndex(1), true);
+		model.document.getPage().getBufferedImage(model);
+		model.system.pressedImage = model.document.getImage();
+		x = (int)(model.system.pressedImage.position.absoluteDimension.width/2 - dimension/2);
+		y = (int)(model.system.pressedImage.position.absoluteDimension.height/2 - dimension/2);
 		width = dimension;
 		height = dimension;
-		document.cache.pressedPoint = new Point(x,y);
-		document.cache.releasedPoint = new Point(x+width, y+height);
+		model.cache.pressedPoint = new Point(x,y);
+		model.cache.releasedPoint = new Point(x+width, y+height);
     	try {
-			document.pattern.execute("addShape");
-		} catch (Exception e) {
-			logger.error("Exception "+e.getMessage());
-		}
-    	
-		assertEquals(document.setIndex(2), true);
-		document.cache.pressedImage = document.getImage();
-		x = (int)(document.cache.pressedImage.position.absoluteDimension.width/2 - dimension/2);
-		y = (int)(document.cache.pressedImage.position.absoluteDimension.height/2 - dimension/2);
-		width = dimension;
-		height = dimension;
-		document.cache.pressedPoint = new Point(x,y);
-		document.cache.releasedPoint = new Point(x+width, y+height);
-    	try {
-			document.pattern.execute("addShape");
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
+			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
+			model.pattern.execute("addShape");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
     	
-		assertEquals(document.setIndex(3), true);
-		document.cache.pressedImage = document.getImage();
-		x = (int)(document.cache.pressedImage.position.absoluteDimension.width/2 - dimension/2);
-		y = (int)(document.cache.pressedImage.position.absoluteDimension.height/2 - dimension/2);
+		assertEquals(model.document.setIndex(2), true);
+		model.document.getPage().getBufferedImage(model);
+		model.system.pressedImage = model.document.getImage();
+		x = (int)(model.system.pressedImage.position.absoluteDimension.width/2 - dimension/2);
+		y = (int)(model.system.pressedImage.position.absoluteDimension.height/2 - dimension/2);
 		width = dimension;
 		height = dimension;
-		document.cache.pressedPoint = new Point(x,y);
-		document.cache.releasedPoint = new Point(x+width, y+height);
+		model.cache.pressedPoint = new Point(x,y);
+		model.cache.releasedPoint = new Point(x+width, y+height);
     	try {
-			document.pattern.execute("addShape");
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
+			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
+			model.pattern.execute("addShape");
+		} catch (Exception e) {
+			logger.error("Exception "+e.getMessage());
+		}
+    	
+		assertEquals(model.document.setIndex(3), true);
+		model.document.getPage().getBufferedImage(model);
+		model.system.pressedImage = model.document.getImage();
+		x = (int)(model.system.pressedImage.position.absoluteDimension.width/2 - dimension/2);
+		y = (int)(model.system.pressedImage.position.absoluteDimension.height/2 - dimension/2);
+		width = dimension;
+		height = dimension;
+		model.cache.pressedPoint = new Point(x,y);
+		model.cache.releasedPoint = new Point(x+width, y+height);
+    	try {
+			model.cache.pressedPageUUID = model.document.getPage().uuid;
+			model.cache.pressedImageUUID = model.system.pressedImage.uuid;
+			model.pattern.execute("addShape");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
@@ -118,10 +127,10 @@ public class DocumentExecuteScriptTest {
 	@Test
 	@Order(2) 
 	public void executeScript() {
-		document.cache.script = "JOIN 0:1; SPLIT 1; SWAP 0:1; INSERT 2:1;";
-    	document.cache.pageList = document.getPageList();
+		model.cache.script = "JOIN 0:1; SPLIT 1; SWAP 0:1; INSERT 2:1;";
+    	model.cache.pageList = model.document.getPageList();
     	try {
-			document.pattern.execute("executeScript");
+			model.pattern.execute("executeScript");
 		} catch (Exception e) {
 			logger.error("Exception "+e.getMessage());
 		}
@@ -130,28 +139,28 @@ public class DocumentExecuteScriptTest {
 	@Test
 	@Order(3)
 	public void verify() {
-		assertEquals(document.pageList.size(),4);
+		assertEquals(model.document.pageList.size(),4);
 	}
 	
 	@Test
 	@Order(4)
 	public void undo() {
-		document.pattern.undo();
-		assertEquals(document.pageList.size(),4);
-		assertEquals(document.setIndex(0), true);
-		System.out.println(document.getPage().uuid);
-		assertEquals(document.getPage().uuid,pageZeroUUID);
+		model.pattern.undo();
+		assertEquals(model.document.pageList.size(),4);
+		assertEquals(model.document.setIndex(0), true);
+		System.out.println(model.document.getPage().uuid);
+		assertEquals(model.document.getPage().uuid,pageZeroUUID);
 		
-		assertEquals(document.setIndex(1), true);
-		System.out.println(document.getPage().uuid);
-		assertEquals(document.getPage().uuid,pageOneUUID);
+		assertEquals(model.document.setIndex(1), true);
+		System.out.println(model.document.getPage().uuid);
+		assertEquals(model.document.getPage().uuid,pageOneUUID);
 		
-		assertEquals(document.setIndex(2), true);
-		System.out.println(document.getPage().uuid);
-		assertEquals(document.getPage().uuid,pageTwoUUID);
+		assertEquals(model.document.setIndex(2), true);
+		System.out.println(model.document.getPage().uuid);
+		assertEquals(model.document.getPage().uuid,pageTwoUUID);
 		
-		assertEquals(document.setIndex(3), true);
-		System.out.println(document.getPage().uuid);
-		assertEquals(document.getPage().uuid,pageThreeUUID);
+		assertEquals(model.document.setIndex(3), true);
+		System.out.println(model.document.getPage().uuid);
+		assertEquals(model.document.getPage().uuid,pageThreeUUID);
 	}
 }

@@ -165,11 +165,8 @@ public class UserLoginDialog extends javax.swing.JDialog {
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         String userName = this.userNameTextField.getText();
         String password = new String(this.userPasswordField.getPassword());
-        UserController userController = new UserController(this.model.system);
-        if(userController.loginUser(userName, password)) {
+        if(this.model.loginUser(userName, password)) {
         	JOptionPane.showMessageDialog(this, "Welcome");
-        	this.model.system.loggedIn = true;
-        	this.model.document.pattern.user = this.model.system.user;
         	this.mainFrame.init();
         	this.setVisible(false);
         } else {

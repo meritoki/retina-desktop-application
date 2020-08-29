@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>retina</comment>
+<entry key="service.key">1234</entry>
+<entry key="service.web.file.url">http\://localhost\:8302</entry>
+<entry key="service.web.machine.url">http\://localhost\:8303</entry>
+<entry key="service.web.gateway.url">http\://localhost\:8080</entry>
+<entry key="token">eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZXJpdG9raUB5YWhvby5jb20iLCJleHAiOjE1OTU3MDg0MjYsImlhdCI6MTU5NTY5MDQyNn0.D_qVkmhnw6QlwAVibysuE6CKcjYP9LFowJOgxwBBiEjKd8WppSF4k0FQxLWFF9QLOJId94bAAF5utCV0ULi9MA</entry>
+<entry key="service.web.user.url">http\://localhost\:8300</entry>
+<entry key="service.web.vision.url">http\://localhost\:8304</entry>
+<entry key="service.web.retina.url">http\://localhost\:8301</entry>
+<entry key="gateway">false</entry>
+</properties>

@@ -13,9 +13,11 @@ import com.meritoki.app.desktop.retina.model.provider.Provider;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Output;
 import com.meritoki.library.cortex.model.Concept;
-import com.meritoki.module.library.model.Data;
 import com.meritoki.module.library.model.Module;
 import com.meritoki.module.library.model.Node;
+import com.meritoki.module.library.model.State;
+import com.meritoki.module.library.model.data.Data;
+import com.meritoki.module.library.model.data.DataType;
 
 public class Inference extends Node {
 	
@@ -38,13 +40,10 @@ public class Inference extends Node {
                 this.meritoki = (Meritoki) provider;
             }
         }
-		this.stateMap.put(WAIT,"WAIT");
-		this.stateMap.put(SEARCH, "SEARCH");
-		this.stateMap.put(SCAN,"SCAN");
-		this.setState(WAIT);
+		this.setState(State.WAIT);
 	}
 	
-	protected void machine(int state, Object object) {
+	protected void machine(State state, Object object) {
 		switch(state) {
 		case WAIT: {
 			this.wait(object);
@@ -58,16 +57,19 @@ public class Inference extends Node {
 			this.scan(object);
 			break;
 		}
+		default: {
+			super.machine(state, object);
 		}
-		super.machine(state, object);
+		}
+		
 	}
 	
 	private void wait(Object object) {
 		if(object instanceof Data) {
 			Data data = (Data)object;
 			switch(data.getType()) {
-			case Data.UNBLOCK:{
-				this.setState(SEARCH);
+			case UNBLOCK:{
+				this.setState(State.SEARCH);
 				this.setDelay(this.newDelay(this.inputDelay));
 				break;
 			}
@@ -81,7 +83,7 @@ public class Inference extends Node {
 		}
 		if(this.delayExpired()) {
 			this.meritoki.openOutput(this.model.document.uuid);
-			List<Shape> shapeList = this.model.document.getGridShapeList(true);
+			List<Shape> shapeList = this.model.document.getGridShapeList();
 			boolean flag;
 			scan = false;
 			for(Shape s:shapeList) {
@@ -107,11 +109,11 @@ public class Inference extends Node {
 				}
 			}
 			if(this.scan) {
-				this.setState(SCAN);
+				this.setState(State.SCAN);
 			} else {
-				this.rootAdd(new Data(1,this.id, Data.UNBLOCK,0,null,this.objectList));
+				this.rootAdd(new Data(1,this.id, DataType.UNBLOCK,0,null,this.objectList));
 				this.setDelay(this.newDelay(this.inputDelay));
-				this.setState(WAIT);
+				this.setState(State.WAIT);
 			}
 			this.setDelay(this.newDelay(this.inputDelay));
 		}
@@ -124,9 +126,9 @@ public class Inference extends Node {
 			}
 			this.meritoki.saveOutput();
 			this.model.document.importOutputList(this.meritoki.outputList);
-			this.rootAdd(new Data(1,this.id, Data.UNBLOCK,0,null,this.objectList));
+			this.rootAdd(new Data(1,this.id, DataType.UNBLOCK,0,null,this.objectList));
 			this.setDelay(this.newDelay(this.inputDelay));
-			this.setState(WAIT);
+			this.setState(State.WAIT);
 		}
 	}
 	

@@ -18,8 +18,6 @@ package com.meritoki.app.desktop.retina.model.document;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -35,6 +33,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.meritoki.app.desktop.retina.model.Model;
 
 /**
  * The Page class is used to hold a list of Images.
@@ -63,7 +62,7 @@ public class Page {
 	/**
 	 * Current Image index selected. Default is zero.
 	 */
-	@JsonIgnore
+	@JsonProperty
 	public int index = 0;
 	/**
 	 * Cached copy of joined bufferedImage from one or more Images.
@@ -92,6 +91,7 @@ public class Page {
 	public Page() {
 		this.uuid = UUID.randomUUID().toString();
 	}
+
 	/**
 	 * Class constructor that accepts image as parameter
 	 */
@@ -100,6 +100,7 @@ public class Page {
 		this.addImage(image);
 		this.index = 0;
 	}
+
 	/**
 	 * Class copy constructor
 	 *
@@ -113,6 +114,7 @@ public class Page {
 		this.index = page.index;
 		this.position = new Position(page.position);
 	}
+
 	/**
 	 * Function gets the current index.
 	 *
@@ -122,25 +124,26 @@ public class Page {
 	public int getIndex() {
 		return this.index;
 	}
-	
+
 	@JsonIgnore
 	public int getIndex(String uuid) {
 		int index = 0;
 		Image image;
-		for(int i = 0; i< this.imageList.size();i++) {
+		for (int i = 0; i < this.imageList.size(); i++) {
 			image = this.imageList.get(i);
-			if(image.uuid.equals(uuid)) {
+			if (image.uuid.equals(uuid)) {
 				index = i;
 				break;
 			}
 		}
 		return index;
 	}
-	
+
 	@JsonIgnore
 	public double getThreshold() {
 		return threshold;
 	}
+
 	/**
 	 * Function returns Image using index
 	 *
@@ -150,15 +153,15 @@ public class Page {
 	public Image getImage() {
 		int size = this.imageList.size();
 		Image image = (this.index < size && size > 0) ? this.imageList.get(this.index) : null;
-		logger.debug("getImage() image="+image);
+		logger.debug("getImage() image=" + image);
 		return image;
 	}
-	
+
 	@JsonIgnore
 	public Image getImage(int index) {
 		int size = this.imageList.size();
 		Image image = (index < size && size > 0) ? this.imageList.get(index) : null;
-		logger.debug("getImage() image="+image);
+		logger.debug("getImage() image=" + image);
 		return image;
 	}
 
@@ -177,14 +180,17 @@ public class Page {
 		}
 		return null;
 	}
+
 	/**
 	 * Function returns list of Image objects
+	 * 
 	 * @return List<Image>
 	 */
 	@JsonIgnore
 	public List<Image> getImageList() {
 		return this.imageList;
 	}
+
 	/**
 	 * Function returns shape that contains the point parameter
 	 *
@@ -202,6 +208,7 @@ public class Page {
 		}
 		return s;
 	}
+
 	/**
 	 * Function returns the Shape at the current index in Image
 	 *
@@ -213,12 +220,12 @@ public class Page {
 		Shape shape = (image != null) ? image.getShape() : null;
 		return shape;
 	}
-	
+
 	@JsonIgnore
 	public Shape getGridShape() {
 		Shape shape = this.getShape();
-		if(shape instanceof Grid) {
-			Grid grid = (Grid)shape;
+		if (shape instanceof Grid) {
+			Grid grid = (Grid) shape;
 			shape = grid.getShape();
 		}
 		return shape;
@@ -226,58 +233,26 @@ public class Page {
 
 	@JsonIgnore
 	public List<Shape> getShapeList() {
-		BufferedImage bufferedImage = this.getScaledBufferedImage();
 		List<Shape> shapeList = new ArrayList<>();
 		for (Image image : this.imageList) {
 			for (Shape shape : image.getShapeList()) {
-				shape.bufferedImage = this.getShapeBufferedImage(bufferedImage, shape);
 				shapeList.add(shape);
 			}
 		}
 		return shapeList;
-	}
-	
-	@JsonIgnore
-	public List<Shape> getGridShapeList(boolean flag) {
-		BufferedImage bufferedImage = null;
-		if(flag)
-			bufferedImage = this.getScaledBufferedImage();
-		List<Shape> shapeList = new ArrayList<>();
-		for (Image image : this.imageList) {
-			for (Shape shape : image.getGridShapeList()) {
-				if(flag)
-					shape.bufferedImage = this.getShapeBufferedImage(bufferedImage,shape);
-				shapeList.add(shape);
-			}
-		}
-		return shapeList;
-	}
-	
-	@JsonIgnore
-	public BufferedImage getScaledBufferedImage() {
-		BufferedImage before = this.getBufferedImage();
-		BufferedImage after = new BufferedImage(before.getWidth(),before.getHeight(),BufferedImage.TYPE_INT_RGB);
-		AffineTransform affineTransform = new AffineTransform();
-		affineTransform.scale(this.position.scale, this.position.scale);//this handles scaling the bufferedImage
-		AffineTransformOp affineTransformOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
-		after = affineTransformOp.filter(before, after);
-		return after;
 	}
 
 	@JsonIgnore
-	public BufferedImage getShapeBufferedImage(BufferedImage after, Shape shape) {
-		logger.debug("getShapeBufferedImage("+shape+")");
-		BufferedImage shapeBufferedImage = null;
-		if (after != null) {
-			if(shape.position.point.x >= 0 && shape.position.point.y >= 0 && (int)shape.position.dimension.height > 0 && (int)shape.position.dimension.width > 0) {
-				shapeBufferedImage = after.getSubimage((int)shape.position.point.x, (int)shape.position.point.y, (int)shape.position.dimension.width, (int)shape.position.dimension.height);
-			} else {
-				logger.error("MAJOR ERROR THAT NEEDS TO BE FIXED shape.position="+shape.position);
+	public List<Shape> getGridShapeList() {
+		List<Shape> shapeList = new ArrayList<>();
+		for (Image image : this.imageList) {
+			for (Shape shape : image.getGridShapeList()) {
+				shapeList.add(shape);
 			}
 		}
-		return shapeBufferedImage;
+		return shapeList;
 	}
-	
+
 	/**
 	 * Function returns bufferedImage with one or more File bufferedImages from the
 	 * fileList
@@ -285,49 +260,65 @@ public class Page {
 	 * @return this.bufferedImage;
 	 */
 	@JsonIgnore
-	public BufferedImage getBufferedImage() {
+	public BufferedImage getBufferedImage(Model model) {
 		if (this.bufferedImage == null) {
-			this.bufferedImage = this.joinImages(this.getImageList());
-			if(this.bufferedImage != null) {
-				this.position.setAbsoluteDimension(new Dimension(this.bufferedImage.getWidth(),this.bufferedImage.getHeight()));
+			this.bufferedImage = this.joinImages(model);
+			if (this.bufferedImage != null) {
+				this.position.setAbsoluteDimension(
+						new Dimension(this.bufferedImage.getWidth(), this.bufferedImage.getHeight()));
 			} else {
-				this.position.setAbsoluteDimension(new Dimension(0,0));
+				this.position.setAbsoluteDimension(new Dimension(0, 0));
 			}
 		}
 		return this.bufferedImage;
 	}
+
+	@JsonIgnore
+	public BufferedImage getScaledBufferedImage(Model model) {
+		BufferedImage before = this.getBufferedImage(model);
+		BufferedImage after = new BufferedImage(before.getWidth(), before.getHeight(), BufferedImage.TYPE_INT_RGB);
+		AffineTransform affineTransform = new AffineTransform();
+		affineTransform.scale(this.position.scale, this.position.scale);// this handles scaling the bufferedImage
+		AffineTransformOp affineTransformOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
+		after = affineTransformOp.filter(before, after);
+		return after;
+	}
+
 	@JsonIgnore
 	public List<Shape> getSortedShapeList() {
-		return new Matrix(this.getShapeList(),null,this.threshold).getShapeList();
+		return new Matrix(this.getShapeList(), null, this.threshold).getShapeList();
 	}
 
 	@JsonIgnore
 	public Matrix getMatrix() {
-		return new Matrix(this.getGridShapeList(false), this.script, this.threshold);
+		return new Matrix(this.getGridShapeList(), this.script, this.threshold);
 	}
-	
+
 	@JsonIgnore
 	public Table getTable() {
 		return new Table(this.getMatrix());
 	}
-	
+
 	@JsonIgnore
 	public Archive getArchive() {
 		return new Archive(this.getMatrix());
 	}
+
 	@JsonIgnore
 	public void setThreshold(double threshold) {
 		this.threshold = threshold;
 	}
+
 	@JsonIgnore
 	public void setBufferedImage(BufferedImage bufferedImage) {
+		logger.info("setBufferedImage(" + bufferedImage + ")");
 		this.bufferedImage = bufferedImage;
 	}
-	
+
 	@JsonIgnore
 	public void setBufferedImageNull() {
 		this.setBufferedImage(null);
-		for(Image image: this.imageList) {
+		for (Image image : this.imageList) {
 			image.setBufferedImage(null);
 		}
 	}
@@ -348,17 +339,20 @@ public class Page {
 	}
 
 	@JsonIgnore
-	public void setImage(String uuid) {
+	public boolean setImage(String uuid) {
 		logger.debug("setImage(" + uuid + ")");
+		boolean flag = false;
 		Image image = null;
 		List<Image> imageList = this.getImageList();
 		for (int i = 0; i < imageList.size(); i++) {
 			image = imageList.get(i);
 			if (image.uuid.equals(uuid)) {
+				flag = true;
 				this.setIndex(i);
 				break;
 			}
 		}
+		return flag;
 	}
 
 	/**
@@ -368,7 +362,7 @@ public class Page {
 	 */
 	@JsonIgnore
 	public void setScale(double scale) {
-		logger.info("setScale("+scale+")");
+		logger.info("setScale(" + scale + ")");
 		this.position.setScale(scale);
 		for (Image image : this.imageList) {
 			image.setScale(scale);
@@ -389,7 +383,7 @@ public class Page {
 			}
 		}
 	}
-	
+
 	@JsonIgnore
 	public void setGridShape(String uuid) {
 		for (Image image : this.getImageList()) {
@@ -406,8 +400,20 @@ public class Page {
 		this.imageList.add(image);
 		image.setScale(this.position.scale);
 		image.setOffset(this.position.absoluteDimension.width);
-		this.position.addAbsoluteDimension(new Dimension(image.position.absoluteDimension.width,image.position.absoluteDimension.height));//added height to fix contain point method and allow MoveShapeTest to work
-		for(Shape shape: image.shapeList) {
+		this.position.addAbsoluteDimension(
+				new Dimension(image.position.absoluteDimension.width, image.position.absoluteDimension.height));// added
+																												// height
+																												// to
+																												// fix
+																												// contain
+																												// point
+																												// method
+																												// and
+																												// allow
+																												// MoveShapeTest
+																												// to
+																												// work
+		for (Shape shape : image.shapeList) {
 			shape.position.setOffset(image.position.offset);
 		}
 	}
@@ -427,7 +433,7 @@ public class Page {
 			}
 		}
 	}
-	
+
 	@JsonIgnore
 	public Image removeImage(Image image) {
 		return this.removeImage(image.uuid);
@@ -436,21 +442,22 @@ public class Page {
 	@JsonIgnore
 	public Image removeImage(String uuid) {
 		ListIterator<Image> imageListIterator = this.imageList.listIterator();
-		while(imageListIterator.hasNext()){
+		while (imageListIterator.hasNext()) {
 			Image image = imageListIterator.next();
-		    if(image.uuid.equals(uuid)){
-		    	imageListIterator.remove();
-		    	this.position.absoluteDimension.width -= image.position.absoluteDimension.width;
-		        image.setOffset(0);
-		        image.setMargin(0);
-		        return image;
-		    }
+			if (image.uuid.equals(uuid)) {
+				imageListIterator.remove();
+				this.position.absoluteDimension.width -= image.position.absoluteDimension.width;
+				image.setOffset(0);
+				image.setMargin(0);
+				return image;
+			}
 		}
 		return null;
 	}
 
 	/**
 	 * Need to refactor
+	 * 
 	 * @param shape
 	 * @return
 	 */
@@ -476,16 +483,16 @@ public class Page {
 		}
 		return selection;
 	}
-	
+
 	@JsonIgnore
 	public boolean contains(Point point) {
 		boolean flag = this.position.contains(point);
-		logger.debug("contains("+point+") flag="+flag);
+		logger.debug("contains(" + point + ") flag=" + flag);
 		return flag;
 	}
 
 	@JsonIgnore
-	public BufferedImage joinImages(List<Image> imageList) {
+	public BufferedImage joinImages(Model model) {
 		logger.debug("joinImages(" + imageList + ")");
 		BufferedImage bufferedImage = null;
 		double offset = 0;
@@ -493,14 +500,14 @@ public class Page {
 			Image a = imageList.get(i);
 			if (bufferedImage == null) {
 				a.setOffset(offset);
-				int width = a.getBufferedImage().getWidth();
-				int height = (int) (a.getBufferedImage().getHeight() + a.position.margin);
+				int width = a.getBufferedImage(model).getWidth();
+				int height = (int) (a.getBufferedImage(model).getHeight() + a.position.margin);
 				bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 				Graphics2D graphics2D = bufferedImage.createGraphics();
 				graphics2D.setPaint(Color.BLACK);
 				graphics2D.fillRect(0, 0, width, height);
 				graphics2D.setColor(Color.BLACK);
-				graphics2D.drawImage(a.getBufferedImage(), null, 0, (int)(a.position.margin));
+				graphics2D.drawImage(a.getBufferedImage(model), null, 0, (int) (a.position.margin));
 				graphics2D.dispose();
 				offset = a.position.absoluteDimension.width;
 			}
@@ -509,8 +516,8 @@ public class Page {
 				b.setOffset(offset);
 				int w = bufferedImage.getWidth();
 				int h = bufferedImage.getHeight();
-				int width = w + b.getBufferedImage().getWidth();
-				int height = Math.max(h, b.getBufferedImage().getHeight() + (int) b.position.margin);
+				int width = w + b.getBufferedImage(model).getWidth();
+				int height = Math.max(h, b.getBufferedImage(model).getHeight() + (int) b.position.margin);
 				BufferedImage bI = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 				Graphics2D graphics2D = bI.createGraphics();
 				Color oldColor = graphics2D.getColor();
@@ -518,98 +525,20 @@ public class Page {
 				graphics2D.fillRect(0, 0, width, height);
 				graphics2D.setColor(oldColor);
 				graphics2D.drawImage(bufferedImage, null, 0, 0);
-				graphics2D.drawImage(b.getBufferedImage(), null, w, (int) (b.position.margin));
+				graphics2D.drawImage(b.getBufferedImage(model), null, w, (int) (b.position.margin));
 				graphics2D.dispose();
 				bufferedImage = bI;
-				offset+= b.position.absoluteDimension.width;
+				offset += b.position.absoluteDimension.width;
 			}
 		}
 		return bufferedImage;
 	}
 
 	@JsonIgnore
-	public void paint(Graphics2D graphics2D) {
-		AffineTransform affineTransform = new AffineTransform();
-		affineTransform.scale(this.position.scale, this.position.scale);//this handles scaling the bufferedImage
-		BufferedImage bufferedImage = this.getBufferedImage();
-		if (bufferedImage != null) {
-			graphics2D.drawImage(bufferedImage, affineTransform, null);
-		}
-		List<Image> imageList = this.getImageList();
-		Image image = this.getImage();
-		if (imageList != null) {
-			for (Image i : imageList) {
-				Position p = i.position;
-				if (image != null && i.uuid.equals(image.uuid)) {
-					graphics2D.setColor(Color.RED);
-				} else {
-					graphics2D.setColor(Color.YELLOW);
-				}
-				Rectangle2D.Double rectangle = new Rectangle2D.Double(p.point.x, p.point.y, p.dimension.width, p.dimension.height);
-				graphics2D.draw(rectangle);
-			}
-
-		}
-		List<Shape> shapeList = this.getSortedShapeList();//this.getMatrix().getShapeList();
-		Shape shape = this.getShape();
-		Shape gridShape = this.getGridShape();
-		Shape previousShape = null;
-		if (shapeList != null) {
-			for (Shape s : shapeList) {
-				Position position = s.position;
-				if (shape != null && s.uuid.equals(shape.uuid)) {
-					graphics2D.setColor(Color.RED);
-				} else {
-					graphics2D.setColor(Color.BLUE);
-				}
-				switch (s.type) {
-				case ELLIPSE: {
-					Ellipse2D.Double ellipse = new Ellipse2D.Double(position.point.x, position.point.y, position.dimension.width, position.dimension.height);
-					graphics2D.draw(ellipse);
-					break;
-				}
-				case RECTANGLE: {
-					Rectangle2D.Double rectangle = new Rectangle2D.Double(position.point.x, position.point.y, position.dimension.width, position.dimension.height);
-					graphics2D.draw(rectangle);
-					if(s instanceof Grid) {
-						Shape[][] matrix = ((Grid) s).matrix;
-						for(int i=0;i<matrix.length;i++) {
-							for(int j=0;j<matrix[i].length;j++) {
-								Shape gs = matrix[i][j];
-								if (gridShape != null && gs.uuid.equals(gridShape.uuid)) {
-									graphics2D.setColor(Color.YELLOW);
-								} else {
-									if (shape != null && s.uuid.equals(shape.uuid)) {
-										graphics2D.setColor(Color.RED);
-									} else {
-										graphics2D.setColor(Color.BLUE);
-									}
-								}
-								rectangle = new Rectangle2D.Double(gs.position.point.x, gs.position.point.y, gs.position.dimension.width, gs.position.dimension.height);
-								graphics2D.draw(rectangle);
-							}
-						}
-					}
-					break;
-				}
-				}
-				if (previousShape != null) {
-					Position p = previousShape.position;
-					graphics2D.drawLine((int)(p.center.x),(int)(p.center.y),(int)(position.center.x),(int)(position.center.y));
-				}
-				previousShape = s;
-			}
-		}
-		graphics2D.setColor(Color.BLUE);
-		Rectangle2D.Double frame = new Rectangle2D.Double(0, 0, this.position.dimension.width, this.position.dimension.height);
-		graphics2D.draw(frame);
-	}
-	
-	@JsonIgnore
 	@Override
 	public String toString() {
 		String string = "";
-		ObjectWriter ow = new ObjectMapper().writer();//.withDefaultPrettyPrinter();
+		ObjectWriter ow = new ObjectMapper().writer();// .withDefaultPrettyPrinter();
 		try {
 			string = ow.writeValueAsString(this);
 		} catch (IOException ex) {
@@ -618,3 +547,188 @@ public class Page {
 		return string;
 	}
 }
+
+//@JsonIgnore
+//public BufferedImage joinImages(List<Image> imageList) {
+//	logger.debug("joinImages(" + imageList + ")");
+//	BufferedImage bufferedImage = null;
+//	double offset = 0;
+//	for (int i = 0; i < imageList.size(); i++) {
+//		Image a = imageList.get(i);
+//		if (bufferedImage == null) {
+//			a.setOffset(offset);
+//			int width = a.getBufferedImage().getWidth();
+//			int height = (int) (a.getBufferedImage().getHeight() + a.position.margin);
+//			bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+//			Graphics2D graphics2D = bufferedImage.createGraphics();
+//			graphics2D.setPaint(Color.BLACK);
+//			graphics2D.fillRect(0, 0, width, height);
+//			graphics2D.setColor(Color.BLACK);
+//			graphics2D.drawImage(a.getBufferedImage(), null, 0, (int)(a.position.margin));
+//			graphics2D.dispose();
+//			offset = a.position.absoluteDimension.width;
+//		}
+//		if (i + 1 < imageList.size()) {
+//			Image b = imageList.get(i + 1);
+//			b.setOffset(offset);
+//			int w = bufferedImage.getWidth();
+//			int h = bufferedImage.getHeight();
+//			int width = w + b.getBufferedImage().getWidth();
+//			int height = Math.max(h, b.getBufferedImage().getHeight() + (int) b.position.margin);
+//			BufferedImage bI = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+//			Graphics2D graphics2D = bI.createGraphics();
+//			Color oldColor = graphics2D.getColor();
+//			graphics2D.setPaint(Color.BLACK);
+//			graphics2D.fillRect(0, 0, width, height);
+//			graphics2D.setColor(oldColor);
+//			graphics2D.drawImage(bufferedImage, null, 0, 0);
+//			graphics2D.drawImage(b.getBufferedImage(), null, w, (int) (b.position.margin));
+//			graphics2D.dispose();
+//			bufferedImage = bI;
+//			offset+= b.position.absoluteDimension.width;
+//		}
+//	}
+//	return bufferedImage;
+//}
+
+//@JsonIgnore
+//public void paint(Graphics2D graphics2D) {
+//	AffineTransform affineTransform = new AffineTransform();
+//	affineTransform.scale(this.position.scale, this.position.scale);//this handles scaling the bufferedImage
+//	BufferedImage bufferedImage = this.getBufferedImage();
+//	if (bufferedImage != null) {
+//		graphics2D.drawImage(bufferedImage, affineTransform, null);
+//	}
+//	List<Image> imageList = this.getImageList();
+//	Image image = this.getImage();
+//	if (imageList != null) {
+//		for (Image i : imageList) {
+//			Position p = i.position;
+//			if (image != null && i.uuid.equals(image.uuid)) {
+//				graphics2D.setColor(Color.RED);
+//			} else {
+//				graphics2D.setColor(Color.YELLOW);
+//			}
+//			Rectangle2D.Double rectangle = new Rectangle2D.Double(p.point.x, p.point.y, p.dimension.width, p.dimension.height);
+//			graphics2D.draw(rectangle);
+//		}
+//
+//	}
+//	List<Shape> shapeList = this.getSortedShapeList();//this.getMatrix().getShapeList();
+//	Shape shape = this.getShape();
+//	Shape gridShape = this.getGridShape();
+//	Shape previousShape = null;
+//	if (shapeList != null) {
+//		for (Shape s : shapeList) {
+//			Position position = s.position;
+//			if (shape != null && s.uuid.equals(shape.uuid)) {
+//				graphics2D.setColor(Color.RED);
+//			} else {
+//				graphics2D.setColor(Color.BLUE);
+//			}
+//			switch (s.type) {
+//			case ELLIPSE: {
+//				Ellipse2D.Double ellipse = new Ellipse2D.Double(position.point.x, position.point.y, position.dimension.width, position.dimension.height);
+//				graphics2D.draw(ellipse);
+//				break;
+//			}
+//			case RECTANGLE: {
+//				Rectangle2D.Double rectangle = new Rectangle2D.Double(position.point.x, position.point.y, position.dimension.width, position.dimension.height);
+//				graphics2D.draw(rectangle);
+//				if(s instanceof Grid) {
+//					Shape[][] matrix = ((Grid) s).matrix;
+//					for(int i=0;i<matrix.length;i++) {
+//						for(int j=0;j<matrix[i].length;j++) {
+//							Shape gs = matrix[i][j];
+//							if (gridShape != null && gs.uuid.equals(gridShape.uuid)) {
+//								graphics2D.setColor(Color.YELLOW);
+//							} else {
+//								if (shape != null && s.uuid.equals(shape.uuid)) {
+//									graphics2D.setColor(Color.RED);
+//								} else {
+//									graphics2D.setColor(Color.BLUE);
+//								}
+//							}
+//							rectangle = new Rectangle2D.Double(gs.position.point.x, gs.position.point.y, gs.position.dimension.width, gs.position.dimension.height);
+//							graphics2D.draw(rectangle);
+//						}
+//					}
+//				}
+//				break;
+//			}
+//			}
+//			if (previousShape != null) {
+//				Position p = previousShape.position;
+//				graphics2D.drawLine((int)(p.center.x),(int)(p.center.y),(int)(position.center.x),(int)(position.center.y));
+//			}
+//			previousShape = s;
+//		}
+//	}
+//	graphics2D.setColor(Color.BLUE);
+//	Rectangle2D.Double frame = new Rectangle2D.Double(0, 0, this.position.dimension.width, this.position.dimension.height);
+//	graphics2D.draw(frame);
+//}
+
+//	@JsonIgnore
+//	public List<Shape> getShapeList(String uuid, boolean flag) {
+//		BufferedImage bufferedImage = null;
+//		if(flag)
+//			bufferedImage = this.getScaledBufferedImage(uuid);
+//		List<Shape> shapeList = new ArrayList<>();
+//		for (Image image : this.imageList) {
+//			for (Shape shape : image.getShapeList()) {
+//				if(flag)
+//					shape.bufferedImage = this.getShapeBufferedImage(bufferedImage, shape);
+//				shapeList.add(shape);
+//			}
+//		}
+//		return shapeList;
+//	}
+//	
+//	@JsonIgnore
+//	public List<Shape> getGridShapeList(String uuid, boolean flag) {
+//		BufferedImage bufferedImage = null;
+//		if(flag)
+//			bufferedImage = this.getScaledBufferedImage(uuid);
+//		List<Shape> shapeList = new ArrayList<>();
+//		for (Image image : this.imageList) {
+//			for (Shape shape : image.getGridShapeList()) {
+//				if(flag)
+//					shape.bufferedImage = this.getShapeBufferedImage(bufferedImage,shape);
+//				shapeList.add(shape);
+//			}
+//		}
+//		return shapeList;
+//	}
+
+//@JsonIgnore
+//public List<Shape> getShapeList(String uuid, boolean flag) {
+//	BufferedImage bufferedImage = null;
+//	if(flag)
+//		bufferedImage = this.getScaledBufferedImage(uuid);
+//	List<Shape> shapeList = new ArrayList<>();
+//	for (Image image : this.imageList) {
+//		for (Shape shape : image.getShapeList()) {
+//			if(flag)
+//				shape.bufferedImage = this.getShapeBufferedImage(bufferedImage, shape);
+//			shapeList.add(shape);
+//		}
+//	}
+//	return shapeList;
+//}
+//
+//@JsonIgnore
+//public List<Shape> getGridShapeList(String uuid, boolean flag) {
+//	BufferedImage bufferedImage = null;
+//	if(flag)
+//		bufferedImage = this.getScaledBufferedImage(uuid);
+//	List<Shape> shapeList = new ArrayList<>();
+//	for (Image image : this.imageList) {
+//		for (Shape shape : image.getGridShapeList()) {
+//			if(flag)
+//				shape.bufferedImage = this.getShapeBufferedImage(bufferedImage,shape);
+//			shapeList.add(shape);
+//		}
+//	}
+//	return shapeList;
+//}

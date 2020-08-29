@@ -32,6 +32,11 @@ import javax.swing.SwingUtilities;
  * @author osvaldo.rodriguez
  */
 public class SplashWindow extends JWindow {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8551616570410856131L;
+
 	public SplashWindow(String filename, JFrame f, int waitTime) {
 		super(f);
 		JLabel l = new JLabel(new ImageIcon(getClass().getResource(filename)));

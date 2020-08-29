@@ -64,7 +64,7 @@ public class ShapePanel extends JPanel {
 		if (this.model != null) {
 			Graphics2D graphics2D = (Graphics2D) graphics.create();
 			Document document = (this.model != null) ? this.model.document : null;
-			Page page = (document != null) ? document.getPage() : null;
+			Page page = (document != null)?document.getPage():null;
 			Shape shape = (page != null) ? page.getShape(): null;
 			if (shape != null) {
 				if(shape instanceof Grid) {
@@ -73,9 +73,8 @@ public class ShapePanel extends JPanel {
 				}
 				AffineTransform affineTransform = new AffineTransform();
 				affineTransform.scale(1, 1);
-				BufferedImage bufferedImage = shape.bufferedImage;
+				BufferedImage bufferedImage = this.model.document.getShapeBufferedImage(page.getScaledBufferedImage(this.model), shape);
 				if (bufferedImage != null) {
-//					Image image = bufferedImage.getScaledInstance(bufferedImage.getWidth(),this.getHeight(),Image.SCALE_SMOOTH);
 					graphics2D.drawImage(bufferedImage, affineTransform, null);
 				}
 			}

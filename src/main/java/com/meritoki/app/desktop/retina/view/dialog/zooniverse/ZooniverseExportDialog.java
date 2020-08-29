@@ -176,13 +176,17 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
 		if (query.pageIndexList != null) {
 			shapeList = new ArrayList<>();
 			if (query.pageIndexList.contains(-1)) {
-				shapeList = this.model.document.getGridShapeList(true);
+				shapeList = this.model.document.getGridShapeList();
 			} else {
 				for (Integer i : query.pageIndexList) {
 					if (this.model.document.setIndex(i)) {
 						Page p = this.model.document.getPage();
 						if (p != null) {
-							shapeList = p.getGridShapeList(true);
+							List<Shape> tmpShapeList = p.getGridShapeList();
+							for(Shape s: tmpShapeList) {
+								s.bufferedImage = this.model.document.getShapeBufferedImage(p.getScaledBufferedImage(this.model), s);
+							}
+							shapeList.addAll(tmpShapeList);
 						}
 					}
 				}
@@ -551,6 +555,7 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
 		}
 		List<Shape> shapeList = this.getShapeList(query);
 		if (shapeList != null) {
+
 			try {
 				SubjectSet subjectSet = zooniverse.getSubjectSet(subjectSetTitle, shapeList);
 				Project project = zooniverse.getProject(projectName);
