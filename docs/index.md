@@ -1,6 +1,6 @@
 # Meritoki Retina
 ## [Implementation](https://github.com/meritoki/retina-desktop-application/wiki/Implementation)
-The implemenation of Retina can be installed, configured, and used. Click the link above for instructions.
+The implemenation of Retina can be downloaded, installed, configured, and used. Click the link above for instructions.
 
 ### Features
 1. Save/Open Project to and from File (JSON)
