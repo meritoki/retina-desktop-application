@@ -69,7 +69,13 @@ public class Zooniverse extends Provider {
 	@JsonIgnore
 	public List<Project> getProjectList(String query) throws Exception {
 		logger.info("searchProject(" + query + ")");
-		List<String> stringList = NodeController.executeCommand("panoptes project ls | grep " + query, 1440);
+		String command = null;
+		if(NodeController.isLinux()) {
+			command = "panoptes project ls | grep " + query;
+		} else if(NodeController.isWindows()) {
+			command = "set PYTHONIOENCODING=utf-8 && panoptes project ls | findstr " + query;
+		}
+		List<String> stringList = NodeController.executeCommand(command, 1440);
 		List<Project> projectList = new ArrayList<>();
 		if (stringList.size() > 0 && !stringList.get(0).equals("error")) {
 			for (String s : stringList) {

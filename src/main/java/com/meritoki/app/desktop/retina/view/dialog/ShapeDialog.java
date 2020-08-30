@@ -398,8 +398,9 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					case KeyEvent.VK_LEFT: {
 						logger.debug("keyEvent.VK_LEFT");
 						setShapeListSelectedIndex(--index);
-						model.cache.shapeUUID = (String) shapeList.getSelectedValue();
 						try {
+							model.cache.shapeUUID = model.document.getShape().uuid;
+							model.cache.pressedShapeUUID = (String) shapeList.getSelectedValue();
 							model.pattern.execute("setShape");
 							mainFrame.init();
 						} catch (Exception e) {
@@ -411,8 +412,9 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					case KeyEvent.VK_RIGHT: {
 						logger.debug("keyEvent.VK_RIGHT");
 						setShapeListSelectedIndex(++index);
-						model.cache.shapeUUID = (String) shapeList.getSelectedValue();
 						try {
+							model.cache.shapeUUID = model.document.getShape().uuid;
+							model.cache.pressedShapeUUID = (String) shapeList.getSelectedValue();
 							model.pattern.execute("setShape");
 							mainFrame.init();
 						} catch (Exception e) {
@@ -424,8 +426,9 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					case KeyEvent.VK_UP: {
 						logger.debug("keyEvent.VK_UP");
 						setShapeListSelectedIndex(--index);
-						model.cache.shapeUUID = (String) shapeList.getSelectedValue();
 						try {
+							model.cache.shapeUUID = model.document.getShape().uuid;
+							model.cache.pressedShapeUUID = (String) shapeList.getSelectedValue();
 							model.pattern.execute("setShape");
 							mainFrame.init();
 						} catch (Exception e) {
@@ -437,8 +440,9 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					case KeyEvent.VK_DOWN: {
 						logger.debug("keyEvent.VK_DOWN");
 						setShapeListSelectedIndex(++index);
-						model.cache.shapeUUID = (String) shapeList.getSelectedValue();
 						try {
+							model.cache.shapeUUID = model.document.getShape().uuid;
+							model.cache.pressedShapeUUID = (String) shapeList.getSelectedValue();
 							model.pattern.execute("setShape");
 							mainFrame.init();
 						} catch (Exception e) {
@@ -457,8 +461,9 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 		this.shapeList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent me) {
-				model.cache.shapeUUID = (String) shapeList.getSelectedValue();
 				try {
+					model.cache.shapeUUID = model.document.getShape().uuid;
+					model.cache.pressedShapeUUID = (String) shapeList.getSelectedValue();
 					model.pattern.execute("setShape");
 					mainFrame.init();
 				} catch (Exception e) {
