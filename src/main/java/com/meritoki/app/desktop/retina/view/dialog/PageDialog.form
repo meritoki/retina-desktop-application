@@ -78,10 +78,10 @@
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="pageIndexLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="pageListSizeValueLabel" min="-2" max="-2" attributes="0"/>
                                   <Component id="jSeparator5" min="-2" pref="346" max="-2" attributes="0"/>
+                                  <Component id="pageIndexValueLabel" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -103,13 +103,13 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <Component id="uuidLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="pageUUIDValueLabel" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="pageIndexValueLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="pageListSizeValueLabel" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -132,12 +132,12 @@
               <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="pageIndexLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="pageListSizeValueLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="pageIndexValueLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="pageIndexValueLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="pageListSizeValueLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -155,19 +155,19 @@
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="jSeparator3" min="-2" pref="10" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="imageIndexLabel" alignment="1" min="-2" max="-2" attributes="0"/>
-                  <Component id="imageIndexValueLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="imageIndexValueLabel" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="imageUUIDLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="imageUUIDValueLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="imageUUIDValueLabel" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="imageNameLabel" alignment="1" min="-2" max="-2" attributes="0"/>
-                  <Component id="imageNameValueLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="imageNameValueLabel" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">

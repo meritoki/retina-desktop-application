@@ -311,7 +311,7 @@ public class Page {
 
 	@JsonIgnore
 	public void setBufferedImage(BufferedImage bufferedImage) {
-		logger.info("setBufferedImage(" + bufferedImage + ")");
+		logger.debug("setBufferedImage(" + bufferedImage + ")");
 		this.bufferedImage = bufferedImage;
 	}
 
@@ -465,10 +465,12 @@ public class Page {
 	public Shape removeShape(Shape shape) {
 		logger.info("removeShape(" + shape + ")");
 		Shape s = null;
-		for (Image image : this.getImageList()) {
-			s = image.removeShape(shape.uuid);
-			if (s != null) {
-				break;
+		if (shape != null) {
+			for (Image image : this.getImageList()) {
+				s = image.removeShape(shape.uuid);
+				if (s != null) {
+					break;
+				}
 			}
 		}
 		return s;

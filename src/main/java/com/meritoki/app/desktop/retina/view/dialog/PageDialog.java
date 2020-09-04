@@ -123,6 +123,30 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
 						}
 						break;
 					}
+					case KeyEvent.VK_UP: {
+						logger.debug("keyEvent.VK_UP");
+						setPageListSelectedIndex(--index);
+						model.cache.pageUUID = (String)pageList.getSelectedValue();
+						try {
+							model.pattern.execute("setPage");
+							mainFrame.init();
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+						}
+						break;
+					}
+					case KeyEvent.VK_DOWN: {
+						logger.debug("keyEvent.VK_DOWN");
+						setPageListSelectedIndex(++index);
+						model.cache.pageUUID = (String)pageList.getSelectedValue();
+						try {
+							model.pattern.execute("setPage");
+							mainFrame.init();
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+						}
+						break;
+					}
 					}
 				}
 			}
@@ -544,8 +568,8 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
                                 .addComponent(pageIndexLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(pageListSizeValueLabel)
-                                    .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(pageIndexValueLabel)))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -561,12 +585,12 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(uuidLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(pageUUIDValueLabel))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(pageIndexValueLabel)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(pageListSizeValueLabel)))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -582,11 +606,11 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
                 .addGap(19, 19, 19)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(pageIndexLabel)
-                    .addComponent(pageListSizeValueLabel))
+                    .addComponent(pageIndexValueLabel))
                 .addGap(5, 5, 5)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(pageIndexValueLabel))
+                    .addComponent(pageListSizeValueLabel))
                 .addGap(5, 5, 5)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(uuidLabel)
@@ -600,16 +624,16 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(imageIndexLabel)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(imageIndexLabel, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(imageIndexValueLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(imageUUIDLabel)
                     .addComponent(imageUUIDValueLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(imageNameLabel)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(imageNameLabel, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(imageNameValueLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)

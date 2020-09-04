@@ -36,10 +36,10 @@ public class RemoveShape extends Command {
     	logger.info("execute()");
     	//variables
     	String pressedShapeUUID = this.model.cache.pressedShapeUUID;
-    	Shape pressedShape = this.model.document.getShape(pressedShapeUUID);
+    	Shape pressedShape = (pressedShapeUUID != null)?this.model.document.getShape(pressedShapeUUID):null;
 		//undo
 		Operation operation = new Operation();
-		operation.object = new Shape(pressedShape,true);
+		operation.object = (pressedShape != null)?new Shape(pressedShape,true):null;
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);

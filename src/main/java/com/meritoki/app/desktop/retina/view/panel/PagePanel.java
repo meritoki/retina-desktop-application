@@ -298,9 +298,10 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			switch (ke.getKeyCode()) {
 			case KeyEvent.VK_EQUALS: {
 				logger.debug("keyPressed(e) KeyEvent.VK_EQUALS");
-				this.model.cache.scaleOperator = '*';
-				this.model.cache.scaleFactor = 1.5;
 				try {
+					this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+					this.model.cache.scaleOperator = '*';
+					this.model.cache.scaleFactor = 1.5;
 					this.model.pattern.execute("scalePage");
 					this.mainFrame.init();
 				} catch (Exception e) {
@@ -310,9 +311,11 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_PLUS: {
 				logger.debug("keyPressed(e) KeyEvent.VK_PLUS");
-				this.model.cache.scaleOperator = '*';
-				this.model.cache.scaleFactor = 1.5;
+				
 				try {
+					this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+					this.model.cache.scaleOperator = '*';
+					this.model.cache.scaleFactor = 1.5;
 					this.model.pattern.execute("scalePage");
 					this.mainFrame.init();
 				} catch (Exception e) {
@@ -322,9 +325,11 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_MINUS: {
 				logger.debug("keyPressed(e) KeyEvent.VK_MINUS");
-				this.model.cache.scaleOperator = '/';
-				this.model.cache.scaleFactor = 1.5;
+				
 				try {
+					this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+					this.model.cache.scaleOperator = '/';
+					this.model.cache.scaleFactor = 1.5;
 					this.model.pattern.execute("scalePage");
 					this.mainFrame.init();
 				} catch (Exception e) {
@@ -334,12 +339,11 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_DOWN: {
 				logger.debug("keyPressed(e) KeyEvent.VK_DOWN"); 
-//				this.model.cache.pressedImage = this.model.document.getImage();
-				this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
-				this.model.cache.pressedImageUUID = this.model.document.getImage().uuid;
-				this.model.cache.shiftOperator = '+';
-				this.model.cache.shiftFactor = 10;
 				try {
+					this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+					this.model.cache.pressedImageUUID = this.model.document.getImage().uuid;
+					this.model.cache.shiftOperator = '+';
+					this.model.cache.shiftFactor = 10;
 					this.model.pattern.execute("shiftImage");
 					this.mainFrame.init();
 				} catch (Exception e) {
@@ -350,12 +354,11 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_UP: {
 				logger.debug("keyPressed(e) KeyEvent.VK_UP");
-//				this.model.cache.pressedImage = this.model.document.getImage();
-				this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
-				this.model.cache.pressedImageUUID = this.model.document.getImage().uuid;
-				this.model.cache.shiftOperator = '-';
-				this.model.cache.shiftFactor = 10;
 				try {
+					this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+					this.model.cache.pressedImageUUID = this.model.document.getImage().uuid;
+					this.model.cache.shiftOperator = '-';
+					this.model.cache.shiftFactor = 10;
 					this.model.pattern.execute("shiftImage");
 					this.mainFrame.init();
 				} catch (Exception e) {
@@ -420,7 +423,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			switch (keyCode) {
 			case KeyEvent.VK_BACK_SPACE: {
 				try {
-					this.model.cache.pressedShapeUUID = this.model.document.getPage().getShape().uuid;
+					this.model.cache.pressedShapeUUID = (this.model.document.getPage().getShape()!=null)?this.model.document.getPage().getShape().uuid:null;
 					this.model.pattern.execute("removeShape");
 					this.mainFrame.init();
 				} catch (Exception e) {

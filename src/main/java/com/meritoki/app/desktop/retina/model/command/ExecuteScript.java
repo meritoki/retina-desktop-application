@@ -25,6 +25,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.document.Grid;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Shape;
@@ -305,7 +306,11 @@ public class ExecuteScript extends Command {
 			for(Shape shape:image.shapeList) {
 				for(Image i: pageB.imageList) {
 					if(i.containsShape(shape)) {
-						pageB.addShape(new Shape(shape,false));
+						if(shape instanceof Grid) {
+							pageB.addShape(new Grid((Grid)shape, false));
+						} else {
+							pageB.addShape(new Shape(shape,false));
+						}
 					}
 				}
 			}

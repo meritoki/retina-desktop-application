@@ -86,7 +86,11 @@ public class Image {
 		this.position = new Position(image.position);
 		this.index = image.index;
 		for (Shape shape : image.shapeList) {
-			this.shapeList.add(new Shape(shape, true));
+			if(shape instanceof Grid) {
+				this.shapeList.add(new Grid((Grid)shape, true));
+			} else {
+				this.shapeList.add(new Shape(shape, true));
+			}
 		}
 	}
 
@@ -294,7 +298,7 @@ public class Image {
 //New 
 	@JsonIgnore
 	public void setBufferedImage(BufferedImage bufferedImage) {
-		logger.info("setBufferedImage(" + bufferedImage + ")");
+		logger.debug("setBufferedImage(" + bufferedImage + ")");
 		this.bufferedImage = bufferedImage;
 		if (this.bufferedImage != null) {
 			this.position.absoluteDimension.width = this.bufferedImage.getWidth();

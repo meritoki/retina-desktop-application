@@ -128,9 +128,9 @@ public final class MainFrame extends JFrame {
 		this.propertyDialog.setModel(this.model);
 		this.loginDialog.setRegisterDialog(this.registerDialog);
 		if (this.model.system.newUser) {
-//			this.registerDialog.setVisible(true);
+			this.registerDialog.setVisible(true);
 		} else if (this.model.system.loginUser) {
-//			this.loginDialog.setVisible(true);
+			this.loginDialog.setVisible(true);
 		}
 		this.shapeDialog.setVisible(true);
 		this.pageDialog.setVisible(true);
