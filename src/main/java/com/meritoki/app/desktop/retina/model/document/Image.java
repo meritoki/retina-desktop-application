@@ -86,8 +86,8 @@ public class Image {
 		this.position = new Position(image.position);
 		this.index = image.index;
 		for (Shape shape : image.shapeList) {
-			if(shape instanceof Grid) {
-				this.shapeList.add(new Grid((Grid)shape, true));
+			if (shape instanceof Grid) {
+				this.shapeList.add(new Grid((Grid) shape, true));
 			} else {
 				this.shapeList.add(new Shape(shape, true));
 			}
@@ -224,7 +224,7 @@ public class Image {
 								e.printStackTrace();
 							}
 						}
-					} else if(model.system.multiUser){
+					} else if (model.system.multiUser) {
 						ClientController clientController = new ClientController(model);
 						if (clientController.fileClient.checkHealth()) {
 							if (!clientController.fileClient.checkFile(this.uuid)) {
@@ -238,7 +238,7 @@ public class Image {
 						}
 					}
 				}
-			} else if(model.system.multiUser){
+			} else if (model.system.multiUser) {
 				ClientController clientController = new ClientController(model);
 				if (clientController.fileClient.checkHealth()) {
 					if (clientController.fileClient.checkFile(this.uuid)) {
@@ -447,16 +447,15 @@ public class Image {
 	public String toString() {
 		String string = "";
 		ObjectWriter ow = new ObjectMapper().writer();
-//		if (logger.isDebugEnabled()) {
-		try {
-			string = ow.writeValueAsString(this);
-		} catch (IOException e) {
-			logger.error("IOException " + e.getMessage());
+		if (logger.isDebugEnabled()) {
+			try {
+				string = ow.writeValueAsString(this);
+			} catch (IOException e) {
+				logger.error("IOException " + e.getMessage());
+			}
+		} else if (logger.isInfoEnabled()) {
+			string = "{\"uuid\":" + this.uuid + ", \"position\":" + position + "}";
 		}
-//		} else if (logger.isInfoEnabled()) {
-//			string = "{\"uuid\":" + this.uuid + ", \"position\":" + position + ", \"shapeList\":" + this.shapeList
-//					+ "}";
-//		}
 		return string;
 	}
 }
