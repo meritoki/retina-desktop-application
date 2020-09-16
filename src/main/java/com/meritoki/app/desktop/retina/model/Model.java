@@ -28,6 +28,8 @@ import com.meritoki.app.desktop.retina.model.cache.Cache;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 import com.meritoki.app.desktop.retina.model.pattern.Pattern;
+import com.meritoki.app.desktop.retina.model.provider.Provider;
+import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.app.desktop.retina.model.resource.Resource;
 import com.meritoki.app.desktop.retina.model.system.System;
 
@@ -56,6 +58,18 @@ public class Model {
 
 	public Model() {
 		this.pattern.setModel(this);
+		this.newDocument();
+	}
+	
+	public void newDocument() {
+		this.system.newDocument = true;
+		for (Provider provider : this.system.providerList) {
+            if (provider instanceof Meritoki) {
+                Meritoki meritoki = (Meritoki) provider;
+//                meritoki.openCortex(this.document.uuid);
+                meritoki.newCortex();
+            }
+        }
 	}
 	
 	public List<String> getDocumentList() {
@@ -83,6 +97,13 @@ public class Model {
 		if(!directory.exists()) {
 			directory.mkdirs();
 		}
+		for (Provider provider : this.system.providerList) {
+            if (provider instanceof Meritoki) {
+                Meritoki meritoki = (Meritoki) provider;
+//                meritoki.openCortex(this.document.uuid);
+                meritoki.newCortex();
+            }
+        }
 	}
 	
 	public void saveDocument(File file) {
@@ -92,6 +113,12 @@ public class Model {
 		NodeController.saveDocument(this.system.file, this.document);
 		this.resource.addRecent(this.system.file.getAbsolutePath());
 		this.system.newDocument = false;
+		for (Provider provider : this.system.providerList) {
+            if (provider instanceof Meritoki) {
+                Meritoki meritoki = (Meritoki) provider;
+                meritoki.saveCortex();
+            }
+        }
 	}
 	public void saveDocument() {
 		logger.info("saveDocument()");
@@ -99,6 +126,12 @@ public class Model {
 		NodeController.saveDocument(this.system.file, this.document);
 		this.resource.addRecent(this.system.file.getAbsolutePath());
 		this.system.newDocument = false;
+		for (Provider provider : this.system.providerList) {
+            if (provider instanceof Meritoki) {
+                Meritoki meritoki = (Meritoki) provider;
+                meritoki.saveCortex();
+            }
+        }
 	}
 	
 	public boolean loginUser(String name, String password) {

@@ -16,8 +16,11 @@
 package com.meritoki.app.desktop.retina.model.provider.meritoki;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.meritoki.library.cortex.model.Cortex;
-import com.meritoki.library.cortex.model.hexagon.Hexagonal;
+import com.meritoki.library.cortex.model.group.Group;
+import com.meritoki.library.cortex.model.network.Color;
+import com.meritoki.library.cortex.model.network.Cortex;
+import com.meritoki.library.cortex.model.network.hexagon.Hexagonal;
+import com.meritoki.library.cortex.model.network.square.Squared;
 
 public class Document {
 
@@ -25,6 +28,8 @@ public class Document {
 	public Cortex cortex;
 	
 	public Document() {
-		this.cortex = new Hexagonal(Hexagonal.BRIGHTNESS, 0, 0, 27, 1, 0);
+//		this.cortex = new Squared(Squared.BRIGHTNESS,0,0,32,1,0);
+		this.cortex = new Hexagonal(Color.BRIGHTNESS, 0, 0, 27, 1, 0);
+//		this.cortex = new Group(Group.HEXAGONAL);
 	}
 }

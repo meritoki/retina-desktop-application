@@ -71,6 +71,11 @@ public class Meritoki extends Provider {
 		document.cortex.load();
 	}
 	
+	public void newCortex() {
+		this.document = new Document();
+		this.document.cortex.load();
+	}
+	
 	public void saveCortex() {
 		NodeController.saveJson(this.cortexFile, this.document);
 	}

@@ -18,6 +18,7 @@ package com.meritoki.app.desktop.retina.model.cache;
 import java.io.File;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
@@ -26,6 +27,7 @@ import com.meritoki.app.desktop.retina.model.document.Selection;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.ShapeType;
 import com.meritoki.app.desktop.retina.model.document.user.User;
+import com.meritoki.library.cortex.model.Concept;
 
 public class Cache {
 	@JsonProperty
@@ -80,4 +82,7 @@ public class Cache {
 	public int column = 1;
 	@JsonProperty
 	public double defaultScale = 1;
+	@JsonIgnore
+	public Concept concept = null;
+	public List<Concept> conceptList = null;
 }

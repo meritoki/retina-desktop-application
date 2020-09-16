@@ -118,6 +118,8 @@ public class Inference extends Node {
 						scan = true;
 						Output output = new Output();
 						output.shape = s;
+						output.shape.bufferedImage = this.model.document.getShapeBufferedImage(
+								this.model.document.getPage().getScaledBufferedImage(this.model), s);
 						output.flag = false;
 						this.meritoki.outputList.add(output);
 //					}
@@ -156,28 +158,31 @@ public class Inference extends Node {
 //			logger.info("scan(...) bufferedImaged="+bufferedImage);
 			double width = bufferedImage.getWidth();
 			double height = bufferedImage.getHeight();
-			double diameter = this.meritoki.document.cortex.size;
-			int wInterval = (int)(width/(width/diameter/2));
-			int hInterval = (int)(height/(height/diameter/2));
+			int radius = (int) (this.meritoki.document.cortex.getSensorRadius());
+			int wInterval = (int)(width/(radius));
+			int hInterval = (int)(height/(radius));
 			logger.info("scan(...) hInterval="+hInterval);
 			logger.info("scan(...) wInterval="+wInterval);
 			Map<String, Integer> conceptMap = new HashMap<>();
-			for (int w = 0; w < width; w += wInterval) {
-				for (int h = 0; h < height; h += hInterval) {
+			for (int w = 0; w < width; w++) {
+				for (int h = 0; h < height; h++) {
+					if ((w%radius) == 0 && (h % radius) == 0) {
 					this.meritoki.document.cortex.setOrigin(w, h);
 					this.meritoki.document.cortex.update();
-					conceptList = this.meritoki.document.cortex.process(bufferedImage, null);
+					this.meritoki.document.cortex.process(null,bufferedImage, null);
+					conceptList = ((com.meritoki.library.cortex.model.network.Network)this.meritoki.document.cortex).getRootLevel().getCoincidenceConceptList();
 					for (Concept c : conceptList) {
 						Integer integer = conceptMap.get(c.toString());
 						integer = (integer == null) ? 0 : integer;
 						conceptMap.put(c.toString(), integer + 1);
 					}
-					concept = new Concept(this.getMaxConcept(conceptMap, 0.50));
+					concept = new Concept(this.getMaxConcept(conceptMap, 0.90));
+					}
 				}
 			}
 		}
 		logger.info("scan(...) concept.value="+concept);
-		return (concept != null)?concept.value:null;
+		return (concept != null)?concept.value: null;
 	}
 	
 	public String getMaxConcept(Map<String, Integer> conceptMap, double threshold) {

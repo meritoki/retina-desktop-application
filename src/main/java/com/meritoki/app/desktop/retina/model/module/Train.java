@@ -31,6 +31,7 @@ import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.library.cortex.model.Concept;
 import com.meritoki.module.library.model.Module;
 import com.meritoki.module.library.model.Node;
+import com.meritoki.module.library.model.Network;
 import com.meritoki.module.library.model.State;
 import com.meritoki.module.library.model.data.Data;
 import com.meritoki.module.library.model.data.DataType;
@@ -98,6 +99,7 @@ public class Train extends Node {
 			boolean flag;
 			scan = false;
 			for (Shape s : shapeList) {
+
 				if (s.data.text.value != null) {
 					flag = true;
 					for (Input input : this.meritoki.inputList) {
@@ -105,9 +107,10 @@ public class Train extends Node {
 							flag = false;
 							if (!input.flag) {
 								scan = true;
-								input.shape.bufferedImage = s.bufferedImage;
+								input.shape.bufferedImage = this.model.document.getShapeBufferedImage(
+										this.model.document.getPage().getScaledBufferedImage(this.model), s);
 								input.concept = s.data.text.value;
-//								this.meritoki.inputList.add(input);
+								this.meritoki.inputList.add(input);
 							}
 						}
 					}
@@ -115,6 +118,8 @@ public class Train extends Node {
 						scan = true;
 						Input input = new Input();
 						input.shape = s;
+						input.shape.bufferedImage = this.model.document.getShapeBufferedImage(
+								this.model.document.getPage().getScaledBufferedImage(this.model), s);
 						input.concept = s.data.text.value;
 						input.flag = false;
 						this.meritoki.inputList.add(input);
@@ -136,8 +141,8 @@ public class Train extends Node {
 					i.flag = true;
 				}
 			}
-			this.meritoki.saveInput();
-			this.meritoki.saveCortex();
+//			this.meritoki.saveInput();
+//			this.meritoki.saveCortex();
 			this.rootAdd(new Data(2, this.id, DataType.UNBLOCK, 0, null, this.objectList));
 			this.setDelay(this.newDelay(this.inputDelay));
 			this.setState(State.WAIT);
@@ -151,33 +156,41 @@ public class Train extends Node {
 //			bufferedImage = this.scaleBufferedImage(bufferedImage, 0.25);
 //			logger.info("scan(...) bufferedImaged="+bufferedImage);
 //			NodeController.saveJpg("./test", UUID.randomUUID().toString()+".jpeg", bufferedImage);
-			double width = bufferedImage.getWidth();
-			double height = bufferedImage.getHeight();
-			double diameter = this.meritoki.document.cortex.size;
-			int wInterval = (int)(width/(width/diameter/2));
-			int hInterval = (int)(height/(height/diameter/2));
-			logger.info("scan(...) hInterval="+hInterval);
-			logger.info("scan(...) wInterval="+wInterval);
+			int width = bufferedImage.getWidth();
+			int height = bufferedImage.getHeight();
+			int radius = (int) (this.meritoki.document.cortex.getSensorRadius());
+			System.out.println("diameter=" + radius);
+			System.out.println("width=" + width);
+			System.out.println("height=" + height);
+			int wInterval = (int) (width / (radius));
+			int hInterval = (int) (height / (radius));
+			logger.info("scan(...) hInterval=" + hInterval);
+			logger.info("scan(...) wInterval=" + wInterval);
 			Map<String, Integer> conceptMap = new HashMap<>();
-			for (int w = 0; w < width; w += wInterval) {
-				for (int h = 0; h < height; h += hInterval) {
-					this.meritoki.document.cortex.setOrigin(w, h);
-					this.meritoki.document.cortex.update();
-					if (value != null) {
-						List<Concept> conceptList = this.meritoki.document.cortex.process(bufferedImage, new Concept(value));
+			for (int w = 0; w < width; w++) {
+				for (int h = 0; h < height; h++) {
+					if ((w%radius) == 0 && (h % radius) == 0) {
+						this.meritoki.document.cortex.setOrigin(w, h);
+						this.meritoki.document.cortex.update();
+//					if (value != null) {
+//						
+						this.meritoki.document.cortex.process(null, bufferedImage, new Concept(value));
+						List<Concept> conceptList = ((com.meritoki.library.cortex.model.network.Network) this.meritoki.document.cortex)
+								.getRootLevel().getCoincidenceConceptList();
 						for (Concept c : conceptList) {
 							Integer integer = conceptMap.get(c.toString());
 							integer = (integer == null) ? 0 : integer;
 							conceptMap.put(c.toString(), integer + 1);
 						}
 						concept = new Concept(this.getMaxConcept(conceptMap, 0.50));
+//					}
 					}
 				}
 			}
 		}
-		logger.info("scan(...) concept.value="+concept);
+		logger.info("scan(...) concept.value=" + concept);
 	}
-	
+
 	public String getMaxConcept(Map<String, Integer> conceptMap, double threshold) {
 		String concept = null;
 		double max = 0;
@@ -198,12 +211,12 @@ public class Train extends Node {
 		}
 		return concept;
 	}
-	
+
 	public BufferedImage scaleBufferedImage(BufferedImage bufferedImage, double scale) {
 		BufferedImage before = bufferedImage;
 		int w = before.getWidth();
 		int h = before.getHeight();
-		BufferedImage after = new BufferedImage((int)(w*scale), (int)(h*scale), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage after = new BufferedImage((int) (w * scale), (int) (h * scale), BufferedImage.TYPE_INT_ARGB);
 		AffineTransform at = new AffineTransform();
 		at.scale(scale, scale);
 		AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
