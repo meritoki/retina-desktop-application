@@ -15,14 +15,19 @@
  */
 package com.meritoki.app.desktop.retina.model.provider.meritoki;
 
+import java.awt.image.BufferedImage;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.meritoki.app.desktop.retina.model.document.Shape;
+import com.meritoki.app.desktop.retina.model.document.Page;
 
 public class Input {
 	@JsonProperty
 	public String uuid;
+	@JsonProperty
+	public Page page;
 	@JsonProperty
 	public Shape shape;
 	@JsonProperty
@@ -32,5 +37,30 @@ public class Input {
 	
 	public Input() {
 		this.uuid = UUID.randomUUID().toString();
+	}
+	
+	@JsonIgnore
+	public boolean equals(Shape shape) {
+		boolean flag = false;
+		if(this.uuid.equals(shape.uuid)) {
+			flag = true;
+		}
+		return flag;
+	}
+	
+	public boolean hasPage(String uuid) {
+		return (page != null)? page.uuid.equals(uuid): false;
+	}
+	
+	public boolean hasShape(String uuid) {
+		return (shape != null)? shape.uuid.equals(uuid): false;
+	}
+	
+	public BufferedImage getBufferedImage() {
+		Page page = this.page;
+		Shape shape = this.shape;
+		BufferedImage bufferedImage = (page != null) ? page.bufferedImage : null;
+		bufferedImage = (bufferedImage == null)? shape.bufferedImage: bufferedImage;
+		return bufferedImage;
 	}
 }

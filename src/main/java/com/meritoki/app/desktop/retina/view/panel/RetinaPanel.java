@@ -30,6 +30,7 @@ import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
+import com.meritoki.library.cortex.model.Belief;
 import com.meritoki.library.cortex.model.network.Level;
 import com.meritoki.library.cortex.model.network.Network;
 import com.meritoki.library.cortex.model.network.shape.Shape;
@@ -53,55 +54,55 @@ public class RetinaPanel extends JPanel {
 		this.model = model;
 //		this.init();
 		this.setPreferredSize(this.getPreferredSize());
-		for (Provider provider : this.model.system.providerList) {
-			if (provider instanceof Meritoki) {
-				this.meritoki = (Meritoki) provider;
-			}
-		}
+		this.meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
 	}
-//
-//	public void init() {
-//		logger.debug("init()");
-//		this.repaint();
-//		this.revalidate();
-//	}
+	public void init() {
+		logger.debug("init()");
+		this.repaint();
+		this.revalidate();
+	}
 
 	@Override
 	public void paint(Graphics graphics) {
 		super.paint(graphics);
 		if (this.model != null) {
-			
 			Graphics2D graphics2D = (Graphics2D) graphics.create();
-			
-			Level level = ((Network) this.meritoki.document.cortex).getInputLevel();
-			if (level != null) {
-				int dimension = (int)(this.meritoki.document.cortex.getSensorRadius()*2);
-				double scale = 1;
-				dimension *= scale;
-				BufferedImage bufferedImage = new BufferedImage(dimension, dimension, BufferedImage.TYPE_INT_RGB);
-				
-				for (Shape shape : level.getShapeList()) {
-					shape.initCells();
-					for (int i = 0; i < shape.sides+1; i++) {
-						int brightness = shape.coincidence.list.get(0);
-//						System.out.println("paint(...) brightness="+brightness);
-						Color color = new Color(brightness, brightness, brightness);
-						double x = (shape.xpoints[i]-this.meritoki.document.cortex.getX());
-						double y = (shape.ypoints[i]-this.meritoki.document.cortex.getY());
-						x *= scale;
-						y *= scale;
-//						if(x > 0 && y > 0) {
-//							System.out.println("x="+x+", y="+y);
-							bufferedImage.setRGB((int)x+dimension/2,(int)y+dimension/2, color.getRGB());
-//						}
-					}
-					AffineTransform affineTransform = new AffineTransform();
-					affineTransform.scale(1, 1);// this handles scaling the
-					if (bufferedImage != null) {
-						graphics2D.drawImage(bufferedImage, affineTransform, null);
-					}
-				}
+			Belief belief = this.meritoki.document.cortex.getBelief();
+			if(belief != null) {
+				AffineTransform affineTransform = new AffineTransform();
+				affineTransform.scale(1, 1);// this handles scaling the
+				graphics2D.drawImage(belief.bufferedImage, affineTransform, null);
 			}
 		}
 	}
 }
+
+//Level level = ((Network) this.meritoki.document.cortex).getInputLevel();
+//if (level != null) {
+//	int dimension = (int)(this.meritoki.document.cortex.getSensorRadius()*2);
+//	double scale = 1;
+//	dimension *= scale;
+//	BufferedImage bufferedImage = new BufferedImage(dimension, dimension, BufferedImage.TYPE_INT_RGB);
+//	
+//	for (Shape shape : level.getShapeList()) {
+//		shape.initCells();
+//		for (int i = 0; i < shape.sides+1; i++) {
+//			int brightness = shape.coincidence.list.get(0);
+////			System.out.println("paint(...) brightness="+brightness);
+//			Color color = new Color(brightness, brightness, brightness);
+//			double x = (shape.xpoints[i]-this.meritoki.document.cortex.getX());
+//			double y = (shape.ypoints[i]-this.meritoki.document.cortex.getY());
+//			x *= scale;
+//			y *= scale;
+////			if(x > 0 && y > 0) {
+////				System.out.println("x="+x+", y="+y);
+//				bufferedImage.setRGB((int)x+dimension/2,(int)y+dimension/2, color.getRGB());
+////			}
+//		}
+//		AffineTransform affineTransform = new AffineTransform();
+//		affineTransform.scale(1, 1);// this handles scaling the
+//		if (bufferedImage != null) {
+//			graphics2D.drawImage(bufferedImage, affineTransform, null);
+//		}
+//	}
+//}

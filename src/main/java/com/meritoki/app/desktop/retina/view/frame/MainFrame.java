@@ -31,7 +31,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.controller.client.ClientController;
-import com.meritoki.app.desktop.retina.controller.module.ModuleController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
@@ -48,6 +47,8 @@ import com.meritoki.app.desktop.retina.view.dialog.ShapeDialog;
 import com.meritoki.app.desktop.retina.view.dialog.ShareDialog;
 import com.meritoki.app.desktop.retina.view.dialog.audio.AudioExportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.image.ImageImportDialog;
+import com.meritoki.app.desktop.retina.view.dialog.meritoki.MeritokiExportDialog;
+import com.meritoki.app.desktop.retina.view.dialog.meritoki.MeritokiImportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.microsoft.MicrosoftExportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.user.UserLoginDialog;
 import com.meritoki.app.desktop.retina.view.dialog.user.UserRegisterDialog;
@@ -81,11 +82,12 @@ public final class MainFrame extends JFrame {
 	public ZooniverseImportDialog zooniverseImportDialog = new ZooniverseImportDialog(this, false);
 	public ZooniverseCSVImportDialog zooniverseCSVImportDialog = null;
 	public MicrosoftExportDialog microsoftExportDialog = new MicrosoftExportDialog(this, false);
+	public MeritokiExportDialog meritokiExportDialog = new MeritokiExportDialog(this,false);
+	public MeritokiImportDialog meritokiImportDialog = new MeritokiImportDialog(this,false);
 	public AudioExportDialog audioExportDialog = new AudioExportDialog(this, false);
 	public PropertyDialog propertyDialog = new PropertyDialog(this, false);
 	public ShareDialog shareDialog = new ShareDialog(this, false);
 	public ControlDialog controlDialog = new ControlDialog(this,false);
-	public ModuleController moduleController;
 	public JMenuItem shareMenuItem;
 
 	public MainFrame(Model model) {
@@ -114,7 +116,6 @@ public final class MainFrame extends JFrame {
 	public void setModel(Model model) {
 		logger.debug("setModel(" + model + ")");
 		this.model = model;
-		this.moduleController = new ModuleController(this.model);
 		this.controlDialog.setModel(this.model);
 		this.pagePanel.setModel(this.model);
 		this.matrixPanel.setModel(this.model);
@@ -145,7 +146,7 @@ public final class MainFrame extends JFrame {
 	}
 
 	public void init() {
-		logger.info("init()");
+		logger.debug("init()");
 		this.repaint();
 		this.pagePanel.init();
 		this.matrixPanel.init();
@@ -258,19 +259,20 @@ public final class MainFrame extends JFrame {
         importImageMenuItem = new javax.swing.JMenuItem();
         zooniverseImportMenuItem = new javax.swing.JMenuItem();
         zooniverseCSVImportMenuItem = new javax.swing.JMenuItem();
+        importMeritokiMenuItem = new javax.swing.JMenuItem();
         exportMenu = new javax.swing.JMenu();
         zooniverseExportMenuItem = new javax.swing.JMenuItem();
         microsoftExportMenuItem = new javax.swing.JMenuItem();
         audioMenuItem = new javax.swing.JMenuItem();
+        exportMeritokiMenuItem = new javax.swing.JMenuItem();
         editMenu = new javax.swing.JMenu();
         undoMenuItem = new javax.swing.JMenuItem();
         redoMenuItem = new javax.swing.JMenuItem();
         jMenu1 = new javax.swing.JMenu();
-        recognitionMenu = new javax.swing.JMenu();
-        recognitionStartMenuItem = new javax.swing.JMenuItem();
-        recognitionStopMenuItem = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        startMeritokiMenuItem = new javax.swing.JMenuItem();
+        stopMeritokiMenuItem = new javax.swing.JMenuItem();
+        resetMeritokiMenuItem = new javax.swing.JMenuItem();
         windowMenu = new javax.swing.JMenu();
         dialogMenu = new javax.swing.JMenu();
         pageMenuItem = new javax.swing.JMenuItem();
@@ -369,7 +371,7 @@ public final class MainFrame extends JFrame {
         });
         fileMenu.add(openMenuItem);
 
-        openRecentMenu.setText("Open Recent");
+        openRecentMenu.setText("Recent");
         fileMenu.add(openRecentMenu);
 
         saveMenuItem.setText("Save");
@@ -414,6 +416,14 @@ public final class MainFrame extends JFrame {
         });
         importMenu.add(zooniverseCSVImportMenuItem);
 
+        importMeritokiMenuItem.setText("Meritoki");
+        importMeritokiMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importMeritokiMenuItemActionPerformed(evt);
+            }
+        });
+        importMenu.add(importMeritokiMenuItem);
+
         fileMenu.add(importMenu);
 
         exportMenu.setText("Export");
@@ -442,6 +452,14 @@ public final class MainFrame extends JFrame {
         });
         exportMenu.add(audioMenuItem);
 
+        exportMeritokiMenuItem.setText("Meritoki");
+        exportMeritokiMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportMeritokiMenuItemActionPerformed(evt);
+            }
+        });
+        exportMenu.add(exportMeritokiMenuItem);
+
         fileMenu.add(exportMenu);
 
         mainMenuBar.add(fileMenu);
@@ -466,36 +484,37 @@ public final class MainFrame extends JFrame {
 
         mainMenuBar.add(editMenu);
 
-        jMenu1.setText("Run");
+        jMenu1.setText("Provider");
 
-        recognitionMenu.setText("Recognition");
+        jMenu2.setText("Meritoki");
 
-        recognitionStartMenuItem.setText("Start");
-        recognitionStartMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        startMeritokiMenuItem.setText("Start");
+        startMeritokiMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                recognitionStartMenuItemActionPerformed(evt);
+                startMeritokiMenuItemActionPerformed(evt);
             }
         });
-        recognitionMenu.add(recognitionStartMenuItem);
+        jMenu2.add(startMeritokiMenuItem);
 
-        recognitionStopMenuItem.setText("Stop");
-        recognitionStopMenuItem.addActionListener(new java.awt.event.ActionListener() {
+        stopMeritokiMenuItem.setText("Stop");
+        stopMeritokiMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                recognitionStopMenuItemActionPerformed(evt);
+                stopMeritokiMenuItemActionPerformed(evt);
             }
         });
-        recognitionMenu.add(recognitionStopMenuItem);
+        jMenu2.add(stopMeritokiMenuItem);
 
-        jMenu1.add(recognitionMenu);
+        resetMeritokiMenuItem.setText("Reset");
+        resetMeritokiMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetMeritokiMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu2.add(resetMeritokiMenuItem);
+
+        jMenu1.add(jMenu2);
 
         mainMenuBar.add(jMenu1);
-
-        jMenu2.setText("Tools");
-
-        jMenuItem1.setText("Vision");
-        jMenu2.add(jMenuItem1);
-
-        mainMenuBar.add(jMenu2);
 
         windowMenu.setText("Window");
 
@@ -569,6 +588,29 @@ public final class MainFrame extends JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void exportMeritokiMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportMeritokiMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_exportMeritokiMenuItemActionPerformed
+
+    private void importMeritokiMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importMeritokiMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_importMeritokiMenuItemActionPerformed
+
+    private void startMeritokiMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startMeritokiMenuItemActionPerformed
+        this.machinePanel.start();
+    }//GEN-LAST:event_startMeritokiMenuItemActionPerformed
+
+    private void stopMeritokiMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopMeritokiMenuItemActionPerformed
+        this.machinePanel.stop();
+    }//GEN-LAST:event_stopMeritokiMenuItemActionPerformed
+
+    private void resetMeritokiMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetMeritokiMenuItemActionPerformed
+        Meritoki meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
+        if(meritoki != null) {
+        	meritoki.init();
+        }
+    }//GEN-LAST:event_resetMeritokiMenuItemActionPerformed
+
 	private void zooniverseCSVImportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_zooniverseCSVImportMenuItemActionPerformed
 		this.zooniverseCSVImportDialog = new com.meritoki.app.desktop.retina.view.dialog.zooniverse.ZooniverseCSVImportDialog(
 				this, false, this.model);
@@ -595,12 +637,11 @@ public final class MainFrame extends JFrame {
 	}// GEN-LAST:event_attributionMenuItemActionPerformed
 
 	private void recognitionStartMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_recognitionStartMenuItemActionPerformed
-		this.moduleController = new ModuleController(this.model);
-		this.moduleController.start();
+		
 	}// GEN-LAST:event_recognitionStartMenuItemActionPerformed
 
 	private void recognitionStopMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_recognitionStopMenuItemActionPerformed
-		this.moduleController.stop();
+		
 	}// GEN-LAST:event_recognitionStopMenuItemActionPerformed
 
 	private void recognitionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_recognitionMenuItemActionPerformed
@@ -617,7 +658,7 @@ public final class MainFrame extends JFrame {
 		for (Provider provider : this.model.system.providerList) {
             if (provider instanceof Meritoki) {
                 Meritoki meritoki = (Meritoki) provider;
-                meritoki.openCortex(this.model.document.uuid);
+                meritoki.open(this.model.document.uuid);
             }
         }
 //		this.model.document.pattern.user = this.model.system.user;
@@ -741,13 +782,14 @@ public final class MainFrame extends JFrame {
     private javax.swing.JMenu dialogMenu;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu exportMenu;
+    private javax.swing.JMenuItem exportMeritokiMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JTabbedPane imagePageTabbedPane;
     private javax.swing.JMenuItem importImageMenuItem;
     private javax.swing.JMenu importMenu;
+    private javax.swing.JMenuItem importMeritokiMenuItem;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -764,14 +806,14 @@ public final class MainFrame extends JFrame {
     private javax.swing.JMenuItem pageMenuItem;
     private com.meritoki.app.desktop.retina.view.panel.PagePanel pagePanel;
     private javax.swing.JMenuItem propertyMenuItem;
-    private javax.swing.JMenu recognitionMenu;
     private javax.swing.JMenuItem recognitionMenuItem;
-    private javax.swing.JMenuItem recognitionStartMenuItem;
-    private javax.swing.JMenuItem recognitionStopMenuItem;
     private javax.swing.JMenuItem redoMenuItem;
+    private javax.swing.JMenuItem resetMeritokiMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JMenuItem selectionMenuItem;
+    private javax.swing.JMenuItem startMeritokiMenuItem;
+    private javax.swing.JMenuItem stopMeritokiMenuItem;
     private com.meritoki.app.desktop.retina.view.panel.TablePanel table1;
     private com.meritoki.app.desktop.retina.view.panel.TablePanel tablePanel;
     private javax.swing.JMenuItem undoMenuItem;

@@ -22,6 +22,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Page;
+import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.library.controller.memory.MemoryController;
 
 public class SetPage extends Command {
@@ -48,6 +49,10 @@ public class SetPage extends Command {
 		//logic
     	if (pageUUID != null) {
     		this.model.document.setPage(pageUUID);
+    		Meritoki meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
+    		if(meritoki != null) {
+    			meritoki.document.setIndex(pageUUID);
+    		}
     	} else if(pageIndex >  -1) {
     		this.model.document.setIndex(pageIndex);
     		pageUUID = this.model.document.getPage().uuid;

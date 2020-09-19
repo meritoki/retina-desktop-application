@@ -26,6 +26,7 @@ import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
+import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.library.controller.memory.MemoryController;
 
 public class AddPage extends Command {
@@ -66,6 +67,10 @@ public class AddPage extends Command {
 	    		MemoryController.log();
     		}
     	}
+    	Meritoki meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
+		if(meritoki != null) {
+			meritoki.update();
+		}
     	//redo
     	operation = new Operation();
     	operation.object = this.model.document.pageList;

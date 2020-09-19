@@ -27,6 +27,7 @@ import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Position;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.ShapeType;
+import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 
 public class AddShape extends Command {
 
@@ -56,6 +57,10 @@ public class AddShape extends Command {
 		shape.position = new Position(new Point(pressedPoint), new Point(releasedPoint),
 				pressedImage.position.relativeScale, scale, pressedImage.position.offset, pressedImage.position.margin);
 		this.model.document.addShape(shape);
+    	Meritoki meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
+		if(meritoki != null) {
+			meritoki.update();
+		}
 		Operation operation = new Operation();
 		operation.object = new Shape(shape, true);
 		operation.sign = 1;

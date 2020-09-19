@@ -66,8 +66,9 @@ public class Model {
 		for (Provider provider : this.system.providerList) {
             if (provider instanceof Meritoki) {
                 Meritoki meritoki = (Meritoki) provider;
-//                meritoki.openCortex(this.document.uuid);
-                meritoki.newCortex();
+                meritoki.setModel(this);
+                meritoki.open(this.document.uuid);
+                meritoki.init();
             }
         }
 	}
@@ -100,8 +101,8 @@ public class Model {
 		for (Provider provider : this.system.providerList) {
             if (provider instanceof Meritoki) {
                 Meritoki meritoki = (Meritoki) provider;
-//                meritoki.openCortex(this.document.uuid);
-                meritoki.newCortex();
+                meritoki.open(this.document.uuid);
+//                meritoki.init();
             }
         }
 	}
@@ -116,7 +117,7 @@ public class Model {
 		for (Provider provider : this.system.providerList) {
             if (provider instanceof Meritoki) {
                 Meritoki meritoki = (Meritoki) provider;
-                meritoki.saveCortex();
+                meritoki.save();
             }
         }
 	}
@@ -129,7 +130,7 @@ public class Model {
 		for (Provider provider : this.system.providerList) {
             if (provider instanceof Meritoki) {
                 Meritoki meritoki = (Meritoki) provider;
-                meritoki.saveCortex();
+                meritoki.save();
             }
         }
 	}
