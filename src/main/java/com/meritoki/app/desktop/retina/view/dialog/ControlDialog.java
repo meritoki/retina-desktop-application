@@ -6,6 +6,7 @@
 package com.meritoki.app.desktop.retina.view.dialog;
 
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.command.Command;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Document;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
@@ -16,6 +17,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -29,6 +31,8 @@ import com.meritoki.library.cortex.model.Concept;
 import com.meritoki.library.cortex.model.group.Group;
 import com.meritoki.library.cortex.model.network.Cortex;
 import com.meritoki.library.cortex.model.network.Network;
+
+import com.meritoki.app.desktop.retina.model.command.ScriptCortex;
 
 /**
  *
@@ -162,7 +166,7 @@ public class ControlDialog extends javax.swing.JDialog {
 	public void init() {
 		this.initList();
 		this.initLabel();
-		this.retinaPanel.repaint();
+		this.retinaPanel.init();
 	}
 
 	public void initLabel() {
@@ -181,7 +185,7 @@ public class ControlDialog extends javax.swing.JDialog {
 			Belief belief = cortex.getBelief();
 			if (belief != null) {
 				List<Belief> beliefList = cortex.beliefList;
-				List<Concept> conceptList = belief.conceptList;
+				List<Concept> conceptList = belief.getConceptList();
 				this.initBeliefList(beliefList);
 				this.setBeliefListSelectedIndex(cortex.index);
 				this.initConceptList(conceptList);
@@ -191,7 +195,6 @@ public class ControlDialog extends javax.swing.JDialog {
 	}
 
 	public void setBeliefListSelectedUUID(String uuid) {
-	
 		this.beliefList.setSelectedValue(uuid, true);
 	}
 
@@ -466,7 +469,16 @@ public class ControlDialog extends javax.swing.JDialog {
 	}// </editor-fold>//GEN-END:initComponents
 
 	private void doButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_doButtonActionPerformed
-		// TODO add your handling code here:
+		this.model.cache.cortex = this.meritoki.document.cortex;
+		this.model.cache.conceptScript = this.conceptTextArea.getText();
+		try {
+			Command command = new ScriptCortex(this.model);
+			command.execute();
+			this.init();
+		} catch (Exception e) {
+//			JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
 	}// GEN-LAST:event_doButtonActionPerformed
 
 	private void undoButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_undoButtonActionPerformed
@@ -485,6 +497,7 @@ public class ControlDialog extends javax.swing.JDialog {
 		this.stateLabel.setText("Inferring...");
 		this.conceptLabel.setText("");
 		this.model.cache.concept = null;
+		this.meritoki.retina.manual = true;
 	}// GEN-LAST:event_inferButtonActionPerformed
 
 	/**

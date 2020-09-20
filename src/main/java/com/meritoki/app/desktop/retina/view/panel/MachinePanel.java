@@ -128,6 +128,7 @@ public class MachinePanel extends JPanel implements MouseListener, KeyListener, 
 //        System.out.println("paint("+String.valueOf(graphics != null)+")");
         super.paint(graphics);
         this.meritoki.paint(graphics);
+        this.mainFrame.controlDialog.init();
     }
 
     /**

@@ -30,6 +30,7 @@ import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
+import com.meritoki.library.cortex.model.Belief;
 import com.meritoki.library.cortex.model.Concept;
 import com.meritoki.library.cortex.model.Node;
 import com.meritoki.library.cortex.model.Point;
@@ -70,20 +71,20 @@ public class Meritoki extends Provider {
 		}
 		this.document = new Document();
 	}
-	
+
 	public void update() {
 		this.initInputList();
 	}
 
 	public void setVisible(boolean visible) {
-		System.out.println("setVisible("+visible+")");
+		System.out.println("setVisible(" + visible + ")");
 		this.visible = visible;
 		if (!visible) {
 			if (this.retina.loop) {
-				if(recognition != null)
+				if (recognition != null)
 					recognition.start();
 			} else {
-				if(recognition != null && recognition.getRun())
+				if (recognition != null && recognition.getRun())
 					recognition.destroy();
 			}
 		}
@@ -127,10 +128,15 @@ public class Meritoki extends Provider {
 			graphics2D = (Graphics2D) graphics.create();
 		}
 		Concept concept = null;
-		if(this.retina.manual) 
+		if (this.retina.manual) {
 			concept = this.model.cache.concept;
-		else 
-			concept = new Concept("");
+			if (concept != null && concept.value.isEmpty()) {
+				System.out.println("A concept="+concept);
+				concept = new Concept();
+			}
+		} else {
+			concept = new Concept();
+		}
 		this.retina.iterate(graphics2D, this.getBufferedImage(), this.document.cortex, concept);
 	}
 
@@ -139,19 +145,21 @@ public class Meritoki extends Provider {
 	// if there are shapes then the currently selected shape is visualized.
 	public BufferedImage getBufferedImage() {
 		Input input = this.document.getInput();
-		BufferedImage bufferedImage = (input != null)?input.getBufferedImage():null;
+		BufferedImage bufferedImage = (input != null) ? input.getBufferedImage() : null;
 //		System.out.println("getBufferedImage() bufferedImage="+bufferedImage);
 		return bufferedImage;
 	}
 
-	// Need function that returns a list of training candidates, they do not necessarily require a concept
-	//Every time this function is called a clean list is returned with a Page followed by all of its Shapes
-	//This is easy to visualize Pages or Shapes can be chosen using the Dialogs
+	// Need function that returns a list of training candidates, they do not
+	// necessarily require a concept
+	// Every time this function is called a clean list is returned with a Page
+	// followed by all of its Shapes
+	// This is easy to visualize Pages or Shapes can be chosen using the Dialogs
 	public List<Input> getInputList() {
 		List<Input> inputList = new ArrayList<>();
 		if (this.model != null && this.model.document != null) {
 			List<Page> pageList = this.model.document.pageList;
-			for(Page page: pageList) {
+			for (Page page : pageList) {
 				Input input = new Input();
 				input.uuid = page.uuid;
 				input.page = page;
@@ -162,19 +170,20 @@ public class Meritoki extends Provider {
 					input = new Input();
 					input.uuid = shape.uuid;
 					input.shape = shape;
-					input.shape.bufferedImage = this.model.document.getShapeBufferedImage(page.getScaledBufferedImage(this.model), shape);
+					input.shape.bufferedImage = this.model.document
+							.getShapeBufferedImage(page.getScaledBufferedImage(this.model), shape);
 					inputList.add(input);
 				}
 			}
 		}
 		return inputList;
 	}
-	
+
 	public void setInputList(List<Input> inputList) {
 		this.document.inputList = new ArrayList<>();
 		this.document.inputList.addAll(inputList);
 	}
-	
+
 	public void initInputList() {
 		this.setInputList(this.getInputList());
 	}
@@ -182,8 +191,6 @@ public class Meritoki extends Provider {
 	public static String getMeritokiHome() {
 		return NodeController.getProviderHome() + NodeController.getSeperator() + "meritoki";
 	}
-	
-	
 
 	// Need fucntion that returns list of inference candidates, these are shapes
 	// without text;
@@ -329,4 +336,27 @@ public class Meritoki extends Provider {
 
 //public void saveOutput() {
 //NodeController.saveJson(this.outputFile, this.outputList);
+//}
+
+//System.out.println(concept);
+//if (this.retina.cortex != null) {
+//	Belief belief = this.retina.cortex.getBelief();
+//	if (belief != null) {
+//		List<Concept> conceptList = belief.getConceptList();
+//		System.out.println(conceptList);
+//		if (conceptList != null && conceptList.size() > 0) {
+//			concept = conceptList.get(0);
+//		}
+//	}
+//}
+
+//System.out.println("B concept="+concept);
+//Belief belief = this.retina.cortex.getBelief();
+//System.out.println(belief);
+//if (belief != null) {
+//	List<Concept> conceptList = belief.getConceptList();
+//	System.out.println(conceptList);
+//	if (conceptList != null && conceptList.size() > 1) {
+//		concept = conceptList.get(conceptList.size());
+//	}
 //}
