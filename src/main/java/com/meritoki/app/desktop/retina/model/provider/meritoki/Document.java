@@ -20,25 +20,24 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.meritoki.library.cortex.model.cortex.Cortex;
 import com.meritoki.library.cortex.model.network.Color;
-import com.meritoki.library.cortex.model.network.Cortex;
 import com.meritoki.library.cortex.model.network.hexagon.Hexagonal;
 import com.meritoki.library.cortex.model.retina.Retina;
 
 public class Document {
 
 	@JsonProperty
-	public Cortex cortex;
-	@JsonProperty
+	public Cortex cortex = new Hexagonal(Color.BRIGHTNESS, 0, 0, 27, 1, 0);
+	@JsonIgnore
 	public List<Input> inputList = new ArrayList<>();
-	@JsonProperty
+	@JsonIgnore
 	public List<Output> outputList = new ArrayList<>();
 	@JsonProperty
 	public int index = 0;
 
 	
 	public Document() {
-		this.cortex = new Hexagonal(Color.BRIGHTNESS, 0, 0, 27, 1, 0);
 		this.cortex.load();
 	}
 	

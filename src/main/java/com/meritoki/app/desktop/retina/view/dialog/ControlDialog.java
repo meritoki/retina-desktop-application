@@ -28,8 +28,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.meritoki.library.cortex.model.Belief;
 import com.meritoki.library.cortex.model.Concept;
+import com.meritoki.library.cortex.model.cortex.Cortex;
 import com.meritoki.library.cortex.model.group.Group;
-import com.meritoki.library.cortex.model.network.Cortex;
 import com.meritoki.library.cortex.model.network.Network;
 
 import com.meritoki.app.desktop.retina.model.command.ScriptCortex;
@@ -164,6 +164,7 @@ public class ControlDialog extends javax.swing.JDialog {
 	}
 
 	public void init() {
+		System.out.println("ControlDialog.init()");
 		this.initList();
 		this.initLabel();
 		this.retinaPanel.init();

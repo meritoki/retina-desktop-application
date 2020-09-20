@@ -71,7 +71,7 @@ public class RetinaPanel extends JPanel {
 			if(belief != null) {
 				AffineTransform affineTransform = new AffineTransform();
 				affineTransform.scale(1, 1);// this handles scaling the
-				graphics2D.drawImage(belief.bufferedImage, affineTransform, null);
+				graphics2D.drawImage(belief.getBufferedImage(), affineTransform, null);
 			}
 		}
 	}

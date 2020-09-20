@@ -63,6 +63,8 @@ public class NodeController extends com.meritoki.library.controller.node.NodeCon
 	public static String getProviderHome() {
 		return getSystemHome() + getSeperator() + "provider";
 	}
+	
+	
 
 	public static void saveDocument(String filePath, String fileName, Document document) {
 		logger.info("saveDocument(" + filePath + ", " + fileName + ", " + document + ")");

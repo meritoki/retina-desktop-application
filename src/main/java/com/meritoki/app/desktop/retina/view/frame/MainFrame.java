@@ -22,6 +22,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -607,8 +608,9 @@ public final class MainFrame extends JFrame {
     private void resetMeritokiMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetMeritokiMenuItemActionPerformed
         Meritoki meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
         if(meritoki != null) {
-        	meritoki.init();
+        	meritoki.reset();
         }
+        this.init();
     }//GEN-LAST:event_resetMeritokiMenuItemActionPerformed
 
 	private void zooniverseCSVImportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_zooniverseCSVImportMenuItemActionPerformed
@@ -655,12 +657,16 @@ public final class MainFrame extends JFrame {
 	private void newMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newMenuItemActionPerformed
 		this.model.document = new Document();
 		this.model.system.newDocument = true;
-		for (Provider provider : this.model.system.providerList) {
-            if (provider instanceof Meritoki) {
-                Meritoki meritoki = (Meritoki) provider;
-                meritoki.open(this.model.document.uuid);
-            }
-        }
+		for(Entry<String, Provider> entry:this.model.system.providerMap.entrySet()) {
+			Provider provider = entry.getValue();
+			provider.open();
+		}
+//		for (Provider provider : this.model.system.providerList) {
+//            if (provider instanceof Meritoki) {
+//                Meritoki meritoki = (Meritoki) provider;
+//                meritoki.open(this.model.document.uuid);
+//            }
+//        }
 //		this.model.document.pattern.user = this.model.system.user;
 		this.init();
 	}// GEN-LAST:event_newMenuItemActionPerformed

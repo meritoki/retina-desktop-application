@@ -20,7 +20,7 @@ import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.library.cortex.model.Belief;
 import com.meritoki.library.cortex.model.Concept;
-import com.meritoki.library.cortex.model.network.Cortex;
+import com.meritoki.library.cortex.model.cortex.Cortex;
 
 public class ScriptCortex extends Command {
 	private Logger logger = LogManager.getLogger(ScriptPage.class.getName());

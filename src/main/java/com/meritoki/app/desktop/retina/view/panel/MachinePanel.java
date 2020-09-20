@@ -62,7 +62,7 @@ public class MachinePanel extends JPanel implements MouseListener, KeyListener, 
         this.model = model;
         this.init();
         this.meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
-        this.meritoki.setModel(this.model);
+//        this.meritoki.setModel(this.model);
     }
     
     private boolean visible() {

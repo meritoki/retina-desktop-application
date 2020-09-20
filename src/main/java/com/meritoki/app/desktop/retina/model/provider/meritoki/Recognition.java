@@ -42,12 +42,13 @@ public class Recognition extends Node {
 	@Override
 	public void initialize() {
 		super.initialize();
-        for (Provider provider : this.model.system.providerList) {
-            if (provider instanceof Meritoki) {
-                this.meritoki = (Meritoki) provider;
-                this.meritoki.init();
-            }
-        }
+		this.meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
+//        for (Provider provider : this.model.system.providerList) {
+//            if (provider instanceof Meritoki) {
+//                this.meritoki = (Meritoki) provider;
+//                this.meritoki.init();
+//            }
+//        }
         this.filter = false;
         this.setState(State.DEFAULT);
 	}

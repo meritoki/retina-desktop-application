@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
@@ -47,8 +50,8 @@ import com.meritoki.library.cortex.model.retina.Retina;
  */
 public class Meritoki extends Provider {
 
-	public Document document;
-	private Model model;
+	private static final Logger logger = LogManager.getLogger(Meritoki.class.getName());
+	public Document document = new Document();
 	public File defaultFile;
 	private boolean visible = true;
 	public Retina retina = new Retina();
@@ -56,20 +59,17 @@ public class Meritoki extends Provider {
 
 	public Meritoki() {
 		super("meritoki");
-		this.init();
-	}
-
-	public void setModel(Model model) {
-		this.model = model;
-		this.recognition = new Recognition(0, this.model);
-	}
-
-	public void init() {
 		File directory = new File(getMeritokiHome());
 		if (!directory.exists()) {
 			directory.mkdirs();
 		}
+//		this.init();
+	}
+
+	public void reset() {
+		System.out.println("reset()");
 		this.document = new Document();
+		this.retina = new Retina();
 	}
 
 	public void update() {
@@ -90,9 +90,12 @@ public class Meritoki extends Provider {
 		}
 	}
 
-	public void open(String documentUUID) {
-		File directory = new File(getMeritokiHome() + NodeController.getSeperator() + documentUUID);
+	public void open() {// String documentUUID) {
+		logger.info("open()");
+		String uuid = this.model.document.uuid;
+		File directory = new File(getCortexHome(uuid));
 		this.defaultFile = new File(directory + NodeController.getSeperator() + "cortex.json");
+		logger.info("open() defaultFile=" + defaultFile);
 		if (this.defaultFile.exists()) {
 			// not functional
 			this.document = (Document) NodeController.openJson(this.defaultFile, Document.class);
@@ -101,23 +104,43 @@ public class Meritoki extends Provider {
 			directory.mkdirs();
 			NodeController.saveJson(this.defaultFile, this.document);
 		}
-		document.cortex.load();
+		document.cortex.load();// ?
 	}
 
 	public void exportDocument(File destination) {
-
+		NodeController.saveJson(destination, this.document);
 	}
 
 	public void importDocument(File file) {
-		this.defaultFile = file;
-		if (this.defaultFile.exists()) {
+		if (file.exists()) {
 			// not functional
-			this.document = (Document) NodeController.openJson(this.defaultFile, Document.class);
+			this.document = (Document) NodeController.openJson(file, Document.class);
 		}
 		document.cortex.load();
 	}
 
 	public void save() {
+		logger.info("save()");
+		for (Belief b : this.document.cortex.beliefList) {
+			if (b.file == null) {
+				File directory = new File(getBeliefHome() + NodeController.getSeperator());
+				if (!directory.exists()) {
+					directory.mkdirs();
+				}
+				b.file = new File(directory + NodeController.getSeperator()+b.uuid + ".jpg");
+				if (!b.file.exists()) {
+					try {
+						NodeController.saveJpg(b.file, b.bufferedImage);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			} 
+			b.filePath = b.file.getParent();
+			b.fileName = b.file.getName();
+			System.out.println("getBufferedImage() b.filePath="+b.filePath+" b.fileName="+b.fileName);
+		}
 		NodeController.saveJson(this.defaultFile, this.document);
 	}
 
@@ -131,7 +154,7 @@ public class Meritoki extends Provider {
 		if (this.retina.manual) {
 			concept = this.model.cache.concept;
 			if (concept != null && concept.value.isEmpty()) {
-				System.out.println("A concept="+concept);
+				System.out.println("A concept=" + concept);
 				concept = new Concept();
 			}
 		} else {
@@ -190,6 +213,14 @@ public class Meritoki extends Provider {
 
 	public static String getMeritokiHome() {
 		return NodeController.getProviderHome() + NodeController.getSeperator() + "meritoki";
+	}
+
+	public static String getCortexHome(String uuid) {
+		return getMeritokiHome() + NodeController.getSeperator() + "document" + NodeController.getSeperator() + uuid;
+	}
+
+	public static String getBeliefHome() {
+		return getMeritokiHome() + NodeController.getSeperator() + "belief";
 	}
 
 	// Need fucntion that returns list of inference candidates, these are shapes
