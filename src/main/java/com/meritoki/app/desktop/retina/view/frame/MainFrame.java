@@ -122,7 +122,7 @@ public final class MainFrame extends JFrame {
 		this.matrixPanel.setModel(this.model);
 		this.tablePanel.setModel(this.model);
 		this.archivePanel.setModel(this.model);
-		this.machinePanel.setModel(this.model);
+		
 		this.attributionDialog.setModel(this.model);
 		this.commandDialog.setModel(this.model);
 		this.pageDialog.setModel(this.model);
@@ -142,8 +142,13 @@ public final class MainFrame extends JFrame {
 			this.loginDialog.setVisible(true);
 		}
 		this.shapeDialog.setVisible(true);
-		this.pageDialog.setVisible(true);
-		this.controlDialog.setVisible(true);
+		this.pageDialog.setVisible(true); 
+		if(this.model.system.machine) {
+			this.controlDialog.setVisible(true);
+			this.machinePanel.setModel(this.model);
+		} else {
+			this.mainTabbedPane.remove(this.machineScrollPane);
+		}
 	}
 
 	public void init() {
@@ -194,6 +199,9 @@ public final class MainFrame extends JFrame {
 			});
 			this.fileMenu.add(this.shareMenuItem);
 		} else {
+			if(!this.model.system.machine) {
+				this.mainMenuBar.remove(this.providerMenu);
+			}
 			this.fileMenu.remove(this.connectMenuItem);
 			List<String> recentList = this.model.resource.recentList;
 			this.openRecentMenu.removeAll();
@@ -236,16 +244,16 @@ public final class MainFrame extends JFrame {
     private void initComponents() {
 
         table1 = new com.meritoki.app.desktop.retina.view.panel.TablePanel();
-        imagePageTabbedPane = new javax.swing.JTabbedPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        mainTabbedPane = new javax.swing.JTabbedPane();
+        pageScrollPane = new javax.swing.JScrollPane();
         pagePanel = new com.meritoki.app.desktop.retina.view.panel.PagePanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        matrixScrollPane = new javax.swing.JScrollPane();
         matrixPanel = new com.meritoki.app.desktop.retina.view.panel.MatrixPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
+        tableScrollPane = new javax.swing.JScrollPane();
         tablePanel = new com.meritoki.app.desktop.retina.view.panel.TablePanel();
-        jScrollPane4 = new javax.swing.JScrollPane();
+        archiveScrollPane = new javax.swing.JScrollPane();
         archivePanel = new com.meritoki.app.desktop.retina.view.panel.ArchivePanel();
-        jScrollPane5 = new javax.swing.JScrollPane();
+        machineScrollPane = new javax.swing.JScrollPane();
         machinePanel = new com.meritoki.app.desktop.retina.view.panel.MachinePanel();
         mainMenuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -269,8 +277,10 @@ public final class MainFrame extends JFrame {
         editMenu = new javax.swing.JMenu();
         undoMenuItem = new javax.swing.JMenuItem();
         redoMenuItem = new javax.swing.JMenuItem();
-        jMenu1 = new javax.swing.JMenu();
+        providerMenu = new javax.swing.JMenu();
         jMenu2 = new javax.swing.JMenu();
+        meritokiDialogMenu = new javax.swing.JMenu();
+        controlMenuItem = new javax.swing.JMenuItem();
         startMeritokiMenuItem = new javax.swing.JMenuItem();
         stopMeritokiMenuItem = new javax.swing.JMenuItem();
         resetMeritokiMenuItem = new javax.swing.JMenuItem();
@@ -278,7 +288,6 @@ public final class MainFrame extends JFrame {
         dialogMenu = new javax.swing.JMenu();
         pageMenuItem = new javax.swing.JMenuItem();
         selectionMenuItem = new javax.swing.JMenuItem();
-        recognitionMenuItem = new javax.swing.JMenuItem();
         commandMenuItem = new javax.swing.JMenuItem();
         attributionMenuItem = new javax.swing.JMenuItem();
         propertyMenuItem = new javax.swing.JMenuItem();
@@ -296,9 +305,9 @@ public final class MainFrame extends JFrame {
             .addGap(0, 562, Short.MAX_VALUE)
         );
 
-        jScrollPane1.setViewportView(pagePanel);
+        pageScrollPane.setViewportView(pagePanel);
 
-        imagePageTabbedPane.addTab("Page", jScrollPane1);
+        mainTabbedPane.addTab("Page", pageScrollPane);
 
         javax.swing.GroupLayout matrixPanelLayout = new javax.swing.GroupLayout(matrixPanel);
         matrixPanel.setLayout(matrixPanelLayout);
@@ -311,17 +320,17 @@ public final class MainFrame extends JFrame {
             .addGap(0, 562, Short.MAX_VALUE)
         );
 
-        jScrollPane2.setViewportView(matrixPanel);
+        matrixScrollPane.setViewportView(matrixPanel);
 
-        imagePageTabbedPane.addTab("Matrix", jScrollPane2);
+        mainTabbedPane.addTab("Matrix", matrixScrollPane);
 
-        jScrollPane3.setViewportView(tablePanel);
+        tableScrollPane.setViewportView(tablePanel);
 
-        imagePageTabbedPane.addTab("Table", jScrollPane3);
+        mainTabbedPane.addTab("Table", tableScrollPane);
 
-        jScrollPane4.setViewportView(archivePanel);
+        archiveScrollPane.setViewportView(archivePanel);
 
-        imagePageTabbedPane.addTab("Archive", jScrollPane4);
+        mainTabbedPane.addTab("Archive", archiveScrollPane);
 
         javax.swing.GroupLayout machinePanelLayout = new javax.swing.GroupLayout(machinePanel);
         machinePanel.setLayout(machinePanelLayout);
@@ -334,9 +343,9 @@ public final class MainFrame extends JFrame {
             .addGap(0, 562, Short.MAX_VALUE)
         );
 
-        jScrollPane5.setViewportView(machinePanel);
+        machineScrollPane.setViewportView(machinePanel);
 
-        imagePageTabbedPane.addTab("Machine", jScrollPane5);
+        mainTabbedPane.addTab("Machine", machineScrollPane);
 
         fileMenu.setText("File");
 
@@ -485,9 +494,21 @@ public final class MainFrame extends JFrame {
 
         mainMenuBar.add(editMenu);
 
-        jMenu1.setText("Provider");
+        providerMenu.setText("Provider");
 
         jMenu2.setText("Meritoki");
+
+        meritokiDialogMenu.setText("Dialog");
+
+        controlMenuItem.setText("Control");
+        controlMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                controlMenuItemActionPerformed(evt);
+            }
+        });
+        meritokiDialogMenu.add(controlMenuItem);
+
+        jMenu2.add(meritokiDialogMenu);
 
         startMeritokiMenuItem.setText("Start");
         startMeritokiMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -513,9 +534,9 @@ public final class MainFrame extends JFrame {
         });
         jMenu2.add(resetMeritokiMenuItem);
 
-        jMenu1.add(jMenu2);
+        providerMenu.add(jMenu2);
 
-        mainMenuBar.add(jMenu1);
+        mainMenuBar.add(providerMenu);
 
         windowMenu.setText("Window");
 
@@ -536,14 +557,6 @@ public final class MainFrame extends JFrame {
             }
         });
         dialogMenu.add(selectionMenuItem);
-
-        recognitionMenuItem.setText("Recognition");
-        recognitionMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                recognitionMenuItemActionPerformed(evt);
-            }
-        });
-        dialogMenu.add(recognitionMenuItem);
 
         commandMenuItem.setText("Command");
         commandMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -579,11 +592,11 @@ public final class MainFrame extends JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(imagePageTabbedPane)
+            .addComponent(mainTabbedPane)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(imagePageTabbedPane)
+            .addComponent(mainTabbedPane)
         );
 
         pack();
@@ -612,6 +625,10 @@ public final class MainFrame extends JFrame {
         }
         this.init();
     }//GEN-LAST:event_resetMeritokiMenuItemActionPerformed
+
+    private void controlMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_controlMenuItemActionPerformed
+        this.controlDialog.setVisible(true);
+    }//GEN-LAST:event_controlMenuItemActionPerformed
 
 	private void zooniverseCSVImportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_zooniverseCSVImportMenuItemActionPerformed
 		this.zooniverseCSVImportDialog = new com.meritoki.app.desktop.retina.view.dialog.zooniverse.ZooniverseCSVImportDialog(
@@ -781,38 +798,38 @@ public final class MainFrame extends JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.meritoki.app.desktop.retina.view.panel.ArchivePanel archivePanel;
+    private javax.swing.JScrollPane archiveScrollPane;
     private javax.swing.JMenuItem attributionMenuItem;
     private javax.swing.JMenuItem audioMenuItem;
     private javax.swing.JMenuItem commandMenuItem;
     private javax.swing.JMenuItem connectMenuItem;
+    private javax.swing.JMenuItem controlMenuItem;
     private javax.swing.JMenu dialogMenu;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu exportMenu;
     private javax.swing.JMenuItem exportMeritokiMenuItem;
     private javax.swing.JMenu fileMenu;
-    private javax.swing.JTabbedPane imagePageTabbedPane;
     private javax.swing.JMenuItem importImageMenuItem;
     private javax.swing.JMenu importMenu;
     private javax.swing.JMenuItem importMeritokiMenuItem;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JMenuItem logInOutMenuItem;
     private com.meritoki.app.desktop.retina.view.panel.MachinePanel machinePanel;
+    private javax.swing.JScrollPane machineScrollPane;
     private javax.swing.JMenuBar mainMenuBar;
+    private javax.swing.JTabbedPane mainTabbedPane;
     private com.meritoki.app.desktop.retina.view.panel.MatrixPanel matrixPanel;
+    private javax.swing.JScrollPane matrixScrollPane;
+    private javax.swing.JMenu meritokiDialogMenu;
     private javax.swing.JMenuItem microsoftExportMenuItem;
     private javax.swing.JMenuItem newMenuItem;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenu openRecentMenu;
     private javax.swing.JMenuItem pageMenuItem;
     private com.meritoki.app.desktop.retina.view.panel.PagePanel pagePanel;
+    private javax.swing.JScrollPane pageScrollPane;
     private javax.swing.JMenuItem propertyMenuItem;
-    private javax.swing.JMenuItem recognitionMenuItem;
+    private javax.swing.JMenu providerMenu;
     private javax.swing.JMenuItem redoMenuItem;
     private javax.swing.JMenuItem resetMeritokiMenuItem;
     private javax.swing.JMenuItem saveAsMenuItem;
@@ -822,6 +839,7 @@ public final class MainFrame extends JFrame {
     private javax.swing.JMenuItem stopMeritokiMenuItem;
     private com.meritoki.app.desktop.retina.view.panel.TablePanel table1;
     private com.meritoki.app.desktop.retina.view.panel.TablePanel tablePanel;
+    private javax.swing.JScrollPane tableScrollPane;
     private javax.swing.JMenuItem undoMenuItem;
     private javax.swing.JMenu windowMenu;
     private javax.swing.JMenuItem zooniverseCSVImportMenuItem;

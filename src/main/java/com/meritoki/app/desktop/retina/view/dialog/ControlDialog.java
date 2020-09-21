@@ -186,7 +186,7 @@ public class ControlDialog extends javax.swing.JDialog {
 			Belief belief = cortex.getBelief();
 			if (belief != null) {
 				List<Belief> beliefList = cortex.beliefList;
-				List<Concept> conceptList = belief.getConceptList();
+				List<Concept> conceptList = belief.conceptList;
 				this.initBeliefList(beliefList);
 				this.setBeliefListSelectedIndex(cortex.index);
 				this.initConceptList(conceptList);

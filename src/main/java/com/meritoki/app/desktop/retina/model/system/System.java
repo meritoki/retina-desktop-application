@@ -59,6 +59,8 @@ public class System {
 	public File file = null;//The file that corresponds to the loaded document
 	@JsonIgnore
 	public String defaultFileName = "Untitled.json";
+	@JsonIgnore 
+	public boolean machine = true;
 	@JsonIgnore
 	public boolean multiUser = false;
 	@JsonIgnore
