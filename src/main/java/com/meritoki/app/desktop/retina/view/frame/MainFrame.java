@@ -56,6 +56,7 @@ import com.meritoki.app.desktop.retina.view.dialog.user.UserRegisterDialog;
 import com.meritoki.app.desktop.retina.view.dialog.zooniverse.ZooniverseCSVImportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.zooniverse.ZooniverseExportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.zooniverse.ZooniverseImportDialog;
+import com.meritoki.app.desktop.retina.view.panel.MachinePanel;
 
 /**
  *
@@ -226,9 +227,16 @@ public final class MainFrame extends JFrame {
 		}
 	}
 	
+
+	
+	public MachinePanel getMachinePanel() {
+		return this.machinePanel;
+	}
+	
 	private void shareMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_pageMenuItemActionPerformed
 		this.shareDialog.setVisible(true);
 	}// GEN-LAST:event_pageMenuItemActionPerformed
+	
 	
 
 	/**
@@ -611,11 +619,13 @@ public final class MainFrame extends JFrame {
     }//GEN-LAST:event_importMeritokiMenuItemActionPerformed
 
     private void startMeritokiMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startMeritokiMenuItemActionPerformed
-        this.machinePanel.start();
+    	Meritoki meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
+    	meritoki.start();
     }//GEN-LAST:event_startMeritokiMenuItemActionPerformed
 
     private void stopMeritokiMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopMeritokiMenuItemActionPerformed
-        this.machinePanel.stop();
+    	Meritoki meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
+    	meritoki.stop();
     }//GEN-LAST:event_stopMeritokiMenuItemActionPerformed
 
     private void resetMeritokiMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetMeritokiMenuItemActionPerformed

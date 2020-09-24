@@ -40,6 +40,10 @@ public class AddPage extends Command {
     @Override
     public void execute() {
     	logger.info("execute()");
+//    	Meritoki meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
+//		if(meritoki != null) {
+//			meritoki.update();
+//		}
     	//undo
     	Operation operation = new Operation();
     	operation.object = new ArrayList<Page>(this.model.document.pageList);
@@ -56,6 +60,7 @@ public class AddPage extends Command {
     				Page page = new Page();
     				page.imageList.add(new Image(p));
     	    		this.model.document.addPage(page);
+//    	    		meritoki.input(page);
     	    		page.setBufferedImageNull();
     	    		MemoryController.log();
     			}
@@ -63,14 +68,17 @@ public class AddPage extends Command {
 	    		Page page = new Page();
 				page.imageList.add(new Image(file));
 	    		this.model.document.addPage(page);
+//	    		meritoki.input(page);
 	    		page.setBufferedImageNull();
 	    		MemoryController.log();
     		}
     	}
+    	
     	Meritoki meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
 		if(meritoki != null) {
 			meritoki.update();
 		}
+    	
     	//redo
     	operation = new Operation();
     	operation.object = this.model.document.pageList;

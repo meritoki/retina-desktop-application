@@ -16,7 +16,10 @@
 package com.meritoki.app.desktop.retina.model.provider.meritoki;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,70 +32,39 @@ public class Document {
 
 	@JsonProperty
 	public Cortex cortex = new Hexagonal(Color.BRIGHTNESS, 0, 0, 27, 1, 0);
-	@JsonIgnore
-	public List<Input> inputList = new ArrayList<>();
-	@JsonIgnore
-	public List<Output> outputList = new ArrayList<>();
+	// Retains inputs that have been completed;
 	@JsonProperty
-	public int index = 0;
+	public Map<String, Input> inputMap = new HashMap<>();
 
-	
 	public Document() {
 		this.cortex.load();
 	}
-	
-	@JsonIgnore
-	public boolean setIndex(String uuid) {
-		boolean flag = false;
-		for(int i=0;i<this.inputList.size();i++) {
-			Input input = this.inputList.get(i);
-			if(input.uuid.equals(uuid)) {
-				this.index = i;
-				flag = true;
-				break;
-			}
-		}
-		return flag;
-	}
-	
-	@JsonIgnore
-	public boolean setIndex(int index) {
-		boolean flag = false;
-		if (index >= 0 && index < this.inputList.size()) {
-			this.index = index;
-			flag = true;
-		}
-		return flag;
-	}
-	
-	@JsonIgnore
-	public Input getInput() {
-		int size = this.inputList.size();
-		Input page = (this.index < size && size > 0) ? this.inputList.get(this.index) : null;
-		return page;
-	}
 
-	@JsonIgnore
-	public Input getInput(int index) {
-		int size = this.inputList.size();
-		Input page = (index < size && size > 0) ? this.inputList.get(index) : null;
-		return page;
-	}
-	
-	@JsonIgnore
-	public void addInput(Input input) {
-		if(!inputList.contains(input)) {
-			inputList.add(input);
-		} else {
-			for(Input i: inputList) {
-				if(i.uuid.equals(input.uuid)) {
-					if(i.shape != null) {
-						i.shape.bufferedImage = input.shape.bufferedImage;
-					} else if(i.page != null) {
-						i.page.bufferedImage = input.shape.bufferedImage;
-					}
-				}
-			}
+	public List<Input> getInputList() {
+		List<Input> inputList = new ArrayList<>();
+		for (Entry<String, Input> entry : this.inputMap.entrySet()) {
+			inputList.add(entry.getValue());
 		}
+		return inputList;
 	}
 }
+
+//this.document.inputList = new ArrayList<>();
+//this.inputList = new ArrayList<>();
+//this.inputList.addAll(inputList);
+//public void setInputList(List<Input> inputList) {
+//for (int i = 0; i < inputList.size(); i++) {
+//	Input novel = inputList.get(i);
+//	if (!this.inputList.contains(novel)) {
+//		this.inputList.add(novel);
+//	}
+////	if (this.inputList.contains(novel)) {
+////		int index = this.inputList.indexOf(novel);
+////		Input input = this.inputList.get(index);
+////		input.shape = novel.shape;
+////		input.page = novel.page;
+////	} else {
+////		this.inputList.add(novel);
+////	}
+//}
+//}

@@ -5,19 +5,10 @@
  */
 package com.meritoki.app.desktop.retina.view.dialog;
 
-import com.meritoki.app.desktop.retina.model.Model;
-import com.meritoki.app.desktop.retina.model.command.Command;
-import com.meritoki.app.desktop.retina.model.provider.Provider;
-import com.meritoki.app.desktop.retina.model.provider.meritoki.Document;
-import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
-import com.meritoki.app.desktop.retina.view.frame.MainFrame;
-
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -26,13 +17,16 @@ import javax.swing.JOptionPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.command.Command;
+import com.meritoki.app.desktop.retina.model.command.ScriptCortex;
+import com.meritoki.app.desktop.retina.model.provider.meritoki.Document;
+import com.meritoki.app.desktop.retina.model.provider.meritoki.Input;
+import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
+import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 import com.meritoki.library.cortex.model.Belief;
 import com.meritoki.library.cortex.model.Concept;
 import com.meritoki.library.cortex.model.cortex.Cortex;
-import com.meritoki.library.cortex.model.group.Group;
-import com.meritoki.library.cortex.model.network.Network;
-
-import com.meritoki.app.desktop.retina.model.command.ScriptCortex;
 
 /**
  *
@@ -55,6 +49,7 @@ public class ControlDialog extends javax.swing.JDialog {
 	public ControlDialog(java.awt.Frame parent, boolean modal) {
 		super(parent, modal);
 		this.initComponents();
+		this.inputListAddMouseListener();
 		this.beliefListAddKeyListener();
 		this.beliefListAddMouseListener();
 		this.mainFrame = (MainFrame) parent;
@@ -162,20 +157,45 @@ public class ControlDialog extends javax.swing.JDialog {
 			}
 		});
 	}
+	
+	public void inputListAddMouseListener() {
+		this.inputList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent me) {
+				String uuid = (String)inputList.getSelectedValue();
+				if (meritoki != null) {
+					meritoki.setIndex(uuid);
+					meritoki.scale();
+				}
+				setInputListSelectedUUID(uuid);
+				mainFrame.init();
+			}
+		});
+	}
 
 	public void init() {
-		System.out.println("ControlDialog.init()");
+		System.out.println("init()");
+		this.revalidate();
+		this.initButton();
 		this.initList();
 		this.initLabel();
 		this.retinaPanel.init();
 	}
+	
+	public void initButton() {
+		if(this.meritoki.loop) {
+			this.startButton.setText("Stop");
+		} else {
+			this.startButton.setText("Start");
+		}
+	}
 
 	public void initLabel() {
 		Document document = (this.model != null) ? this.meritoki.document : null;
-		Cortex network = (document != null) ? document.cortex : null;
-		if (network != null) {
-			this.xLabel.setText(Integer.toString(network.getX()));
-			this.yLabel.setText(Integer.toString(network.getY()));
+		Cortex cortex = (document != null) ? document.cortex : null;
+		if (cortex != null) {
+			this.xLabel.setText(Double.toString(cortex.origin.x));
+			this.yLabel.setText(Double.toString(cortex.origin.y));
 		}
 	}
 
@@ -184,6 +204,7 @@ public class ControlDialog extends javax.swing.JDialog {
 		Cortex cortex = (document != null) ? document.cortex : null;
 		if (cortex != null) {
 			Belief belief = cortex.getBelief();
+			System.out.println("initList() belief="+belief);
 			if (belief != null) {
 				List<Belief> beliefList = cortex.beliefList;
 				List<Concept> conceptList = belief.conceptList;
@@ -192,7 +213,15 @@ public class ControlDialog extends javax.swing.JDialog {
 				this.initConceptList(conceptList);
 			}
 		}
+		List<Input> inputList = meritoki.inputList;
+		if(inputList != null) {
+			this.initInputList(inputList);
+		}
 		// this.initPredictionConceptList(predictionConceptList);
+	}
+	
+	public void setInputListSelectedUUID(String uuid) {
+		this.inputList.setSelectedValue(uuid, true);
 	}
 
 	public void setBeliefListSelectedUUID(String uuid) {
@@ -201,6 +230,10 @@ public class ControlDialog extends javax.swing.JDialog {
 
 	public void setBeliefListSelectedIndex(int index) {
 		this.beliefList.setSelectedIndex(index);
+	}
+	
+	public void setConceptListSelectedIndex(int index) {
+		this.conceptList.setSelectedIndex(index);
 	}
 
 //	public void initList() {
@@ -215,6 +248,17 @@ public class ControlDialog extends javax.swing.JDialog {
 //		// this.initPredictionConceptList(predictionConceptList);
 //	}
 
+	public void initInputList(List<Input> conceptList) {
+//      logger.debug("initConceptList(...)");
+		DefaultListModel<String> defaultListModel = new DefaultListModel<>();
+		if (conceptList != null) {
+			for (int i = 0; i < conceptList.size(); i++) {
+				defaultListModel.addElement(conceptList.get(i).uuid);
+			}
+		}
+		this.inputList.setModel(defaultListModel);
+	}
+	
 	public void initBeliefList(List<Belief> beliefList) {
 //        logger.debug("initConceptList(...)");
 		DefaultListModel<String> defaultListModel = new DefaultListModel<>();
@@ -227,7 +271,7 @@ public class ControlDialog extends javax.swing.JDialog {
 	}
 
 	public void initConceptList(List<Concept> conceptList) {
-//        logger.debug("initConceptList(...)");
+        logger.info("initConceptList("+conceptList+")");
 		DefaultListModel<String> defaultListModel = new DefaultListModel<>();
 		if (conceptList != null) {
 			for (int i = 0; i < conceptList.size(); i++) {
@@ -260,214 +304,252 @@ public class ControlDialog extends javax.swing.JDialog {
 	// <editor-fold defaultstate="collapsed" desc="Generated
 	// <editor-fold defaultstate="collapsed" desc="Generated
 	// <editor-fold defaultstate="collapsed" desc="Generated
-	// Code">//GEN-BEGIN:initComponents
-	private void initComponents() {
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
-		inputLabel = new javax.swing.JLabel();
-		conceptLabel = new javax.swing.JLabel();
-		jScrollPane1 = new javax.swing.JScrollPane();
-		conceptList = new javax.swing.JList<>();
-		inputTextField = new javax.swing.JTextField();
-		trainButton = new javax.swing.JButton();
-		inferButton = new javax.swing.JButton();
-		stateLabel = new javax.swing.JLabel();
-		jLabel3 = new javax.swing.JLabel();
-		jSeparator1 = new javax.swing.JSeparator();
-		jSeparator3 = new javax.swing.JSeparator();
-		jLabel8 = new javax.swing.JLabel();
-		xLabel = new javax.swing.JLabel();
-		yLabel = new javax.swing.JLabel();
-		jLabel11 = new javax.swing.JLabel();
-		jLabel12 = new javax.swing.JLabel();
-		retinaPanel = new com.meritoki.app.desktop.retina.view.panel.RetinaPanel();
-		jScrollPane3 = new javax.swing.JScrollPane();
-		conceptTextArea = new javax.swing.JTextArea();
-		doButton = new javax.swing.JButton();
-		undoButton = new javax.swing.JButton();
-		jScrollPane2 = new javax.swing.JScrollPane();
-		beliefList = new javax.swing.JList<>();
-		jLabel1 = new javax.swing.JLabel();
+        inputLabel = new javax.swing.JLabel();
+        conceptLabel = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        conceptList = new javax.swing.JList<>();
+        inputTextField = new javax.swing.JTextField();
+        trainButton = new javax.swing.JButton();
+        inferButton = new javax.swing.JButton();
+        stateLabel = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jSeparator3 = new javax.swing.JSeparator();
+        jLabel8 = new javax.swing.JLabel();
+        xLabel = new javax.swing.JLabel();
+        yLabel = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        retinaPanel = new com.meritoki.app.desktop.retina.view.panel.RetinaPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        conceptTextArea = new javax.swing.JTextArea();
+        doButton = new javax.swing.JButton();
+        undoButton = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        beliefList = new javax.swing.JList<>();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        inputList = new javax.swing.JList<>();
+        startButton = new javax.swing.JButton();
 
-		setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-		inputLabel.setText("input:");
+        inputLabel.setText("input:");
 
-		conceptLabel.setText("null");
+        conceptLabel.setText("null");
 
-		conceptList.setModel(new javax.swing.AbstractListModel<String>() {
-			String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+        conceptList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(conceptList);
 
-			public int getSize() {
-				return strings.length;
-			}
+        trainButton.setText("Train");
+        trainButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                trainButtonActionPerformed(evt);
+            }
+        });
 
-			public String getElementAt(int i) {
-				return strings[i];
-			}
-		});
-		jScrollPane1.setViewportView(conceptList);
+        inferButton.setText("Infer");
+        inferButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inferButtonActionPerformed(evt);
+            }
+        });
 
-		trainButton.setText("Train");
-		trainButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				trainButtonActionPerformed(evt);
-			}
-		});
+        stateLabel.setText("null");
 
-		inferButton.setText("Infer");
-		inferButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				inferButtonActionPerformed(evt);
-			}
-		});
+        jLabel3.setText("concept:");
 
-		stateLabel.setText("null");
+        jLabel8.setText("center:");
 
-		jLabel3.setText("concept:");
+        xLabel.setText("null");
 
-		jLabel8.setText("center:");
+        yLabel.setText("null");
 
-		xLabel.setText("null");
+        jLabel11.setText("x:");
 
-		yLabel.setText("null");
+        jLabel12.setText("y:");
 
-		jLabel11.setText("x:");
+        javax.swing.GroupLayout retinaPanelLayout = new javax.swing.GroupLayout(retinaPanel);
+        retinaPanel.setLayout(retinaPanelLayout);
+        retinaPanelLayout.setHorizontalGroup(
+            retinaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 77, Short.MAX_VALUE)
+        );
+        retinaPanelLayout.setVerticalGroup(
+            retinaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 74, Short.MAX_VALUE)
+        );
 
-		jLabel12.setText("y:");
+        conceptTextArea.setColumns(20);
+        conceptTextArea.setRows(5);
+        jScrollPane3.setViewportView(conceptTextArea);
 
-		javax.swing.GroupLayout retinaPanelLayout = new javax.swing.GroupLayout(retinaPanel);
-		retinaPanel.setLayout(retinaPanelLayout);
-		retinaPanelLayout.setHorizontalGroup(retinaPanelLayout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 77, Short.MAX_VALUE));
-		retinaPanelLayout.setVerticalGroup(retinaPanelLayout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 74, Short.MAX_VALUE));
+        doButton.setText("Do");
+        doButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                doButtonActionPerformed(evt);
+            }
+        });
 
-		conceptTextArea.setColumns(20);
-		conceptTextArea.setRows(5);
-		jScrollPane3.setViewportView(conceptTextArea);
+        undoButton.setText("Undo");
+        undoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                undoButtonActionPerformed(evt);
+            }
+        });
 
-		doButton.setText("Do");
-		doButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				doButtonActionPerformed(evt);
-			}
-		});
+        beliefList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane2.setViewportView(beliefList);
 
-		undoButton.setText("Undo");
-		undoButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				undoButtonActionPerformed(evt);
-			}
-		});
+        jLabel1.setText("belief:");
 
-		beliefList.setModel(new javax.swing.AbstractListModel<String>() {
-			String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+        inputList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane4.setViewportView(inputList);
 
-			public int getSize() {
-				return strings.length;
-			}
+        startButton.setText("Start");
+        startButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startButtonActionPerformed(evt);
+            }
+        });
 
-			public String getElementAt(int i) {
-				return strings[i];
-			}
-		});
-		jScrollPane2.setViewportView(beliefList);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(37, 37, 37)
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 147, Short.MAX_VALUE)
+                        .addComponent(jLabel11)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(xLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(yLabel)
+                        .addGap(124, 124, 124))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(49, 49, 49)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(doButton, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(undoButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jScrollPane2)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(66, 66, 66)
+                        .addComponent(inputLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(inputTextField)
+                            .addComponent(trainButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(inferButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane4)
+                            .addComponent(startButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(stateLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(conceptLabel)
+                        .addGap(154, 154, 154))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(retinaPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(141, 141, 141))))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(startButton)
+                .addGap(8, 8, 8)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(inputLabel)
+                    .addComponent(inputTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(trainButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(conceptLabel)
+                    .addComponent(stateLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(inferButton)
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(xLabel)
+                    .addComponent(yLabel)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel12))
+                .addGap(24, 24, 24)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
+                .addComponent(retinaPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(doButton)
+                            .addComponent(undoButton)))
+                    .addComponent(jLabel1))
+                .addContainerGap())
+        );
 
-		jLabel1.setText("belief:");
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
 
-		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout
-				.createSequentialGroup()
-				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout
-						.createSequentialGroup().addGap(37, 37, 37).addComponent(jLabel8)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 147, Short.MAX_VALUE)
-						.addComponent(jLabel11).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addComponent(xLabel).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addComponent(jLabel12).addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addComponent(yLabel).addGap(124, 124, 124))
-						.addGroup(layout.createSequentialGroup().addContainerGap()
-								.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-										.addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
-										.addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.TRAILING)))
-						.addGroup(layout.createSequentialGroup().addGap(66, 66, 66).addComponent(inputLabel)
-								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-								.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-										.addComponent(inputTextField)
-										.addComponent(trainButton, javax.swing.GroupLayout.DEFAULT_SIZE,
-												javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-										.addComponent(inferButton, javax.swing.GroupLayout.DEFAULT_SIZE,
-												javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-						.addGroup(layout.createSequentialGroup().addGap(49, 49, 49)
-								.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-										.addComponent(jLabel3).addComponent(jLabel1))
-								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-								.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-										.addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
-										.addComponent(jScrollPane1)
-										.addGroup(layout.createSequentialGroup()
-												.addComponent(doButton, javax.swing.GroupLayout.PREFERRED_SIZE, 160,
-														javax.swing.GroupLayout.PREFERRED_SIZE)
-												.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-												.addComponent(undoButton, javax.swing.GroupLayout.DEFAULT_SIZE,
-														javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-										.addComponent(jScrollPane2))))
-				.addContainerGap())
-				.addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-						.addGap(0, 0, Short.MAX_VALUE)
-						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-								.addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
-										layout.createSequentialGroup().addComponent(stateLabel)
-												.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-												.addComponent(conceptLabel).addGap(154, 154, 154))
-								.addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-										.addComponent(retinaPanel, javax.swing.GroupLayout.PREFERRED_SIZE,
-												javax.swing.GroupLayout.DEFAULT_SIZE,
-												javax.swing.GroupLayout.PREFERRED_SIZE)
-										.addGap(141, 141, 141)))));
-		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout
-				.createSequentialGroup().addContainerGap()
-				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-						.addComponent(inputLabel).addComponent(inputTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
-								javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(trainButton)
-				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-						.addComponent(conceptLabel).addComponent(stateLabel))
-				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(inferButton)
-				.addGap(18, 18, 18)
-				.addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10,
-						javax.swing.GroupLayout.PREFERRED_SIZE)
-				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE).addComponent(jLabel8)
-						.addComponent(xLabel).addComponent(yLabel).addComponent(jLabel11).addComponent(jLabel12))
-				.addGap(24, 24, 24)
-				.addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10,
-						javax.swing.GroupLayout.PREFERRED_SIZE)
-				.addGap(29, 29, 29)
-				.addComponent(retinaPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
-						javax.swing.GroupLayout.PREFERRED_SIZE)
-				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
-				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-						.addGroup(layout.createSequentialGroup()
-								.addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 125,
-										javax.swing.GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-								.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-										.addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 124,
-												javax.swing.GroupLayout.PREFERRED_SIZE)
-										.addComponent(jLabel3))
-								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-								.addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE,
-										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-								.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-										.addComponent(doButton).addComponent(undoButton)))
-						.addComponent(jLabel1))
-				.addContainerGap()));
-
-		pack();
-	}// </editor-fold>//GEN-END:initComponents
+    private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
+        if(this.startButton.getText().equals("Start")) {
+        	this.mainFrame.getMachinePanel().start();
+        	this.startButton.setText("Stop");
+        } else if(this.startButton.getText().equals("Stop")) {
+        	this.mainFrame.getMachinePanel().stop();
+        	this.startButton.setText("Start");
+        }
+    }//GEN-LAST:event_startButtonActionPerformed
 
 	private void doButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_doButtonActionPerformed
 		this.model.cache.cortex = this.meritoki.document.cortex;
@@ -491,14 +573,12 @@ public class ControlDialog extends javax.swing.JDialog {
 		String value = this.inputTextField.getText().trim();
 		this.model.cache.concept = new Concept(value);
 		this.conceptLabel.setText(value);
-		this.meritoki.retina.manual = true;
 	}// GEN-LAST:event_trainButtonActionPerformed
 
 	private void inferButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_inferButtonActionPerformed
 		this.stateLabel.setText("Inferring...");
 		this.conceptLabel.setText("");
 		this.model.cache.concept = null;
-		this.meritoki.retina.manual = true;
 	}// GEN-LAST:event_inferButtonActionPerformed
 
 	/**
@@ -553,32 +633,35 @@ public class ControlDialog extends javax.swing.JDialog {
 		});
 	}
 
-	// Variables declaration - do not modify//GEN-BEGIN:variables
-	private javax.swing.JList<String> beliefList;
-	private javax.swing.JLabel conceptLabel;
-	private javax.swing.JList<String> conceptList;
-	private javax.swing.JTextArea conceptTextArea;
-	private javax.swing.JButton doButton;
-	private javax.swing.JButton inferButton;
-	private javax.swing.JLabel inputLabel;
-	private javax.swing.JTextField inputTextField;
-	private javax.swing.JLabel jLabel1;
-	private javax.swing.JLabel jLabel11;
-	private javax.swing.JLabel jLabel12;
-	private javax.swing.JLabel jLabel3;
-	private javax.swing.JLabel jLabel8;
-	private javax.swing.JScrollPane jScrollPane1;
-	private javax.swing.JScrollPane jScrollPane2;
-	private javax.swing.JScrollPane jScrollPane3;
-	private javax.swing.JSeparator jSeparator1;
-	private javax.swing.JSeparator jSeparator3;
-	private com.meritoki.app.desktop.retina.view.panel.RetinaPanel retinaPanel;
-	private javax.swing.JLabel stateLabel;
-	private javax.swing.JButton trainButton;
-	private javax.swing.JButton undoButton;
-	private javax.swing.JLabel xLabel;
-	private javax.swing.JLabel yLabel;
-	// End of variables declaration//GEN-END:variables
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JList<String> beliefList;
+    private javax.swing.JLabel conceptLabel;
+    private javax.swing.JList<String> conceptList;
+    private javax.swing.JTextArea conceptTextArea;
+    private javax.swing.JButton doButton;
+    private javax.swing.JButton inferButton;
+    private javax.swing.JLabel inputLabel;
+    private javax.swing.JList<String> inputList;
+    private javax.swing.JTextField inputTextField;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator3;
+    private com.meritoki.app.desktop.retina.view.panel.RetinaPanel retinaPanel;
+    private javax.swing.JButton startButton;
+    private javax.swing.JLabel stateLabel;
+    private javax.swing.JButton trainButton;
+    private javax.swing.JButton undoButton;
+    private javax.swing.JLabel xLabel;
+    private javax.swing.JLabel yLabel;
+    // End of variables declaration//GEN-END:variables
 }
 
 //if (cortex instanceof Group) {

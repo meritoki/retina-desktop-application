@@ -57,6 +57,7 @@ public class AddShape extends Command {
 		shape.position = new Position(new Point(pressedPoint), new Point(releasedPoint),
 				pressedImage.position.relativeScale, scale, pressedImage.position.offset, pressedImage.position.margin);
 		this.model.document.addShape(shape);
+		shape.bufferedImage = this.model.document.getShapeBufferedImage(page.getScaledBufferedImage(this.model), shape);
     	Meritoki meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
 		if(meritoki != null) {
 			meritoki.update();

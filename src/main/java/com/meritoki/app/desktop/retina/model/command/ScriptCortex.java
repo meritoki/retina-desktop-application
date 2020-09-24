@@ -21,6 +21,8 @@ import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.library.cortex.model.Belief;
 import com.meritoki.library.cortex.model.Concept;
 import com.meritoki.library.cortex.model.cortex.Cortex;
+import com.meritoki.library.cortex.model.network.Level;
+import com.meritoki.library.cortex.model.network.Network;
 
 public class ScriptCortex extends Command {
 	private Logger logger = LogManager.getLogger(ScriptPage.class.getName());
@@ -56,10 +58,10 @@ public class ScriptCortex extends Command {
 				instruction = i.replaceFirst("FORGET", "");
 				List<Integer> set = this.getIndexList(instruction);
 				System.out.println(set);
-				operationList.addAll(forgetConcept(cortex.getBelief(), set));
+				operationList.addAll(forgetConcept(cortex, set));
 			} else if (i.contains("REMEMBER")) {
 				instruction = i.replaceFirst("REMEMBER", "");
-				operationList.addAll(rememberConcept(cortex.getBelief(), instruction));
+				operationList.addAll(rememberConcept(cortex, instruction));
 			} else if (i.contains("MAP")) {
 				instruction = i.replaceFirst("MAP", "");
 				parameters = instruction.split(":");
@@ -77,12 +79,13 @@ public class ScriptCortex extends Command {
 		return operationList;
 	}
 
-	public List<Operation> forgetConcept(Belief belief, List<Integer> set) {
+	public List<Operation> forgetConcept(Cortex cortex, List<Integer> set) {
+		Belief belief = cortex.getBelief();
 		System.out.println("forgetConcept(" + belief + ", " + set + ")");
 		List<Operation> operationList = new ArrayList<>();
 		Operation operation = new Operation();
 		List<Concept> cList = new ArrayList<>();
-		for (Concept page : belief.getConceptList()) {
+		for (Concept page : belief.conceptList) {
 			cList.add(new Concept(page));
 		}
 
@@ -94,51 +97,44 @@ public class ScriptCortex extends Command {
 		//Remove Cortex Map 
 		
 		// Logic
+		if(set.size() == 1 && set.get(0) == -1) {
+			set = new ArrayList<>();
+			int index = 0;
+			for(Concept c: belief.conceptList) {
+				set.add(index);
+				index++;
+			}
+			
+		}
+		
+		List<Concept> conceptList = new ArrayList<>();
 		for (int a : set) {
 			System.out.println(a);
 			Concept removeConcept = belief.conceptList.remove(a);
-//			List<List<Concept>> keyList = new ArrayList<>();
-//			for(Entry<List<Concept>, Concept> entry : belief.map.entrySet()) {
-//				List<Concept> key = entry.getKey();
-//				Concept concept = entry.getValue();
-//				if(concept.equals(removeConcept)) {
-//					boolean contains = true;
-//					for(Concept k: key) {
-//						if(!belief.conceptList.contains(k)) {
-//							contains = false;
-//						}
-//					}
-//					if(contains) {
-////						belief.map.remove(key);
-//						keyList.add(key);
-//						for(Concept k: key) {
-//							if(belief.conceptList.contains(k)) {
-//								belief.conceptList.remove(k);
-//							}
-//						}
-//					}
-//				}
-//			}
-//			for(List<Concept> key: keyList) {
-//				belief.map.remove(key);
-//			}
+			conceptList.add(removeConcept);
 		}
 		
+		if(cortex instanceof Network) {
+			Network network = (Network)cortex;
+			Level level = network.getRootLevel();
+			level.removeCoincidenceConceptList(belief.coincidence, conceptList);
+		}
 		
 		operation = new Operation();
-		operation.object = belief.getConceptList();
+		operation.object = belief.conceptList;
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		operationList.add(operation);
 		return operationList;
 	}
 
-	public List<Operation> rememberConcept(Belief belief, String value) {
-		System.out.println("rememberConcept(" + belief + ", " + value + ")");
+	public List<Operation> rememberConcept(Cortex cortex, String value) {
+		System.out.println("rememberConcept(" + cortex + ", " + value + ")");
+		Belief belief = cortex.getBelief();
 		List<Operation> operationList = new ArrayList<>();
 		Operation operation = new Operation();
 		List<Concept> cList = new ArrayList<>();
-		for (Concept page : belief.getConceptList()) {
+		for (Concept page : belief.conceptList) {
 			cList.add(new Concept(page));
 		}
 		operation.object = cList;
@@ -147,9 +143,16 @@ public class ScriptCortex extends Command {
 		operationList.add(operation);
 
 		belief.conceptList.add(new Concept(value));
+		
+		if(cortex instanceof Network) {
+			Network network = (Network)cortex;
+			Level level = network.getRootLevel();
+			level.addCoincidenceConceptList(belief.coincidence, belief.conceptList);
+		}
+		
 
 		operation = new Operation();
-		operation.object = belief.conceptList;
+		operation.object = cortex;
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		operationList.add(operation);
@@ -161,7 +164,7 @@ public class ScriptCortex extends Command {
 		List<Operation> operationList = new ArrayList<>();
 		Operation operation = new Operation();
 		List<Concept> cList = new ArrayList<>();
-		for (Concept page : cortex.getBelief().getConceptList()) {
+		for (Concept page : cortex.getBelief().conceptList) {
 			cList.add(new Concept(page));
 		}
 		operation.object = cList;
@@ -169,20 +172,36 @@ public class ScriptCortex extends Command {
 		operation.id = UUID.randomUUID().toString();
 		operationList.add(operation);
 
-		List<Concept> key = new ArrayList<>();
 		// Logic
-		for (int i : set) {
-			Concept c = cortex.getBelief().getConceptList().get(i);
-			key.add(c);
+		if(set.size() == 1 && set.get(0) == -1) {
+			set = new ArrayList<>();
+			int index = 0;
+			for(Concept c: cortex.getBelief().conceptList) {
+				set.add(index);
+				index++;
+			}
+			
 		}
-		System.out.println("key:" + key);
-		System.out.println("value:" + value);
-		if (!key.toString().contains(value)) {
-			cortex.conceptMap.put(key, new Concept(value));
-			for (Belief belief : cortex.beliefList) {
-				belief.map = cortex.conceptMap;
+		for (int i : set) {
+			String key = cortex.getBelief().conceptList.get(i).toString();
+			if (!key.contains(value)) {
+				System.out.println("key:" + key);
+				System.out.println("value:" + value);
+				try{
+				    UUID uuid = UUID.fromString(key);
+				    cortex.conceptMap.put(key, value);
+				    //do something
+				} catch (IllegalArgumentException exception){
+				    //handle the case where string is not valid UUID 
+				}
+				
 			}
 		}
+		
+		for (Belief belief : cortex.beliefList) {
+			belief.setConceptList(cortex.conceptMap, cortex.getBelief().conceptList);
+		}
+		
 		operation = new Operation();
 		operation.object = cortex.getBelief().conceptList;
 		operation.sign = 0;

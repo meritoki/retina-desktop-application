@@ -89,8 +89,8 @@ public class Train extends Node {
 			Data data = (Data) object;
 		}
 		if (this.delayExpired()) {
-			this.input = this.meritoki.document.getInput();
-			if(this.input != null) {
+			this.input = this.meritoki.getInput();
+			if(this.input != null && input.scan) {
 				this.setState(State.SCAN);
 			}
 			this.setDelay(this.newDelay(this.inputDelay));
@@ -99,7 +99,7 @@ public class Train extends Node {
 
 	private void scan(Object object) {
 		if (this.delayExpired()) {
-			this.meritoki.retina.iterate(null, this.input.getBufferedImage(), this.meritoki.document.cortex, new Concept("test"));
+			this.meritoki.retina.iterate(null, this.input.getBufferedImage(), this.meritoki.document.cortex, new Concept(this.input.concept));
 			switch(this.meritoki.retina.state) {
 			case COMPLETE: {
 				this.rootAdd(new Data(2, this.id, DataType.UNBLOCK, 0, null, this.objectList));

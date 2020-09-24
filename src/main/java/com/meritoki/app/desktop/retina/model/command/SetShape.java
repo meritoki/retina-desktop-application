@@ -47,7 +47,7 @@ public class SetShape extends Command {
 			this.model.document.getPage().setShape(pressedShapeUUID);
 			Meritoki meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
     		if(meritoki != null) {
-    			meritoki.document.setIndex(pressedShapeUUID);
+    			meritoki.setIndex(pressedShapeUUID);
     		}
 		}
 		//redo

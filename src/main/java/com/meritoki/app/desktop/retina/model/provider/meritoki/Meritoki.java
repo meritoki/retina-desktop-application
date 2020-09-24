@@ -15,6 +15,7 @@
  */
 package com.meritoki.app.desktop.retina.model.provider.meritoki;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -22,10 +23,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
@@ -38,6 +41,7 @@ import com.meritoki.library.cortex.model.Concept;
 import com.meritoki.library.cortex.model.Node;
 import com.meritoki.library.cortex.model.Point;
 import com.meritoki.library.cortex.model.retina.Retina;
+import com.meritoki.library.cortex.model.retina.*;
 
 /**
  * As a provider there are several things that need to be stored in the provider
@@ -52,10 +56,14 @@ public class Meritoki extends Provider {
 
 	private static final Logger logger = LogManager.getLogger(Meritoki.class.getName());
 	public Document document = new Document();
-	public File defaultFile;
+	public File file;
 	private boolean visible = true;
 	public Retina retina = new Retina();
 	private Recognition recognition;
+	public Dimension dimension;
+	public boolean loop = false;
+	public List<Input> inputList;
+	public int index = 0;
 
 	public Meritoki() {
 		super("meritoki");
@@ -63,24 +71,149 @@ public class Meritoki extends Provider {
 		if (!directory.exists()) {
 			directory.mkdirs();
 		}
-//		this.init();
+	}
+	
+	
+	//Meritoki can know the size of the JPanel
+	public void setDimension(Dimension dimension) {
+		this.dimension = dimension;
+		this.retina.setDimension(dimension);
+	}
+
+	public void zoom(double factor) {
+		this.retina.deltaDistance(factor);
+		this.retina.setOrigin(this.retina.getImageCenterX(), this.retina.getImageCenterY());
+	}
+
+	public void input(Object object) {// Point point) {
+		System.out.println("input(" + object + ")");
+		if (object instanceof Point) {
+			Point point = (Point) object;
+			this.retina.setOrigin(point.x, point.y);
+		}
+	}
+	
+	public void scale() {
+		this.retina.setDistance(this.retina.minDistance);
+		this.retina.setOrigin(this.retina.getImageCenterX(),this.retina.getImageCenterY());
+	}
+
+	public void open() {// String documentUUID) {
+		logger.info("open()");
+		String uuid = this.model.document.uuid;
+		File directory = new File(getCortexHome(uuid));
+		this.file = new File(directory + NodeController.getSeperator() + "cortex.json");
+		logger.info("open() defaultFile=" + file);
+		if (this.file.exists()) {
+			// not functional
+			this.document = (Document) NodeController.openJson(this.file, Document.class);
+		} else {
+			this.document = new Document();
+			directory.mkdirs();
+			NodeController.saveJson(this.file, this.document);
+		}
+		this.document.cortex.load();// ?
+		this.document.cortex.update();
+		this.update();
+	}
+
+	public void update() {
+		this.setInputList(this.getInputList());
+//		this.retina.setDimension(this.dimension);
+	}
+
+	public void start() {
+		this.loop = true;
+		this.retina.setDistance(0);
+	}
+
+	public void stop() {
+		this.loop = false;
 	}
 
 	public void reset() {
 		System.out.println("reset()");
 		this.document = new Document();
 		this.retina = new Retina();
+
+		this.update();
 	}
 
-	public void update() {
-		this.initInputList();
+	public void paint(Graphics graphics) {
+		System.out.println("paint(" + String.valueOf(graphics != null) + ")");
+		Graphics2D graphics2D = null;
+		if (graphics != null) {
+			graphics2D = (Graphics2D) graphics.create();
+		}
+		//Has to work in and out of loop;
+		Input input = this.getInput();
+		if(input != null) {
+		Concept concept = input.concept;
+		Concept override = this.model.cache.concept;
+		if(!loop) {
+			if(override == null) {
+				concept = null;
+			} else if(override.value.isEmpty()) {
+				concept = new Concept();
+			} else {
+				concept = override;
+			}
+		} 
+		System.out.println("paint(" + String.valueOf(graphics != null) + ") concept="+concept);
+		// Difference is call iterate over input directly;
+		// When loop is true, call iterate;
+		BufferedImage bufferedImage = this.getBufferedImage(graphics2D);
+		if (this.loop) {
+			this.retina.iterate(graphics2D, bufferedImage, this.document.cortex, concept);
+			if (this.retina.state == State.COMPLETE) {
+				System.out.println("COMPLETE");
+				input.scan = false;
+				this.document.inputMap.put(input.uuid, input);
+				this.update();
+				boolean flag = this.setIndex(true);
+				if (flag) {
+					this.retina.setDistance(0);
+				} else {
+					this.loop = false;
+				}
+			}
+		} else {
+			this.retina.input(graphics2D, bufferedImage, this.document.cortex, concept);
+		}
+		}
+	}
+
+	public void save() {
+		logger.info("save()");
+		for (Belief b : this.document.cortex.beliefList) {
+			if (b.file == null) {
+				File directory = new File(getBeliefHome() + NodeController.getSeperator());
+				if (!directory.exists()) {
+					directory.mkdirs();
+				}
+				b.file = new File(directory + NodeController.getSeperator() + b.uuid + ".jpg");
+				if (!b.file.exists()) {
+					try {
+						NodeController.saveJpg(b.file, b.bufferedImage);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+			b.filePath = b.file.getParent();
+			b.fileName = b.file.getName();
+			// System.out.println("getBufferedImage() b.filePath="+b.filePath+"
+			// b.fileName="+b.fileName);
+		}
+		NodeController.saveJson(this.file, this.document);
 	}
 
 	public void setVisible(boolean visible) {
 		System.out.println("setVisible(" + visible + ")");
 		this.visible = visible;
 		if (!visible) {
-			if (this.retina.loop) {
+			if (this.loop) {
 				if (recognition != null)
 					recognition.start();
 			} else {
@@ -88,23 +221,6 @@ public class Meritoki extends Provider {
 					recognition.destroy();
 			}
 		}
-	}
-
-	public void open() {// String documentUUID) {
-		logger.info("open()");
-		String uuid = this.model.document.uuid;
-		File directory = new File(getCortexHome(uuid));
-		this.defaultFile = new File(directory + NodeController.getSeperator() + "cortex.json");
-		logger.info("open() defaultFile=" + defaultFile);
-		if (this.defaultFile.exists()) {
-			// not functional
-			this.document = (Document) NodeController.openJson(this.defaultFile, Document.class);
-		} else {
-			this.document = new Document();
-			directory.mkdirs();
-			NodeController.saveJson(this.defaultFile, this.document);
-		}
-		document.cortex.load();// ?
 	}
 
 	public void exportDocument(File destination) {
@@ -119,96 +235,122 @@ public class Meritoki extends Provider {
 		document.cortex.load();
 	}
 
-	public void save() {
-		logger.info("save()");
-		for (Belief b : this.document.cortex.beliefList) {
-			if (b.file == null) {
-				File directory = new File(getBeliefHome() + NodeController.getSeperator());
-				if (!directory.exists()) {
-					directory.mkdirs();
-				}
-				b.file = new File(directory + NodeController.getSeperator()+b.uuid + ".jpg");
-				if (!b.file.exists()) {
-					try {
-						NodeController.saveJpg(b.file, b.bufferedImage);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			} 
-			b.filePath = b.file.getParent();
-			b.fileName = b.file.getName();
-			System.out.println("getBufferedImage() b.filePath="+b.filePath+" b.fileName="+b.fileName);
+	public Dimension getDimension() {
+		Dimension dimension = new Dimension(0, 0);
+		if (this.retina != null) {
+			dimension.setSize(this.retina.getObjectWidth(), this.retina.getObjectHeight());
 		}
-		NodeController.saveJson(this.defaultFile, this.document);
+		return dimension;
 	}
 
-	public void paint(Graphics graphics) {
-//        System.out.println("paint("+String.valueOf(graphics != null)+")");
-		Graphics2D graphics2D = null;
-		if (graphics != null) {
-			graphics2D = (Graphics2D) graphics.create();
-		}
-		Concept concept = null;
-		if (this.retina.manual) {
-			concept = this.model.cache.concept;
-			if (concept != null && concept.value.isEmpty()) {
-				System.out.println("A concept=" + concept);
-				concept = new Concept();
+	@JsonIgnore
+	public boolean setIndex(String uuid) {
+		System.out.println("setIndex(" + uuid + ")");
+		boolean flag = false;
+		for (int i = 0; i < this.inputList.size(); i++) {
+			Input input = this.inputList.get(i);
+			if (input.uuid.equals(uuid)) {
+				flag = this.setIndex(i);
+				break;
 			}
-		} else {
-			concept = new Concept();
 		}
-		this.retina.iterate(graphics2D, this.getBufferedImage(), this.document.cortex, concept);
+		return flag;
+	}
+
+	@JsonIgnore
+	public boolean setIndex(int index) {
+		System.out.println("setIndex(" + index + ")");
+		boolean flag = false;
+		if (index >= 0 && index < this.inputList.size()) {
+			this.index = index;
+			flag = true;
+		}
+		return flag;
+	}
+
+	@JsonIgnore
+	public boolean setIndex(boolean flag) {
+		for (Input i : this.inputList) {
+			if (i.scan == flag) {
+				return this.setIndex(i.uuid);
+			}
+		}
+		return false;
+	}
+
+	@JsonIgnore
+	public Input getInput() {
+		int size = this.inputList.size();
+		Input page = (this.index < size && size > 0) ? this.inputList.get(this.index) : null;
+		return page;
+	}
+
+	@JsonIgnore
+	public Input getInput(int index) {
+		int size = this.inputList.size();
+		Input page = (index < size && size > 0) ? this.inputList.get(index) : null;
+		return page;
 	}
 
 	// The model gives the image which has priority,
 	// if page has no shapes, then the whole page is loaded;
 	// if there are shapes then the currently selected shape is visualized.
-	public BufferedImage getBufferedImage() {
-		Input input = this.document.getInput();
+	public BufferedImage getBufferedImage(Graphics2D graphics2D) {
+		Input input = this.getInput();
 		BufferedImage bufferedImage = (input != null) ? input.getBufferedImage() : null;
-//		System.out.println("getBufferedImage() bufferedImage="+bufferedImage);
+		System.out.println("getBufferedImage() bufferedImage=" + bufferedImage);
 		return bufferedImage;
 	}
 
-	// Need function that returns a list of training candidates, they do not
-	// necessarily require a concept
-	// Every time this function is called a clean list is returned with a Page
-	// followed by all of its Shapes
-	// This is easy to visualize Pages or Shapes can be chosen using the Dialogs
 	public List<Input> getInputList() {
 		List<Input> inputList = new ArrayList<>();
 		if (this.model != null && this.model.document != null) {
 			List<Page> pageList = this.model.document.pageList;
 			for (Page page : pageList) {
-				Input input = new Input();
-				input.uuid = page.uuid;
-				input.page = page;
-				input.page.bufferedImage = page.getBufferedImage(model);
-				inputList.add(input);
+				Input input = this.document.inputMap.get(page.uuid);
+				if (input == null) {
+					input = new Input();
+					input.scan = true;
+					input.uuid = page.uuid;
+					input.bufferedImage = page.getBufferedImage(model);
+					input.concept = new Concept();
+					inputList.add(input);// we want it in list if it has not been scanned;
+				} else {
+					input.scan = false;
+					input.bufferedImage = page.getBufferedImage(model);
+					inputList.add(input);
+				}
 				List<Shape> shapeList = page.getGridShapeList();
 				for (Shape shape : shapeList) {
-					input = new Input();
-					input.uuid = shape.uuid;
-					input.shape = shape;
-					input.shape.bufferedImage = this.model.document
-							.getShapeBufferedImage(page.getScaledBufferedImage(this.model), shape);
-					inputList.add(input);
+					input = this.document.inputMap.get(shape.uuid);
+					if (input == null) {
+						input = new Input();
+						input.uuid = shape.uuid;
+						input.bufferedImage = this.model.document
+								.getShapeBufferedImage(page.getScaledBufferedImage(this.model), shape);
+						String value = shape.data.text.value;
+						Concept concept = (value != null)? new Concept(value):new Concept();
+						input.concept = concept;
+						inputList.add(input);
+					} else {
+						input.scan = false;
+						String value = shape.data.text.value;
+						Concept concept = (value != null)? new Concept(value):new Concept();
+						input.concept = concept;
+						input.bufferedImage = this.model.document
+								.getShapeBufferedImage(page.getScaledBufferedImage(this.model), shape);
+						inputList.add(input);
+					}
 				}
 			}
 		}
+		System.out.println("getInputList() inputList.size()=" + inputList.size());
 		return inputList;
 	}
 
 	public void setInputList(List<Input> inputList) {
-		this.document.inputList = new ArrayList<>();
-		this.document.inputList.addAll(inputList);
-	}
-
-	public void initInputList() {
-		this.setInputList(this.getInputList());
+		System.out.println("setInputList(" + inputList.size() + ")");
+		this.inputList = inputList;
 	}
 
 	public static String getMeritokiHome() {
@@ -223,10 +365,19 @@ public class Meritoki extends Provider {
 		return getMeritokiHome() + NodeController.getSeperator() + "belief";
 	}
 
+	public static String getInputHome() {
+		return getMeritokiHome() + NodeController.getSeperator() + "input";
+	}
+
 	// Need fucntion that returns list of inference candidates, these are shapes
 	// without text;
 
 }
+
+//List<Input> inputList = new ArrayList<>();
+//inputList.addAll(document.getInputList());
+//inputList.addAll(this.getInputList());
+//this.setInputList(inputList);
 
 //public void paint(Graphics graphics) {
 //Graphics2D graphics2D = null;
@@ -391,3 +542,90 @@ public class Meritoki extends Provider {
 //		concept = conceptList.get(conceptList.size());
 //	}
 //}
+
+//for (Input b : this.document.getInputList()) {
+//if (b.file == null) {
+//	File directory = new File(getInputHome() + NodeController.getSeperator());
+//	if (!directory.exists()) {
+//		directory.mkdirs();
+//	}
+//	b.file = new File(directory + NodeController.getSeperator() + b.uuid + ".jpg");
+//	if (!b.file.exists()) {
+//		try {
+//			NodeController.saveJpg(b.file, b.bufferedImage);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
+//}
+//b.filePath = b.file.getParent();
+//b.fileName = b.file.getName();
+//// System.out.println("getBufferedImage() b.filePath="+b.filePath+"
+//// b.fileName="+b.fileName);
+//}
+
+// Need function that returns a list of training candidates, they do not
+// necessarily require a concept
+// Every time this function is called a clean list is returned with a Page
+// followed by all of its Shapes
+// This is easy to visualize Pages or Shapes can be chosen using the Dialogs
+//public void setInputMap() {
+//	if (this.model != null && this.model.document != null) {
+//		List<Page> pageList = this.model.document.pageList;
+//		for (Page page : pageList) {
+//			Input input = this.document.inputMap.get(page.uuid);
+//			if(input == null) {
+//				input = new Input();
+//				input.uuid = page.uuid;
+//				input.bufferedImage = page.getBufferedImage(model);
+//				input.concept = new Concept();
+//				this.document.inputMap.put(input.uuid,input);
+//			} 
+//			List<Shape> shapeList = page.getGridShapeList();
+//			for (Shape shape : shapeList) {
+//				input = this.document.inputMap.get(shape.uuid);
+//				if(input == null) {
+//					input = new Input();
+//					input.uuid = shape.uuid;
+//					input.bufferedImage = this.model.document
+//							.getShapeBufferedImage(page.getScaledBufferedImage(this.model), shape);
+//					input.concept = new Concept(shape.data.text.value);
+//					this.document.inputMap.put(input.uuid,input);
+//				}
+//			}
+//		}
+//	}
+//}
+
+
+//if (concept != null && concept.value.isEmpty()) {
+//	System.out.println("A concept=" + concept);
+//	concept = new Concept();
+//}
+//if (!this.loop) {
+//	concept = this.model.cache.concept;
+//	if (concept != null && concept.value.isEmpty()) {
+//		System.out.println("A concept=" + concept);
+//		concept = new Concept();
+//	}
+//} else {
+//	concept = new Concept();
+//}
+
+//Concept concept = null;
+//if (!this.loop) {
+//	concept = this.model.cache.concept;
+//	if (concept != null && concept.value.isEmpty()) {
+//		System.out.println("A concept=" + concept);
+//		concept = new Concept();
+//	}
+//} else {
+//	concept = new Concept();
+//}
+//concept = (this.model.cache.concept == null)?:this.model.cache.concept;
+//concept = (concept.value.isEmpty())?new Concept():concept;
+
+//concept = (this.model.cache.concept != null)?this.model.cache.concept:concept;
+//concept = (concept.value.isEmpty())?new Concept():concept;
+

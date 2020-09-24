@@ -51,7 +51,7 @@ public class SetPage extends Command {
     		this.model.document.setPage(pageUUID);
     		Meritoki meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
     		if(meritoki != null) {
-    			meritoki.document.setIndex(pageUUID);
+    			meritoki.setIndex(pageUUID);
     		}
     	} else if(pageIndex >  -1) {
     		this.model.document.setIndex(pageIndex);

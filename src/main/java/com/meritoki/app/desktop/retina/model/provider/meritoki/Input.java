@@ -16,51 +16,56 @@
 package com.meritoki.app.desktop.retina.model.provider.meritoki;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.meritoki.app.desktop.retina.model.document.Shape;
-import com.meritoki.app.desktop.retina.model.document.Page;
+import com.meritoki.library.controller.node.NodeController;
+import com.meritoki.library.cortex.model.*;
 
 public class Input {
 	@JsonProperty
 	public String uuid;
+	@JsonIgnore
+	public BufferedImage bufferedImage;
+	@JsonIgnore
+	public File file;
 	@JsonProperty
-	public Page page;
+	public String filePath;
 	@JsonProperty
-	public Shape shape;
+	public String fileName;
 	@JsonProperty
-	public String concept;
+	public Concept concept;
 	@JsonProperty
-	public boolean flag;
+	public boolean scan = true;
 	
 	public Input() {
 		this.uuid = UUID.randomUUID().toString();
 	}
 	
 	@JsonIgnore
-	public boolean equals(Shape shape) {
+	public boolean equals(Object input) {
 		boolean flag = false;
-		if(this.uuid.equals(shape.uuid)) {
+		if(input instanceof Input && this.uuid.equals(((Input)input).uuid)) {
 			flag = true;
 		}
 		return flag;
 	}
 	
-	public boolean hasPage(String uuid) {
-		return (page != null)? page.uuid.equals(uuid): false;
-	}
-	
-	public boolean hasShape(String uuid) {
-		return (shape != null)? shape.uuid.equals(uuid): false;
-	}
-	
 	public BufferedImage getBufferedImage() {
-		Page page = this.page;
-		Shape shape = this.shape;
-		BufferedImage bufferedImage = (page != null) ? page.bufferedImage : null;
-		bufferedImage = (bufferedImage == null)? shape.bufferedImage: bufferedImage;
-		return bufferedImage;
+		if (this.bufferedImage == null) {
+			System.out.println("getBufferedImage() filePath="+filePath+" fileName="+fileName);
+			this.file = new File(filePath + NodeController.getSeperator() + fileName);
+			if (this.file.exists()) {
+				this.bufferedImage = NodeController.openBufferedImage(this.file);
+			}
+		}
+		return this.bufferedImage;
 	}
 }
+
+//Page page = this.page;
+//Shape shape = this.shape;
+//BufferedImage bufferedImage = (page != null) ? page.bufferedImage : null;
+//bufferedImage = (shape != null && bufferedImage == null)? shape.bufferedImage: bufferedImage;
