@@ -199,7 +199,7 @@ public class ScriptCortex extends Command {
 		}
 		
 		for (Belief belief : cortex.beliefList) {
-			belief.setConceptList(cortex.conceptMap, cortex.getBelief().conceptList);
+			belief.setConceptList(cortex.conceptMap, belief.conceptList);
 		}
 		
 		operation = new Operation();

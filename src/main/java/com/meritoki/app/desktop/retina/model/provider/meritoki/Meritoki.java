@@ -82,20 +82,24 @@ public class Meritoki extends Provider {
 
 	public void zoom(double factor) {
 		this.retina.deltaDistance(factor);
-		this.retina.setOrigin(this.retina.getImageCenterX(), this.retina.getImageCenterY());
+		Point origin = new Point(this.retina.getInputCenterX(),this.retina.getInputCenterY());
+		origin.center = true;
+		this.retina.setOrigin(origin);
 	}
 
 	public void input(Object object) {// Point point) {
 		System.out.println("input(" + object + ")");
 		if (object instanceof Point) {
 			Point point = (Point) object;
-			this.retina.setOrigin(point.x, point.y);
+			this.retina.setOrigin(point);
 		}
 	}
 	
 	public void scale() {
 		this.retina.setDistance(this.retina.minDistance);
-		this.retina.setOrigin(this.retina.getImageCenterX(),this.retina.getImageCenterY());
+		Point origin = new Point(this.retina.getInputCenterX(),this.retina.getInputCenterY());
+		origin.center = true;
+		this.retina.setOrigin(origin);
 	}
 
 	public void open() {// String documentUUID) {
@@ -119,7 +123,7 @@ public class Meritoki extends Provider {
 
 	public void update() {
 		this.setInputList(this.getInputList());
-//		this.retina.setDimension(this.dimension);
+
 	}
 
 	public void start() {
@@ -135,12 +139,12 @@ public class Meritoki extends Provider {
 		System.out.println("reset()");
 		this.document = new Document();
 		this.retina = new Retina();
-
+		this.retina.setDimension(this.dimension);
 		this.update();
 	}
 
 	public void paint(Graphics graphics) {
-		System.out.println("paint(" + String.valueOf(graphics != null) + ")");
+//		System.out.println("paint(" + String.valueOf(graphics != null) + ")");
 		Graphics2D graphics2D = null;
 		if (graphics != null) {
 			graphics2D = (Graphics2D) graphics.create();
@@ -159,12 +163,14 @@ public class Meritoki extends Provider {
 				concept = override;
 			}
 		} 
-		System.out.println("paint(" + String.valueOf(graphics != null) + ") concept="+concept);
+//		System.out.println("paint(" + String.valueOf(graphics != null) + ") concept="+concept);
 		// Difference is call iterate over input directly;
 		// When loop is true, call iterate;
-		BufferedImage bufferedImage = this.getBufferedImage(graphics2D);
+		BufferedImage bufferedImage = this.getBufferedImage();
 		if (this.loop) {
+			//Problem - Image is processed over and over again, this adds time.
 			this.retina.iterate(graphics2D, bufferedImage, this.document.cortex, concept);
+			//Passing bufferedImage and cortex.
 			if (this.retina.state == State.COMPLETE) {
 				System.out.println("COMPLETE");
 				input.scan = false;
@@ -295,10 +301,9 @@ public class Meritoki extends Provider {
 	// The model gives the image which has priority,
 	// if page has no shapes, then the whole page is loaded;
 	// if there are shapes then the currently selected shape is visualized.
-	public BufferedImage getBufferedImage(Graphics2D graphics2D) {
+	public BufferedImage getBufferedImage() {
 		Input input = this.getInput();
 		BufferedImage bufferedImage = (input != null) ? input.getBufferedImage() : null;
-		System.out.println("getBufferedImage() bufferedImage=" + bufferedImage);
 		return bufferedImage;
 	}
 
@@ -344,12 +349,12 @@ public class Meritoki extends Provider {
 				}
 			}
 		}
-		System.out.println("getInputList() inputList.size()=" + inputList.size());
+//		System.out.println("getInputList() inputList.size()=" + inputList.size());
 		return inputList;
 	}
 
 	public void setInputList(List<Input> inputList) {
-		System.out.println("setInputList(" + inputList.size() + ")");
+//		System.out.println("setInputList(" + inputList.size() + ")");
 		this.inputList = inputList;
 	}
 

@@ -204,7 +204,7 @@ public class ControlDialog extends javax.swing.JDialog {
 		Cortex cortex = (document != null) ? document.cortex : null;
 		if (cortex != null) {
 			Belief belief = cortex.getBelief();
-			System.out.println("initList() belief="+belief);
+//			System.out.println("initList() belief="+belief);
 			if (belief != null) {
 				List<Belief> beliefList = cortex.beliefList;
 				List<Concept> conceptList = belief.conceptList;
@@ -271,7 +271,7 @@ public class ControlDialog extends javax.swing.JDialog {
 	}
 
 	public void initConceptList(List<Concept> conceptList) {
-        logger.info("initConceptList("+conceptList+")");
+//        logger.info("initConceptList("+conceptList+")");
 		DefaultListModel<String> defaultListModel = new DefaultListModel<>();
 		if (conceptList != null) {
 			for (int i = 0; i < conceptList.size(); i++) {

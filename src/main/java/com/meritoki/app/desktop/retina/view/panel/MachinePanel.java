@@ -137,8 +137,9 @@ public class MachinePanel extends JPanel implements MouseListener, KeyListener, 
 	public void run() {
 		System.out.println("run()");
 		while (this.meritoki.loop) {
-			if(this.mainFrame != null)
-				this.mainFrame.init();
+//			if(this.mainFrame != null)
+//				this.mainFrame.init();
+			this.init();
 			try {
 				Thread.sleep(100);
 			} catch (Exception e) {
@@ -148,8 +149,7 @@ public class MachinePanel extends JPanel implements MouseListener, KeyListener, 
 
 	@Override
 	public void paint(Graphics graphics) {
-        System.out.println("paint("+String.valueOf(graphics != null)+")");
-        
+//        System.out.println("paint("+String.valueOf(graphics != null)+")");
 		super.paint(graphics);
 		this.meritoki.paint(graphics);
 		if(this.mainFrame != null)
@@ -341,6 +341,7 @@ public class MachinePanel extends JPanel implements MouseListener, KeyListener, 
 		if(this.meritoki != null) {
 			this.meritoki.setDimension(dimension);
 		}
+		this.repaint();
 	}
 
 	@Override

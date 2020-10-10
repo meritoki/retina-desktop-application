@@ -91,34 +91,6 @@ public class Inference extends Node {
 			Data data = (Data) object;
 		}
 		if(this.delayExpired()) {
-			this.meritoki.openOutput(this.model.document.uuid);
-			List<Shape> shapeList = this.model.document.getGridShapeList();
-			boolean flag;
-			scan = false;
-			for(Shape s:shapeList) {
-				if(s.data.text.value == null) {
-//					flag = true;
-//					for(Output output:this.meritoki.outputList) {
-//						if(output.shape.uuid.equals(s.uuid)) {
-//							flag = false;
-//							if(!output.flag) {
-//								scan = true;
-//								output.shape.bufferedImage = s.bufferedImage;
-//								this.meritoki.outputList.add(output);
-//							}
-//						}
-//					}
-//					if(flag) {
-						scan = true;
-						Output output = new Output();
-						output.shape = s;
-						output.shape.bufferedImage = this.model.document.getShapeBufferedImage(
-								this.model.document.getPage().getScaledBufferedImage(this.model), s);
-						output.flag = false;
-						this.meritoki.outputList.add(output);
-//					}
-				}
-			}
 			if(this.scan) {
 				this.setState(State.SCAN);
 			} else {
@@ -132,11 +104,6 @@ public class Inference extends Node {
 	
 	private void scan(Object object) {
 		if(this.delayExpired()) {
-			for(Output output: this.meritoki.outputList) {
-				output.concept = this.scan(output.shape.bufferedImage);
-			}
-			this.meritoki.saveOutput();
-			this.model.document.importOutputList(this.meritoki.outputList);
 			this.rootAdd(new Data(1,this.id, DataType.UNBLOCK,0,null,this.objectList));
 			this.setDelay(this.newDelay(this.inputDelay));
 			this.setState(State.WAIT);
@@ -152,7 +119,7 @@ public class Inference extends Node {
 //			logger.info("scan(...) bufferedImaged="+bufferedImage);
 			double width = bufferedImage.getWidth();
 			double height = bufferedImage.getHeight();
-			int radius = (int) (this.meritoki.document.cortex.getSensorRadius());
+			int radius = (int) (this.meritoki.document.cortex.getRadius());
 			int wInterval = (int)(width/(radius));
 			int hInterval = (int)(height/(radius));
 			logger.info("scan(...) hInterval="+hInterval);
