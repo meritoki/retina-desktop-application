@@ -202,6 +202,8 @@ public final class MainFrame extends JFrame {
 		} else {
 			if(!this.model.system.machine) {
 				this.mainMenuBar.remove(this.providerMenu);
+				this.exportMenu.remove(this.exportMeritokiMenuItem);
+				this.importMenu.remove(this.importMeritokiMenuItem);
 			}
 			this.fileMenu.remove(this.connectMenuItem);
 			List<String> recentList = this.model.resource.recentList;

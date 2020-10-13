@@ -58,12 +58,13 @@ public class Meritoki extends Provider {
 	public Document document = new Document();
 	public File file;
 	private boolean visible = true;
-	public Retina retina = new Retina();
+	public Retina retina = new Retina(null, null);
 	private Recognition recognition;
 	public Dimension dimension;
 	public boolean loop = false;
 	public List<Input> inputList;
 	public int index = 0;
+	public BufferedImage bufferedImage;
 
 	public Meritoki() {
 		super("meritoki");
@@ -72,9 +73,8 @@ public class Meritoki extends Provider {
 			directory.mkdirs();
 		}
 	}
-	
-	
-	//Meritoki can know the size of the JPanel
+
+	// Meritoki can know the size of the JPanel
 	public void setDimension(Dimension dimension) {
 		this.dimension = dimension;
 		this.retina.setDimension(dimension);
@@ -82,7 +82,7 @@ public class Meritoki extends Provider {
 
 	public void zoom(double factor) {
 		this.retina.deltaDistance(factor);
-		Point origin = new Point(this.retina.getInputCenterX(),this.retina.getInputCenterY());
+		Point origin = new Point(this.retina.getInputCenterX(), this.retina.getInputCenterY());
 		origin.center = true;
 		this.retina.setOrigin(origin);
 	}
@@ -94,10 +94,10 @@ public class Meritoki extends Provider {
 			this.retina.setOrigin(point);
 		}
 	}
-	
+
 	public void scale() {
 		this.retina.setDistance(this.retina.minDistance);
-		Point origin = new Point(this.retina.getInputCenterX(),this.retina.getInputCenterY());
+		Point origin = new Point(this.retina.getInputCenterX(), this.retina.getInputCenterY());
 		origin.center = true;
 		this.retina.setOrigin(origin);
 	}
@@ -138,7 +138,7 @@ public class Meritoki extends Provider {
 	public void reset() {
 		System.out.println("reset()");
 		this.document = new Document();
-		this.retina = new Retina();
+		this.retina = new Retina(this.getBufferedImage(), this.document.cortex);
 		this.retina.setDimension(this.dimension);
 		this.update();
 	}
@@ -149,43 +149,47 @@ public class Meritoki extends Provider {
 		if (graphics != null) {
 			graphics2D = (Graphics2D) graphics.create();
 		}
-		//Has to work in and out of loop;
+		// Has to work in and out of loop;
 		Input input = this.getInput();
-		if(input != null) {
-		Concept concept = input.concept;
-		Concept override = this.model.cache.concept;
-		if(!loop) {
-			if(override == null) {
-				concept = null;
-			} else if(override.value.isEmpty()) {
-				concept = new Concept();
-			} else {
-				concept = override;
-			}
-		} 
-//		System.out.println("paint(" + String.valueOf(graphics != null) + ") concept="+concept);
-		// Difference is call iterate over input directly;
-		// When loop is true, call iterate;
-		BufferedImage bufferedImage = this.getBufferedImage();
-		if (this.loop) {
-			//Problem - Image is processed over and over again, this adds time.
-			this.retina.iterate(graphics2D, bufferedImage, this.document.cortex, concept);
-			//Passing bufferedImage and cortex.
-			if (this.retina.state == State.COMPLETE) {
-				System.out.println("COMPLETE");
-				input.scan = false;
-				this.document.inputMap.put(input.uuid, input);
-				this.update();
-				boolean flag = this.setIndex(true);
-				if (flag) {
-					this.retina.setDistance(0);
+		if (input != null) {
+			Concept concept = input.concept;
+			Concept override = this.model.cache.concept;
+			if (!loop) {
+				if (override == null) {
+					concept = null;
+				} else if (override.value.isEmpty()) {
+					concept = new Concept();
 				} else {
-					this.loop = false;
+					concept = override;
 				}
 			}
-		} else {
-			this.retina.input(graphics2D, bufferedImage, this.document.cortex, concept);
-		}
+//		System.out.println("paint(" + String.valueOf(graphics != null) + ") concept="+concept);
+			// Difference is call iterate over input directly;
+			// When loop is true, call iterate;
+			this.bufferedImage = this.getBufferedImage();
+			if (this.bufferedImage != this.retina.bufferedImage) {
+				this.retina = new Retina(this.bufferedImage, this.document.cortex);
+				this.retina.setDimension(this.dimension);
+			}
+			if (this.loop) {
+				// Problem - Image is processed over and over again, this adds time.
+				this.retina.iterate(graphics2D, concept);// bufferedImage, this.document.cortex,
+				// Passing bufferedImage and cortex.
+				if (this.retina.state == State.COMPLETE) {
+					System.out.println("COMPLETE");
+					input.scan = false;
+					this.document.inputMap.put(input.uuid, input);
+					this.update();
+					boolean flag = this.setIndex(true);
+					if (flag) {
+						this.retina.setDistance(0);
+					} else {
+						this.loop = false;
+					}
+				}
+			} else {
+				this.retina.input(graphics2D, concept);// bufferedImage, this.document.cortex,
+			}
 		}
 	}
 
@@ -334,13 +338,13 @@ public class Meritoki extends Provider {
 						input.bufferedImage = this.model.document
 								.getShapeBufferedImage(page.getScaledBufferedImage(this.model), shape);
 						String value = shape.data.text.value;
-						Concept concept = (value != null)? new Concept(value):new Concept();
+						Concept concept = (value != null) ? new Concept(value) : new Concept();
 						input.concept = concept;
 						inputList.add(input);
 					} else {
 						input.scan = false;
 						String value = shape.data.text.value;
-						Concept concept = (value != null)? new Concept(value):new Concept();
+						Concept concept = (value != null) ? new Concept(value) : new Concept();
 						input.concept = concept;
 						input.bufferedImage = this.model.document
 								.getShapeBufferedImage(page.getScaledBufferedImage(this.model), shape);
@@ -603,7 +607,6 @@ public class Meritoki extends Provider {
 //	}
 //}
 
-
 //if (concept != null && concept.value.isEmpty()) {
 //	System.out.println("A concept=" + concept);
 //	concept = new Concept();
@@ -633,4 +636,3 @@ public class Meritoki extends Provider {
 
 //concept = (this.model.cache.concept != null)?this.model.cache.concept:concept;
 //concept = (concept.value.isEmpty())?new Concept():concept;
-

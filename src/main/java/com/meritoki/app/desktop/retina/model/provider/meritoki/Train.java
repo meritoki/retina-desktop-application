@@ -99,7 +99,7 @@ public class Train extends Node {
 
 	private void scan(Object object) {
 		if (this.delayExpired()) {
-			this.meritoki.retina.iterate(null, this.input.getBufferedImage(), this.meritoki.document.cortex, new Concept(this.input.concept));
+			this.meritoki.retina.iterate(null,new Concept(this.input.concept));// this.input.getBufferedImage(), this.meritoki.document.cortex, 
 			switch(this.meritoki.retina.state) {
 			case COMPLETE: {
 				this.rootAdd(new Data(2, this.id, DataType.UNBLOCK, 0, null, this.objectList));
