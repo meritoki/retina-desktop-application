@@ -21,6 +21,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 
 public class SetShape extends Command {
 	private static Logger logger = LogManager.getLogger(SetShape.class.getName());
@@ -44,6 +45,10 @@ public class SetShape extends Command {
 		//logic
 		if(pressedShapeUUID != null) {
 			this.model.document.getPage().setShape(pressedShapeUUID);
+			Meritoki meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
+    		if(meritoki != null) {
+    			meritoki.setIndex(pressedShapeUUID);
+    		}
 		}
 		//redo
 		operation = new Operation();

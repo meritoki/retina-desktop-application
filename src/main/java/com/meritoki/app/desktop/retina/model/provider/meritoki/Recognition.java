@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meritoki.app.desktop.retina.model.module;
+package com.meritoki.app.desktop.retina.model.provider.meritoki;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -21,7 +21,6 @@ import java.util.concurrent.CountDownLatch;
 
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
-import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.module.library.model.Module;
 import com.meritoki.module.library.model.Node;
 import com.meritoki.module.library.model.State;
@@ -43,12 +42,13 @@ public class Recognition extends Node {
 	@Override
 	public void initialize() {
 		super.initialize();
-        for (Provider provider : this.model.system.providerList) {
-            if (provider instanceof Meritoki) {
-                this.meritoki = (Meritoki) provider;
-                this.meritoki.openCortex(this.model.document.uuid);
-            }
-        }
+		this.meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
+//        for (Provider provider : this.model.system.providerList) {
+//            if (provider instanceof Meritoki) {
+//                this.meritoki = (Meritoki) provider;
+//                this.meritoki.init();
+//            }
+//        }
         this.filter = false;
         this.setState(State.DEFAULT);
 	}
@@ -126,6 +126,6 @@ public class Recognition extends Node {
 	@Override
 	public void destroy() {
 		super.destroy();
-		this.meritoki.saveCortex();
+//		this.meritoki.saveCortex();
 	}
 }

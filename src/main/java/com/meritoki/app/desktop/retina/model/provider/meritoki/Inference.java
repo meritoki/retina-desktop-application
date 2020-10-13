@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meritoki.app.desktop.retina.model.module;
+package com.meritoki.app.desktop.retina.model.provider.meritoki;
 
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -25,8 +25,6 @@ import java.util.Map;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
-import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
-import com.meritoki.app.desktop.retina.model.provider.meritoki.Output;
 import com.meritoki.library.cortex.model.Concept;
 import com.meritoki.module.library.model.Module;
 import com.meritoki.module.library.model.Node;
@@ -50,11 +48,7 @@ public class Inference extends Node {
 	
 	public void initialize() {
 		super.initialize();
-        for (Provider provider : this.model.system.providerList) {
-            if (provider instanceof Meritoki) {
-                this.meritoki = (Meritoki) provider;
-            }
-        }
+		this.meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
 		this.setState(State.WAIT);
 	}
 	
@@ -97,32 +91,6 @@ public class Inference extends Node {
 			Data data = (Data) object;
 		}
 		if(this.delayExpired()) {
-			this.meritoki.openOutput(this.model.document.uuid);
-			List<Shape> shapeList = this.model.document.getGridShapeList();
-			boolean flag;
-			scan = false;
-			for(Shape s:shapeList) {
-				if(s.data.text.value == null) {
-//					flag = true;
-//					for(Output output:this.meritoki.outputList) {
-//						if(output.shape.uuid.equals(s.uuid)) {
-//							flag = false;
-//							if(!output.flag) {
-//								scan = true;
-//								output.shape.bufferedImage = s.bufferedImage;
-//								this.meritoki.outputList.add(output);
-//							}
-//						}
-//					}
-//					if(flag) {
-						scan = true;
-						Output output = new Output();
-						output.shape = s;
-						output.flag = false;
-						this.meritoki.outputList.add(output);
-//					}
-				}
-			}
 			if(this.scan) {
 				this.setState(State.SCAN);
 			} else {
@@ -136,11 +104,6 @@ public class Inference extends Node {
 	
 	private void scan(Object object) {
 		if(this.delayExpired()) {
-			for(Output output: this.meritoki.outputList) {
-				output.concept = this.scan(output.shape.bufferedImage);
-			}
-			this.meritoki.saveOutput();
-			this.model.document.importOutputList(this.meritoki.outputList);
 			this.rootAdd(new Data(1,this.id, DataType.UNBLOCK,0,null,this.objectList));
 			this.setDelay(this.newDelay(this.inputDelay));
 			this.setState(State.WAIT);
@@ -156,28 +119,31 @@ public class Inference extends Node {
 //			logger.info("scan(...) bufferedImaged="+bufferedImage);
 			double width = bufferedImage.getWidth();
 			double height = bufferedImage.getHeight();
-			double diameter = this.meritoki.document.cortex.size;
-			int wInterval = (int)(width/(width/diameter/2));
-			int hInterval = (int)(height/(height/diameter/2));
+			int radius = (int) (this.meritoki.document.cortex.getRadius());
+			int wInterval = (int)(width/(radius));
+			int hInterval = (int)(height/(radius));
 			logger.info("scan(...) hInterval="+hInterval);
 			logger.info("scan(...) wInterval="+wInterval);
 			Map<String, Integer> conceptMap = new HashMap<>();
-			for (int w = 0; w < width; w += wInterval) {
-				for (int h = 0; h < height; h += hInterval) {
+			for (int w = 0; w < width; w++) {
+				for (int h = 0; h < height; h++) {
+					if ((w%radius) == 0 && (h % radius) == 0) {
 					this.meritoki.document.cortex.setOrigin(w, h);
 					this.meritoki.document.cortex.update();
-					conceptList = this.meritoki.document.cortex.process(bufferedImage, null);
+					this.meritoki.document.cortex.process(null,bufferedImage, null);
+					conceptList = ((com.meritoki.library.cortex.model.network.Network)this.meritoki.document.cortex).getRootLevel().getCoincidenceConceptList();
 					for (Concept c : conceptList) {
 						Integer integer = conceptMap.get(c.toString());
 						integer = (integer == null) ? 0 : integer;
 						conceptMap.put(c.toString(), integer + 1);
 					}
-					concept = new Concept(this.getMaxConcept(conceptMap, 0.50));
+					concept = new Concept(this.getMaxConcept(conceptMap, 0.90));
+					}
 				}
 			}
 		}
 		logger.info("scan(...) concept.value="+concept);
-		return (concept != null)?concept.value:null;
+		return (concept != null)?concept.value: null;
 	}
 	
 	public String getMaxConcept(Map<String, Integer> conceptMap, double threshold) {

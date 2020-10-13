@@ -15,10 +15,27 @@
  */
 package com.meritoki.app.desktop.retina.model.provider;
 
+import com.meritoki.app.desktop.retina.model.Model;
+
 public class Provider {
 	public String name;
+	public Model model;
 	
 	public Provider(String name) {
 		this.name = name;
 	}
+	
+	public void setModel(Model model) {
+		this.model = model;
+		
+	}
+	
+	public void save() {
+		
+	}
+	
+	public void open() {
+		
+	}
+
 }

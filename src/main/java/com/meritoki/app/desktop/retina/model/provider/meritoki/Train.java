@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Joaquin Osvaldo Rodriguez
+- * Copyright 2020 Joaquin Osvaldo Rodriguez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meritoki.app.desktop.retina.model.module;
+package com.meritoki.app.desktop.retina.model.provider.meritoki;
 
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -26,11 +26,10 @@ import com.meritoki.app.desktop.retina.model.Model;
 //import com.meritoki.app.desktop.retina.model.document.Data;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
-import com.meritoki.app.desktop.retina.model.provider.meritoki.Input;
-import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.library.cortex.model.Concept;
 import com.meritoki.module.library.model.Module;
 import com.meritoki.module.library.model.Node;
+import com.meritoki.module.library.model.Network;
 import com.meritoki.module.library.model.State;
 import com.meritoki.module.library.model.data.Data;
 import com.meritoki.module.library.model.data.DataType;
@@ -39,6 +38,7 @@ public class Train extends Node {
 	private Model model;
 	private Meritoki meritoki;
 	private boolean scan = false;
+	private Input input;
 
 	public Train(int intValue, Module module, Model model) {
 		super(intValue, module);
@@ -47,11 +47,7 @@ public class Train extends Node {
 
 	public void initialize() {
 		super.initialize();
-		for (Provider provider : this.model.system.providerList) {
-			if (provider instanceof Meritoki) {
-				this.meritoki = (Meritoki) provider;
-			}
-		}
+		this.meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
 		this.setState(State.SEARCH);
 	}
 
@@ -93,35 +89,8 @@ public class Train extends Node {
 			Data data = (Data) object;
 		}
 		if (this.delayExpired()) {
-			this.meritoki.openInput(this.model.document.uuid);
-			List<Shape> shapeList = this.model.document.getGridShapeList();
-			boolean flag;
-			scan = false;
-			for (Shape s : shapeList) {
-				if (s.data.text.value != null) {
-					flag = true;
-					for (Input input : this.meritoki.inputList) {
-						if (input.shape.uuid.equals(s.uuid)) {
-							flag = false;
-							if (!input.flag) {
-								scan = true;
-								input.shape.bufferedImage = s.bufferedImage;
-								input.concept = s.data.text.value;
-//								this.meritoki.inputList.add(input);
-							}
-						}
-					}
-					if (flag) {
-						scan = true;
-						Input input = new Input();
-						input.shape = s;
-						input.concept = s.data.text.value;
-						input.flag = false;
-						this.meritoki.inputList.add(input);
-					}
-				}
-			}
-			if (this.scan) {
+			this.input = this.meritoki.getInput();
+			if(this.input != null && input.scan) {
 				this.setState(State.SCAN);
 			}
 			this.setDelay(this.newDelay(this.inputDelay));
@@ -130,54 +99,19 @@ public class Train extends Node {
 
 	private void scan(Object object) {
 		if (this.delayExpired()) {
-			for (Input i : this.meritoki.inputList) {
-				if (!i.flag) {
-					this.scan(i.shape.bufferedImage, i.concept);
-					i.flag = true;
-				}
+			this.meritoki.retina.iterate(null,new Concept(this.input.concept));// this.input.getBufferedImage(), this.meritoki.document.cortex, 
+			switch(this.meritoki.retina.state) {
+			case COMPLETE: {
+				this.rootAdd(new Data(2, this.id, DataType.UNBLOCK, 0, null, this.objectList));
+				this.setDelay(this.newDelay(this.inputDelay));
+				this.setState(State.WAIT);
 			}
-			this.meritoki.saveInput();
-			this.meritoki.saveCortex();
-			this.rootAdd(new Data(2, this.id, DataType.UNBLOCK, 0, null, this.objectList));
-			this.setDelay(this.newDelay(this.inputDelay));
-			this.setState(State.WAIT);
+			}
 		}
 	}
 
-	public void scan(BufferedImage bufferedImage, String value) {
-		logger.info("scan(" + bufferedImage + ", " + value + ")");
-		Concept concept = null;
-		if (bufferedImage != null) {
-//			bufferedImage = this.scaleBufferedImage(bufferedImage, 0.25);
-//			logger.info("scan(...) bufferedImaged="+bufferedImage);
-//			NodeController.saveJpg("./test", UUID.randomUUID().toString()+".jpeg", bufferedImage);
-			double width = bufferedImage.getWidth();
-			double height = bufferedImage.getHeight();
-			double diameter = this.meritoki.document.cortex.size;
-			int wInterval = (int)(width/(width/diameter/2));
-			int hInterval = (int)(height/(height/diameter/2));
-			logger.info("scan(...) hInterval="+hInterval);
-			logger.info("scan(...) wInterval="+wInterval);
-			Map<String, Integer> conceptMap = new HashMap<>();
-			for (int w = 0; w < width; w += wInterval) {
-				for (int h = 0; h < height; h += hInterval) {
-					this.meritoki.document.cortex.setOrigin(w, h);
-					this.meritoki.document.cortex.update();
-					if (value != null) {
-						List<Concept> conceptList = this.meritoki.document.cortex.process(bufferedImage, new Concept(value));
-						for (Concept c : conceptList) {
-							Integer integer = conceptMap.get(c.toString());
-							integer = (integer == null) ? 0 : integer;
-							conceptMap.put(c.toString(), integer + 1);
-						}
-						concept = new Concept(this.getMaxConcept(conceptMap, 0.50));
-					}
-				}
-			}
-		}
-		logger.info("scan(...) concept.value="+concept);
-	}
-	
+
+
 	public String getMaxConcept(Map<String, Integer> conceptMap, double threshold) {
 		String concept = null;
 		double max = 0;
@@ -198,12 +132,12 @@ public class Train extends Node {
 		}
 		return concept;
 	}
-	
+
 	public BufferedImage scaleBufferedImage(BufferedImage bufferedImage, double scale) {
 		BufferedImage before = bufferedImage;
 		int w = before.getWidth();
 		int h = before.getHeight();
-		BufferedImage after = new BufferedImage((int)(w*scale), (int)(h*scale), BufferedImage.TYPE_INT_ARGB);
+		BufferedImage after = new BufferedImage((int) (w * scale), (int) (h * scale), BufferedImage.TYPE_INT_ARGB);
 		AffineTransform at = new AffineTransform();
 		at.scale(scale, scale);
 		AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
@@ -211,3 +145,45 @@ public class Train extends Node {
 		return after;
 	}
 }
+
+//public void scan(BufferedImage bufferedImage, String value) {
+//logger.info("scan(" + bufferedImage + ", " + value + ")");
+//Concept concept = null;
+//if (bufferedImage != null) {
+////	bufferedImage = this.scaleBufferedImage(bufferedImage, 0.25);
+////	logger.info("scan(...) bufferedImaged="+bufferedImage);
+////	NodeController.saveJpg("./test", UUID.randomUUID().toString()+".jpeg", bufferedImage);
+//	int width = bufferedImage.getWidth();
+//	int height = bufferedImage.getHeight();
+//	int radius = (int) (this.meritoki.document.cortex.getSensorRadius());
+//	System.out.println("diameter=" + radius);
+//	System.out.println("width=" + width);
+//	System.out.println("height=" + height);
+//	int wInterval = (int) (width / (radius));
+//	int hInterval = (int) (height / (radius));
+//	logger.info("scan(...) hInterval=" + hInterval);
+//	logger.info("scan(...) wInterval=" + wInterval);
+//	Map<String, Integer> conceptMap = new HashMap<>();
+//	for (int w = 0; w < width; w++) {
+//		for (int h = 0; h < height; h++) {
+//			if ((w%radius) == 0 && (h % radius) == 0) {
+//				this.meritoki.document.cortex.setOrigin(w, h);
+//				this.meritoki.document.cortex.update();
+////			if (value != null) {
+////				
+//				this.meritoki.document.cortex.process(null, bufferedImage, new Concept(value));
+//				List<Concept> conceptList = ((com.meritoki.library.cortex.model.network.Network) this.meritoki.document.cortex)
+//						.getRootLevel().getCoincidenceConceptList();
+//				for (Concept c : conceptList) {
+//					Integer integer = conceptMap.get(c.toString());
+//					integer = (integer == null) ? 0 : integer;
+//					conceptMap.put(c.toString(), integer + 1);
+//				}
+//				concept = new Concept(this.getMaxConcept(conceptMap, 0.50));
+////			}
+//			}
+//		}
+//	}
+//}
+//logger.info("scan(...) concept.value=" + concept);
+//}

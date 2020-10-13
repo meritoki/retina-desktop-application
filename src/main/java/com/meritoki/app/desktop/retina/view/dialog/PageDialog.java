@@ -251,7 +251,7 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
 	 * Function instantiates view.
 	 */
 	public void init() {
-		logger.info("init()");
+		logger.debug("init()");
 		this.initTextField();
 		this.initLabel();
 		this.initList();

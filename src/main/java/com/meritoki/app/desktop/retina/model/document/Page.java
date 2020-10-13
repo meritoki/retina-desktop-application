@@ -267,6 +267,7 @@ public class Page {
 				this.position.setAbsoluteDimension(
 						new Dimension(this.bufferedImage.getWidth(), this.bufferedImage.getHeight()));
 			} else {
+				logger.info("this.bufferedImage == null");
 				this.position.setAbsoluteDimension(new Dimension(0, 0));
 			}
 		}
@@ -276,7 +277,7 @@ public class Page {
 	@JsonIgnore
 	public BufferedImage getScaledBufferedImage(Model model) {
 		BufferedImage before = this.getBufferedImage(model);
-		BufferedImage after = new BufferedImage(before.getWidth(), before.getHeight(), BufferedImage.TYPE_INT_RGB);
+		BufferedImage after = new BufferedImage((int)this.position.dimension.width, (int)this.position.dimension.height, BufferedImage.TYPE_INT_RGB);//new BufferedImage(before.getWidth(), before.getHeight(), BufferedImage.TYPE_INT_RGB);
 		AffineTransform affineTransform = new AffineTransform();
 		affineTransform.scale(this.position.scale, this.position.scale);// this handles scaling the bufferedImage
 		AffineTransformOp affineTransformOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);

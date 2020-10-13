@@ -30,11 +30,11 @@ import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 
-public class ExecuteScript extends Command {
+public class ScriptPage extends Command {
 
-	private Logger logger = LogManager.getLogger(ExecuteScript.class.getName());
+	private Logger logger = LogManager.getLogger(ScriptPage.class.getName());
 
-	public ExecuteScript(Model document) {
+	public ScriptPage(Model document) {
 		super(document, "executeScript");
 	}
 

@@ -17,7 +17,9 @@ package com.meritoki.app.desktop.retina.model.system;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
@@ -44,6 +46,8 @@ public class System {
 	@JsonIgnore
 	public Properties properties = null;
 	@JsonProperty
+	public Map<String,Provider> providerMap = new HashMap<>();
+	@JsonProperty
 	public List<Provider> providerList = new ArrayList<>();
 	@JsonProperty
 	public List<Vendor> vendorList = new ArrayList<>();
@@ -55,6 +59,8 @@ public class System {
 	public File file = null;//The file that corresponds to the loaded document
 	@JsonIgnore
 	public String defaultFileName = "Untitled.json";
+	@JsonIgnore 
+	public boolean machine = false;
 	@JsonIgnore
 	public boolean multiUser = false;
 	@JsonIgnore
@@ -135,7 +141,8 @@ public class System {
 	
 	public void initProviders() {
 		this.providerList.add(new Zooniverse());
-		this.providerList.add(new Meritoki());
+//		this.providerList.add(new Meritoki());
+		this.providerMap.put("meritoki", new Meritoki());
 	}
 	
 	public void initVendors() {
