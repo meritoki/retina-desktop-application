@@ -118,12 +118,11 @@ public final class MainFrame extends JFrame {
 	public void setModel(Model model) {
 		logger.debug("setModel(" + model + ")");
 		this.model = model;
-		this.controlDialog.setModel(this.model);
+		
 		this.pagePanel.setModel(this.model);
 		this.matrixPanel.setModel(this.model);
 		this.tablePanel.setModel(this.model);
 		this.archivePanel.setModel(this.model);
-		
 		this.attributionDialog.setModel(this.model);
 		this.commandDialog.setModel(this.model);
 		this.pageDialog.setModel(this.model);
@@ -145,6 +144,7 @@ public final class MainFrame extends JFrame {
 		this.shapeDialog.setVisible(true);
 		this.pageDialog.setVisible(true); 
 		if(this.model.system.machine) {
+			this.controlDialog.setModel(this.model);
 			this.controlDialog.setVisible(true);
 			this.machinePanel.setModel(this.model);
 		} else {
@@ -164,7 +164,8 @@ public final class MainFrame extends JFrame {
 		this.shapeDialog.init();
 		this.commandDialog.init();
 		this.attributionDialog.init();
-		this.controlDialog.init();
+		if(this.model.system.machine)
+			this.controlDialog.init();
 		if (this.model.system.loggedIn) {
 			this.logInOutMenuItem.setText("Logout");
 		} else {

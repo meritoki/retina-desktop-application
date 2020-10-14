@@ -289,13 +289,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-//		this.requestFocus();
-//		int x = e.getX();
-//		int y = e.getY();
-//		this.meritoki.document.cortex.setOrigin(x, y);
-//		this.meritoki.document.cortex.update();
-//		revalidate();
-//		repaint();
+		this.requestFocus();
 	}
 
 	@Override

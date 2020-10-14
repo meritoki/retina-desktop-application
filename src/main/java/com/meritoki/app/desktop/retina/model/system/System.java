@@ -142,7 +142,7 @@ public class System {
 	public void initProviders() {
 		this.providerList.add(new Zooniverse());
 //		this.providerList.add(new Meritoki());
-		this.providerMap.put("meritoki", new Meritoki());
+//		this.providerMap.put("meritoki", new Meritoki());
 	}
 	
 	public void initVendors() {
