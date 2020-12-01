@@ -43,11 +43,7 @@ import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Position;
 import com.meritoki.app.desktop.retina.model.document.Shape;
-import com.meritoki.app.desktop.retina.model.provider.Provider;
-import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
-import com.meritoki.library.controller.node.NodeController;
-import com.meritoki.library.cortex.model.Concept;
 
 public class PagePanel extends JPanel implements MouseListener, KeyListener {
 
@@ -218,7 +214,10 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				this.model.cache.pressedImageUUID = this.model.system.pressedImage.uuid;
 				this.model.cache.imageUUID = image.uuid;
 				this.model.pattern.execute("setImage");
-			} catch (Exception e) {
+			} catch (NullPointerException e) {
+				e.printStackTrace();
+			}
+			catch (Exception e) {
 				JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
@@ -237,7 +236,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 					this.model.cache.shapeUUID = this.model.document.getShape().uuid;
 					this.model.cache.pressedShapeUUID = this.model.system.pressedShape.uuid;
 					this.model.pattern.execute("setShape");
-				} catch (Exception e) {
+				} catch (NullPointerException e) {
+					e.printStackTrace();
+				}catch (Exception e) {
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
@@ -252,7 +253,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 							this.model.cache.pressedShapeUUID = this.model.system.pressedShape.uuid;
 							this.model.cache.releasedPoint = this.model.system.releasedPoint;
 							this.model.pattern.execute("resizeShape");
-						} catch (Exception e) {
+						} catch (NullPointerException e) {
+							e.printStackTrace();
+						}catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
 									JOptionPane.ERROR_MESSAGE);
 						}
@@ -266,7 +269,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 							this.model.cache.pressedPoint = this.model.system.pressedPoint;
 							this.model.cache.releasedPoint = this.model.system.releasedPoint;
 							this.model.pattern.execute("moveShape");
-						} catch (Exception e) {
+						} catch (NullPointerException e) {
+							e.printStackTrace();
+						}catch (Exception e) {
 							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
 									JOptionPane.ERROR_MESSAGE);
 						}
@@ -278,7 +283,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 						this.model.cache.pressedPoint = this.model.system.pressedPoint;
 						this.model.cache.releasedPoint = this.model.system.releasedPoint;
 						this.model.pattern.execute("addShape");
-					} catch (Exception e) {
+					} catch (NullPointerException e) {
+						e.printStackTrace();
+					}catch (Exception e) {
 						JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
