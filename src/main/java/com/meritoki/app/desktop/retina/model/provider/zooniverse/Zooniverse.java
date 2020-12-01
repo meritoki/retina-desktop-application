@@ -68,7 +68,8 @@ public class Zooniverse extends Provider {
 
 	@JsonIgnore
 	public List<Project> getProjectList(String query) throws Exception {
-		logger.info("searchProject(" + query + ")");
+		logger.info("getProjectList(" + query + ")");
+		List<Project> projectList = new ArrayList<>();
 		String command = null;
 		if (NodeController.isLinux()) {
 			command = "panoptes project ls | grep " + query;
@@ -80,7 +81,6 @@ public class Zooniverse extends Provider {
 			throw new Exception("Non-Zero Exit Value: " + exit.value);
 		} else {
 			List<String> stringList = exit.list;
-			List<Project> projectList = new ArrayList<>();
 			if (stringList.size() > 0 && !stringList.get(0).equals("error")) {
 				for (String s : stringList) {
 					String[] result = s.split(" ");

@@ -1,6 +1,6 @@
 echo WORKSPACE $WORKSPACE
 cd $WORKSPACE
-VERSION=0.15.202008
+VERSION=0.16.202008
 JAR=target/retina-$VERSION.jar
 java -jar $JAR $@
 cd -
