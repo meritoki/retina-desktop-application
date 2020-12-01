@@ -29,7 +29,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
-
+import com.meritoki.library.controller.node.Exit;
 
 /**
  *
@@ -70,20 +70,25 @@ public class Zooniverse extends Provider {
 	public List<Project> getProjectList(String query) throws Exception {
 		logger.info("searchProject(" + query + ")");
 		String command = null;
-		if(NodeController.isLinux()) {
+		if (NodeController.isLinux()) {
 			command = "panoptes project ls | grep " + query;
-		} else if(NodeController.isWindows()) {
+		} else if (NodeController.isWindows()) {
 			command = "set PYTHONIOENCODING=utf-8 && panoptes project ls | findstr " + query;
 		}
-		List<String> stringList = NodeController.executeCommand(command, 1440);
-		List<Project> projectList = new ArrayList<>();
-		if (stringList.size() > 0 && !stringList.get(0).equals("error")) {
-			for (String s : stringList) {
-				String[] result = s.split(" ");
-				String id = result[0].replace("*", "");
-				String name = result[1];
-				String title = this.convertArrayToStringMethod(result, 2);
-				projectList.add(new Project(id, name, title));
+		Exit exit = NodeController.executeCommand(command, 1440);
+		if (exit.value != 0) {
+			throw new Exception("Non-Zero Exit Value: " + exit.value);
+		} else {
+			List<String> stringList = exit.list;
+			List<Project> projectList = new ArrayList<>();
+			if (stringList.size() > 0 && !stringList.get(0).equals("error")) {
+				for (String s : stringList) {
+					String[] result = s.split(" ");
+					String id = result[0].replace("*", "");
+					String name = result[1];
+					String title = this.convertArrayToStringMethod(result, 2);
+					projectList.add(new Project(id, name, title));
+				}
 			}
 		}
 		return projectList;
@@ -165,69 +170,99 @@ public class Zooniverse extends Provider {
 			NodeController.saveYaml(this.getConfigPath(), "config.yml", data);
 			File file = new File(NodeController.getPanoptesHome());
 			file.mkdir();
-			NodeController.executeCommand("cp " + this.getConfigPath() + NodeController.getSeperator() + "config.yml "
-					+ NodeController.getPanoptesHome() + NodeController.getSeperator());
-//            NodeController.executeCommand("panoptes configure");
+			String cpCommand = "cp " + this.getConfigPath() + NodeController.getSeperator() + "config.yml "
+					+ NodeController.getPanoptesHome() + NodeController.getSeperator();
+			Exit exit = NodeController.executeCommand(cpCommand);
+			if (exit.value != 0) {
+				throw new Exception("Non-Zero Exit Value: " + exit.value);
+			}
 		}
 	}
 
 	@JsonIgnore
 	public void createProject(Project project) throws Exception {
-		List<String> stringList = NodeController
-				.executeCommand("panoptes project create " + project.getTitle() + " " + project.getDescription());
-		if (stringList.size() > 0 && !stringList.get(0).equals("error")) {
-			String string = stringList.get(0);
-			String[] stringArray = string.split(" ");
-			project.setId(stringArray[0]);
-			project.setName(stringArray[1]);
-			this.projectList.add(project);
-			this.project = project;
+		String panoptesProjectCreateCommand = "panoptes project create " + project.getTitle() + " "
+				+ project.getDescription();
+		Exit exit = NodeController.executeCommand(panoptesProjectCreateCommand);
+		if (exit.value != 0) {
+			throw new Exception("Non-Zero Exit Value: " + exit.value);
+		} else {
+			List<String> stringList = exit.list;
+			if (stringList.size() > 0 && !stringList.get(0).equals("error")) {
+				String string = stringList.get(0);
+				String[] stringArray = string.split(" ");
+				project.setId(stringArray[0]);
+				project.setName(stringArray[1]);
+				this.projectList.add(project);
+				this.project = project;
+			}
 		}
 	}
 
 	@JsonIgnore
 	public void updateProjectWorkflowList(Project project) throws Exception {
-		List<String> stringList = NodeController.executeCommand("panoptes workflow ls -p " + project.getId(), 60);
-		if (stringList.size() > 0 && !stringList.get(0).equals("error")) {
-			String string = stringList.get(0);
-			for (String s : stringList) {
-				String[] stringArray = string.split(" ");
-				Workflow workflow = new Workflow(stringArray[0], this.convertArrayToStringMethod(stringArray, 1));
-				project.getWorkflowList().add(workflow);
+		String panoptesWorkflowCommand = "panoptes workflow ls -p " + project.getId();
+		Exit exit = NodeController.executeCommand(panoptesWorkflowCommand, 60);
+		if (exit.value != 0) {
+			throw new Exception("Non-Zero Exit Value: " + exit.value);
+		} else {
+			List<String> stringList = exit.list;
+			if (stringList.size() > 0 && !stringList.get(0).equals("error")) {
+				String string = stringList.get(0);
+				for (String s : stringList) {
+					String[] stringArray = string.split(" ");
+					Workflow workflow = new Workflow(stringArray[0], this.convertArrayToStringMethod(stringArray, 1));
+					project.getWorkflowList().add(workflow);
+				}
 			}
 		}
 	}
 
 	@JsonIgnore
 	public void createSubjectSet(String projectId, SubjectSet subjectSet) throws Exception {
-		List<String> stringList = NodeController
-				.executeCommand("panoptes subject-set create " + projectId + " " + subjectSet.getTitle());
-		if (stringList.size() > 0 && !stringList.get(0).equals("error")) {
-			String string = stringList.get(0);
-			for (String s : stringList) {
-				String[] stringArray = string.split(" ");
-				subjectSet.setId(stringArray[0]);
-			}
+		String panoptesCommand = "panoptes subject-set create " + projectId + " " + subjectSet.getTitle();
+		Exit exit = NodeController.executeCommand(panoptesCommand);
+		if (exit.value != 0) {
+			throw new Exception("Non-Zero Exit Value: " + exit.value);
 		} else {
-			throw new Exception("Name already taken");
+			List<String> stringList = exit.list;
+			if (stringList.size() > 0 && !stringList.get(0).equals("error")) {
+				String string = stringList.get(0);
+				for (String s : stringList) {
+					String[] stringArray = string.split(" ");
+					subjectSet.setId(stringArray[0]);
+				}
+			} else {
+				throw new Exception("Name already taken");
+			}
 		}
 	}
 
 	@JsonIgnore
 	public void uploadSubjectSet(SubjectSet subjectSet, String filePath, String fileName) throws Exception {
-		List<String> stringList = NodeController.executeCommand(
-				"panoptes subject-set upload-subjects " + subjectSet.getId() + " " + filePath + "/" + fileName, 2880);
+		String panoptesCommand = "panoptes subject-set upload-subjects " + subjectSet.getId() + " " + filePath + "/"
+				+ fileName;
+		Exit exit = NodeController.executeCommand(panoptesCommand, 2880);
+		if (exit.value != 0) {
+			throw new Exception("Non-Zero Exit Value: " + exit.value);
+		}
 	}
 
 	@JsonIgnore
 	public void workflowUploadSubjectSet(Workflow workflow, SubjectSet subjectSet) throws Exception {
-		List<String> stringList = NodeController
-				.executeCommand("panoptes workflow add-subject-sets " + workflow.getId() + " " + subjectSet.getId());
+		String panoptesCommand = "panoptes workflow add-subject-sets " + workflow.getId() + " " + subjectSet.getId();
+		Exit exit = NodeController.executeCommand(panoptesCommand);
+		if (exit.value != 0) {
+			throw new Exception("Non-Zero Exit Value: " + exit.value);
+		}
 	}
 
 	public void downloadClassification(Project project, String fileName) throws Exception {
-		List<String> stringList = NodeController
-				.executeCommand("panoptes project download --generate " + project.id + " " + fileName, 1440);
+		String panoptesCommand = "panoptes project download --generate " + project.id + " " + fileName;
+		Exit exit = NodeController.executeCommand(panoptesCommand, 1440);
+		if (exit.value != 0) {
+			throw new Exception("Non-Zero Exit Value: " + exit.value);
+		}
 	}
 
 	@JsonIgnore
@@ -270,10 +305,10 @@ public class Zooniverse extends Provider {
 	}
 
 	public void upload(Project project, Workflow workflow, SubjectSet subjectSet) throws Exception {
-		if(project != null && workflow != null && subjectSet != null) {
-		this.createSubjectSet(project.getId(), subjectSet);
-		this.uploadSubjectSet(subjectSet, subjectSet.path, "manifest.csv");
-		this.workflowUploadSubjectSet(workflow, subjectSet);
+		if (project != null && workflow != null && subjectSet != null) {
+			this.createSubjectSet(project.getId(), subjectSet);
+			this.uploadSubjectSet(subjectSet, subjectSet.path, "manifest.csv");
+			this.workflowUploadSubjectSet(workflow, subjectSet);
 		} else {
 			throw new Exception("project, workflow, and/or subjectset is null");
 		}
