@@ -15,14 +15,7 @@
  */
 package com.meritoki.app.desktop.retina.model.document;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -74,7 +67,7 @@ public class Document {
 		if (this.getPage() != null) {
 			image = this.getPage().getImage();
 		}
-		logger.info("getImage() image=" + image);
+//		logger.info("getImage() image=" + image);
 		return image;
 	}
 
@@ -84,7 +77,7 @@ public class Document {
 		if (this.getPage() != null) {
 			image = this.getPage().getImage(point);
 		}
-		logger.info("getImage(" + point + ") image=" + image);
+//		logger.info("getImage(" + point + ") image=" + image);
 		return image;
 	}
 
@@ -293,6 +286,8 @@ public class Document {
 		logger.debug("getShapeBufferedImage("+shape+")");
 		BufferedImage shapeBufferedImage = null;
 		if (bufferedImage != null) {
+//			logger.info("getShapeBufferedImage("+shape+") bufferedImage == "+bufferedImage);
+//			logger.info("getShapeBufferedImage("+shape+") "+shape.position.dimension.height+" "+shape.position.dimension.width);
 			if(shape.position.point.x >= 0 && shape.position.point.y >= 0 && (int)shape.position.dimension.height > 0 && (int)shape.position.dimension.width > 0) {
 				shapeBufferedImage = bufferedImage.getSubimage((int)shape.position.point.x, (int)shape.position.point.y, (int)shape.position.dimension.width, (int)shape.position.dimension.height);
 			} else {

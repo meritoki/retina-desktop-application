@@ -20,3 +20,6 @@ nb-configuration.xml
 bin/
 retina.sh
 archive/
+REAMDE.md.save
+.README.md.swp
+get-pip.py

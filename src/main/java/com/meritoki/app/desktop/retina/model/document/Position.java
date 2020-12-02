@@ -27,9 +27,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-//@JsonDeserialize(converter=PositionSanitizer.class)
 public class Position {
 	@JsonIgnore
 	private static Logger logger = LogManager.getLogger(Position.class.getName());

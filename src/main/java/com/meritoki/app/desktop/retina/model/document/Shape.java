@@ -93,22 +93,22 @@ public class Shape {
 	}
 	
 	public void setScale(double scale) {
-		logger.info("setScale("+scale+")");
+		logger.debug("setScale("+scale+")");
 		this.position.setScale(scale);
 	}
 	
 	public void setRelativeScale(double scale) {
-		logger.info("setRelativeScale("+scale+")");
+		logger.debug("setRelativeScale("+scale+")");
 		this.position.setRelativeScale(scale);
 	}
 	
 	public void setMargin(double margin) {
-		logger.info("setMargin("+margin+")");
+		logger.debug("setMargin("+margin+")");
 		this.position.setMargin(margin);
 	}
 	
 	public void setOffset(double offset) {
-		logger.info("setOffset("+offset+")");
+		logger.debug("setOffset("+offset+")");
 		this.position.setOffset(offset);
 	}
 

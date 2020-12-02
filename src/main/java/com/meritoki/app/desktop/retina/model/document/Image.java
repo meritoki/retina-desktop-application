@@ -86,7 +86,11 @@ public class Image {
 		this.position = new Position(image.position);
 		this.index = image.index;
 		for (Shape shape : image.shapeList) {
-			this.shapeList.add(new Shape(shape, true));
+			if (shape instanceof Grid) {
+				this.shapeList.add(new Grid((Grid) shape, true));
+			} else {
+				this.shapeList.add(new Shape(shape, true));
+			}
 		}
 	}
 
@@ -211,7 +215,6 @@ public class Image {
 					if (bufferedImage != null) {
 						this.setBufferedImage(bufferedImage);
 						if (this.getExtension().equals("jpg") || this.getExtension().equals("jpeg")) {
-
 							try {
 								NodeController.saveJpg(NodeController.getDocumentCache(model.document.uuid),
 										this.uuid + "." + this.getExtension(), bufferedImage);
@@ -219,8 +222,24 @@ public class Image {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
+						} else if(this.getExtension().equals("jpeg")) {
+							try {
+								NodeController.saveJpg(NodeController.getDocumentCache(model.document.uuid),
+										this.uuid + "." + this.getExtension(), bufferedImage);
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						} else if(this.getExtension().equals("png")) {
+							try {
+								NodeController.savePng(NodeController.getDocumentCache(model.document.uuid),
+										this.uuid + "." + this.getExtension(), bufferedImage);
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						}
-					} else if(model.system.multiUser){
+					} else if (model.system.multiUser) {
 						ClientController clientController = new ClientController(model);
 						if (clientController.fileClient.checkHealth()) {
 							if (!clientController.fileClient.checkFile(this.uuid)) {
@@ -234,7 +253,7 @@ public class Image {
 						}
 					}
 				}
-			} else if(model.system.multiUser){
+			} else if (model.system.multiUser) {
 				ClientController clientController = new ClientController(model);
 				if (clientController.fileClient.checkHealth()) {
 					if (clientController.fileClient.checkFile(this.uuid)) {
@@ -294,7 +313,7 @@ public class Image {
 //New 
 	@JsonIgnore
 	public void setBufferedImage(BufferedImage bufferedImage) {
-		logger.info("setBufferedImage(" + bufferedImage + ")");
+		logger.debug("setBufferedImage(" + bufferedImage + ")");
 		this.bufferedImage = bufferedImage;
 		if (this.bufferedImage != null) {
 			this.position.absoluteDimension.width = this.bufferedImage.getWidth();
@@ -443,16 +462,15 @@ public class Image {
 	public String toString() {
 		String string = "";
 		ObjectWriter ow = new ObjectMapper().writer();
-//		if (logger.isDebugEnabled()) {
-		try {
-			string = ow.writeValueAsString(this);
-		} catch (IOException e) {
-			logger.error("IOException " + e.getMessage());
+		if (logger.isDebugEnabled()) {
+			try {
+				string = ow.writeValueAsString(this);
+			} catch (IOException e) {
+				logger.error("IOException " + e.getMessage());
+			}
+		} else if (logger.isInfoEnabled()) {
+			string = "{\"uuid\":" + this.uuid + ", \"position\":" + position + "}";
 		}
-//		} else if (logger.isInfoEnabled()) {
-//			string = "{\"uuid\":" + this.uuid + ", \"position\":" + position + ", \"shapeList\":" + this.shapeList
-//					+ "}";
-//		}
 		return string;
 	}
 }

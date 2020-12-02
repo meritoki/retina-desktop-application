@@ -1,5 +1,4 @@
 # Retina Desktop Application
-
 ## Features
 
 1. Save/Open Project to and from File (JSON)
@@ -13,3 +12,8 @@
 9. Export Audio generate with Text-to-speech
 10. Implementation of Hierarchical Temporal Memory (HTM) Algorithm for OCR/ICR/IWR
 11. Modifiable interface for implementation of any Machine Learning Algorithm
+
+## Specification
+### Implementation
+The implemenation of Retina can be installed, configured, and used following the [Guide](https://github.com/meritoki/retina-desktop-application/wiki/Guide) available
+

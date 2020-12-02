@@ -1,3 +1,18 @@
+/*
+ * Copyright 2020 Joaquin Osvaldo Rodriguez
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.meritoki.app.desktop.retina.model.command;
 
 import java.util.UUID;
@@ -12,6 +27,7 @@ import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Position;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.ShapeType;
+import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 
 public class AddShape extends Command {
 
@@ -41,6 +57,11 @@ public class AddShape extends Command {
 		shape.position = new Position(new Point(pressedPoint), new Point(releasedPoint),
 				pressedImage.position.relativeScale, scale, pressedImage.position.offset, pressedImage.position.margin);
 		this.model.document.addShape(shape);
+		shape.bufferedImage = this.model.document.getShapeBufferedImage(page.getScaledBufferedImage(this.model), shape);
+    	Meritoki meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
+		if(meritoki != null) {
+			meritoki.update();
+		}
 		Operation operation = new Operation();
 		operation.object = new Shape(shape, true);
 		operation.sign = 1;

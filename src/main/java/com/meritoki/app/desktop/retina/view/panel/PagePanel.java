@@ -1,7 +1,17 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2020 Joaquin Osvaldo Rodriguez
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package com.meritoki.app.desktop.retina.view.panel;
 
@@ -34,7 +44,6 @@ import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Position;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
-import com.meritoki.library.controller.node.NodeController;
 
 public class PagePanel extends JPanel implements MouseListener, KeyListener {
 
@@ -48,6 +57,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 		this.setBackground(Color.black);
 		this.addMouseListener(this);
 		this.addKeyListener(this);
+
 	}
 
 	public void setMainFrame(MainFrame main) {
@@ -59,7 +69,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 		this.init();
 		this.setPreferredSize(this.getPreferredSize());
 	}
-	
+
 	public void init() {
 		logger.debug("init()");
 		this.repaint();
@@ -83,11 +93,13 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 		if (this.model != null) {
 			Graphics2D graphics2D = (Graphics2D) graphics.create();
 			Document document = (this.model != null) ? this.model.document : null;
-			Page page = (document != null)?document.getPage():null;
+			Page page = (document != null) ? document.getPage() : null;
+			BufferedImage bufferedImage = null;
 			if (page != null) {
 				AffineTransform affineTransform = new AffineTransform();
-				affineTransform.scale(page.position.scale, page.position.scale);// this handles scaling the bufferedImage
-				BufferedImage bufferedImage = page.getBufferedImage(this.model);
+				affineTransform.scale(page.position.scale, page.position.scale);// this handles scaling the
+																				// bufferedImage
+				bufferedImage = page.getBufferedImage(this.model);
 				if (bufferedImage != null) {
 					graphics2D.drawImage(bufferedImage, affineTransform, null);
 				}
@@ -166,6 +178,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 						page.position.dimension.height);
 				graphics2D.draw(frame);
 			}
+//			this.meritoki.document.cortex.process(graphics2D, bufferedImage, this.model.cache.concept);
 		}
 	}
 
@@ -193,15 +206,18 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 		pressedPoint.x = me.getX();
 		pressedPoint.y = me.getY();
 		this.model.system.pressedPoint = pressedPoint;
-		logger.trace("mousePressed(me) pressedPoint="+pressedPoint);
+		logger.trace("mousePressed(me) pressedPoint=" + pressedPoint);
 		this.model.system.pressedImage = this.model.document.getImage(pressedPoint);
 		Image image = this.model.document.getImage();
-		if(this.model.system.pressedImage != null && image != null && !image.equals(this.model.system.pressedImage)) {
+		if (this.model.system.pressedImage != null && image != null && !image.equals(this.model.system.pressedImage)) {
 			try {
 				this.model.cache.pressedImageUUID = this.model.system.pressedImage.uuid;
 				this.model.cache.imageUUID = image.uuid;
 				this.model.pattern.execute("setImage");
-			} catch (Exception e) {
+			} catch (NullPointerException e) {
+				e.printStackTrace();
+			}
+			catch (Exception e) {
 				JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
@@ -220,7 +236,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 					this.model.cache.shapeUUID = this.model.document.getShape().uuid;
 					this.model.cache.pressedShapeUUID = this.model.system.pressedShape.uuid;
 					this.model.pattern.execute("setShape");
-				} catch (Exception e) {
+				} catch (NullPointerException e) {
+					e.printStackTrace();
+				}catch (Exception e) {
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
@@ -235,8 +253,11 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 							this.model.cache.pressedShapeUUID = this.model.system.pressedShape.uuid;
 							this.model.cache.releasedPoint = this.model.system.releasedPoint;
 							this.model.pattern.execute("resizeShape");
-						} catch (Exception e) {
-							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+						} catch (NullPointerException e) {
+							e.printStackTrace();
+						}catch (Exception e) {
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+									JOptionPane.ERROR_MESSAGE);
 						}
 					} else {
 						this.model.system.releasedImage = this.model.document.getImage(this.model.system.releasedPoint);
@@ -248,8 +269,11 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 							this.model.cache.pressedPoint = this.model.system.pressedPoint;
 							this.model.cache.releasedPoint = this.model.system.releasedPoint;
 							this.model.pattern.execute("moveShape");
-						} catch (Exception e) {
-							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+						} catch (NullPointerException e) {
+							e.printStackTrace();
+						}catch (Exception e) {
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+									JOptionPane.ERROR_MESSAGE);
 						}
 					}
 				} else {
@@ -259,7 +283,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 						this.model.cache.pressedPoint = this.model.system.pressedPoint;
 						this.model.cache.releasedPoint = this.model.system.releasedPoint;
 						this.model.pattern.execute("addShape");
-					} catch (Exception e) {
+					} catch (NullPointerException e) {
+						e.printStackTrace();
+					}catch (Exception e) {
 						JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
@@ -288,9 +314,10 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			switch (ke.getKeyCode()) {
 			case KeyEvent.VK_EQUALS: {
 				logger.debug("keyPressed(e) KeyEvent.VK_EQUALS");
-				this.model.cache.scaleOperator = '*';
-				this.model.cache.scaleFactor = 1.5;
 				try {
+					this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+					this.model.cache.scaleOperator = '*';
+					this.model.cache.scaleFactor = 1.5;
 					this.model.pattern.execute("scalePage");
 					this.mainFrame.init();
 				} catch (Exception e) {
@@ -300,21 +327,25 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_PLUS: {
 				logger.debug("keyPressed(e) KeyEvent.VK_PLUS");
-				this.model.cache.scaleOperator = '*';
-				this.model.cache.scaleFactor = 1.5;
+
 				try {
+					this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+					this.model.cache.scaleOperator = '*';
+					this.model.cache.scaleFactor = 1.5;
 					this.model.pattern.execute("scalePage");
 					this.mainFrame.init();
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-				}	
+				}
 				break;
 			}
 			case KeyEvent.VK_MINUS: {
 				logger.debug("keyPressed(e) KeyEvent.VK_MINUS");
-				this.model.cache.scaleOperator = '/';
-				this.model.cache.scaleFactor = 1.5;
+
 				try {
+					this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+					this.model.cache.scaleOperator = '/';
+					this.model.cache.scaleFactor = 1.5;
 					this.model.pattern.execute("scalePage");
 					this.mainFrame.init();
 				} catch (Exception e) {
@@ -323,13 +354,12 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				break;
 			}
 			case KeyEvent.VK_DOWN: {
-				logger.debug("keyPressed(e) KeyEvent.VK_DOWN"); 
-//				this.model.cache.pressedImage = this.model.document.getImage();
-				this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
-				this.model.cache.pressedImageUUID = this.model.document.getImage().uuid;
-				this.model.cache.shiftOperator = '+';
-				this.model.cache.shiftFactor = 10;
+				logger.debug("keyPressed(e) KeyEvent.VK_DOWN");
 				try {
+					this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+					this.model.cache.pressedImageUUID = this.model.document.getImage().uuid;
+					this.model.cache.shiftOperator = '+';
+					this.model.cache.shiftFactor = 10;
 					this.model.pattern.execute("shiftImage");
 					this.mainFrame.init();
 				} catch (Exception e) {
@@ -340,12 +370,11 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_UP: {
 				logger.debug("keyPressed(e) KeyEvent.VK_UP");
-//				this.model.cache.pressedImage = this.model.document.getImage();
-				this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
-				this.model.cache.pressedImageUUID = this.model.document.getImage().uuid;
-				this.model.cache.shiftOperator = '-';
-				this.model.cache.shiftFactor = 10;
 				try {
+					this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+					this.model.cache.pressedImageUUID = this.model.document.getImage().uuid;
+					this.model.cache.shiftOperator = '-';
+					this.model.cache.shiftFactor = 10;
 					this.model.pattern.execute("shiftImage");
 					this.mainFrame.init();
 				} catch (Exception e) {
@@ -355,7 +384,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_LEFT: {
 				logger.info("keyPressed(e) KeyEvent.VK_LEFT");
-				
+
 				try {
 					this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
 					this.model.cache.pressedImageUUID = this.model.document.getImage().uuid;
@@ -363,11 +392,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 					this.model.cache.scaleFactor = 1.01;
 					this.model.pattern.execute("scaleImage");
 					this.mainFrame.init();
-				}
-				catch(NullPointerException e) {
+				} catch (NullPointerException e) {
 					e.printStackTrace();
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
@@ -381,11 +408,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 					this.model.cache.scaleFactor = 1.01;
 					this.model.pattern.execute("scaleImage");
 					this.mainFrame.init();
-				} 
-				catch(NullPointerException e) {
+				} catch (NullPointerException e) {
 					e.printStackTrace();
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				break;
@@ -410,7 +435,9 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			switch (keyCode) {
 			case KeyEvent.VK_BACK_SPACE: {
 				try {
-					this.model.cache.pressedShapeUUID = this.model.document.getPage().getShape().uuid;
+					this.model.cache.pressedShapeUUID = (this.model.document.getPage().getShape() != null)
+							? this.model.document.getPage().getShape().uuid
+							: null;
 					this.model.pattern.execute("removeShape");
 					this.mainFrame.init();
 				} catch (Exception e) {

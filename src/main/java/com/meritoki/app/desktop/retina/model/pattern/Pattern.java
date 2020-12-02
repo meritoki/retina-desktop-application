@@ -1,3 +1,18 @@
+/*
+ * Copyright 2020 Joaquin Osvaldo Rodriguez
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.meritoki.app.desktop.retina.model.pattern;
 
 import java.util.Collections;
@@ -11,19 +26,19 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.meritoki.app.desktop.retina.controller.client.ClientController;
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.command.AddGrid;
 import com.meritoki.app.desktop.retina.model.command.AddPage;
 import com.meritoki.app.desktop.retina.model.command.AddShape;
 import com.meritoki.app.desktop.retina.model.command.Command;
-import com.meritoki.app.desktop.retina.model.command.ExecuteScript;
 import com.meritoki.app.desktop.retina.model.command.MoveShape;
 import com.meritoki.app.desktop.retina.model.command.Operation;
 import com.meritoki.app.desktop.retina.model.command.RemoveImage;
 import com.meritoki.app.desktop.retina.model.command.RemovePage;
 import com.meritoki.app.desktop.retina.model.command.RemoveShape;
-import com.meritoki.app.desktop.retina.model.command.ScaleImage;
 import com.meritoki.app.desktop.retina.model.command.ResizeShape;
+import com.meritoki.app.desktop.retina.model.command.ScaleImage;
 import com.meritoki.app.desktop.retina.model.command.ScalePage;
-import com.meritoki.app.desktop.retina.model.command.AddGrid;
+import com.meritoki.app.desktop.retina.model.command.ScriptPage;
 import com.meritoki.app.desktop.retina.model.command.SetGrid;
 import com.meritoki.app.desktop.retina.model.command.SetImage;
 import com.meritoki.app.desktop.retina.model.command.SetPage;
@@ -88,7 +103,7 @@ public class Pattern {
 		Command removeImage = new RemoveImage(this.model);
 		Command removeShape = new RemoveShape(this.model);
 		//Execute
-		Command executeScript = new ExecuteScript(this.model);
+		Command executeScript = new ScriptPage(this.model);
 		//Add
 		this.register("addPage", addPage);
 		this.register("addShape", addShape);

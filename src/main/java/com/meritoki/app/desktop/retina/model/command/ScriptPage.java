@@ -1,3 +1,18 @@
+/*
+ * Copyright 2020 Joaquin Osvaldo Rodriguez
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.meritoki.app.desktop.retina.model.command;
 
 import java.util.ArrayList;
@@ -10,23 +25,24 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.Model;
-import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Grid;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 
-public class ExecuteScript extends Command {
+public class ScriptPage extends Command {
 
-	private Logger logger = LogManager.getLogger(ExecuteScript.class.getName());
+	private Logger logger = LogManager.getLogger(ScriptPage.class.getName());
 
-	public ExecuteScript(Model document) {
+	public ScriptPage(Model document) {
 		super(document, "executeScript");
 	}
 
 	public void execute() throws Exception {
 		logger.info("execute()");
 		this.user = this.model.cache.user;
-		this.operationList = (LinkedList<Operation>)this.getOperationList(this.model.cache.pageList, this.model.cache.script);
+		this.operationList = (LinkedList<Operation>) this.getOperationList(this.model.cache.pageList,
+				this.model.cache.script);
 	}
 
 	/**
@@ -63,23 +79,23 @@ public class ExecuteScript extends Command {
 				a = parameters[0].trim();
 				b = parameters[1].trim();
 				operationList.addAll(joinPage(pageList, a, b));
-			} else if(i.contains("SPLIT")) {
+			} else if (i.contains("SPLIT")) {
 				instruction = i.replaceFirst("SPLIT", "");
 				a = instruction.trim();
-				operationList.addAll(splitPage(pageList,a));
-			} else if(i.contains("LAYOUT")) {
+				operationList.addAll(splitPage(pageList, a));
+			} else if (i.contains("LAYOUT")) {
 				instruction = i.replaceFirst("LAYOUT", "");
 				parameters = instruction.split(":");
 				a = parameters[0].trim();
 				b = parameters[1].trim();
 				operationList.addAll(layoutPage(pageList, a, b));
-			} else if(i.contains("CLEAR")) {
+			} else if (i.contains("CLEAR")) {
 				instruction = i.replaceFirst("CLEAR", "");
 				a = instruction.trim();
-				operationList.addAll(clearPage(pageList,a));
+				operationList.addAll(clearPage(pageList, a));
 			}
 		}
-		logger.info("getOperationList(...) operationList.size()="+operationList.size());
+		logger.info("getOperationList(...) operationList.size()=" + operationList.size());
 		return operationList;
 	}
 
@@ -138,7 +154,7 @@ public class ExecuteScript extends Command {
 		return operationList;
 
 	}
-	
+
 	//
 //	public  void interlacePage(List<Page> pageList, String a, String b) throws Exception {
 //		logger.info("interlace(" + a + "," + b + ")");
@@ -218,7 +234,7 @@ public class ExecuteScript extends Command {
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		operationList.add(operation);
-	
+
 		// Logic
 		int x = Integer.parseInt(a);
 		int y = Integer.parseInt(b);
@@ -230,7 +246,7 @@ public class ExecuteScript extends Command {
 		pageA.setBufferedImage(null);
 		pageList.remove(y);
 		// End Logic
-	
+
 		// Operation Redo
 		operation = new Operation();
 		operation.object = this.copyPageList(pageList);
@@ -239,29 +255,29 @@ public class ExecuteScript extends Command {
 		operationList.add(operation);
 		return operationList;
 	}
-	
+
 	public List<Operation> splitPage(List<Page> pageList, String a) {
-		logger.info("splitPage("+a+")");
+		logger.info("splitPage(" + a + ")");
 		Operation operation = new Operation();
 		operation.object = this.copyPageList(pageList);
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		operationList.add(operation);
-	
+
 		// Logic
 		int x = Integer.parseInt(a);
 //		int y = Integer.parseInt(b);
 		Page page = pageList.get(x);
 		List<Image> imageList = page.getImageList();
-		Collections.reverse(imageList);;
+		Collections.reverse(imageList);
 		pageList.remove(x);
-		for(Image image: imageList) {
+		for (Image image : imageList) {
 			image.setOffset(0);
 			image.setMargin(0);
 			pageList.add(x, new Page(image));
 		}
 		// End Logic
-	
+
 		// Operation Redo
 		operation = new Operation();
 		operation.object = this.copyPageList(pageList);
@@ -270,7 +286,7 @@ public class ExecuteScript extends Command {
 		operationList.add(operation);
 		return operationList;
 	}
-	
+
 	public List<Operation> layoutPage(List<Page> pageList, String a, String b) {
 		logger.info("joinPage(" + a + "," + b + ")");
 		List<Operation> operationList = new ArrayList<>();
@@ -280,25 +296,35 @@ public class ExecuteScript extends Command {
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		operationList.add(operation);
-	
+
 		// Logic
 		int x = Integer.parseInt(a);
 		int y = Integer.parseInt(b);
 		Page pageA = pageList.get(x);
 		Page pageB = pageList.get(y);
-		//Pending
-		for(Image image: pageA.imageList) {
-			for(Shape shape:image.shapeList) {
-				for(Image i: pageB.imageList) {
-					if(i.containsShape(shape)) {
-						pageB.addShape(new Shape(shape,false));
+		// Pending
+		for (Image image : pageA.imageList) {
+			for (Shape shape : image.shapeList) {
+				for (Image i : pageB.imageList) {
+					if (shape instanceof Grid) {
+						Grid grid = new Grid((Grid) shape, false);
+						grid.setScale(pageB.position.scale);
+						if (i.containsShape(grid)) {
+							pageB.addShape(grid);
+						}
+					} else {
+						Shape s = new Shape(shape, false);
+						s.setScale(pageB.position.scale);
+						if (i.containsShape(s)) {
+							pageB.addShape(s);
+						}
 					}
 				}
 			}
 		}
-		
+
 		// End Logic
-	
+
 		// Operation Redo
 		operation = new Operation();
 		operation.object = this.copyPageList(pageList);
@@ -307,23 +333,23 @@ public class ExecuteScript extends Command {
 		operationList.add(operation);
 		return operationList;
 	}
-	
+
 	public List<Operation> clearPage(List<Page> pageList, String a) {
 		Operation operation = new Operation();
 		operation.object = this.copyPageList(pageList);
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		operationList.add(operation);
-	
+
 		// Logic
 		int x = Integer.parseInt(a);
 //		int y = Integer.parseInt(b);
 		Page page = pageList.get(x);
-		for(Image image: page.imageList) {
+		for (Image image : page.imageList) {
 			image.removeAllShapes();
 		}
 		// End Logic
-	
+
 		// Operation Redo
 		operation = new Operation();
 		operation.object = this.copyPageList(pageList);

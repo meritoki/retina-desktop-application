@@ -1,4 +1,19 @@
-package com.meritoki.app.desktop.retina.model.module;
+/*
+ * Copyright 2020 Joaquin Osvaldo Rodriguez
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.meritoki.app.desktop.retina.model.provider.meritoki;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -6,7 +21,6 @@ import java.util.concurrent.CountDownLatch;
 
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
-import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.module.library.model.Module;
 import com.meritoki.module.library.model.Node;
 import com.meritoki.module.library.model.State;
@@ -28,12 +42,13 @@ public class Recognition extends Node {
 	@Override
 	public void initialize() {
 		super.initialize();
-        for (Provider provider : this.model.system.providerList) {
-            if (provider instanceof Meritoki) {
-                this.meritoki = (Meritoki) provider;
-                this.meritoki.openCortex(this.model.document.uuid);
-            }
-        }
+		this.meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
+//        for (Provider provider : this.model.system.providerList) {
+//            if (provider instanceof Meritoki) {
+//                this.meritoki = (Meritoki) provider;
+//                this.meritoki.init();
+//            }
+//        }
         this.filter = false;
         this.setState(State.DEFAULT);
 	}
@@ -111,6 +126,6 @@ public class Recognition extends Node {
 	@Override
 	public void destroy() {
 		super.destroy();
-		this.meritoki.saveCortex();
+//		this.meritoki.saveCortex();
 	}
 }

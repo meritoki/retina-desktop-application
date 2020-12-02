@@ -17,6 +17,7 @@ package com.meritoki.app.desktop.retina.model;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,6 +29,8 @@ import com.meritoki.app.desktop.retina.model.cache.Cache;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 import com.meritoki.app.desktop.retina.model.pattern.Pattern;
+import com.meritoki.app.desktop.retina.model.provider.Provider;
+import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.app.desktop.retina.model.resource.Resource;
 import com.meritoki.app.desktop.retina.model.system.System;
 
@@ -56,6 +59,15 @@ public class Model {
 
 	public Model() {
 		this.pattern.setModel(this);
+		this.newDocument();
+	}
+	
+	public void newDocument() {
+		this.system.newDocument = true;
+		for(Entry<String, Provider> entry:this.system.providerMap.entrySet()) {
+			Provider provider = entry.getValue();
+			provider.setModel(this);
+		}
 	}
 	
 	public List<String> getDocumentList() {
@@ -83,6 +95,17 @@ public class Model {
 		if(!directory.exists()) {
 			directory.mkdirs();
 		}
+		for(Entry<String, Provider> entry:this.system.providerMap.entrySet()) {
+			Provider provider = entry.getValue();
+			provider.open();
+		}
+//		for (Provider provider : this.system.providerList) {
+//            if (provider instanceof Meritoki) {
+//                Meritoki meritoki = (Meritoki) provider;
+//                meritoki.open(this.document.uuid);
+////                meritoki.init();
+//            }
+//        }
 	}
 	
 	public void saveDocument(File file) {
@@ -92,6 +115,10 @@ public class Model {
 		NodeController.saveDocument(this.system.file, this.document);
 		this.resource.addRecent(this.system.file.getAbsolutePath());
 		this.system.newDocument = false;
+		for(Entry<String, Provider> entry:this.system.providerMap.entrySet()) {
+			Provider provider = entry.getValue();
+			provider.save();
+		}
 	}
 	public void saveDocument() {
 		logger.info("saveDocument()");
@@ -99,6 +126,11 @@ public class Model {
 		NodeController.saveDocument(this.system.file, this.document);
 		this.resource.addRecent(this.system.file.getAbsolutePath());
 		this.system.newDocument = false;
+		for(Entry<String, Provider> entry:this.system.providerMap.entrySet()) {
+			Provider provider = entry.getValue();
+			provider.save();
+		}
+
 	}
 	
 	public boolean loginUser(String name, String password) {
@@ -120,3 +152,32 @@ public class Model {
 		this.system.initUsers();
 	}
 }
+
+//Meritoki meritoki = (Meritoki) this.system.providerMap.get("meritoki");
+//meritoki.setModel(this);
+//meritoki.open(this.document.uuid);
+//meritoki.init();
+//
+//for (Provider provider : this.system.providerList) {
+//    if (provider instanceof Meritoki) {
+//        Meritoki meritoki = (Meritoki) provider;
+//        meritoki.setModel(this);
+//        meritoki.open(this.document.uuid);
+//        meritoki.init();
+//    }
+//}
+
+//for (Provider provider : this.system.providerList) {
+//if (provider instanceof Meritoki) {
+//  Meritoki meritoki = (Meritoki) provider;
+//  meritoki.save();
+//}
+//}
+
+//for (Provider provider : this.system.providerList) {
+//if (provider instanceof Meritoki) {
+//  Meritoki meritoki = (Meritoki) provider;
+//  meritoki.save();
+//}
+//}
+

@@ -5,7 +5,7 @@
 	<name>retina-desktop-application</name>
 	<groupId>com.meritoki.app.desktop</groupId>
 	<artifactId>retina</artifactId>
-	<version>0.15.202008-alpha</version>
+	<version>0.16.202012-alpha</version>
 	<packaging>jar</packaging>
 	<properties>
 		<cayenne.version>4.0.1</cayenne.version>
@@ -19,20 +19,21 @@
 		<version>2.1.4.RELEASE</version>
 	</parent>
 	<dependencies>
+		<!-- Meritoki -->
 		<dependency>
 			<groupId>com.meritoki.library</groupId>
 			<artifactId>cortex</artifactId>
-			<version>0.4.202006</version>
+			<version>0.5.202008-alpha</version>
 		</dependency>
 		<dependency>
 			<groupId>com.meritoki.library</groupId>
 			<artifactId>module</artifactId>
-			<version>0.5.202008</version>
+			<version>0.6.202008</version>
 		</dependency>
 		<dependency>
 			<groupId>com.meritoki.library</groupId>
 			<artifactId>controller</artifactId>
-			<version>0.1.202007</version>
+			<version>0.3.202012</version>
 		</dependency>
 		<!-- logging -->
 		<dependency>
@@ -231,6 +232,7 @@
 						<manifestEntries>
 							<Specification-Vendor>Meritoki</Specification-Vendor>
 							<Implementation-Vendor>Meritoki</Implementation-Vendor>
+							<Multi-Release>true</Multi-Release>
 						</manifestEntries>
 					</archive>
 					<descriptorRefs>
@@ -248,6 +250,8 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+			
 		</plugins>
 	</build>
 

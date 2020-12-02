@@ -1,5 +1,4 @@
 WORKSPACE=$(pwd)
-mvn package
 ./dependency.sh
 echo WORKSPACE $WORKSPACE
 cp retina.sh.src retina.sh

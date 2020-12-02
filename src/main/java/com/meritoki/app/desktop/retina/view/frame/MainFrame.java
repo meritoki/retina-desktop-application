@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 osvaldo.rodriguez.
+ * Copyright 2020 Joaquin Osvaldo Rodriguez
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -31,11 +32,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.controller.client.ClientController;
-import com.meritoki.app.desktop.retina.controller.module.ModuleController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.provider.Provider;
+import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.app.desktop.retina.view.dialog.AttributionDialog;
 import com.meritoki.app.desktop.retina.view.dialog.CommandDialog;
+import com.meritoki.app.desktop.retina.view.dialog.ControlDialog;
 import com.meritoki.app.desktop.retina.view.dialog.OpenDialog;
 import com.meritoki.app.desktop.retina.view.dialog.PageDialog;
 import com.meritoki.app.desktop.retina.view.dialog.PropertyDialog;
@@ -45,12 +48,15 @@ import com.meritoki.app.desktop.retina.view.dialog.ShapeDialog;
 import com.meritoki.app.desktop.retina.view.dialog.ShareDialog;
 import com.meritoki.app.desktop.retina.view.dialog.audio.AudioExportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.image.ImageImportDialog;
+import com.meritoki.app.desktop.retina.view.dialog.meritoki.MeritokiExportDialog;
+import com.meritoki.app.desktop.retina.view.dialog.meritoki.MeritokiImportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.microsoft.MicrosoftExportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.user.UserLoginDialog;
 import com.meritoki.app.desktop.retina.view.dialog.user.UserRegisterDialog;
 import com.meritoki.app.desktop.retina.view.dialog.zooniverse.ZooniverseCSVImportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.zooniverse.ZooniverseExportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.zooniverse.ZooniverseImportDialog;
+import com.meritoki.app.desktop.retina.view.panel.MachinePanel;
 
 /**
  *
@@ -78,10 +84,12 @@ public final class MainFrame extends JFrame {
 	public ZooniverseImportDialog zooniverseImportDialog = new ZooniverseImportDialog(this, false);
 	public ZooniverseCSVImportDialog zooniverseCSVImportDialog = null;
 	public MicrosoftExportDialog microsoftExportDialog = new MicrosoftExportDialog(this, false);
+	public MeritokiExportDialog meritokiExportDialog = new MeritokiExportDialog(this,false);
+	public MeritokiImportDialog meritokiImportDialog = new MeritokiImportDialog(this,false);
 	public AudioExportDialog audioExportDialog = new AudioExportDialog(this, false);
 	public PropertyDialog propertyDialog = new PropertyDialog(this, false);
 	public ShareDialog shareDialog = new ShareDialog(this, false);
-	public ModuleController moduleController;
+	public ControlDialog controlDialog = new ControlDialog(this,false);
 	public JMenuItem shareMenuItem;
 
 	public MainFrame(Model model) {
@@ -104,12 +112,13 @@ public final class MainFrame extends JFrame {
 
 	public void setMainFrame() {
 		this.pagePanel.setMainFrame(this);
+		this.machinePanel.setMainFrame(this);
 	}
 
 	public void setModel(Model model) {
 		logger.debug("setModel(" + model + ")");
 		this.model = model;
-		this.moduleController = new ModuleController(this.model);
+		
 		this.pagePanel.setModel(this.model);
 		this.matrixPanel.setModel(this.model);
 		this.tablePanel.setModel(this.model);
@@ -128,25 +137,35 @@ public final class MainFrame extends JFrame {
 		this.propertyDialog.setModel(this.model);
 		this.loginDialog.setRegisterDialog(this.registerDialog);
 		if (this.model.system.newUser) {
-//			this.registerDialog.setVisible(true);
+			this.registerDialog.setVisible(true);
 		} else if (this.model.system.loginUser) {
-//			this.loginDialog.setVisible(true);
+			this.loginDialog.setVisible(true);
 		}
 		this.shapeDialog.setVisible(true);
-//		this.pageDialog.setVisible(true);
+		this.pageDialog.setVisible(true); 
+		if(this.model.system.machine) {
+			this.controlDialog.setModel(this.model);
+			this.controlDialog.setVisible(true);
+			this.machinePanel.setModel(this.model);
+		} else {
+			this.mainTabbedPane.remove(this.machineScrollPane);
+		}
 	}
 
 	public void init() {
-		logger.info("init()");
+		logger.debug("init()");
 		this.repaint();
 		this.pagePanel.init();
 		this.matrixPanel.init();
 		this.tablePanel.init();
 		this.archivePanel.init();
+		this.machinePanel.init();
 		this.pageDialog.init();
 		this.shapeDialog.init();
 		this.commandDialog.init();
 		this.attributionDialog.init();
+		if(this.model.system.machine)
+			this.controlDialog.init();
 		if (this.model.system.loggedIn) {
 			this.logInOutMenuItem.setText("Logout");
 		} else {
@@ -182,6 +201,11 @@ public final class MainFrame extends JFrame {
 			});
 			this.fileMenu.add(this.shareMenuItem);
 		} else {
+			if(!this.model.system.machine) {
+				this.mainMenuBar.remove(this.providerMenu);
+				this.exportMenu.remove(this.exportMeritokiMenuItem);
+				this.importMenu.remove(this.importMeritokiMenuItem);
+			}
 			this.fileMenu.remove(this.connectMenuItem);
 			List<String> recentList = this.model.resource.recentList;
 			this.openRecentMenu.removeAll();
@@ -206,9 +230,16 @@ public final class MainFrame extends JFrame {
 		}
 	}
 	
+
+	
+	public MachinePanel getMachinePanel() {
+		return this.machinePanel;
+	}
+	
 	private void shareMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_pageMenuItemActionPerformed
 		this.shareDialog.setVisible(true);
 	}// GEN-LAST:event_pageMenuItemActionPerformed
+	
 	
 
 	/**
@@ -220,306 +251,397 @@ public final class MainFrame extends JFrame {
 	// <editor-fold defaultstate="collapsed" desc="Generated
 	// <editor-fold defaultstate="collapsed" desc="Generated
 	// <editor-fold defaultstate="collapsed" desc="Generated
-	// Code">//GEN-BEGIN:initComponents
-	private void initComponents() {
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
-		table1 = new com.meritoki.app.desktop.retina.view.panel.TablePanel();
-		imagePageTabbedPane = new javax.swing.JTabbedPane();
-		jScrollPane1 = new javax.swing.JScrollPane();
-		pagePanel = new com.meritoki.app.desktop.retina.view.panel.PagePanel();
-		jScrollPane2 = new javax.swing.JScrollPane();
-		matrixPanel = new com.meritoki.app.desktop.retina.view.panel.MatrixPanel();
-		jScrollPane3 = new javax.swing.JScrollPane();
-		tablePanel = new com.meritoki.app.desktop.retina.view.panel.TablePanel();
-		jScrollPane4 = new javax.swing.JScrollPane();
-		archivePanel = new com.meritoki.app.desktop.retina.view.panel.ArchivePanel();
-		mainMenuBar = new javax.swing.JMenuBar();
-		fileMenu = new javax.swing.JMenu();
-		connectMenuItem = new javax.swing.JMenuItem();
-		logInOutMenuItem = new javax.swing.JMenuItem();
-		newMenuItem = new javax.swing.JMenuItem();
-		openMenuItem = new javax.swing.JMenuItem();
-		openRecentMenu = new javax.swing.JMenu();
-		saveMenuItem = new javax.swing.JMenuItem();
-		saveAsMenuItem = new javax.swing.JMenuItem();
-		importMenu = new javax.swing.JMenu();
-		importImageMenuItem = new javax.swing.JMenuItem();
-		zooniverseImportMenuItem = new javax.swing.JMenuItem();
-		zooniverseCSVImportMenuItem = new javax.swing.JMenuItem();
-		exportMenu = new javax.swing.JMenu();
-		zooniverseExportMenuItem = new javax.swing.JMenuItem();
-		microsoftExportMenuItem = new javax.swing.JMenuItem();
-		audioMenuItem = new javax.swing.JMenuItem();
-		editMenu = new javax.swing.JMenu();
-		undoMenuItem = new javax.swing.JMenuItem();
-		redoMenuItem = new javax.swing.JMenuItem();
-		jMenu1 = new javax.swing.JMenu();
-		recognitionMenu = new javax.swing.JMenu();
-		recognitionStartMenuItem = new javax.swing.JMenuItem();
-		recognitionStopMenuItem = new javax.swing.JMenuItem();
-		windowMenu = new javax.swing.JMenu();
-		dialogMenu = new javax.swing.JMenu();
-		pageMenuItem = new javax.swing.JMenuItem();
-		selectionMenuItem = new javax.swing.JMenuItem();
-		recognitionMenuItem = new javax.swing.JMenuItem();
-		commandMenuItem = new javax.swing.JMenuItem();
-		attributionMenuItem = new javax.swing.JMenuItem();
-		propertyMenuItem = new javax.swing.JMenuItem();
+        table1 = new com.meritoki.app.desktop.retina.view.panel.TablePanel();
+        mainTabbedPane = new javax.swing.JTabbedPane();
+        pageScrollPane = new javax.swing.JScrollPane();
+        pagePanel = new com.meritoki.app.desktop.retina.view.panel.PagePanel();
+        matrixScrollPane = new javax.swing.JScrollPane();
+        matrixPanel = new com.meritoki.app.desktop.retina.view.panel.MatrixPanel();
+        tableScrollPane = new javax.swing.JScrollPane();
+        tablePanel = new com.meritoki.app.desktop.retina.view.panel.TablePanel();
+        archiveScrollPane = new javax.swing.JScrollPane();
+        archivePanel = new com.meritoki.app.desktop.retina.view.panel.ArchivePanel();
+        machineScrollPane = new javax.swing.JScrollPane();
+        machinePanel = new com.meritoki.app.desktop.retina.view.panel.MachinePanel();
+        mainMenuBar = new javax.swing.JMenuBar();
+        fileMenu = new javax.swing.JMenu();
+        connectMenuItem = new javax.swing.JMenuItem();
+        logInOutMenuItem = new javax.swing.JMenuItem();
+        newMenuItem = new javax.swing.JMenuItem();
+        openMenuItem = new javax.swing.JMenuItem();
+        openRecentMenu = new javax.swing.JMenu();
+        saveMenuItem = new javax.swing.JMenuItem();
+        saveAsMenuItem = new javax.swing.JMenuItem();
+        importMenu = new javax.swing.JMenu();
+        importImageMenuItem = new javax.swing.JMenuItem();
+        zooniverseImportMenuItem = new javax.swing.JMenuItem();
+        zooniverseCSVImportMenuItem = new javax.swing.JMenuItem();
+        importMeritokiMenuItem = new javax.swing.JMenuItem();
+        exportMenu = new javax.swing.JMenu();
+        zooniverseExportMenuItem = new javax.swing.JMenuItem();
+        microsoftExportMenuItem = new javax.swing.JMenuItem();
+        audioMenuItem = new javax.swing.JMenuItem();
+        exportMeritokiMenuItem = new javax.swing.JMenuItem();
+        editMenu = new javax.swing.JMenu();
+        undoMenuItem = new javax.swing.JMenuItem();
+        redoMenuItem = new javax.swing.JMenuItem();
+        providerMenu = new javax.swing.JMenu();
+        jMenu2 = new javax.swing.JMenu();
+        meritokiDialogMenu = new javax.swing.JMenu();
+        controlMenuItem = new javax.swing.JMenuItem();
+        startMeritokiMenuItem = new javax.swing.JMenuItem();
+        stopMeritokiMenuItem = new javax.swing.JMenuItem();
+        resetMeritokiMenuItem = new javax.swing.JMenuItem();
+        windowMenu = new javax.swing.JMenu();
+        dialogMenu = new javax.swing.JMenu();
+        pageMenuItem = new javax.swing.JMenuItem();
+        selectionMenuItem = new javax.swing.JMenuItem();
+        commandMenuItem = new javax.swing.JMenuItem();
+        attributionMenuItem = new javax.swing.JMenuItem();
+        propertyMenuItem = new javax.swing.JMenuItem();
 
-		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-		javax.swing.GroupLayout pagePanelLayout = new javax.swing.GroupLayout(pagePanel);
-		pagePanel.setLayout(pagePanelLayout);
-		pagePanelLayout.setHorizontalGroup(pagePanelLayout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 1028, Short.MAX_VALUE));
-		pagePanelLayout.setVerticalGroup(pagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addGap(0, 562, Short.MAX_VALUE));
+        javax.swing.GroupLayout pagePanelLayout = new javax.swing.GroupLayout(pagePanel);
+        pagePanel.setLayout(pagePanelLayout);
+        pagePanelLayout.setHorizontalGroup(
+            pagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1028, Short.MAX_VALUE)
+        );
+        pagePanelLayout.setVerticalGroup(
+            pagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 562, Short.MAX_VALUE)
+        );
 
-		jScrollPane1.setViewportView(pagePanel);
+        pageScrollPane.setViewportView(pagePanel);
 
-		imagePageTabbedPane.addTab("Page", jScrollPane1);
+        mainTabbedPane.addTab("Page", pageScrollPane);
 
-		javax.swing.GroupLayout matrixPanelLayout = new javax.swing.GroupLayout(matrixPanel);
-		matrixPanel.setLayout(matrixPanelLayout);
-		matrixPanelLayout.setHorizontalGroup(matrixPanelLayout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 1028, Short.MAX_VALUE));
-		matrixPanelLayout.setVerticalGroup(matrixPanelLayout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 562, Short.MAX_VALUE));
+        javax.swing.GroupLayout matrixPanelLayout = new javax.swing.GroupLayout(matrixPanel);
+        matrixPanel.setLayout(matrixPanelLayout);
+        matrixPanelLayout.setHorizontalGroup(
+            matrixPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1028, Short.MAX_VALUE)
+        );
+        matrixPanelLayout.setVerticalGroup(
+            matrixPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 562, Short.MAX_VALUE)
+        );
 
-		jScrollPane2.setViewportView(matrixPanel);
+        matrixScrollPane.setViewportView(matrixPanel);
 
-		imagePageTabbedPane.addTab("Matrix", jScrollPane2);
+        mainTabbedPane.addTab("Matrix", matrixScrollPane);
 
-		jScrollPane3.setViewportView(tablePanel);
+        tableScrollPane.setViewportView(tablePanel);
 
-		imagePageTabbedPane.addTab("Table", jScrollPane3);
+        mainTabbedPane.addTab("Table", tableScrollPane);
 
-		jScrollPane4.setViewportView(archivePanel);
+        archiveScrollPane.setViewportView(archivePanel);
 
-		imagePageTabbedPane.addTab("Archive", jScrollPane4);
+        mainTabbedPane.addTab("Archive", archiveScrollPane);
 
-		fileMenu.setText("File");
+        javax.swing.GroupLayout machinePanelLayout = new javax.swing.GroupLayout(machinePanel);
+        machinePanel.setLayout(machinePanelLayout);
+        machinePanelLayout.setHorizontalGroup(
+            machinePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1028, Short.MAX_VALUE)
+        );
+        machinePanelLayout.setVerticalGroup(
+            machinePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 562, Short.MAX_VALUE)
+        );
 
-		connectMenuItem.setText("Connect");
-		connectMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				connectMenuItemActionPerformed(evt);
-			}
-		});
-		fileMenu.add(connectMenuItem);
+        machineScrollPane.setViewportView(machinePanel);
 
-		logInOutMenuItem.setText("Login");
-		logInOutMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				logInOutMenuItemActionPerformed(evt);
-			}
-		});
-		fileMenu.add(logInOutMenuItem);
+        mainTabbedPane.addTab("Machine", machineScrollPane);
 
-		newMenuItem.setText("New");
-		newMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				newMenuItemActionPerformed(evt);
-			}
-		});
-		fileMenu.add(newMenuItem);
+        fileMenu.setText("File");
 
-		openMenuItem.setText("Open");
-		openMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				openMenuItemActionPerformed(evt);
-			}
-		});
-		fileMenu.add(openMenuItem);
+        connectMenuItem.setText("Connect");
+        connectMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                connectMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(connectMenuItem);
 
-		openRecentMenu.setText("Open Recent");
-		fileMenu.add(openRecentMenu);
+        logInOutMenuItem.setText("Login");
+        logInOutMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logInOutMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(logInOutMenuItem);
 
-		saveMenuItem.setText("Save");
-		saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				saveMenuItemActionPerformed(evt);
-			}
-		});
-		fileMenu.add(saveMenuItem);
+        newMenuItem.setText("New");
+        newMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(newMenuItem);
 
-		saveAsMenuItem.setText("Save As");
-		saveAsMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				saveAsMenuItemActionPerformed(evt);
-			}
-		});
-		fileMenu.add(saveAsMenuItem);
+        openMenuItem.setText("Open");
+        openMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(openMenuItem);
 
-		importMenu.setText("Import");
+        openRecentMenu.setText("Recent");
+        fileMenu.add(openRecentMenu);
 
-		importImageMenuItem.setText("Image");
-		importImageMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				importImageMenuItemActionPerformed(evt);
-			}
-		});
-		importMenu.add(importImageMenuItem);
+        saveMenuItem.setText("Save");
+        saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(saveMenuItem);
 
-		zooniverseImportMenuItem.setText("Zooniverse");
-		zooniverseImportMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				zooniverseImportMenuItemActionPerformed(evt);
-			}
-		});
-		importMenu.add(zooniverseImportMenuItem);
+        saveAsMenuItem.setText("Save As");
+        saveAsMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveAsMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(saveAsMenuItem);
 
-		zooniverseCSVImportMenuItem.setText("Zooniverse CSV");
-		zooniverseCSVImportMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				zooniverseCSVImportMenuItemActionPerformed(evt);
-			}
-		});
-		importMenu.add(zooniverseCSVImportMenuItem);
+        importMenu.setText("Import");
 
-		fileMenu.add(importMenu);
+        importImageMenuItem.setText("Image");
+        importImageMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importImageMenuItemActionPerformed(evt);
+            }
+        });
+        importMenu.add(importImageMenuItem);
 
-		exportMenu.setText("Export");
+        zooniverseImportMenuItem.setText("Zooniverse");
+        zooniverseImportMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                zooniverseImportMenuItemActionPerformed(evt);
+            }
+        });
+        importMenu.add(zooniverseImportMenuItem);
 
-		zooniverseExportMenuItem.setText("Zooniverse");
-		zooniverseExportMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				zooniverseExportMenuItemActionPerformed(evt);
-			}
-		});
-		exportMenu.add(zooniverseExportMenuItem);
+        zooniverseCSVImportMenuItem.setText("Zooniverse CSV");
+        zooniverseCSVImportMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                zooniverseCSVImportMenuItemActionPerformed(evt);
+            }
+        });
+        importMenu.add(zooniverseCSVImportMenuItem);
 
-		microsoftExportMenuItem.setText("Microsoft");
-		microsoftExportMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				microsoftExportMenuItemActionPerformed(evt);
-			}
-		});
-		exportMenu.add(microsoftExportMenuItem);
+        importMeritokiMenuItem.setText("Meritoki");
+        importMeritokiMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importMeritokiMenuItemActionPerformed(evt);
+            }
+        });
+        importMenu.add(importMeritokiMenuItem);
 
-		audioMenuItem.setText("Audio");
-		audioMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				audioMenuItemActionPerformed(evt);
-			}
-		});
-		exportMenu.add(audioMenuItem);
+        fileMenu.add(importMenu);
 
-		fileMenu.add(exportMenu);
+        exportMenu.setText("Export");
 
-		mainMenuBar.add(fileMenu);
+        zooniverseExportMenuItem.setText("Zooniverse");
+        zooniverseExportMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                zooniverseExportMenuItemActionPerformed(evt);
+            }
+        });
+        exportMenu.add(zooniverseExportMenuItem);
 
-		editMenu.setText("Edit");
+        microsoftExportMenuItem.setText("Microsoft");
+        microsoftExportMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                microsoftExportMenuItemActionPerformed(evt);
+            }
+        });
+        exportMenu.add(microsoftExportMenuItem);
 
-		undoMenuItem.setText("Undo");
-		undoMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				undoMenuItemActionPerformed(evt);
-			}
-		});
-		editMenu.add(undoMenuItem);
+        audioMenuItem.setText("Audio");
+        audioMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                audioMenuItemActionPerformed(evt);
+            }
+        });
+        exportMenu.add(audioMenuItem);
 
-		redoMenuItem.setText("Redo");
-		redoMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				redoMenuItemActionPerformed(evt);
-			}
-		});
-		editMenu.add(redoMenuItem);
+        exportMeritokiMenuItem.setText("Meritoki");
+        exportMeritokiMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportMeritokiMenuItemActionPerformed(evt);
+            }
+        });
+        exportMenu.add(exportMeritokiMenuItem);
 
-		mainMenuBar.add(editMenu);
+        fileMenu.add(exportMenu);
 
-		jMenu1.setText("Run");
+        mainMenuBar.add(fileMenu);
 
-		recognitionMenu.setText("Recognition");
+        editMenu.setText("Edit");
 
-		recognitionStartMenuItem.setText("Start");
-		recognitionStartMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				recognitionStartMenuItemActionPerformed(evt);
-			}
-		});
-		recognitionMenu.add(recognitionStartMenuItem);
+        undoMenuItem.setText("Undo");
+        undoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                undoMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(undoMenuItem);
 
-		recognitionStopMenuItem.setText("Stop");
-		recognitionStopMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				recognitionStopMenuItemActionPerformed(evt);
-			}
-		});
-		recognitionMenu.add(recognitionStopMenuItem);
+        redoMenuItem.setText("Redo");
+        redoMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                redoMenuItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(redoMenuItem);
 
-		jMenu1.add(recognitionMenu);
+        mainMenuBar.add(editMenu);
 
-		mainMenuBar.add(jMenu1);
+        providerMenu.setText("Provider");
 
-		windowMenu.setText("Window");
+        jMenu2.setText("Meritoki");
 
-		dialogMenu.setText("Dialog");
+        meritokiDialogMenu.setText("Dialog");
 
-		pageMenuItem.setText("Page");
-		pageMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				pageMenuItemActionPerformed(evt);
-			}
-		});
-		dialogMenu.add(pageMenuItem);
+        controlMenuItem.setText("Control");
+        controlMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                controlMenuItemActionPerformed(evt);
+            }
+        });
+        meritokiDialogMenu.add(controlMenuItem);
 
-		selectionMenuItem.setText("Shape");
-		selectionMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				selectionMenuItemActionPerformed(evt);
-			}
-		});
-		dialogMenu.add(selectionMenuItem);
+        jMenu2.add(meritokiDialogMenu);
 
-		recognitionMenuItem.setText("Recognition");
-		recognitionMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				recognitionMenuItemActionPerformed(evt);
-			}
-		});
-		dialogMenu.add(recognitionMenuItem);
+        startMeritokiMenuItem.setText("Start");
+        startMeritokiMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startMeritokiMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu2.add(startMeritokiMenuItem);
 
-		commandMenuItem.setText("Command");
-		commandMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				commandMenuItemActionPerformed(evt);
-			}
-		});
-		dialogMenu.add(commandMenuItem);
+        stopMeritokiMenuItem.setText("Stop");
+        stopMeritokiMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stopMeritokiMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu2.add(stopMeritokiMenuItem);
 
-		attributionMenuItem.setText("Attribution");
-		attributionMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				attributionMenuItemActionPerformed(evt);
-			}
-		});
-		dialogMenu.add(attributionMenuItem);
+        resetMeritokiMenuItem.setText("Reset");
+        resetMeritokiMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetMeritokiMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu2.add(resetMeritokiMenuItem);
 
-		propertyMenuItem.setText("Property");
-		propertyMenuItem.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				propertyMenuItemActionPerformed(evt);
-			}
-		});
-		dialogMenu.add(propertyMenuItem);
+        providerMenu.add(jMenu2);
 
-		windowMenu.add(dialogMenu);
+        mainMenuBar.add(providerMenu);
 
-		mainMenuBar.add(windowMenu);
+        windowMenu.setText("Window");
 
-		setJMenuBar(mainMenuBar);
+        dialogMenu.setText("Dialog");
 
-		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addComponent(imagePageTabbedPane));
-		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-				.addComponent(imagePageTabbedPane));
+        pageMenuItem.setText("Page");
+        pageMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pageMenuItemActionPerformed(evt);
+            }
+        });
+        dialogMenu.add(pageMenuItem);
 
-		pack();
-	}// </editor-fold>//GEN-END:initComponents
+        selectionMenuItem.setText("Shape");
+        selectionMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectionMenuItemActionPerformed(evt);
+            }
+        });
+        dialogMenu.add(selectionMenuItem);
+
+        commandMenuItem.setText("Command");
+        commandMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                commandMenuItemActionPerformed(evt);
+            }
+        });
+        dialogMenu.add(commandMenuItem);
+
+        attributionMenuItem.setText("Attribution");
+        attributionMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                attributionMenuItemActionPerformed(evt);
+            }
+        });
+        dialogMenu.add(attributionMenuItem);
+
+        propertyMenuItem.setText("Property");
+        propertyMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                propertyMenuItemActionPerformed(evt);
+            }
+        });
+        dialogMenu.add(propertyMenuItem);
+
+        windowMenu.add(dialogMenu);
+
+        mainMenuBar.add(windowMenu);
+
+        setJMenuBar(mainMenuBar);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(mainTabbedPane)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(mainTabbedPane)
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void exportMeritokiMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportMeritokiMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_exportMeritokiMenuItemActionPerformed
+
+    private void importMeritokiMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importMeritokiMenuItemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_importMeritokiMenuItemActionPerformed
+
+    private void startMeritokiMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startMeritokiMenuItemActionPerformed
+    	Meritoki meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
+    	meritoki.start();
+    }//GEN-LAST:event_startMeritokiMenuItemActionPerformed
+
+    private void stopMeritokiMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopMeritokiMenuItemActionPerformed
+    	Meritoki meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
+    	meritoki.stop();
+    }//GEN-LAST:event_stopMeritokiMenuItemActionPerformed
+
+    private void resetMeritokiMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetMeritokiMenuItemActionPerformed
+        Meritoki meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
+        if(meritoki != null) {
+        	meritoki.reset();
+        }
+        this.init();
+    }//GEN-LAST:event_resetMeritokiMenuItemActionPerformed
+
+    private void controlMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_controlMenuItemActionPerformed
+        this.controlDialog.setVisible(true);
+    }//GEN-LAST:event_controlMenuItemActionPerformed
 
 	private void zooniverseCSVImportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_zooniverseCSVImportMenuItemActionPerformed
 		this.zooniverseCSVImportDialog = new com.meritoki.app.desktop.retina.view.dialog.zooniverse.ZooniverseCSVImportDialog(
@@ -547,12 +669,11 @@ public final class MainFrame extends JFrame {
 	}// GEN-LAST:event_attributionMenuItemActionPerformed
 
 	private void recognitionStartMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_recognitionStartMenuItemActionPerformed
-		this.moduleController = new ModuleController(this.model);
-		this.moduleController.start();
+		
 	}// GEN-LAST:event_recognitionStartMenuItemActionPerformed
 
 	private void recognitionStopMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_recognitionStopMenuItemActionPerformed
-		this.moduleController.stop();
+		
 	}// GEN-LAST:event_recognitionStopMenuItemActionPerformed
 
 	private void recognitionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_recognitionMenuItemActionPerformed
@@ -566,6 +687,16 @@ public final class MainFrame extends JFrame {
 	private void newMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_newMenuItemActionPerformed
 		this.model.document = new Document();
 		this.model.system.newDocument = true;
+		for(Entry<String, Provider> entry:this.model.system.providerMap.entrySet()) {
+			Provider provider = entry.getValue();
+			provider.open();
+		}
+//		for (Provider provider : this.model.system.providerList) {
+//            if (provider instanceof Meritoki) {
+//                Meritoki meritoki = (Meritoki) provider;
+//                meritoki.open(this.model.document.uuid);
+//            }
+//        }
 //		this.model.document.pattern.user = this.model.system.user;
 		this.init();
 	}// GEN-LAST:event_newMenuItemActionPerformed
@@ -678,48 +809,54 @@ public final class MainFrame extends JFrame {
 //        });
 //    }
 
-	// Variables declaration - do not modify//GEN-BEGIN:variables
-	private com.meritoki.app.desktop.retina.view.panel.ArchivePanel archivePanel;
-	private javax.swing.JMenuItem attributionMenuItem;
-	private javax.swing.JMenuItem audioMenuItem;
-	private javax.swing.JMenuItem commandMenuItem;
-	private javax.swing.JMenuItem connectMenuItem;
-	private javax.swing.JMenu dialogMenu;
-	private javax.swing.JMenu editMenu;
-	private javax.swing.JMenu exportMenu;
-	private javax.swing.JMenu fileMenu;
-	private javax.swing.JTabbedPane imagePageTabbedPane;
-	private javax.swing.JMenuItem importImageMenuItem;
-	private javax.swing.JMenu importMenu;
-	private javax.swing.JMenu jMenu1;
-	private javax.swing.JScrollPane jScrollPane1;
-	private javax.swing.JScrollPane jScrollPane2;
-	private javax.swing.JScrollPane jScrollPane3;
-	private javax.swing.JScrollPane jScrollPane4;
-	private javax.swing.JMenuItem logInOutMenuItem;
-	private javax.swing.JMenuBar mainMenuBar;
-	private com.meritoki.app.desktop.retina.view.panel.MatrixPanel matrixPanel;
-	private javax.swing.JMenuItem microsoftExportMenuItem;
-	private javax.swing.JMenuItem newMenuItem;
-	private javax.swing.JMenuItem openMenuItem;
-	private javax.swing.JMenu openRecentMenu;
-	private javax.swing.JMenuItem pageMenuItem;
-	private com.meritoki.app.desktop.retina.view.panel.PagePanel pagePanel;
-	private javax.swing.JMenuItem propertyMenuItem;
-	private javax.swing.JMenu recognitionMenu;
-	private javax.swing.JMenuItem recognitionMenuItem;
-	private javax.swing.JMenuItem recognitionStartMenuItem;
-	private javax.swing.JMenuItem recognitionStopMenuItem;
-	private javax.swing.JMenuItem redoMenuItem;
-	private javax.swing.JMenuItem saveAsMenuItem;
-	private javax.swing.JMenuItem saveMenuItem;
-	private javax.swing.JMenuItem selectionMenuItem;
-	private com.meritoki.app.desktop.retina.view.panel.TablePanel table1;
-	private com.meritoki.app.desktop.retina.view.panel.TablePanel tablePanel;
-	private javax.swing.JMenuItem undoMenuItem;
-	private javax.swing.JMenu windowMenu;
-	private javax.swing.JMenuItem zooniverseCSVImportMenuItem;
-	private javax.swing.JMenuItem zooniverseExportMenuItem;
-	private javax.swing.JMenuItem zooniverseImportMenuItem;
-	// End of variables declaration//GEN-END:variables
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.meritoki.app.desktop.retina.view.panel.ArchivePanel archivePanel;
+    private javax.swing.JScrollPane archiveScrollPane;
+    private javax.swing.JMenuItem attributionMenuItem;
+    private javax.swing.JMenuItem audioMenuItem;
+    private javax.swing.JMenuItem commandMenuItem;
+    private javax.swing.JMenuItem connectMenuItem;
+    private javax.swing.JMenuItem controlMenuItem;
+    private javax.swing.JMenu dialogMenu;
+    private javax.swing.JMenu editMenu;
+    private javax.swing.JMenu exportMenu;
+    private javax.swing.JMenuItem exportMeritokiMenuItem;
+    private javax.swing.JMenu fileMenu;
+    private javax.swing.JMenuItem importImageMenuItem;
+    private javax.swing.JMenu importMenu;
+    private javax.swing.JMenuItem importMeritokiMenuItem;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuItem logInOutMenuItem;
+    private com.meritoki.app.desktop.retina.view.panel.MachinePanel machinePanel;
+    private javax.swing.JScrollPane machineScrollPane;
+    private javax.swing.JMenuBar mainMenuBar;
+    private javax.swing.JTabbedPane mainTabbedPane;
+    private com.meritoki.app.desktop.retina.view.panel.MatrixPanel matrixPanel;
+    private javax.swing.JScrollPane matrixScrollPane;
+    private javax.swing.JMenu meritokiDialogMenu;
+    private javax.swing.JMenuItem microsoftExportMenuItem;
+    private javax.swing.JMenuItem newMenuItem;
+    private javax.swing.JMenuItem openMenuItem;
+    private javax.swing.JMenu openRecentMenu;
+    private javax.swing.JMenuItem pageMenuItem;
+    private com.meritoki.app.desktop.retina.view.panel.PagePanel pagePanel;
+    private javax.swing.JScrollPane pageScrollPane;
+    private javax.swing.JMenuItem propertyMenuItem;
+    private javax.swing.JMenu providerMenu;
+    private javax.swing.JMenuItem redoMenuItem;
+    private javax.swing.JMenuItem resetMeritokiMenuItem;
+    private javax.swing.JMenuItem saveAsMenuItem;
+    private javax.swing.JMenuItem saveMenuItem;
+    private javax.swing.JMenuItem selectionMenuItem;
+    private javax.swing.JMenuItem startMeritokiMenuItem;
+    private javax.swing.JMenuItem stopMeritokiMenuItem;
+    private com.meritoki.app.desktop.retina.view.panel.TablePanel table1;
+    private com.meritoki.app.desktop.retina.view.panel.TablePanel tablePanel;
+    private javax.swing.JScrollPane tableScrollPane;
+    private javax.swing.JMenuItem undoMenuItem;
+    private javax.swing.JMenu windowMenu;
+    private javax.swing.JMenuItem zooniverseCSVImportMenuItem;
+    private javax.swing.JMenuItem zooniverseExportMenuItem;
+    private javax.swing.JMenuItem zooniverseImportMenuItem;
+    // End of variables declaration//GEN-END:variables
 }
