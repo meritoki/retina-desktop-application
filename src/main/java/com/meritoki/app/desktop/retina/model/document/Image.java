@@ -215,9 +215,24 @@ public class Image {
 					if (bufferedImage != null) {
 						this.setBufferedImage(bufferedImage);
 						if (this.getExtension().equals("jpg") || this.getExtension().equals("jpeg")) {
-
 							try {
 								NodeController.saveJpg(NodeController.getDocumentCache(model.document.uuid),
+										this.uuid + "." + this.getExtension(), bufferedImage);
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						} else if(this.getExtension().equals("jpeg")) {
+							try {
+								NodeController.saveJpg(NodeController.getDocumentCache(model.document.uuid),
+										this.uuid + "." + this.getExtension(), bufferedImage);
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						} else if(this.getExtension().equals("png")) {
+							try {
+								NodeController.savePng(NodeController.getDocumentCache(model.document.uuid),
 										this.uuid + "." + this.getExtension(), bufferedImage);
 							} catch (Exception e) {
 								// TODO Auto-generated catch block

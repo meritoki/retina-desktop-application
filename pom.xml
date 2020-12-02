@@ -23,7 +23,7 @@
 		<dependency>
 			<groupId>com.meritoki.library</groupId>
 			<artifactId>cortex</artifactId>
-			<version>0.5.202008</version>
+			<version>0.5.202008-alpha</version>
 		</dependency>
 		<dependency>
 			<groupId>com.meritoki.library</groupId>
@@ -33,7 +33,7 @@
 		<dependency>
 			<groupId>com.meritoki.library</groupId>
 			<artifactId>controller</artifactId>
-			<version>0.2.202008</version>
+			<version>0.3.202012</version>
 		</dependency>
 		<!-- logging -->
 		<dependency>
