@@ -76,11 +76,12 @@ public class ZooniverseImportDialog extends javax.swing.JDialog {
     }
 
     public void initZooniverse() {
-        for (Provider provider : this.model.system.providerList) {
-            if (provider instanceof Zooniverse) {
-                this.zooniverse = ((Zooniverse) provider);
-            }
-        }
+    	this.zooniverse = ((Zooniverse) this.model.system.providerMap.get("zooniverse"));
+//        for (Provider provider : this.model.system.providerList) {
+//            if (provider instanceof Zooniverse) {
+//                this.zooniverse = ((Zooniverse) provider);
+//            }
+//        }
     }
 
     public void initComboBox() {

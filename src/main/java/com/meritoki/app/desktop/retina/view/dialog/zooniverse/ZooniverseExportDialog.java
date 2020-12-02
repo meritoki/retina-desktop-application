@@ -93,11 +93,12 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
 	}
 
 	public void initZooniverse() {
-		for (Provider provider : this.model.system.providerList) {
-			if (provider instanceof Zooniverse) {
-				this.zooniverse = (Zooniverse) provider;
-			}
-		}
+		this.zooniverse = ((Zooniverse) this.model.system.providerMap.get("zooniverse"));
+//		for (Provider provider : this.model.system.providerList) {
+//			if (provider instanceof Zooniverse) {
+//				this.zooniverse = (Zooniverse) provider;
+//			}
+//		}
 	}
 
 	public void initComboBox() {
@@ -509,10 +510,6 @@ public class ZooniverseExportDialog extends javax.swing.JDialog {
 
 		pack();
 	}// </editor-fold>//GEN-END:initComponents
-
-	private void projectTitleTextFieldActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_projectTitleTextFieldActionPerformed
-		// TODO add your handling code here:
-	}// GEN-LAST:event_projectTitleTextFieldActionPerformed
 
 	private void setCredentialActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_setCredentialActionPerformed
 		Runnable runnable = new Runnable() {

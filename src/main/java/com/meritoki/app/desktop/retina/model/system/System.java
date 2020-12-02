@@ -47,8 +47,8 @@ public class System {
 	public Properties properties = null;
 	@JsonProperty
 	public Map<String,Provider> providerMap = new HashMap<>();
-	@JsonProperty
-	public List<Provider> providerList = new ArrayList<>();
+//	@JsonProperty
+//	public List<Provider> providerList = new ArrayList<>();
 	@JsonProperty
 	public List<Vendor> vendorList = new ArrayList<>();
 	@JsonIgnore
@@ -140,9 +140,10 @@ public class System {
 	}
 	
 	public void initProviders() {
-		this.providerList.add(new Zooniverse());
-//		this.providerList.add(new Meritoki());
-//		this.providerMap.put("meritoki", new Meritoki());
+//		this.providerList.add(new Zooniverse());
+		this.providerMap.put("zooniverse", new Zooniverse());
+		if(this.machine)
+			this.providerMap.put("meritoki", new Meritoki());
 	}
 	
 	public void initVendors() {
