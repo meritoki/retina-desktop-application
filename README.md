@@ -14,6 +14,5 @@
 11. Modifiable interface for implementation of any Machine Learning Algorithm
 
 ## Specification
-### Implementation
-The implemenation of Retina can be installed, configured, and used following the [Guide](https://github.com/meritoki/retina-desktop-application/wiki/Guide) available
-
+### [Implementation](https://github.com/meritoki/retina-desktop-application/wiki/Implementation)
+The implemenation of Retina can be installed, configured, and used following the link above.
