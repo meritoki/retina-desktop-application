@@ -118,6 +118,10 @@ public class Position {
 			this.relativePoint = new Point(position.relativePoint);
 		this.scale();
 	}
+	
+	public boolean containsPosition(Position position) {
+		return true;
+	}
 
 	@JsonIgnore
 	public void normalize(List<Point> pointList) {

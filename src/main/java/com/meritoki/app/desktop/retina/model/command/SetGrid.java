@@ -59,4 +59,37 @@ public class SetGrid extends Command {
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);
 	}
+	
+	@Override
+	public void undo() throws Exception {
+		for(Operation o: this.operationList) {
+			if(o.sign == 0) {
+				if(o.object instanceof String) {
+					String uuid = (String)o.object;
+					Shape shape = this.model.document.getPage().getShape();
+					if(shape instanceof Grid) {
+						Grid grid = (Grid)shape;
+						grid.setShape(uuid);
+					}
+				}
+			}
+		}
+		
+	}
+
+	@Override
+	public void redo() throws Exception {
+		for(Operation o: this.operationList) {
+			if(o.sign == 1) {
+				if(o.object instanceof String) {
+					String uuid = (String)o.object;
+					Shape shape = this.model.document.getPage().getShape();
+					if(shape instanceof Grid) {
+						Grid grid = (Grid)shape;
+						grid.setShape(uuid);
+					}
+				}
+			}
+		}
+	}
 }

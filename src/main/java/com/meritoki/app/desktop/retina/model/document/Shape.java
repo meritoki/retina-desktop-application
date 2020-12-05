@@ -178,11 +178,6 @@ public class Shape {
 	public void setData(Data data) {
 		this.data = data;
 	}
-	
-//	@JsonIgnore
-//	public void paint(Graphics2D graphics2D) {
-//		
-//	}
 
 	@JsonIgnore
 	@Override

@@ -44,6 +44,33 @@ public class ScriptPage extends Command {
 		this.operationList = (LinkedList<Operation>) this.getOperationList(this.model.cache.pageList,
 				this.model.cache.script);
 	}
+	
+	@Override
+	public void undo() throws Exception {
+		logger.info("undo() executeScript command.operationList.size()="+this.operationList.size());
+		Collections.reverse(this.operationList);
+		for(Operation o: this.operationList) {
+			if(o.sign == 0) {
+				if(o.object instanceof List) {
+					this.model.document.pageList = (List<Page>)o.object;
+				}
+			}
+		}
+		
+	}
+
+	@Override
+	public void redo() throws Exception {
+		Collections.reverse(this.operationList);
+		for(Operation o: this.operationList) {
+			if(o.sign == 1) {
+				if(o.object instanceof List) {
+					this.model.document.pageList = (List<Page>)o.object;
+				}
+			} 
+		}
+		
+	}
 
 	/**
 	 * SWAP 1-2:3-4 INTERLACE 1-2:3-4 INSERT 1-2:3-4 SHEET even:odd | SHEET odd:even

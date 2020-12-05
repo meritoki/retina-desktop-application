@@ -43,6 +43,7 @@ import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Position;
 import com.meritoki.app.desktop.retina.model.document.Shape;
+import com.meritoki.app.desktop.retina.model.tool.Tool;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 public class PagePanel extends JPanel implements MouseListener, KeyListener {
@@ -216,8 +217,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 				this.model.pattern.execute("setImage");
 			} catch (NullPointerException e) {
 				e.printStackTrace();
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
@@ -238,55 +238,67 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 					this.model.pattern.execute("setShape");
 				} catch (NullPointerException e) {
 					e.printStackTrace();
-				}catch (Exception e) {
+				} catch (Exception e) {
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		} else {
 			Page page = this.model.document.getPage();
 			if (page != null) {
-				if (this.model.system.pressedShape != null) {
-					this.model.system.selection = page.intersectShape(this.model.system.pressedPoint);
-					if (this.model.system.selection != null) {
-						try {
-							this.model.cache.selection = this.model.system.selection;
-							this.model.cache.pressedShapeUUID = this.model.system.pressedShape.uuid;
-							this.model.cache.releasedPoint = this.model.system.releasedPoint;
-							this.model.pattern.execute("resizeShape");
-						} catch (NullPointerException e) {
-							e.printStackTrace();
-						}catch (Exception e) {
-							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
-									JOptionPane.ERROR_MESSAGE);
+				if (this.model.system.tool == Tool.SELECT) {
+
+				} else {
+					if (this.model.system.pressedShape != null) {
+						this.model.system.selection = page.intersectShape(this.model.system.pressedPoint);
+						if (this.model.system.selection != null) {
+							if (this.model.system.tool == Tool.RESIZE) {
+								try {
+									this.model.cache.selection = this.model.system.selection;
+									this.model.cache.pressedShapeUUID = this.model.system.pressedShape.uuid;
+									this.model.cache.releasedPoint = this.model.system.releasedPoint;
+									this.model.pattern.execute("resizeShape");
+								} catch (NullPointerException e) {
+									e.printStackTrace();
+								} catch (Exception e) {
+									JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+											JOptionPane.ERROR_MESSAGE);
+								}
+							}
+						} else {
+							if (this.model.system.tool == Tool.MOVE) {
+								this.model.system.releasedImage = this.model.document
+										.getImage(this.model.system.releasedPoint);
+								try {
+									this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+									this.model.cache.pressedShapeUUID = this.model.system.pressedShape.uuid;
+									this.model.cache.pressedImageUUID = this.model.system.pressedImage.uuid;
+									this.model.cache.releasedImageUUID = this.model.system.releasedImage.uuid;
+									this.model.cache.pressedPoint = this.model.system.pressedPoint;
+									this.model.cache.releasedPoint = this.model.system.releasedPoint;
+									this.model.pattern.execute("moveShape");
+								} catch (NullPointerException e) {
+									e.printStackTrace();
+								} catch (Exception e) {
+									JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+											JOptionPane.ERROR_MESSAGE);
+								}
+							}
 						}
 					} else {
-						this.model.system.releasedImage = this.model.document.getImage(this.model.system.releasedPoint);
-						try {
-							this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
-							this.model.cache.pressedShapeUUID = this.model.system.pressedShape.uuid;
-							this.model.cache.pressedImageUUID = this.model.system.pressedImage.uuid;
-							this.model.cache.releasedImageUUID = this.model.system.releasedImage.uuid;
-							this.model.cache.pressedPoint = this.model.system.pressedPoint;
-							this.model.cache.releasedPoint = this.model.system.releasedPoint;
-							this.model.pattern.execute("moveShape");
-						} catch (NullPointerException e) {
-							e.printStackTrace();
-						}catch (Exception e) {
-							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
-									JOptionPane.ERROR_MESSAGE);
+						if (this.model.system.tool == Tool.DRAW) {
+							try {
+								this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+								this.model.cache.pressedImageUUID = this.model.system.pressedImage.uuid;
+								this.model.cache.pressedPoint = this.model.system.pressedPoint;
+								this.model.cache.releasedPoint = this.model.system.releasedPoint;
+								this.model.pattern.execute("addShape");
+							} catch (NullPointerException e) {
+								e.printStackTrace();
+							} catch (Exception e) {
+								JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+										JOptionPane.ERROR_MESSAGE);
+							}
 						}
-					}
-				} else {
-					try {
-						this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
-						this.model.cache.pressedImageUUID = this.model.system.pressedImage.uuid;
-						this.model.cache.pressedPoint = this.model.system.pressedPoint;
-						this.model.cache.releasedPoint = this.model.system.releasedPoint;
-						this.model.pattern.execute("addShape");
-					} catch (NullPointerException e) {
-						e.printStackTrace();
-					}catch (Exception e) {
-						JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
@@ -417,14 +429,24 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 			}
 			case KeyEvent.VK_Z: {
 				logger.debug("keyPressed(e) KeyEvent.VK_Z");
-				this.model.pattern.undo();
-				this.mainFrame.init();
+				try {
+					this.model.pattern.undo();
+					this.mainFrame.init();
+				} catch (Exception e) {
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
 				break;
 			}
 			case KeyEvent.VK_Y: {
 				logger.debug("keyPressed(e) KeyEvent.VK_Y");
-				this.model.pattern.redo();
-				this.mainFrame.init();
+				try {
+					this.model.pattern.redo();
+					this.mainFrame.init();
+				} catch (Exception e) {
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
 				break;
 
 			}

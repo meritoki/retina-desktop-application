@@ -230,6 +230,14 @@
                 <Property name="text" type="java.lang.String" value="Dialog"/>
               </Properties>
               <SubComponents>
+                <MenuItem class="javax.swing.JMenuItem" name="toolMenuItem">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Tool"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="toolMenuItemActionPerformed"/>
+                  </Events>
+                </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="pageMenuItem">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Page"/>

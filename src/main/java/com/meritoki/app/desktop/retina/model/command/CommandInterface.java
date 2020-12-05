@@ -16,5 +16,10 @@
 package com.meritoki.app.desktop.retina.model.command;
 
 public interface CommandInterface {
+	
 	public void execute() throws Exception;
+	
+	public void undo() throws Exception;
+	
+	public void redo() throws Exception;
 }

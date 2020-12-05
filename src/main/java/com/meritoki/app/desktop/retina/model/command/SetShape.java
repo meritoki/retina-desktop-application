@@ -57,4 +57,28 @@ public class SetShape extends Command {
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);
 	}
+	
+	@Override
+	public void undo() throws Exception {
+		for (int i = 0; i < this.operationList.size(); i++) {
+			Operation operation = this.operationList.get(i);
+			if (operation.sign == 0) {
+				if (operation.object instanceof String) {
+					this.model.document.getPage().setShape((String) operation.object);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void redo() throws Exception {
+		for (int i = 0; i < this.operationList.size(); i++) {
+			Operation operation = this.operationList.get(i);
+			if (operation.sign == 1) {
+				if (operation.object instanceof String) {
+					this.model.document.getPage().setShape((String) operation.object);
+				}
+			}
+		}
+	}
 }

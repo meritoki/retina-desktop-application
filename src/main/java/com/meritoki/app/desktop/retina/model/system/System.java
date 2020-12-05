@@ -37,6 +37,7 @@ import com.meritoki.app.desktop.retina.model.document.user.User;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Zooniverse;
+import com.meritoki.app.desktop.retina.model.tool.Tool;
 import com.meritoki.app.desktop.retina.model.vendor.Vendor;
 import com.meritoki.app.desktop.retina.model.vendor.microsoft.Microsoft;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
@@ -47,8 +48,8 @@ public class System {
 	public Properties properties = null;
 	@JsonProperty
 	public Map<String,Provider> providerMap = new HashMap<>();
-//	@JsonProperty
-//	public List<Provider> providerList = new ArrayList<>();
+	@JsonProperty
+	public Tool tool = null;
 	@JsonProperty
 	public List<Vendor> vendorList = new ArrayList<>();
 	@JsonIgnore
@@ -60,7 +61,7 @@ public class System {
 	@JsonIgnore
 	public String defaultFileName = "Untitled.json";
 	@JsonIgnore 
-	public boolean machine = false;
+	public boolean machine = true;
 	@JsonIgnore
 	public boolean multiUser = false;
 	@JsonIgnore

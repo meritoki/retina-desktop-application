@@ -72,14 +72,26 @@ public class ControlDialog extends javax.swing.JDialog {
 					switch (ke.getKeyCode()) {
 					case KeyEvent.VK_Z: {
 						logger.debug("keyPressed(e) KeyEvent.VK_Z");
-						model.pattern.undo();
-						mainFrame.init();
+						try {
+							model.pattern.undo();
+							mainFrame.init();
+						} catch (Exception e) {
+							e.printStackTrace();
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
 						break;
 					}
 					case KeyEvent.VK_Y: {
 						logger.debug("keyPressed(e) KeyEvent.VK_Y");
-						model.pattern.redo();
-						mainFrame.init();
+						try {
+							model.pattern.redo();
+							mainFrame.init();
+						} catch (Exception e) {
+							e.printStackTrace();
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
 						break;
 					}
 					}
@@ -235,18 +247,6 @@ public class ControlDialog extends javax.swing.JDialog {
 	public void setConceptListSelectedIndex(int index) {
 		this.conceptList.setSelectedIndex(index);
 	}
-
-//	public void initList() {
-//		Document document = (this.model != null) ? this.model.getDocument() : null;
-//		Network network = (document != null) ? document.getNetwork() : null;
-//		List<Concept> conceptList = (network.getLevelList().size() > 0)
-//				? network.getRootLevel().getCoincidenceConceptList()
-//				: null;
-//		// List<Concept> predictionConceptList = (network.getLevelStack().size() >
-//		// 0)?network.getLevelStack().get(network.getIndex()).getPredictionConceptList():null;
-//		this.initConceptList(conceptList);
-//		// this.initPredictionConceptList(predictionConceptList);
-//	}
 
 	public void initInputList(List<Input> conceptList) {
 //      logger.debug("initConceptList(...)");
@@ -547,6 +547,7 @@ public class ControlDialog extends javax.swing.JDialog {
         	this.startButton.setText("Stop");
         } else if(this.startButton.getText().equals("Stop")) {
         	this.mainFrame.getMachinePanel().stop();
+        	
         	this.startButton.setText("Start");
         }
     }//GEN-LAST:event_startButtonActionPerformed
@@ -670,4 +671,16 @@ public class ControlDialog extends javax.swing.JDialog {
 //} else if (cortex instanceof Network) {
 //Network network = (Network) cortex;
 //conceptList = network.getRootLevel().getCoincidenceConceptList();
+//}
+
+//public void initList() {
+//Document document = (this.model != null) ? this.model.getDocument() : null;
+//Network network = (document != null) ? document.getNetwork() : null;
+//List<Concept> conceptList = (network.getLevelList().size() > 0)
+//		? network.getRootLevel().getCoincidenceConceptList()
+//		: null;
+//// List<Concept> predictionConceptList = (network.getLevelStack().size() >
+//// 0)?network.getLevelStack().get(network.getIndex()).getPredictionConceptList():null;
+//this.initConceptList(conceptList);
+//// this.initPredictionConceptList(predictionConceptList);
 //}
