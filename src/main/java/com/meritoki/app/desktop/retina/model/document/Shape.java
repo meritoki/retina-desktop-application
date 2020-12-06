@@ -53,8 +53,6 @@ public class Shape {
 	public Position position = new Position();
 	@JsonIgnore
 	public BufferedImage bufferedImage;
-	@JsonIgnore
-	public boolean selected = false;
 	@JsonProperty
 	public Data data = new Data();
 	@JsonProperty

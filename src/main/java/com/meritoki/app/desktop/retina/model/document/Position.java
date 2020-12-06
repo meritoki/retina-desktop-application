@@ -120,10 +120,15 @@ public class Position {
 	}
 	
 	public boolean containsPosition(Position position) {
-//		if(this.point.x <= position.point.x && this.point.y <= position.point.y) {
-//			return
-//		}
-		return true;
+		logger.info("containsPosition("+position+") this="+this);
+		if(this.point.x <= position.point.x && this.point.y <= position.point.y) {
+			Point positionEndPoint = new Point(position.point.x +position.dimension.width,position.point.y + position.dimension.height);
+			Point thisEndPoint = new Point(this.point.x+this.dimension.width,this.point.y +this.dimension.height);
+			if((positionEndPoint.x) <=(thisEndPoint.x)  && (positionEndPoint.y) <= (thisEndPoint.y)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@JsonIgnore

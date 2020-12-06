@@ -62,9 +62,9 @@ public class MoveShape extends Command {
 		operation.id = UUID.randomUUID().toString();
 		// operation.uuid = this.document.cache.pressedShape.uuid;
 		this.operationList.push(operation);
+		
 		Shape newShape = pressedPage.moveShape(pressedShape, pressedPoint, releasedPoint);
 		// Logic
-
 		// Redo
 		if(newShape instanceof Grid) {
 			logger.info("execute() (newShape instanceof Grid)");
@@ -74,10 +74,9 @@ public class MoveShape extends Command {
 			redoShape = new Shape(newShape,true);
 		}
 		operation = new Operation();
-		operation.object = redoShape;//new Shape(newShape, true);
+		operation.object = redoShape;
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
-		// operation.uuid = this.document.cache.pressedShape.uuid;
 		this.operationList.push(operation);
 	}
 

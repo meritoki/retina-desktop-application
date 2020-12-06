@@ -61,7 +61,7 @@ public class System {
 	@JsonIgnore
 	public String defaultFileName = "Untitled.json";
 	@JsonIgnore 
-	public boolean machine = true;
+	public boolean machine = false;
 	@JsonIgnore
 	public boolean multiUser = false;
 	@JsonIgnore

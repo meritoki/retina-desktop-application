@@ -64,8 +64,6 @@ public class DocumentAddShapeMoveShapeTest {
 		assertEquals(model.document.setIndex(0), true);
 		model.document.getPage().getBufferedImage(model);
 		Page page = model.document.getPage();
-//		model.system.pressedImage = model.document.getImage();
-//		model.system.releasedImage = model.document.getImage();
 		Position position = page.position;
 		Point startPoint = new Point(model.system.pressedImage.position.center.x, model.system.pressedImage.position.center.y);
 		Point previousPoint = startPoint;
@@ -76,13 +74,9 @@ public class DocumentAddShapeMoveShapeTest {
 			model.cache.pressedPoint = previousPoint;
 			model.system.pressedShape = model.document.getPage().getShape(model.cache.pressedPoint);
 			model.cache.releasedPoint = newPoint;
-//			model.system.pressedImage = model.document.getImage(model.cache.pressedPoint);
-//			model.system.releasedImage = model.document.getImage(model.cache.releasedPoint);
 			try {
 				model.cache.pressedPageUUID = model.document.getPage().uuid;
 				model.cache.pressedShapeUUID = model.system.pressedShape.uuid;
-//				model.cache.pressedImageUUID = model.system.pressedImage.uuid;
-//				model.cache.releasedImageUUID = model.system.releasedImage.uuid;
 				model.pattern.execute("moveShape");
 			} catch (Exception e) {
 				e.printStackTrace();

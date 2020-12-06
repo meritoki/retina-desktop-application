@@ -29,6 +29,7 @@ import com.meritoki.app.desktop.retina.model.command.AddPage;
 import com.meritoki.app.desktop.retina.model.command.AddSelector;
 import com.meritoki.app.desktop.retina.model.command.AddShape;
 import com.meritoki.app.desktop.retina.model.command.Command;
+import com.meritoki.app.desktop.retina.model.command.MoveSelector;
 import com.meritoki.app.desktop.retina.model.command.MoveShape;
 import com.meritoki.app.desktop.retina.model.command.RemoveImage;
 import com.meritoki.app.desktop.retina.model.command.RemovePage;
@@ -123,6 +124,10 @@ public class Pattern {
 		}
 		case "moveShape": {
 			command = new MoveShape(this.model);
+			break;
+		}
+		case "moveSelector": {
+			command = new MoveSelector(this.model);
 			break;
 		}
 		case "removePage": {
