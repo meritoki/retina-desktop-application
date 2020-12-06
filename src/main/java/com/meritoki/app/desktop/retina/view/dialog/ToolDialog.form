@@ -31,7 +31,7 @@
                   <Component id="drawButton" alignment="0" max="32767" attributes="0"/>
                   <Component id="resizeButton" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace pref="28" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -46,7 +46,7 @@
               <Component id="moveButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="resizeButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="20" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -54,7 +54,9 @@
   <SubComponents>
     <Component class="javax.swing.JButton" name="drawButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Draw"/>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/Draw.png"/>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="drawButtonActionPerformed"/>
@@ -62,7 +64,9 @@
     </Component>
     <Component class="javax.swing.JButton" name="selectButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Select"/>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/Selector.png"/>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="selectButtonActionPerformed"/>
@@ -70,7 +74,9 @@
     </Component>
     <Component class="javax.swing.JButton" name="moveButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Move"/>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/Move.png"/>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="moveButtonActionPerformed"/>
@@ -78,7 +84,9 @@
     </Component>
     <Component class="javax.swing.JButton" name="resizeButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Resize"/>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/Resize.png"/>
+        </Property>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="resizeButtonActionPerformed"/>

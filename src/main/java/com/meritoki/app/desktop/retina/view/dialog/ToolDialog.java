@@ -64,28 +64,28 @@ public class ToolDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        drawButton.setText("Draw");
+        drawButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Draw.png"))); // NOI18N
         drawButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 drawButtonActionPerformed(evt);
             }
         });
 
-        selectButton.setText("Select");
+        selectButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Selector.png"))); // NOI18N
         selectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 selectButtonActionPerformed(evt);
             }
         });
 
-        moveButton.setText("Move");
+        moveButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Move.png"))); // NOI18N
         moveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 moveButtonActionPerformed(evt);
             }
         });
 
-        resizeButton.setText("Resize");
+        resizeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resize.png"))); // NOI18N
         resizeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 resizeButtonActionPerformed(evt);
@@ -103,7 +103,7 @@ public class ToolDialog extends javax.swing.JDialog {
                     .addComponent(selectButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(drawButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(resizeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -116,7 +116,7 @@ public class ToolDialog extends javax.swing.JDialog {
                 .addComponent(moveButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(resizeButton)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
