@@ -33,6 +33,11 @@ public class AddSelector extends Command {
 		ShapeType type = this.model.cache.type;
 		Point pressedPoint = this.model.cache.pressedPoint;
 		Point releasedPoint = this.model.cache.releasedPoint;
+		Operation operation = new Operation();
+		operation.object = this.model.cache.selector;
+		operation.sign = 0;
+		operation.id = UUID.randomUUID().toString();
+		this.operationList.push(operation);
 		double scale = page.position.scale;
 		Selector selector = new Selector();
 		selector.type = type;
@@ -44,8 +49,8 @@ public class AddSelector extends Command {
 		}
 		this.model.cache.selector = selector;
 		selector.bufferedImage = this.model.document.getShapeBufferedImage(page.getScaledBufferedImage(this.model), selector);
-		Operation operation = new Operation();
-		operation.object = new Shape(selector, true);
+		operation = new Operation();
+		operation.object = new Selector(selector, true);
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);
@@ -53,11 +58,27 @@ public class AddSelector extends Command {
 	
 	@Override
 	public void undo() {
-		this.model.cache.selector = null;
+		for (int i = 0; i < this.operationList.size(); i++) {
+			Operation operation = this.operationList.get(i);
+			if (operation.sign == 0) {
+				if (operation.object instanceof Selector) {
+					this.model.cache.selector = (Selector)operation.object;
+				} else {
+					this.model.cache.selector = null;
+				}
+			} 
+		}
 	}
 	
 	@Override
 	public void redo() {
-		
+		for (int i = 0; i < this.operationList.size(); i++) {
+			Operation operation = this.operationList.get(i);
+			if (operation.sign == 1) {
+				if (operation.object instanceof Selector) {
+					this.model.cache.selector = (Selector)operation.object;
+				}
+			} 
+		}
 	}
 }
