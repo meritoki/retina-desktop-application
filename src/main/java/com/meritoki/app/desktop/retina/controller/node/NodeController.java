@@ -103,13 +103,12 @@ public class NodeController extends com.meritoki.library.controller.node.NodeCon
 				PDPageTree pdPageList = pdfDocument.getPages();
 				fileArray = new File[pdPageList.getCount()];
 				String fileName = pdf.getName().replace(".pdf", "");
-				int pageNumber = 1;
-				int pageCounter = 0;
+				int pageNumber = 0;
 				for (int i = 0;i<pdPageList.getCount();i++) {
 					PDPage page = pdPageList.get(i);
-					File outputFile = new File(destinationDirectory + fileName + "_" + pageNumber + ".jpg");
+					File outputFile = new File(destinationDirectory + File.separatorChar+fileName + "_" + pageNumber + ".jpg");
 					if (!outputFile.exists()) {
-						BufferedImage image = pdfRenderer.renderImageWithDPI(pageCounter, 300, ImageType.RGB);
+						BufferedImage image = pdfRenderer.renderImageWithDPI(pageNumber, 300, ImageType.RGB);
 						System.out.println("Image Created -> " + outputFile.getName());
 						ImageIO.write(image, "jpg", outputFile);
 					}
