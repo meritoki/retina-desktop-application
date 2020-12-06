@@ -11,7 +11,7 @@ public class Selector extends Shape {
 	
 	public Selector(Selector selector,boolean flag) {
 		super(selector,flag);
-		shapeList = new ArrayList<>(selector.shapeList);
+		shapeList = selector.shapeList;
 	}
 	
 	public void addShape(Shape shape) {

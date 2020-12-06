@@ -27,6 +27,7 @@ public class MoveSelector extends Command {
 		Page pressedPage = this.model.document.getPage(pressedPageUUID);
 		Point releasedPoint = this.model.cache.releasedPoint;
 		Point pressedPoint = this.model.cache.pressedPoint;
+		Page page = this.model.document.getPage(pressedPageUUID);
 		Selector selector = this.model.cache.selector;
 		List<Shape> shapeList = selector.shapeList;
 		Shape undoShape = null;
@@ -34,7 +35,19 @@ public class MoveSelector extends Command {
 		Shape newShape = null;
 		Selector newSelector = null;
 		Operation operation = new Operation();
-		this.model.cache.selector = null;
+		operation.object = this.model.cache.selector;
+		operation.sign = 0;
+		operation.id = UUID.randomUUID().toString();
+		this.operationList.push(operation);
+		newSelector = new Selector(this.model.cache.selector, true);
+		Point movedPoint = this.getMovedPoint(new Point(releasedPoint), new Point(pressedPoint));
+		newSelector.position.move(movedPoint);
+		this.model.cache.selector = newSelector;
+		operation = new Operation();
+		operation.object = newSelector;
+		operation.sign = 1;
+		operation.id = UUID.randomUUID().toString();
+		this.operationList.push(operation);
 		// operation.uuid = this.document.cache.pressedShape.uuid;
 //		this.operationList.push(operation);
 		for(Shape pressedShape:shapeList) {
@@ -70,6 +83,14 @@ public class MoveSelector extends Command {
 			// operation.uuid = this.document.cache.pressedShape.uuid;
 			this.operationList.push(operation);
 		}
+		
+	}
+	
+	public void selectorAddShape(Page page, Selector selector) {
+		List<Shape> shapeList = page.getShapeList();
+		for(Shape shape:shapeList) {
+			selector.addShape(shape);
+		}
 	}
 	
 	public Point getMovedPoint(Point a, Point b) {
@@ -87,7 +108,10 @@ public class MoveSelector extends Command {
 				}
 			} else 
 			if (operation.sign == 0) {
-				if (operation.object instanceof Shape) {
+				if (operation.object instanceof Selector) {
+					this.model.cache.selector = (Selector)operation.object;
+					this.selectorAddShape(this.model.document.getPage(),this.model.cache.selector);
+				} else if (operation.object instanceof Shape) {
 					Shape shape = (Shape)operation.object;
 					if(shape instanceof Grid) {
 						Grid grid = (Grid) shape;
@@ -104,7 +128,10 @@ public class MoveSelector extends Command {
 		for (int i = 0; i < this.operationList.size(); i++) {
 			Operation operation = this.operationList.get(i);
 			if (operation.sign == 1) {
-				if (operation.object instanceof Shape) {
+				if (operation.object instanceof Selector) {
+					this.model.cache.selector = (Selector)operation.object;
+					this.selectorAddShape(this.model.document.getPage(),this.model.cache.selector);
+				} else if (operation.object instanceof Shape) {
 					Shape shape = (Shape)operation.object;
 					if(shape instanceof Grid) {
 						Grid grid = (Grid) shape;
