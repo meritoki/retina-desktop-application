@@ -41,21 +41,10 @@ public class MoveShape extends Command {
 	@Override // Command
 	public void execute() throws Exception {
 		logger.info("execute()");
-//    	this.user = this.document.cache.user;
-		// Variables
 		String pressedPageUUID = this.model.cache.pressedPageUUID;
 		String pressedShapeUUID = this.model.cache.pressedShapeUUID;
-		String pressedImageUUID = this.model.cache.pressedImageUUID;
-		String releasedImageUUID = this.model.cache.releasedImageUUID;
-
 		Page pressedPage = this.model.document.getPage(pressedPageUUID);
 		Shape pressedShape = this.model.document.getShape(pressedShapeUUID);
-		Image pressedImage = this.model.document.getImage(pressedImageUUID);
-		Image releasedImage = this.model.document.getImage(releasedImageUUID);
-//		Page pressedPage = this.model.document.getPage();
-//		Shape pressedShape = this.model.cache.pressedShape;
-//		Image pressedImage = this.model.cache.pressedImage;
-//		Image releasedImage = this.model.cache.releasedImage;
 		Point releasedPoint = this.model.cache.releasedPoint;
 		Point pressedPoint = this.model.cache.pressedPoint;
 		Shape undoShape = null;
@@ -73,33 +62,9 @@ public class MoveShape extends Command {
 		operation.id = UUID.randomUUID().toString();
 		// operation.uuid = this.document.cache.pressedShape.uuid;
 		this.operationList.push(operation);
+		Shape newShape = pressedPage.moveShape(pressedShape, pressedPoint, releasedPoint);
 		// Logic
-		Point movedPoint = this.getMovedPoint(new Point(releasedPoint), new Point(pressedPoint));
-		Shape newShape = null;
-		if (pressedPage.contains(releasedPoint)) {
-			if (releasedImage != null && !pressedImage.equals(releasedImage)) {
-				newShape = pressedShape;// new Shape(pressedShape,true);//uncommented to fix bug
-				newShape.position.move(movedPoint);
-				// Testing new logic
-				newShape.position = new Position(new Point(newShape.position.getStartPoint()),
-						new Point(newShape.position.getStopPoint()), releasedImage.position.relativeScale,
-						releasedImage.position.scale, releasedImage.position.offset, releasedImage.position.margin);
-				newShape = new Shape(newShape, true);
-				pressedImage.removeShape(newShape.uuid);
-				releasedImage.addShape(newShape);
-				if(newShape instanceof Grid) {
-					((Grid)newShape).updateMatrix();
-				}
-			} else {
-				pressedShape.position.move(movedPoint);
-				newShape = pressedShape;
-				if(newShape instanceof Grid) {
-					((Grid)newShape).updateMatrix();
-				}
-			}
-		} else {
-			throw new Exception("Release Point Invalid");
-		}
+
 		// Redo
 		if(newShape instanceof Grid) {
 			logger.info("execute() (newShape instanceof Grid)");
@@ -172,3 +137,30 @@ public class MoveShape extends Command {
 //	Position p = this.document.cache.pressedShape.position;
 //	shape.position = new Position(p.absolutePoint,p.absoluteDimension,p.addScale,i.position.offset,i.position.margin);
 }
+
+//Point movedPoint = this.getMovedPoint(new Point(releasedPoint), new Point(pressedPoint));
+//Shape newShape = null;
+//if (pressedPage.contains(releasedPoint)) {
+//	if (releasedImage != null && !pressedImage.equals(releasedImage)) {
+//		newShape = pressedShape;// new Shape(pressedShape,true);//uncommented to fix bug
+//		newShape.position.move(movedPoint);
+//		// Testing new logic
+//		newShape.position = new Position(new Point(newShape.position.getStartPoint()),
+//				new Point(newShape.position.getStopPoint()), releasedImage.position.relativeScale,
+//				releasedImage.position.scale, releasedImage.position.offset, releasedImage.position.margin);
+//		newShape = new Shape(newShape, true);
+//		pressedImage.removeShape(newShape.uuid);
+//		releasedImage.addShape(newShape);
+//		if(newShape instanceof Grid) {
+//			((Grid)newShape).updateMatrix();
+//		}
+//	} else {
+//		pressedShape.position.move(movedPoint);
+//		newShape = pressedShape;
+//		if(newShape instanceof Grid) {
+//			((Grid)newShape).updateMatrix();
+//		}
+//	}
+//} else {
+//	throw new Exception("Release Point Invalid");
+//}

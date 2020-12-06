@@ -24,6 +24,7 @@ import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Selection;
+import com.meritoki.app.desktop.retina.model.document.Selector;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.ShapeType;
 import com.meritoki.app.desktop.retina.model.document.user.User;
@@ -34,6 +35,8 @@ import com.meritoki.library.cortex.model.cortex.Cortex;
 public class Cache {
 	@JsonProperty
 	public User user = null;
+	@JsonProperty
+	public Selector selector = null;
 	@JsonProperty
 	public Selection selection = null;
 	@JsonProperty

@@ -22,7 +22,7 @@ public class DocumentAddShapeMoveShapeTest {
 	static Logger logger = LogManager.getLogger(DocumentAddShapeMoveShapeShiftImageTest.class.getName());
 	static Model model = new Model();
 	static int dimension = 2;
-	static int limit = 10000;
+	static int limit =   16384;
 
 	@BeforeAll
 	public static void initialize() {
@@ -64,8 +64,8 @@ public class DocumentAddShapeMoveShapeTest {
 		assertEquals(model.document.setIndex(0), true);
 		model.document.getPage().getBufferedImage(model);
 		Page page = model.document.getPage();
-		model.system.pressedImage = model.document.getImage();
-		model.system.releasedImage = model.document.getImage();
+//		model.system.pressedImage = model.document.getImage();
+//		model.system.releasedImage = model.document.getImage();
 		Position position = page.position;
 		Point startPoint = new Point(model.system.pressedImage.position.center.x, model.system.pressedImage.position.center.y);
 		Point previousPoint = startPoint;
@@ -76,13 +76,16 @@ public class DocumentAddShapeMoveShapeTest {
 			model.cache.pressedPoint = previousPoint;
 			model.system.pressedShape = model.document.getPage().getShape(model.cache.pressedPoint);
 			model.cache.releasedPoint = newPoint;
+//			model.system.pressedImage = model.document.getImage(model.cache.pressedPoint);
+//			model.system.releasedImage = model.document.getImage(model.cache.releasedPoint);
 			try {
 				model.cache.pressedPageUUID = model.document.getPage().uuid;
 				model.cache.pressedShapeUUID = model.system.pressedShape.uuid;
-				model.cache.pressedImageUUID = model.system.pressedImage.uuid;
-				model.cache.releasedImageUUID = model.system.releasedImage.uuid;
+//				model.cache.pressedImageUUID = model.system.pressedImage.uuid;
+//				model.cache.releasedImageUUID = model.system.releasedImage.uuid;
 				model.pattern.execute("moveShape");
 			} catch (Exception e) {
+				e.printStackTrace();
 				logger.error("Exception " + e.getMessage());
 			}
 			assertNotNull(model.document.getPage().getShape(newPoint));
@@ -96,16 +99,21 @@ public class DocumentAddShapeMoveShapeTest {
 	public void undo() {
 		int count = limit;
 		while(count > 0) {
+			try {
 			model.pattern.undo();
 			count--;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 		}
 		assertNotNull(model.document.getShape(new Point(model.system.pressedImage.position.center.x, model.system.pressedImage.position.center.y)));
 	}
 	
 	public static Point getRandomPoint(Position position) {
 		Point point = new Point();
-		point.x = ThreadLocalRandom.current().nextInt(0, (int)(position.dimension.width) + 1);
-		point.y = ThreadLocalRandom.current().nextInt(0, (int)(position.dimension.height) + 1);
+		point.x = ThreadLocalRandom.current().nextInt(0, (int)(position.dimension.width));
+		point.y = ThreadLocalRandom.current().nextInt(0, (int)(position.dimension.height));
 		return point;
 	}
 }

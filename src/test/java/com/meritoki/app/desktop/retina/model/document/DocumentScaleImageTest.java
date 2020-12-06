@@ -75,6 +75,7 @@ public class DocumentScaleImageTest {
 	@Order(2)
 	public void undo() {
 		//scale down
+		try {
 		model.pattern.undo();
 		model.pattern.undo();
 		model.pattern.undo();
@@ -89,5 +90,8 @@ public class DocumentScaleImageTest {
 		logger.info(model.system.pressedImage);
 		assertEquals(origin.width,model.system.pressedImage.position.dimension.width);
 		assertEquals(origin.height,model.system.pressedImage.position.dimension.height);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

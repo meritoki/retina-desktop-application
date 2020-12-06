@@ -97,6 +97,7 @@ public class DocumentSetPageTest {
 	@Test
 	@Order(2)
 	public void undo() {
+		try {
 		assertEquals(model.document.getPage().uuid,pageTwo.uuid);
 		model.pattern.undo();
 		assertEquals(model.document.getPage().uuid,pageOne.uuid);
@@ -109,12 +110,15 @@ public class DocumentSetPageTest {
 		model.pattern.undo();
 		assertEquals(model.document.getPage().uuid,pageZero.uuid);
 		model.pattern.undo();
-		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Test
 	@Order(3)
 	public void redo() {
+		try {
 		model.pattern.redo();
 		assertEquals(model.document.getPage().uuid,pageZero.uuid);
 		model.pattern.redo();
@@ -127,5 +131,8 @@ public class DocumentSetPageTest {
 		assertEquals(model.document.getPage().uuid,pageOne.uuid);
 		model.pattern.redo();
 		assertEquals(model.document.getPage().uuid,pageTwo.uuid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

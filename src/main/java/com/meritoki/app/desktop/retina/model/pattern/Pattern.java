@@ -26,6 +26,7 @@ import com.meritoki.app.desktop.retina.controller.client.ClientController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.command.AddGrid;
 import com.meritoki.app.desktop.retina.model.command.AddPage;
+import com.meritoki.app.desktop.retina.model.command.AddSelector;
 import com.meritoki.app.desktop.retina.model.command.AddShape;
 import com.meritoki.app.desktop.retina.model.command.Command;
 import com.meritoki.app.desktop.retina.model.command.MoveShape;
@@ -72,16 +73,20 @@ public class Pattern {
 	public Command getCommand(String name) throws Exception {
 		Command command = null;
 		switch(name) {
-		case "addShape": {
-			command = new AddShape(this.model);
-			break;
-		}
 		case "addPage": {
 			command = new AddPage(this.model);
 			break;
 		}
+		case "addShape": {
+			command = new AddShape(this.model);
+			break;
+		}
 		case "addGrid": {
 			command = new AddGrid(this.model);
+			break;
+		}
+		case "addSelector": {
+			command = new AddSelector(this.model);
 			break;
 		}
 		case "setPage": {

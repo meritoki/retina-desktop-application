@@ -120,14 +120,23 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 					}
 
 				}
-				List<Shape> shapeList = page.getSortedShapeList();// this.getMatrix().getShapeList();
+				if (this.model.cache.selector != null) {
+					graphics2D.setColor(Color.PINK);
+					Position position = this.model.cache.selector.position;
+					Rectangle2D.Double rectangle = new Rectangle2D.Double(position.point.x, position.point.y,
+							position.dimension.width, position.dimension.height);
+					graphics2D.draw(rectangle);
+				}
+				List<Shape> shapeList = page.getSortedShapeList();
 				Shape shape = page.getShape();
 				Shape gridShape = page.getGridShape();
 				Shape previousShape = null;
 				if (shapeList != null) {
 					for (Shape s : shapeList) {
 						Position position = s.position;
-						if (shape != null && s.uuid.equals(shape.uuid)) {
+						if (s.selected) {
+							graphics2D.setColor(Color.GREEN);
+						} else if (shape != null && s.uuid.equals(shape.uuid)) {
 							graphics2D.setColor(Color.RED);
 						} else {
 							graphics2D.setColor(Color.BLUE);
@@ -230,80 +239,96 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 	@Override
 	public void mouseReleased(MouseEvent me) {
 		this.model.system.releasedPoint = new Point(me.getX(), me.getY());
-		if (this.model.system.pressedPoint.equals(this.model.system.releasedPoint)) {
-			if (this.model.system.pressedShape != null) {
+		switch (this.model.system.tool) {
+		case SELECT: {
+			if (this.model.system.pressedPoint.equals(this.model.system.releasedPoint)) {
+				this.model.cache.selector = null;
+				if (this.model.system.pressedShape != null) {
+					try {
+						this.model.cache.shapeUUID = this.model.document.getShape().uuid;
+						this.model.cache.pressedShapeUUID = this.model.system.pressedShape.uuid;
+						this.model.pattern.execute("setShape");
+					} catch (NullPointerException e) {
+						e.printStackTrace();
+					} catch (Exception e) {
+						JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			} else {
 				try {
-					this.model.cache.shapeUUID = this.model.document.getShape().uuid;
-					this.model.cache.pressedShapeUUID = this.model.system.pressedShape.uuid;
-					this.model.pattern.execute("setShape");
+					this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+					this.model.cache.pressedImageUUID = this.model.system.pressedImage.uuid;
+					this.model.cache.pressedPoint = this.model.system.pressedPoint;
+					this.model.cache.releasedPoint = this.model.system.releasedPoint;
+					this.model.pattern.execute("addSelector");
 				} catch (NullPointerException e) {
 					e.printStackTrace();
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
-		} else {
-			Page page = this.model.document.getPage();
-			if (page != null) {
-				if (this.model.system.tool == Tool.SELECT) {
-
-				} else {
-					if (this.model.system.pressedShape != null) {
-						this.model.system.selection = page.intersectShape(this.model.system.pressedPoint);
-						if (this.model.system.selection != null) {
-							if (this.model.system.tool == Tool.RESIZE) {
-								try {
-									this.model.cache.selection = this.model.system.selection;
-									this.model.cache.pressedShapeUUID = this.model.system.pressedShape.uuid;
-									this.model.cache.releasedPoint = this.model.system.releasedPoint;
-									this.model.pattern.execute("resizeShape");
-								} catch (NullPointerException e) {
-									e.printStackTrace();
-								} catch (Exception e) {
-									JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
-											JOptionPane.ERROR_MESSAGE);
-								}
-							}
-						} else {
-							if (this.model.system.tool == Tool.MOVE) {
-								this.model.system.releasedImage = this.model.document
-										.getImage(this.model.system.releasedPoint);
-								try {
-									this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
-									this.model.cache.pressedShapeUUID = this.model.system.pressedShape.uuid;
-									this.model.cache.pressedImageUUID = this.model.system.pressedImage.uuid;
-									this.model.cache.releasedImageUUID = this.model.system.releasedImage.uuid;
-									this.model.cache.pressedPoint = this.model.system.pressedPoint;
-									this.model.cache.releasedPoint = this.model.system.releasedPoint;
-									this.model.pattern.execute("moveShape");
-								} catch (NullPointerException e) {
-									e.printStackTrace();
-								} catch (Exception e) {
-									JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
-											JOptionPane.ERROR_MESSAGE);
-								}
-							}
-						}
-					} else {
-						if (this.model.system.tool == Tool.DRAW) {
-							try {
-								this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
-								this.model.cache.pressedImageUUID = this.model.system.pressedImage.uuid;
-								this.model.cache.pressedPoint = this.model.system.pressedPoint;
-								this.model.cache.releasedPoint = this.model.system.releasedPoint;
-								this.model.pattern.execute("addShape");
-							} catch (NullPointerException e) {
-								e.printStackTrace();
-							} catch (Exception e) {
-								JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
-										JOptionPane.ERROR_MESSAGE);
-							}
+			break;
+		}
+		case RESIZE: {
+			if (this.model.system.pressedShape != null) {
+				this.model.system.selection = this.model.document.getPage()
+						.intersectShape(this.model.system.pressedPoint);
+				if (this.model.system.selection != null) {
+					if (this.model.system.tool == Tool.RESIZE) {
+						try {
+							this.model.cache.selection = this.model.system.selection;
+							this.model.cache.pressedShapeUUID = this.model.system.pressedShape.uuid;
+							this.model.cache.releasedPoint = this.model.system.releasedPoint;
+							this.model.pattern.execute("resizeShape");
+						} catch (NullPointerException e) {
+							e.printStackTrace();
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+									JOptionPane.ERROR_MESSAGE);
 						}
 					}
 				}
 			}
+			break;
+		}
+		case MOVE: {
+			if (this.model.cache.selector != null) {
+				logger.info("Moving Selector");
+			} else {
+				this.model.system.releasedImage = this.model.document.getImage(this.model.system.releasedPoint);
+				try {
+					this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+					this.model.cache.pressedShapeUUID = this.model.system.pressedShape.uuid;
+					this.model.cache.pressedImageUUID = this.model.system.pressedImage.uuid;
+					this.model.cache.releasedImageUUID = this.model.system.releasedImage.uuid;
+					this.model.cache.pressedPoint = this.model.system.pressedPoint;
+					this.model.cache.releasedPoint = this.model.system.releasedPoint;
+					this.model.pattern.execute("moveShape");
+				} catch (NullPointerException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			break;
+		}
+		case DRAW: {
+			try {
+				this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+				this.model.cache.pressedImageUUID = this.model.system.pressedImage.uuid;
+				this.model.cache.pressedPoint = this.model.system.pressedPoint;
+				this.model.cache.releasedPoint = this.model.system.releasedPoint;
+				this.model.pattern.execute("addShape");
+			} catch (NullPointerException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			}
+
+		}
 		}
 		this.mainFrame.init();
+
 	}
 
 	@Override

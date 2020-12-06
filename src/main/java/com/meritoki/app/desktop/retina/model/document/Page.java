@@ -115,6 +115,46 @@ public class Page {
 		this.position = new Position(page.position);
 	}
 
+	public Shape moveShape(Shape pressedShape, Point pressedPoint, Point releasedPoint) throws Exception {
+		Point movedPoint = this.getMovedPoint(new Point(releasedPoint), new Point(pressedPoint));
+		Shape newShape = null;
+		if (this.contains(pressedPoint) && this.contains(releasedPoint)) {
+			Image pressedImage = this.getImage(pressedPoint);
+			Image releasedImage = this.getImage(releasedPoint);
+			if (pressedImage != null && releasedImage != null) {
+				if (!pressedImage.equals(releasedImage)) {
+					newShape = pressedShape;
+					newShape.position.move(movedPoint);
+					// Testing new logic
+					newShape.position = new Position(new Point(newShape.position.getStartPoint()),
+							new Point(newShape.position.getStopPoint()), releasedImage.position.relativeScale,
+							releasedImage.position.scale, releasedImage.position.offset, releasedImage.position.margin);
+					newShape = new Shape(newShape, true);
+					pressedImage.removeShape(newShape.uuid);
+					releasedImage.addShape(newShape);
+					if (newShape instanceof Grid) {
+						((Grid) newShape).updateMatrix();
+					}
+				} else {
+					pressedShape.position.move(movedPoint);
+					newShape = pressedShape;
+					if (newShape instanceof Grid) {
+						((Grid) newShape).updateMatrix();
+					}
+				}
+			} else {
+				throw new Exception("Image Null");
+			}
+		} else {
+			throw new Exception("Point Not In Bounds");
+		}
+		return newShape;
+	}
+
+	public Point getMovedPoint(Point a, Point b) {
+		return new Point(a.x - b.x, a.y - b.y);
+	}
+
 	/**
 	 * Function gets the current index.
 	 *
@@ -277,7 +317,11 @@ public class Page {
 	@JsonIgnore
 	public BufferedImage getScaledBufferedImage(Model model) {
 		BufferedImage before = this.getBufferedImage(model);
-		BufferedImage after = new BufferedImage((int)this.position.dimension.width, (int)this.position.dimension.height, BufferedImage.TYPE_INT_RGB);//new BufferedImage(before.getWidth(), before.getHeight(), BufferedImage.TYPE_INT_RGB);
+		BufferedImage after = new BufferedImage((int) this.position.dimension.width,
+				(int) this.position.dimension.height, BufferedImage.TYPE_INT_RGB);// new
+																					// BufferedImage(before.getWidth(),
+																					// before.getHeight(),
+																					// BufferedImage.TYPE_INT_RGB);
 		AffineTransform affineTransform = new AffineTransform();
 		affineTransform.scale(this.position.scale, this.position.scale);// this handles scaling the bufferedImage
 		AffineTransformOp affineTransformOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);

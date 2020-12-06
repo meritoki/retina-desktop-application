@@ -120,6 +120,9 @@ public class Position {
 	}
 	
 	public boolean containsPosition(Position position) {
+//		if(this.point.x <= position.point.x && this.point.y <= position.point.y) {
+//			return
+//		}
 		return true;
 	}
 

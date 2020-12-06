@@ -145,6 +145,7 @@ public class DocumentExecuteScriptTest {
 	@Test
 	@Order(4)
 	public void undo() {
+		try {
 		model.pattern.undo();
 		assertEquals(model.document.pageList.size(),4);
 		assertEquals(model.document.setIndex(0), true);
@@ -162,5 +163,8 @@ public class DocumentExecuteScriptTest {
 		assertEquals(model.document.setIndex(3), true);
 		System.out.println(model.document.getPage().uuid);
 		assertEquals(model.document.getPage().uuid,pageThreeUUID);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
