@@ -55,4 +55,31 @@ public class RemovePage extends Command {
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);
 	}
+	
+	@Override
+	public void undo() throws Exception {
+		for(Operation o: this.operationList) {
+			if(o.sign == 0) {
+				if(o.object instanceof Object[]) {
+					Object[] objectArray = (Object[])o.object;
+					int index = (int)objectArray[0];
+					Page image = (Page)objectArray[1];
+					this.model.document.pageList.add(index, image);
+				}
+			}
+		}
+		
+	}
+
+	@Override
+	public void redo() throws Exception {
+		for(Operation o: this.operationList) {
+			if(o.sign == 1) {
+				if(o.object instanceof String) {
+					this.model.document.removePage((String)o.object);
+				}
+			}
+		}
+		
+	}
 }

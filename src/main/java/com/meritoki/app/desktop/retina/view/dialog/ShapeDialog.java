@@ -380,14 +380,26 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					switch (ke.getKeyCode()) {
 					case KeyEvent.VK_Z: {
 						logger.debug("keyPressed(e) KeyEvent.VK_Z");
-						model.pattern.undo();
-						mainFrame.init();
+						try {
+							model.pattern.undo();
+							mainFrame.init();
+						} catch (Exception e) {
+							e.printStackTrace();
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
 						break;
 					}
 					case KeyEvent.VK_Y: {
 						logger.debug("keyPressed(e) KeyEvent.VK_Y");
-						model.pattern.redo();
-						mainFrame.init();
+						try {
+							model.pattern.redo();
+							mainFrame.init();
+						} catch (Exception e) {
+							e.printStackTrace();
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
 						break;
 					}
 					}
@@ -482,14 +494,26 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					switch (ke.getKeyCode()) {
 					case KeyEvent.VK_Z: {
 						logger.debug("keyPressed(e) KeyEvent.VK_Z");
-						model.pattern.undo();
-						mainFrame.init();
+						try {
+							model.pattern.undo();
+							mainFrame.init();
+						} catch (Exception e) {
+							e.printStackTrace();
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
 						break;
 					}
 					case KeyEvent.VK_Y: {
 						logger.debug("keyPressed(e) KeyEvent.VK_Y");
-						model.pattern.redo();
-						mainFrame.init();
+						try {
+							model.pattern.redo();
+							mainFrame.init();
+						} catch (Exception e) {
+							e.printStackTrace();
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
 						break;
 					}
 					}
@@ -580,14 +604,26 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 			switch (ke.getKeyCode()) {
 			case KeyEvent.VK_Z: {
 				logger.debug("keyPressed(e) KeyEvent.VK_Z");
-				this.model.pattern.undo();
-				this.mainFrame.init();
+				try {
+					model.pattern.undo();
+					mainFrame.init();
+				} catch (Exception e) {
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
 				break;
 			}
 			case KeyEvent.VK_Y: {
 				logger.debug("keyPressed(e) KeyEvent.VK_Y");
-				this.model.pattern.redo();
-				this.mainFrame.init();
+				try {
+					model.pattern.redo();
+					mainFrame.init();
+				} catch (Exception e) {
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+							JOptionPane.ERROR_MESSAGE);
+				}
 				break;
 			}
 			}

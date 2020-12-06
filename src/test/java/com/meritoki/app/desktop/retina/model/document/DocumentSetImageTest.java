@@ -72,22 +72,30 @@ public class DocumentSetImageTest {
 	@Test
 	@Order(2)
 	public void undo() {
+		try {
 		model.pattern.undo();
 		assertEquals(model.document.getImage().uuid, imageOne.uuid);
 		model.pattern.undo();
 		assertEquals(model.document.getImage().uuid, imageZero.uuid);
 		model.pattern.undo();
 		assertEquals(model.document.getImage().uuid, imageZero.uuid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Test
 	@Order(3)
 	public void redo() {
+		try {
 		model.pattern.redo();
 		assertEquals(model.document.getImage().uuid, imageZero.uuid);
 		model.pattern.redo();
 		assertEquals(model.document.getImage().uuid, imageOne.uuid);
 		model.pattern.redo();
 		assertEquals(model.document.getImage().uuid, imageTwo.uuid);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

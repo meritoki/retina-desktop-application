@@ -55,4 +55,26 @@ public class SetImage extends Command {
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);
 	}
+	
+	@Override
+	public void undo() throws Exception {
+		for(Operation o: this.operationList) {
+			if(o.sign == 0) {
+				if(o.object instanceof String) {
+					this.model.document.setImage((String)o.object);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void redo() throws Exception {
+		for(Operation o: this.operationList) {
+			if(o.sign == 1) {
+				if(o.object instanceof String) {
+					this.model.document.setImage((String)o.object);
+				}
+			}
+		}
+	}
 }

@@ -16,12 +16,7 @@
 package com.meritoki.app.desktop.retina.controller.node;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -29,6 +24,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageTree;
+import org.apache.pdfbox.rendering.ImageType;
+import org.apache.pdfbox.rendering.PDFRenderer;
 
 import com.meritoki.app.desktop.retina.model.document.Document;
 
@@ -101,15 +99,16 @@ public class NodeController extends com.meritoki.library.controller.node.NodeCon
 			if (pdf.exists()) {
 				System.out.println("Images copied to Folder: " + destinationFile.getName());
 				PDDocument pdfDocument = PDDocument.load(pdf);
-				List<PDPage> pdPageList = pdfDocument.getDocumentCatalog().getAllPages();
-				fileArray = new File[pdPageList.size()];
+				PDFRenderer pdfRenderer = new PDFRenderer(pdfDocument);
+				PDPageTree pdPageList = pdfDocument.getPages();
+				fileArray = new File[pdPageList.getCount()];
 				String fileName = pdf.getName().replace(".pdf", "");
-				int pageNumber = 1;
-				for (int i = 0; i < pdPageList.size(); i++) {
+				int pageNumber = 0;
+				for (int i = 0;i<pdPageList.getCount();i++) {
 					PDPage page = pdPageList.get(i);
-					File outputFile = new File(destinationDirectory + fileName + "_" + pageNumber + ".jpg");
+					File outputFile = new File(destinationDirectory + File.separatorChar+fileName + "_" + pageNumber + ".jpg");
 					if (!outputFile.exists()) {
-						BufferedImage image = page.convertToImage(BufferedImage.TYPE_INT_RGB, 300);
+						BufferedImage image = pdfRenderer.renderImageWithDPI(pageNumber, 300, ImageType.RGB);
 						System.out.println("Image Created -> " + outputFile.getName());
 						ImageIO.write(image, "jpg", outputFile);
 					}
@@ -127,6 +126,4 @@ public class NodeController extends com.meritoki.library.controller.node.NodeCon
 		}
 		return fileArray;
 	}
-
-
 }

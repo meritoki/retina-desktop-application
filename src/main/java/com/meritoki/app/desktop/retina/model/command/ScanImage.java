@@ -54,4 +54,16 @@ public class ScanImage extends Command {
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);
 	}
+	
+	@Override
+	public void undo() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void redo() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 }

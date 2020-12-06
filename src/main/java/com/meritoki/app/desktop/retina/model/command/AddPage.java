@@ -17,6 +17,7 @@ package com.meritoki.app.desktop.retina.model.command;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
@@ -33,8 +34,8 @@ public class AddPage extends Command {
 	
 	private static Logger logger = LogManager.getLogger(AddPage.class.getName());
 	
-	public AddPage(Model document) {
-		super(document, "addPage");
+	public AddPage(Model model) {
+		super(model, "addPage");
 	}
 	
     @Override
@@ -86,4 +87,28 @@ public class AddPage extends Command {
     	operation.sign = 1;
     	this.operationList.push(operation);
     }
+    
+	@Override
+	public void undo() throws Exception {
+		for (int i = 0; i < this.operationList.size(); i++) {
+			Operation operation = this.operationList.get(i);
+			if (operation.sign == 0) {
+				if (operation.object instanceof List) {
+					this.model.document.pageList = (List<Page>)operation.object;
+				}
+			}
+		}
+	}
+
+	@Override
+	public void redo() throws Exception {
+		for (int i = 0; i < this.operationList.size(); i++) {
+			Operation operation = this.operationList.get(i);
+			if (operation.sign == 1) {
+				if (operation.object instanceof List) {
+					this.model.document.pageList = (List<Page>)operation.object;
+				}
+			}
+		}
+	}
 }

@@ -70,4 +70,31 @@ public class AddGrid extends Command {
 			throw new Exception("row and column less than or equal to 1");
 		}
 	}
+	
+	@Override
+	public void undo() throws Exception {
+		for(Operation o: this.operationList) {
+			if(o.sign == 0) {
+				if(o.object instanceof Shape) {
+					Shape shape = (Shape)o.object;
+					this.model.document.getPage().removeShape(shape);
+					this.model.document.getPage().addShape(shape);
+				}
+			}
+		}
+		
+	}
+
+	@Override
+	public void redo() throws Exception {
+		for(Operation o: this.operationList) {
+			if(o.sign == 1) {
+				if(o.object instanceof Grid) {
+					Grid grid = (Grid)o.object;
+					this.model.document.getPage().removeShape(grid);
+					this.model.document.getPage().addShape(grid);
+				}
+			}
+		}
+	}
 }

@@ -46,4 +46,38 @@ public class RemoveShape extends Command {
 		//logic
 		this.model.document.getPage().removeShape(pressedShape);
     }
+    
+	@Override
+	public void undo() throws Exception {
+		for (int i = 0; i < this.operationList.size(); i++) {
+			Operation operation = this.operationList.get(i);
+			if (operation.sign == 1) {
+				if (operation.object instanceof Shape) {
+					this.model.document.getPage().removeShape((Shape) operation.object);
+				}
+			} else if (operation.sign == 0) {
+				if (operation.object instanceof Shape) {
+					this.model.document.getPage().getImage().addShape((Shape) operation.object);
+				}
+			}
+		}
+		
+	}
+
+	@Override
+	public void redo() throws Exception {
+		for (int i = 0; i < this.operationList.size(); i++) {
+			Operation operation = this.operationList.get(i);
+			if (operation.sign == 1) {
+				if (operation.object instanceof Shape) {
+					this.model.document.getPage().getImage().addShape((Shape) operation.object);
+				}
+			} else if (operation.sign == 0) {
+				if (operation.object instanceof Shape) {
+					this.model.document.getPage().getImage().removeShape((Shape) operation.object);
+				}
+			}
+		}
+		
+	}
 }

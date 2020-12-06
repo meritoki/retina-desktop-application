@@ -67,4 +67,27 @@ public class ScalePage extends Command {
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.add(operation);
     }
+    
+	@Override
+	public void undo() throws Exception {
+		for(Operation o: this.operationList) {
+			if(o.sign == 0) {
+				if(o.object instanceof Double) {
+					this.model.document.getPage().setScale((double)o.object);
+				}
+			}
+		}
+		
+	}
+
+	@Override
+	public void redo() throws Exception {
+		for(Operation o: this.operationList) {
+			if(o.sign == 1) {
+				if(o.object instanceof Double) {
+					this.model.document.getPage().setScale((double)o.object);
+				}
+			}
+		}
+	}
 }

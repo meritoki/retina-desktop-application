@@ -51,4 +51,32 @@ public class RemoveImage extends Command {
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);
 	}
+	
+	@Override
+	public void undo() throws Exception {
+		for(Operation o: this.operationList) {
+			if(o.sign == 0) {
+				if(o.object instanceof Object[]) {
+					Object[] objectArray = (Object[])o.object;
+					int index = (int)objectArray[0];
+					Image image = (Image)objectArray[1];
+					this.model.document.getPage().setBufferedImage(null);
+					this.model.document.getPage().imageList.add(index, image);
+				}
+			}
+		}
+		
+	}
+
+	@Override
+	public void redo() throws Exception {
+		for(Operation o: this.operationList) {
+			if(o.sign == 1) {
+				if(o.object instanceof String) {
+					this.model.document.getPage().setBufferedImage(null);
+					this.model.document.getPage().removeImage((String)o.object);
+				}
+			}
+		}
+	}
 }
