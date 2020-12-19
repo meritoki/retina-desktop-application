@@ -227,7 +227,9 @@ public final class MainFrame extends JFrame {
 					});
 					this.openRecentMenu.add(recentMenuItem);
 				} else {
-					this.model.resource.removeRecent(recent);
+					//this.model.resource.removeRecent(recent);
+					recentIterator.remove();
+					this.model.resource.save();
 				}
 			}
 		}
