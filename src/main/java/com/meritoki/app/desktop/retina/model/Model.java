@@ -99,13 +99,7 @@ public class Model {
 			Provider provider = entry.getValue();
 			provider.open();
 		}
-//		for (Provider provider : this.system.providerList) {
-//            if (provider instanceof Meritoki) {
-//                Meritoki meritoki = (Meritoki) provider;
-//                meritoki.open(this.document.uuid);
-////                meritoki.init();
-//            }
-//        }
+
 	}
 	
 	public void saveDocument(File file) {
@@ -152,7 +146,13 @@ public class Model {
 		this.system.initUsers();
 	}
 }
-
+//for (Provider provider : this.system.providerList) {
+//if (provider instanceof Meritoki) {
+//  Meritoki meritoki = (Meritoki) provider;
+//  meritoki.open(this.document.uuid);
+////  meritoki.init();
+//}
+//}
 //Meritoki meritoki = (Meritoki) this.system.providerMap.get("meritoki");
 //meritoki.setModel(this);
 //meritoki.open(this.document.uuid);

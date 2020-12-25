@@ -55,6 +55,7 @@ import com.meritoki.library.cortex.model.retina.*;
 public class Meritoki extends Provider {
 
 	private static final Logger logger = LogManager.getLogger(Meritoki.class.getName());
+	public boolean flag = true;
 	public Document document = new Document();
 	public File file;
 	private boolean visible = true;
