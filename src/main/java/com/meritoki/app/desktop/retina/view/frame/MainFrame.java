@@ -624,7 +624,8 @@ public final class MainFrame extends JFrame {
             .addComponent(mainTabbedPane)
         );
 
-        pack();
+//        pack();
+        setSize(1024,512);
     }// </editor-fold>//GEN-END:initComponents
 
     private void exportMeritokiMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportMeritokiMenuItemActionPerformed
