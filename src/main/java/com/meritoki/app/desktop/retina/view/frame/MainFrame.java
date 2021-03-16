@@ -46,6 +46,7 @@ import com.meritoki.app.desktop.retina.view.dialog.RecognitionDialog;
 import com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog;
 import com.meritoki.app.desktop.retina.view.dialog.ShapeDialog;
 import com.meritoki.app.desktop.retina.view.dialog.ShareDialog;
+import com.meritoki.app.desktop.retina.view.dialog.ToolDialog;
 import com.meritoki.app.desktop.retina.view.dialog.audio.AudioExportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.image.ImageImportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.meritoki.MeritokiExportDialog;
@@ -76,6 +77,7 @@ public final class MainFrame extends JFrame {
 	public SaveAsDialog saveAsDialog = null;
 	public PageDialog pageDialog = new PageDialog(this, false);
 	public ShapeDialog shapeDialog = new ShapeDialog(this, false);
+	public ToolDialog toolDialog = new ToolDialog(this,false);
 	public RecognitionDialog recognitionDialog = new RecognitionDialog(this, false);
 	public CommandDialog commandDialog = new CommandDialog(this, false);
 	public AttributionDialog attributionDialog = new AttributionDialog(this, false);
@@ -118,11 +120,11 @@ public final class MainFrame extends JFrame {
 	public void setModel(Model model) {
 		logger.debug("setModel(" + model + ")");
 		this.model = model;
-		
 		this.pagePanel.setModel(this.model);
 		this.matrixPanel.setModel(this.model);
 		this.tablePanel.setModel(this.model);
 		this.archivePanel.setModel(this.model);
+		this.toolDialog.setModel(this.model);
 		this.attributionDialog.setModel(this.model);
 		this.commandDialog.setModel(this.model);
 		this.pageDialog.setModel(this.model);
@@ -141,6 +143,7 @@ public final class MainFrame extends JFrame {
 		} else if (this.model.system.loginUser) {
 			this.loginDialog.setVisible(true);
 		}
+		this.toolDialog.setVisible(true);
 		this.shapeDialog.setVisible(true);
 		this.pageDialog.setVisible(true); 
 		if(this.model.system.machine) {
@@ -224,7 +227,9 @@ public final class MainFrame extends JFrame {
 					});
 					this.openRecentMenu.add(recentMenuItem);
 				} else {
-					this.model.resource.removeRecent(recent);
+					//this.model.resource.removeRecent(recent);
+					recentIterator.remove();
+					this.model.resource.save();
 				}
 			}
 		}
@@ -297,6 +302,7 @@ public final class MainFrame extends JFrame {
         resetMeritokiMenuItem = new javax.swing.JMenuItem();
         windowMenu = new javax.swing.JMenu();
         dialogMenu = new javax.swing.JMenu();
+        toolMenuItem = new javax.swing.JMenuItem();
         pageMenuItem = new javax.swing.JMenuItem();
         selectionMenuItem = new javax.swing.JMenuItem();
         commandMenuItem = new javax.swing.JMenuItem();
@@ -553,6 +559,14 @@ public final class MainFrame extends JFrame {
 
         dialogMenu.setText("Dialog");
 
+        toolMenuItem.setText("Tool");
+        toolMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toolMenuItemActionPerformed(evt);
+            }
+        });
+        dialogMenu.add(toolMenuItem);
+
         pageMenuItem.setText("Page");
         pageMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -610,7 +624,8 @@ public final class MainFrame extends JFrame {
             .addComponent(mainTabbedPane)
         );
 
-        pack();
+//        pack();
+        setSize(1024,512);
     }// </editor-fold>//GEN-END:initComponents
 
     private void exportMeritokiMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportMeritokiMenuItemActionPerformed
@@ -642,6 +657,10 @@ public final class MainFrame extends JFrame {
     private void controlMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_controlMenuItemActionPerformed
         this.controlDialog.setVisible(true);
     }//GEN-LAST:event_controlMenuItemActionPerformed
+
+    private void toolMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toolMenuItemActionPerformed
+        this.toolDialog.setVisible(true);
+    }//GEN-LAST:event_toolMenuItemActionPerformed
 
 	private void zooniverseCSVImportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_zooniverseCSVImportMenuItemActionPerformed
 		this.zooniverseCSVImportDialog = new com.meritoki.app.desktop.retina.view.dialog.zooniverse.ZooniverseCSVImportDialog(
@@ -747,11 +766,25 @@ public final class MainFrame extends JFrame {
 	}// GEN-LAST:event_loginMenuItemActionPerformed
 
 	private void undoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_undoMenuItemActionPerformed
-		this.model.pattern.undo();
+		try {
+			this.model.pattern.undo();
+			this.init();
+		} catch(Exception e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}// GEN-LAST:event_undoMenuItemActionPerformed
 
 	private void redoMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_redoMenuItemActionPerformed
-		this.model.pattern.redo();
+		try {
+			this.model.pattern.redo();
+			this.init();
+		} catch(Exception e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}// GEN-LAST:event_redoMenuItemActionPerformed
 
 	private void zooniverseImportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_zooniverseImportMenuItemActionPerformed
@@ -853,6 +886,7 @@ public final class MainFrame extends JFrame {
     private com.meritoki.app.desktop.retina.view.panel.TablePanel table1;
     private com.meritoki.app.desktop.retina.view.panel.TablePanel tablePanel;
     private javax.swing.JScrollPane tableScrollPane;
+    private javax.swing.JMenuItem toolMenuItem;
     private javax.swing.JMenuItem undoMenuItem;
     private javax.swing.JMenu windowMenu;
     private javax.swing.JMenuItem zooniverseCSVImportMenuItem;

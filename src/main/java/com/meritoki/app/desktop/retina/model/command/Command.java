@@ -51,4 +51,14 @@ public class Command implements CommandInterface {
 	public void reset() {
 		this.operationList = new LinkedList<>();
 	}
+
+	@Override
+	public void undo() throws Exception {
+		  throw new UnsupportedOperationException("Unsupported Operation");
+	}
+
+	@Override
+	public void redo() throws Exception {
+		throw new UnsupportedOperationException("Unsupported Operation");
+	}
 }

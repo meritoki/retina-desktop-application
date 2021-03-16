@@ -82,4 +82,34 @@ public class ScaleImage extends Command {
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);
     }
+    
+	@Override
+	public void undo() throws Exception {
+		for(Operation o: this.operationList) {
+			if(o.sign == 0) {
+				if(o.object instanceof Object[]) {
+					Object[] objectArray = (Object[])o.object;
+					this.model.document.setImage((String)objectArray[1]);
+					this.model.document.setPage((String)objectArray[2]);
+					this.model.document.getPage().setBufferedImage(null);
+					this.model.document.getImage().setBufferedImage(null);
+					this.model.document.getImage().setRelativeScale((double)objectArray[0]);							
+				}
+			}
+		}
+		
+	}
+
+	@Override
+	public void redo() throws Exception {
+		for(Operation o: this.operationList) {
+			if(o.sign == 1) {
+				if(o.object instanceof Double) {
+					this.model.document.getPage().setBufferedImage(null);
+					this.model.document.getImage().setBufferedImage(null);
+					this.model.document.getImage().setRelativeScale((double)o.object);
+				}
+			}
+		}
+	}
 }

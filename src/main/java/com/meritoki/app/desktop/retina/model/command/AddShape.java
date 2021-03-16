@@ -82,4 +82,38 @@ public class AddShape extends Command {
 		}
 		return flag;
 	}
+	
+	@Override
+	public void undo() throws Exception {
+		logger.info("undo()");
+		for (int i = 0; i < this.operationList.size(); i++) {
+			Operation operation = this.operationList.get(i);
+			if (operation.sign == 1) {
+				if (operation.object instanceof Shape) {
+					this.model.document.getPage().removeShape((Shape) operation.object);
+				}
+			} else if (operation.sign == 0) {
+				if (operation.object instanceof Shape) {
+					this.model.document.getPage().getImage().addShape((Shape) operation.object);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void redo() throws Exception {
+		for (int i = this.operationList.size() - 1; i >= 0; i--) {
+			Operation operation = this.operationList.get(i);
+			if (operation.sign == 1) {
+				if (operation.object instanceof Shape) {
+					this.model.document.getPage().getImage().addShape((Shape) operation.object);
+				}
+			} else if (operation.sign == 0) {
+				if (operation.object instanceof Shape) {
+					this.model.document.getPage().getImage().removeShape((Shape) operation.object);
+				}
+			}
+		}
+		
+	}
 }

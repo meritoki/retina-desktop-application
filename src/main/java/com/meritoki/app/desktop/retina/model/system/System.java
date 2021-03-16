@@ -37,6 +37,7 @@ import com.meritoki.app.desktop.retina.model.document.user.User;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Zooniverse;
+import com.meritoki.app.desktop.retina.model.tool.Tool;
 import com.meritoki.app.desktop.retina.model.vendor.Vendor;
 import com.meritoki.app.desktop.retina.model.vendor.microsoft.Microsoft;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
@@ -48,7 +49,7 @@ public class System {
 	@JsonProperty
 	public Map<String,Provider> providerMap = new HashMap<>();
 	@JsonProperty
-	public List<Provider> providerList = new ArrayList<>();
+	public Tool tool = null;
 	@JsonProperty
 	public List<Vendor> vendorList = new ArrayList<>();
 	@JsonIgnore
@@ -140,9 +141,10 @@ public class System {
 	}
 	
 	public void initProviders() {
-		this.providerList.add(new Zooniverse());
-//		this.providerList.add(new Meritoki());
-//		this.providerMap.put("meritoki", new Meritoki());
+//		this.providerList.add(new Zooniverse());
+		this.providerMap.put("zooniverse", new Zooniverse());
+		if(this.machine)
+			this.providerMap.put("meritoki", new Meritoki());
 	}
 	
 	public void initVendors() {

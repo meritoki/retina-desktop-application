@@ -109,6 +109,7 @@ public class DocumentAddShapeScalePageTest {
 	@Order(4)
 	public void undo() {
 		//scale down
+		try {
 		model.pattern.undo();
 		model.pattern.undo();
 		model.pattern.undo();
@@ -123,5 +124,8 @@ public class DocumentAddShapeScalePageTest {
 		//undo add shape
 		model.pattern.undo();
 		assertEquals(model.document.getShapeList().size(),0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

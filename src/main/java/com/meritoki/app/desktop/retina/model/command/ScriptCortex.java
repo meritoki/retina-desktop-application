@@ -37,6 +37,18 @@ public class ScriptCortex extends Command {
 		this.operationList = (LinkedList<Operation>) this.getOperationList(this.model.cache.cortex,
 				this.model.cache.conceptScript);
 	}
+	
+	@Override
+	public void undo() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void redo() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 
 	/**
 	 * SWAP 1-2:3-4 INTERLACE 1-2:3-4 INSERT 1-2:3-4 SHEET even:odd | SHEET odd:even

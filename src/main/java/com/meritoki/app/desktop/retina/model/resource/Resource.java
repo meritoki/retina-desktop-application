@@ -76,6 +76,10 @@ public class Resource {
 			NodeController.saveCsv(NodeController.getResourceCache(), "recent.csv", this.recentList);
 		}
 	}
+	
+	public void save() {
+		NodeController.saveCsv(NodeController.getResourceCache(), "recent.csv", this.recentList);
+	}
 
 	public void initRecentList() {
 		File file = new File(NodeController.getResourceCache() + NodeController.getSeperator() + "recent.csv");
