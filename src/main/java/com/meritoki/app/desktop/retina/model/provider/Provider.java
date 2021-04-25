@@ -30,6 +30,10 @@ public class Provider {
 		
 	}
 	
+	public boolean isAvailable() throws Exception{
+		return true;
+	}
+	
 	public void save() {
 		
 	}

@@ -46,6 +46,23 @@ public class Zooniverse extends Provider {
 	public Zooniverse() {
 		super("zooniverse");
 	}
+	
+	@JsonIgnore
+	public boolean isAvailable() throws Exception {
+		logger.info("isAvailable()");
+		String command = null;
+		if (NodeController.isLinux()) {
+			command = "panoptes";
+		} else if (NodeController.isWindows()) {
+			command = "set PYTHONIOENCODING=utf-8 && panoptes";
+		}
+		Exit exit = NodeController.executeCommand(command, 1440);
+		if (exit.value != 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 
 	public Credential getCredential() {
 		return credential;

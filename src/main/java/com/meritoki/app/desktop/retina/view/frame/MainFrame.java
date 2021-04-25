@@ -213,6 +213,18 @@ public final class MainFrame extends JFrame {
 				this.exportMenu.remove(this.exportMeritokiMenuItem);
 				this.importMenu.remove(this.importMeritokiMenuItem);
 			}
+			Provider zooniverse = this.model.system.providerMap.get("zooniverse");
+			if(zooniverse != null) {
+			try {
+				if(!zooniverse.isAvailable()) {
+					this.exportMenu.remove(this.zooniverseExportMenuItem);
+					this.importMenu.remove(this.zooniverseImportMenuItem);
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			}
 			this.fileMenu.remove(this.connectMenuItem);
 			List<String> recentList = this.model.resource.recentList;
 			this.openRecentMenu.removeAll();
