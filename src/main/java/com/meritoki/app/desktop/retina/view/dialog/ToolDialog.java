@@ -5,6 +5,10 @@
  */
 package com.meritoki.app.desktop.retina.view.dialog;
 
+import java.awt.Color;
+
+import javax.swing.JButton;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,6 +50,47 @@ public class ToolDialog extends javax.swing.JDialog {
     
 	public void setModel(Model model) {
 		this.model = model;
+	}
+	
+	public void init() {
+		this.initButton();
+	}
+	
+	public void initButton() {
+		Tool tool = this.model.system.tool;
+		if(tool != null) {
+			JButton defaultButton = new JButton();
+			switch(tool) {
+			case DRAW:{
+				this.drawButton.setBackground(Color.GREEN);
+				this.selectButton.setBackground(defaultButton.getBackground());
+				this.moveButton.setBackground(defaultButton.getBackground());
+				this.resizeButton.setBackground(defaultButton.getBackground());
+				break;
+			}
+			case SELECT: {
+				this.drawButton.setBackground(defaultButton.getBackground());
+				this.selectButton.setBackground(Color.GREEN);
+				this.moveButton.setBackground(defaultButton.getBackground());
+				this.resizeButton.setBackground(defaultButton.getBackground());
+				break;
+			}
+			case MOVE: {
+				this.drawButton.setBackground(defaultButton.getBackground());
+				this.selectButton.setBackground(defaultButton.getBackground());
+				this.moveButton.setBackground(Color.GREEN);
+				this.resizeButton.setBackground(defaultButton.getBackground());
+				break;
+			}
+			case RESIZE: {
+				this.drawButton.setBackground(defaultButton.getBackground());
+				this.selectButton.setBackground(defaultButton.getBackground());
+				this.moveButton.setBackground(defaultButton.getBackground());
+				this.resizeButton.setBackground(Color.GREEN);
+				break;
+			}
+			}
+		}
 	}
 
     /**
@@ -124,18 +169,22 @@ public class ToolDialog extends javax.swing.JDialog {
 
     private void drawButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drawButtonActionPerformed
         this.model.system.tool = Tool.DRAW;
+        this.init();
     }//GEN-LAST:event_drawButtonActionPerformed
 
     private void selectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectButtonActionPerformed
         this.model.system.tool = Tool.SELECT;
+        this.init();
     }//GEN-LAST:event_selectButtonActionPerformed
 
     private void moveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moveButtonActionPerformed
     	this.model.system.tool = Tool.MOVE;
+    	this.init();
     }//GEN-LAST:event_moveButtonActionPerformed
 
     private void resizeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resizeButtonActionPerformed
         this.model.system.tool = Tool.RESIZE;
+        this.init();
     }//GEN-LAST:event_resizeButtonActionPerformed
 
     /**

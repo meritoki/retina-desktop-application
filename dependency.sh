@@ -1,7 +1,7 @@
 sudo apt-get update
 sudo apt-get -y install python
 sudo apt-get install -y curl
-curl https://bootstrap.pypa.io/get-pip.py --output get-pip.py
+curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
 sudo python get-pip.py
 #sudo apt install -y python-pip
 sudo apt-get install libpython-dev

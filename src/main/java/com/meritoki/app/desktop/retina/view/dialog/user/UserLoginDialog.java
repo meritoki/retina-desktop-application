@@ -104,7 +104,7 @@ public class UserLoginDialog extends javax.swing.JDialog {
             }
         });
 
-        registerButton.setText("Regsiter");
+        registerButton.setText("Register");
         registerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 registerButtonActionPerformed(evt);
