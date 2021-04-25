@@ -150,6 +150,7 @@ public class Pattern {
 		}
 		case "removeShape": {
 			command = new RemoveShape(this.model);
+			break;
 		}
 		case "executeScript": {
 			command = new ScriptPage(this.model);

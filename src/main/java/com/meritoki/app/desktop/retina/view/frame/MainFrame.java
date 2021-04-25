@@ -169,6 +169,7 @@ public final class MainFrame extends JFrame {
 		this.machinePanel.init();
 		this.pageDialog.init();
 		this.shapeDialog.init();
+		this.toolDialog.init();
 		this.commandDialog.init();
 		this.attributionDialog.init();
 		if(this.model.system.machine)

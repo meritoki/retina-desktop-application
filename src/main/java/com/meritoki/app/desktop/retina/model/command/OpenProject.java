@@ -20,7 +20,9 @@ public class OpenProject extends Command {
 	public void execute() throws Exception {
 		String fileName = this.model.cache.fileArray[0];
 		File file = new File(fileName);
-		System.out.println(file);
+		if(!fileName.contains(".ret")) {
+			throw new Exception("Not a Retina Project File (.ret)");
+		}
 		ZipFile zipFile = new ZipFile(fileName);
 	    Enumeration<? extends ZipEntry> entries = zipFile.entries();
 	    InputStream is;
@@ -36,11 +38,6 @@ public class OpenProject extends Command {
 	        	Files.copy(zipFile.getInputStream(documentEntry), Paths.get(documentJSON));
 		    	this.model.openDocument(new File(documentJSON));
 	        } 
-//	        else {
-//	        	if(documentUUID != null) {
-//	        		Files.copy(is, Paths.get(NodeController.getDocumentCache(documentUUID)+File.separatorChar+entryName));
-//	        	}
-//	        }
 	    }
 	    entries = zipFile.entries();
 	    while(entries.hasMoreElements()){

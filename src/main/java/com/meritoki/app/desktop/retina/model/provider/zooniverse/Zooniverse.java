@@ -51,7 +51,7 @@ public class Zooniverse extends Provider {
 	public boolean isAvailable() throws Exception {
 		logger.info("isAvailable()");
 		String command = null;
-		if (NodeController.isLinux()) {
+		if (NodeController.isLinux() || NodeController.isMac()) {
 			command = "panoptes";
 		} else if (NodeController.isWindows()) {
 			command = "set PYTHONIOENCODING=utf-8 && panoptes";
