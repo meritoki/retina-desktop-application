@@ -99,7 +99,6 @@ public class Model {
 			Provider provider = entry.getValue();
 			provider.open();
 		}
-
 	}
 	
 	public void saveDocument(File file) {

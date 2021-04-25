@@ -430,287 +430,287 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
 	@SuppressWarnings("unchecked")
 	// <editor-fold defaultstate="collapsed" desc="Generated
 	// <editor-fold defaultstate="collapsed" desc="Generated
-	// Code">//GEN-BEGIN:initComponents
-	private void initComponents() {
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
-		uuidLabel = new javax.swing.JLabel();
-		pageUUIDValueLabel = new javax.swing.JLabel();
-		pageIndexLabel = new javax.swing.JLabel();
-		pageIndexValueLabel = new javax.swing.JLabel();
-		imageListScrollPane = new javax.swing.JScrollPane();
-		pageList = new javax.swing.JList();
-		imageScriptScrollPane = new javax.swing.JScrollPane();
-		pageScriptTextArea = new javax.swing.JTextArea();
-		executeImageScriptButton = new javax.swing.JButton();
-		jLabel1 = new javax.swing.JLabel();
-		jLabel2 = new javax.swing.JLabel();
-		pageListSizeValueLabel = new javax.swing.JLabel();
-		jLabel3 = new javax.swing.JLabel();
-		removePageButton = new javax.swing.JButton();
-		removeScriptButton = new javax.swing.JButton();
-		jScrollPane1 = new javax.swing.JScrollPane();
-		imageList = new javax.swing.JList<>();
-		imageListLabel = new javax.swing.JLabel();
-		removeImageButton = new javax.swing.JButton();
-		jSeparator2 = new javax.swing.JSeparator();
-		imageIndexLabel = new javax.swing.JLabel();
-		jSeparator3 = new javax.swing.JSeparator();
-		imageUUIDLabel = new javax.swing.JLabel();
-		imageNameLabel = new javax.swing.JLabel();
-		imagePathLabel = new javax.swing.JLabel();
-		imageIndexValueLabel = new javax.swing.JLabel();
-		imageUUIDValueLabel = new javax.swing.JLabel();
-		imageNameValueLabel = new javax.swing.JLabel();
-		imagePathValueLabel = new javax.swing.JLabel();
-		jSeparator5 = new javax.swing.JSeparator();
-		jLabel4 = new javax.swing.JLabel();
-		pageThresholdTextField = new javax.swing.JTextField();
-		setPageThresholdButton = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jPanel1 = new javax.swing.JPanel();
+        uuidLabel = new javax.swing.JLabel();
+        pageUUIDValueLabel = new javax.swing.JLabel();
+        pageIndexLabel = new javax.swing.JLabel();
+        pageIndexValueLabel = new javax.swing.JLabel();
+        imageListScrollPane = new javax.swing.JScrollPane();
+        pageList = new javax.swing.JList();
+        imageScriptScrollPane = new javax.swing.JScrollPane();
+        pageScriptTextArea = new javax.swing.JTextArea();
+        executeImageScriptButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        pageListSizeValueLabel = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        removePageButton = new javax.swing.JButton();
+        removeScriptButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        imageList = new javax.swing.JList<>();
+        imageListLabel = new javax.swing.JLabel();
+        removeImageButton = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JSeparator();
+        imageIndexLabel = new javax.swing.JLabel();
+        jSeparator3 = new javax.swing.JSeparator();
+        imageUUIDLabel = new javax.swing.JLabel();
+        imageNameLabel = new javax.swing.JLabel();
+        imagePathLabel = new javax.swing.JLabel();
+        imageIndexValueLabel = new javax.swing.JLabel();
+        imageUUIDValueLabel = new javax.swing.JLabel();
+        imageNameValueLabel = new javax.swing.JLabel();
+        imagePathValueLabel = new javax.swing.JLabel();
+        jSeparator5 = new javax.swing.JSeparator();
+        jLabel4 = new javax.swing.JLabel();
+        pageThresholdTextField = new javax.swing.JTextField();
+        setPageThresholdButton = new javax.swing.JButton();
 
-		setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-		uuidLabel.setText("UUID:");
+        uuidLabel.setText("UUID:");
 
-		pageUUIDValueLabel.setText("null");
+        pageUUIDValueLabel.setText("null");
 
-		pageIndexLabel.setText("Index:");
+        pageIndexLabel.setText("Index:");
 
-		pageIndexValueLabel.setText("null");
+        pageIndexValueLabel.setText("null");
 
-		pageList.setModel(new javax.swing.AbstractListModel() {
-			String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+        pageList.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        imageListScrollPane.setViewportView(pageList);
 
-			public int getSize() {
-				return strings.length;
-			}
+        pageScriptTextArea.setColumns(20);
+        pageScriptTextArea.setRows(5);
+        imageScriptScrollPane.setViewportView(pageScriptTextArea);
 
-			public Object getElementAt(int i) {
-				return strings[i];
-			}
-		});
-		imageListScrollPane.setViewportView(pageList);
+        executeImageScriptButton.setText("Execute");
+        executeImageScriptButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                executeImageScriptButtonActionPerformed(evt);
+            }
+        });
 
-		pageScriptTextArea.setColumns(20);
-		pageScriptTextArea.setRows(5);
-		imageScriptScrollPane.setViewportView(pageScriptTextArea);
+        jLabel1.setText("Page:");
 
-		executeImageScriptButton.setText("Execute");
-		executeImageScriptButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				executeImageScriptButtonActionPerformed(evt);
-			}
-		});
+        jLabel2.setText("Size:");
 
-		jLabel1.setText("Page:");
+        pageListSizeValueLabel.setText("null");
 
-		jLabel2.setText("Size:");
+        jLabel3.setText("Script:");
 
-		pageListSizeValueLabel.setText("null");
+        removePageButton.setText("X");
+        removePageButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removePageButtonActionPerformed(evt);
+            }
+        });
 
-		jLabel3.setText("Script:");
+        removeScriptButton.setText("X");
+        removeScriptButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeScriptButtonActionPerformed(evt);
+            }
+        });
 
-		removePageButton.setText("X");
-		removePageButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				removePageButtonActionPerformed(evt);
-			}
-		});
+        imageList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(imageList);
 
-		removeScriptButton.setText("X");
-		removeScriptButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				removeScriptButtonActionPerformed(evt);
-			}
-		});
+        imageListLabel.setText("Image:");
 
-		imageList.setModel(new javax.swing.AbstractListModel<String>() {
-			String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+        removeImageButton.setText("X");
+        removeImageButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeImageButtonActionPerformed(evt);
+            }
+        });
 
-			public int getSize() {
-				return strings.length;
-			}
+        imageIndexLabel.setText("Index:");
 
-			public String getElementAt(int i) {
-				return strings[i];
-			}
-		});
-		jScrollPane1.setViewportView(imageList);
+        imageUUIDLabel.setText("UUID:");
 
-		imageListLabel.setText("Image:");
+        imageNameLabel.setText("Name:");
 
-		removeImageButton.setText("X");
-		removeImageButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				removeImageButtonActionPerformed(evt);
-			}
-		});
+        imagePathLabel.setText("Path:");
 
-		imageIndexLabel.setText("Index:");
+        imageIndexValueLabel.setText("null");
 
-		imageUUIDLabel.setText("UUID:");
+        imageUUIDValueLabel.setText("null");
 
-		imageNameLabel.setText("Name:");
+        imageNameValueLabel.setText("null");
 
-		imagePathLabel.setText("Path:");
+        imagePathValueLabel.setText("null");
 
-		imageIndexValueLabel.setText("null");
+        jLabel4.setText("Threshold:");
 
-		imageUUIDValueLabel.setText("null");
+        setPageThresholdButton.setText("Set");
+        setPageThresholdButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setPageThresholdButtonActionPerformed(evt);
+            }
+        });
 
-		imageNameValueLabel.setText("null");
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jSeparator3)
+                            .addComponent(imageListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(removePageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(imageIndexLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(imageIndexValueLabel))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(executeImageScriptButton, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(imageScriptScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 339, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(removeScriptButton, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(imageListLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jSeparator2)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(removeImageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(imageUUIDLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(imageUUIDValueLabel))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(imagePathLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(imagePathValueLabel))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(pageIndexLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(pageIndexValueLabel)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(pageThresholdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(setPageThresholdButton, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(imageNameLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(imageNameValueLabel))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(uuidLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(pageUUIDValueLabel))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(pageListSizeValueLabel)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(pageThresholdTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(setPageThresholdButton))
+                .addGap(21, 21, 21)
+                .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(pageIndexLabel)
+                    .addComponent(pageIndexValueLabel))
+                .addGap(5, 5, 5)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(pageListSizeValueLabel))
+                .addGap(5, 5, 5)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(uuidLabel)
+                    .addComponent(pageUUIDValueLabel))
+                .addGap(26, 26, 26)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(imageListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1))
+                    .addComponent(removePageButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(imageIndexLabel, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(imageIndexValueLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(imageUUIDLabel)
+                    .addComponent(imageUUIDValueLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(imageNameLabel, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(imageNameValueLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(imagePathLabel)
+                    .addComponent(imagePathValueLabel))
+                .addGap(26, 26, 26)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(removeImageButton, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(imageListLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(imageScriptScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3)))
+                    .addComponent(removeScriptButton, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(executeImageScriptButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-		imagePathValueLabel.setText("null");
+        jScrollPane2.setViewportView(jPanel1);
 
-		jLabel4.setText("Threshold:");
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 511, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 737, Short.MAX_VALUE)
+        );
 
-		setPageThresholdButton.setText("Set");
-		setPageThresholdButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				setPageThresholdButtonActionPerformed(evt);
-			}
-		});
-
-		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout
-				.createSequentialGroup().addContainerGap()
-				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout
-						.createSequentialGroup()
-						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout
-								.createSequentialGroup().addComponent(jLabel1)
-								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-								.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-										.addComponent(jSeparator3).addComponent(imageListScrollPane,
-												javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE))
-								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(removePageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 78,
-										javax.swing.GroupLayout.PREFERRED_SIZE))
-								.addGroup(layout.createSequentialGroup().addComponent(imageIndexLabel)
-										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(imageIndexValueLabel))
-								.addGroup(layout.createSequentialGroup().addGap(2, 2, 2).addComponent(jLabel3)
-										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-										.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-												.addComponent(executeImageScriptButton,
-														javax.swing.GroupLayout.PREFERRED_SIZE, 345,
-														javax.swing.GroupLayout.PREFERRED_SIZE)
-												.addGroup(layout.createSequentialGroup()
-														.addComponent(imageScriptScrollPane,
-																javax.swing.GroupLayout.PREFERRED_SIZE, 339,
-																javax.swing.GroupLayout.PREFERRED_SIZE)
-														.addPreferredGap(
-																javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-														.addComponent(removeScriptButton,
-																javax.swing.GroupLayout.PREFERRED_SIZE, 84,
-																javax.swing.GroupLayout.PREFERRED_SIZE))))
-								.addGroup(layout.createSequentialGroup().addComponent(imageListLabel)
-										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-										.addGroup(layout
-												.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-												.addComponent(jSeparator2).addComponent(jScrollPane1,
-														javax.swing.GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE))
-										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(removeImageButton, javax.swing.GroupLayout.PREFERRED_SIZE, 78,
-												javax.swing.GroupLayout.PREFERRED_SIZE))
-								.addGroup(layout.createSequentialGroup().addComponent(imageUUIDLabel)
-										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(imageUUIDValueLabel))
-								.addGroup(layout.createSequentialGroup().addComponent(imagePathLabel)
-										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(imagePathValueLabel))
-								.addGroup(layout.createSequentialGroup().addComponent(pageIndexLabel)
-										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-										.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-												.addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 346,
-														javax.swing.GroupLayout.PREFERRED_SIZE)
-												.addComponent(pageIndexValueLabel)))
-								.addGroup(layout.createSequentialGroup().addComponent(jLabel4)
-										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(pageThresholdTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
-												169, javax.swing.GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(setPageThresholdButton, javax.swing.GroupLayout.PREFERRED_SIZE,
-												154, javax.swing.GroupLayout.PREFERRED_SIZE))
-								.addGroup(layout.createSequentialGroup().addComponent(imageNameLabel)
-										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(imageNameValueLabel)))
-						.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-						.addGroup(layout.createSequentialGroup()
-								.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-										.addGroup(layout.createSequentialGroup().addComponent(uuidLabel)
-												.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-												.addComponent(pageUUIDValueLabel))
-										.addGroup(layout.createSequentialGroup().addComponent(jLabel2)
-												.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-												.addComponent(pageListSizeValueLabel)))
-								.addGap(0, 0, Short.MAX_VALUE)))));
-		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(
-				javax.swing.GroupLayout.Alignment.TRAILING,
-				layout.createSequentialGroup().addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-								.addComponent(jLabel4)
-								.addComponent(pageThresholdTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
-										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-								.addComponent(setPageThresholdButton))
-						.addGap(21, 21, 21)
-						.addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 10,
-								javax.swing.GroupLayout.PREFERRED_SIZE)
-						.addGap(19, 19, 19)
-						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-								.addComponent(pageIndexLabel).addComponent(pageIndexValueLabel))
-						.addGap(5, 5, 5)
-						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-								.addComponent(jLabel2).addComponent(pageListSizeValueLabel))
-						.addGap(5, 5, 5)
-						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-								.addComponent(uuidLabel).addComponent(pageUUIDValueLabel))
-						.addGap(26, 26, 26)
-						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-								.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-										.addComponent(imageListScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 189,
-												javax.swing.GroupLayout.PREFERRED_SIZE)
-										.addComponent(jLabel1))
-								.addComponent(removePageButton))
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-						.addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10,
-								javax.swing.GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-								.addComponent(imageIndexLabel, javax.swing.GroupLayout.Alignment.TRAILING)
-								.addComponent(imageIndexValueLabel))
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-								.addComponent(imageUUIDLabel).addComponent(imageUUIDValueLabel))
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-								.addComponent(imageNameLabel, javax.swing.GroupLayout.Alignment.TRAILING)
-								.addComponent(imageNameValueLabel))
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-								.addComponent(imagePathLabel).addComponent(imagePathValueLabel))
-						.addGap(26, 26, 26)
-						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-								.addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING,
-										javax.swing.GroupLayout.PREFERRED_SIZE, 168,
-										javax.swing.GroupLayout.PREFERRED_SIZE)
-								.addComponent(removeImageButton, javax.swing.GroupLayout.Alignment.TRAILING)
-								.addComponent(imageListLabel))
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout
-								.createSequentialGroup()
-								.addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10,
-										javax.swing.GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-								.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-										.addComponent(imageScriptScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE,
-												160, javax.swing.GroupLayout.PREFERRED_SIZE)
-										.addComponent(jLabel3)))
-								.addComponent(removeScriptButton, javax.swing.GroupLayout.Alignment.TRAILING))
-						.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-						.addComponent(executeImageScriptButton).addContainerGap(35, Short.MAX_VALUE)));
-
-		pack();
-	}// </editor-fold>//GEN-END:initComponents
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
 
 	private void setPageThresholdButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_setPageThresholdButtonActionPerformed
 		String thresholdString = this.pageThresholdTextField.getText();
@@ -825,41 +825,43 @@ public class PageDialog extends javax.swing.JDialog implements KeyListener, Mous
 		});
 	}
 
-	// Variables declaration - do not modify//GEN-BEGIN:variables
-	private javax.swing.JButton executeImageScriptButton;
-	private javax.swing.JLabel imageIndexLabel;
-	private javax.swing.JLabel imageIndexValueLabel;
-	private javax.swing.JList<String> imageList;
-	private javax.swing.JLabel imageListLabel;
-	private javax.swing.JScrollPane imageListScrollPane;
-	private javax.swing.JLabel imageNameLabel;
-	private javax.swing.JLabel imageNameValueLabel;
-	private javax.swing.JLabel imagePathLabel;
-	private javax.swing.JLabel imagePathValueLabel;
-	private javax.swing.JScrollPane imageScriptScrollPane;
-	private javax.swing.JLabel imageUUIDLabel;
-	private javax.swing.JLabel imageUUIDValueLabel;
-	private javax.swing.JLabel jLabel1;
-	private javax.swing.JLabel jLabel2;
-	private javax.swing.JLabel jLabel3;
-	private javax.swing.JLabel jLabel4;
-	private javax.swing.JScrollPane jScrollPane1;
-	private javax.swing.JSeparator jSeparator2;
-	private javax.swing.JSeparator jSeparator3;
-	private javax.swing.JSeparator jSeparator5;
-	private javax.swing.JLabel pageIndexLabel;
-	private javax.swing.JLabel pageIndexValueLabel;
-	private javax.swing.JList pageList;
-	private javax.swing.JLabel pageListSizeValueLabel;
-	private javax.swing.JTextArea pageScriptTextArea;
-	private javax.swing.JTextField pageThresholdTextField;
-	private javax.swing.JLabel pageUUIDValueLabel;
-	private javax.swing.JButton removeImageButton;
-	private javax.swing.JButton removePageButton;
-	private javax.swing.JButton removeScriptButton;
-	private javax.swing.JButton setPageThresholdButton;
-	private javax.swing.JLabel uuidLabel;
-	// End of variables declaration//GEN-END:variables
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton executeImageScriptButton;
+    private javax.swing.JLabel imageIndexLabel;
+    private javax.swing.JLabel imageIndexValueLabel;
+    private javax.swing.JList<String> imageList;
+    private javax.swing.JLabel imageListLabel;
+    private javax.swing.JScrollPane imageListScrollPane;
+    private javax.swing.JLabel imageNameLabel;
+    private javax.swing.JLabel imageNameValueLabel;
+    private javax.swing.JLabel imagePathLabel;
+    private javax.swing.JLabel imagePathValueLabel;
+    private javax.swing.JScrollPane imageScriptScrollPane;
+    private javax.swing.JLabel imageUUIDLabel;
+    private javax.swing.JLabel imageUUIDValueLabel;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator5;
+    private javax.swing.JLabel pageIndexLabel;
+    private javax.swing.JLabel pageIndexValueLabel;
+    private javax.swing.JList pageList;
+    private javax.swing.JLabel pageListSizeValueLabel;
+    private javax.swing.JTextArea pageScriptTextArea;
+    private javax.swing.JTextField pageThresholdTextField;
+    private javax.swing.JLabel pageUUIDValueLabel;
+    private javax.swing.JButton removeImageButton;
+    private javax.swing.JButton removePageButton;
+    private javax.swing.JButton removeScriptButton;
+    private javax.swing.JButton setPageThresholdButton;
+    private javax.swing.JLabel uuidLabel;
+    // End of variables declaration//GEN-END:variables
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {

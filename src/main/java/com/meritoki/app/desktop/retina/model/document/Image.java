@@ -52,6 +52,8 @@ public class Image {
 	public String filePath;
 	@JsonProperty
 	public String fileName;
+	@JsonIgnore
+	public String fileCache;
 	@JsonProperty
 	public Position position = new Position();
 	@JsonProperty
@@ -199,13 +201,14 @@ public class Image {
 	@JsonIgnore
 	public BufferedImage getBufferedImage(Model model) {
 
+		this.fileCache =  this.uuid + "." + this.getExtension();
 		if (this.bufferedImage == null) {
 			File directory = new File(NodeController.getDocumentCache(model.document.uuid));
 			if (!directory.exists()) {
 				directory.mkdirs();
 			}
-			BufferedImage bufferedImage = NodeController.openBufferedImage(
-					NodeController.getDocumentCache(model.document.uuid), this.uuid + "." + this.getExtension());
+			BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getDocumentCache(model.document.uuid),
+					this.fileCache);
 			if (bufferedImage == null) {
 				if (file == null) {
 					file = new File(this.filePath + NodeController.getSeperator() + this.fileName);
@@ -217,7 +220,7 @@ public class Image {
 						if (this.getExtension().equals("jpg") || this.getExtension().equals("jpeg")) {
 							try {
 								NodeController.saveJpg(NodeController.getDocumentCache(model.document.uuid),
-										this.uuid + "." + this.getExtension(), bufferedImage);
+										this.fileCache, bufferedImage);
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -225,7 +228,7 @@ public class Image {
 						} else if(this.getExtension().equals("jpeg")) {
 							try {
 								NodeController.saveJpg(NodeController.getDocumentCache(model.document.uuid),
-										this.uuid + "." + this.getExtension(), bufferedImage);
+										this.fileCache, bufferedImage);
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -233,7 +236,7 @@ public class Image {
 						} else if(this.getExtension().equals("png")) {
 							try {
 								NodeController.savePng(NodeController.getDocumentCache(model.document.uuid),
-										this.uuid + "." + this.getExtension(), bufferedImage);
+										this.fileCache, bufferedImage);
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();

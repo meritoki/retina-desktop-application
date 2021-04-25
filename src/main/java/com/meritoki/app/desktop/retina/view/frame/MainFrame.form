@@ -77,6 +77,14 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="importImageMenuItemActionPerformed"/>
                   </Events>
                 </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="importProjectMenuItem">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Project"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="importProjectMenuItemActionPerformed"/>
+                  </Events>
+                </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="zooniverseImportMenuItem">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Zooniverse"/>
@@ -108,6 +116,14 @@
                 <Property name="text" type="java.lang.String" value="Export"/>
               </Properties>
               <SubComponents>
+                <MenuItem class="javax.swing.JMenuItem" name="exportProjectMenuItem">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Project"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="exportProjectMenuItemActionPerformed"/>
+                  </Events>
+                </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="zooniverseExportMenuItem">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Zooniverse"/>

@@ -478,6 +478,8 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 					model.cache.pressedShapeUUID = (String) shapeList.getSelectedValue();
 					model.pattern.execute("setShape");
 					mainFrame.init();
+				} catch(NullPointerException e) { 
+					e.printStackTrace();
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 				}
@@ -655,407 +657,373 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 	// <editor-fold defaultstate="collapsed" desc="Generated
 	// <editor-fold defaultstate="collapsed" desc="Generated
 	// <editor-fold defaultstate="collapsed" desc="Generated
-	// Code">//GEN-BEGIN:initComponents
-	private void initComponents() {
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
-		jTextField1 = new javax.swing.JTextField();
-		textLabel = new javax.swing.JLabel();
-		inputLabel = new javax.swing.JLabel();
-		noInputCheckBox = new javax.swing.JCheckBox();
-		textInputAddButton = new javax.swing.JButton();
-		valueLabel = new javax.swing.JLabel();
-		textValueComboBox = new javax.swing.JComboBox();
-		textValueDefaultCheckBox = new javax.swing.JCheckBox();
-		unitLabel = new javax.swing.JLabel();
-		typeLabel = new javax.swing.JLabel();
-		unitTypeComboBox = new javax.swing.JComboBox();
-		unitValueLabel = new javax.swing.JLabel();
-		unitValueComboBox = new javax.swing.JComboBox();
-		unitRectangleSeparator = new javax.swing.JSeparator();
-		rectangleScrollPane = new javax.swing.JScrollPane();
-		shapeList = new javax.swing.JList();
-		removeShapeButton = new javax.swing.JButton();
-		applyUnitButton = new javax.swing.JButton();
-		jLabel1 = new javax.swing.JLabel();
-		setTextButton = new javax.swing.JButton();
-		jScrollPane1 = new javax.swing.JScrollPane();
-		scriptTextArea = new javax.swing.JTextArea();
-		scriptLabel = new javax.swing.JLabel();
-		resetScriptButton = new javax.swing.JButton();
-		setScriptButton = new javax.swing.JButton();
-		jSeparator2 = new javax.swing.JSeparator();
-		shapePanel = new com.meritoki.app.desktop.retina.view.panel.ShapePanel();
-		jScrollPane2 = new javax.swing.JScrollPane();
-		textInputTextArea = new javax.swing.JTextArea();
-		gridLabel = new javax.swing.JLabel();
-		gridColumnTextField = new javax.swing.JTextField();
-		gridRowTextField = new javax.swing.JTextField();
-		rowLabel = new javax.swing.JLabel();
-		columnLabel = new javax.swing.JLabel();
-		setGridButton = new javax.swing.JButton();
-		jSeparator3 = new javax.swing.JSeparator();
-		rectangleScrollPane1 = new javax.swing.JScrollPane();
-		gridShapeList = new javax.swing.JList();
-		jLabel2 = new javax.swing.JLabel();
-		removeTextButton = new javax.swing.JButton();
-		jSeparator1 = new javax.swing.JSeparator();
+        jTextField1 = new javax.swing.JTextField();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jPanel1 = new javax.swing.JPanel();
+        textLabel = new javax.swing.JLabel();
+        inputLabel = new javax.swing.JLabel();
+        noInputCheckBox = new javax.swing.JCheckBox();
+        textInputAddButton = new javax.swing.JButton();
+        valueLabel = new javax.swing.JLabel();
+        textValueComboBox = new javax.swing.JComboBox();
+        textValueDefaultCheckBox = new javax.swing.JCheckBox();
+        unitLabel = new javax.swing.JLabel();
+        typeLabel = new javax.swing.JLabel();
+        unitTypeComboBox = new javax.swing.JComboBox();
+        unitValueLabel = new javax.swing.JLabel();
+        unitValueComboBox = new javax.swing.JComboBox();
+        unitRectangleSeparator = new javax.swing.JSeparator();
+        rectangleScrollPane = new javax.swing.JScrollPane();
+        shapeList = new javax.swing.JList();
+        removeShapeButton = new javax.swing.JButton();
+        applyUnitButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        setTextButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        scriptTextArea = new javax.swing.JTextArea();
+        scriptLabel = new javax.swing.JLabel();
+        resetScriptButton = new javax.swing.JButton();
+        setScriptButton = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JSeparator();
+        shapePanel = new com.meritoki.app.desktop.retina.view.panel.ShapePanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        textInputTextArea = new javax.swing.JTextArea();
+        gridLabel = new javax.swing.JLabel();
+        gridColumnTextField = new javax.swing.JTextField();
+        gridRowTextField = new javax.swing.JTextField();
+        rowLabel = new javax.swing.JLabel();
+        columnLabel = new javax.swing.JLabel();
+        setGridButton = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JSeparator();
+        rectangleScrollPane1 = new javax.swing.JScrollPane();
+        gridShapeList = new javax.swing.JList();
+        jLabel2 = new javax.swing.JLabel();
+        removeTextButton = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
 
-		jTextField1.setText("jTextField1");
+        jTextField1.setText("jTextField1");
 
-		setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-		textLabel.setText("Text");
+        textLabel.setText("Text");
 
-		inputLabel.setText("Input:");
+        inputLabel.setText("Input:");
 
-		noInputCheckBox.setText("No");
-		noInputCheckBox.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				noInputCheckBoxActionPerformed(evt);
-			}
-		});
+        noInputCheckBox.setText("No");
+        noInputCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                noInputCheckBoxActionPerformed(evt);
+            }
+        });
 
-		textInputAddButton.setText("Add");
-		textInputAddButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				textInputAddButtonActionPerformed(evt);
-			}
-		});
+        textInputAddButton.setText("Add");
+        textInputAddButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textInputAddButtonActionPerformed(evt);
+            }
+        });
 
-		valueLabel.setText("Value:");
+        valueLabel.setText("Value:");
 
-		textValueComboBox.setModel(
-				new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        textValueComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-		textValueDefaultCheckBox.setText("Default");
-		textValueDefaultCheckBox.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				textValueDefaultCheckBoxActionPerformed(evt);
-			}
-		});
+        textValueDefaultCheckBox.setText("Default");
+        textValueDefaultCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textValueDefaultCheckBoxActionPerformed(evt);
+            }
+        });
 
-		unitLabel.setText("Unit");
+        unitLabel.setText("Unit");
 
-		typeLabel.setText("Type:");
+        typeLabel.setText("Type:");
 
-		unitTypeComboBox.setModel(
-				new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        unitTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-		unitValueLabel.setText("Value:");
+        unitValueLabel.setText("Value:");
 
-		unitValueComboBox.setModel(
-				new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        unitValueComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-		shapeList.setModel(new javax.swing.AbstractListModel() {
-			String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+        shapeList.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        rectangleScrollPane.setViewportView(shapeList);
 
-			public int getSize() {
-				return strings.length;
-			}
+        removeShapeButton.setText("X");
+        removeShapeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeShapeButtonActionPerformed(evt);
+            }
+        });
 
-			public Object getElementAt(int i) {
-				return strings[i];
-			}
-		});
-		rectangleScrollPane.setViewportView(shapeList);
+        applyUnitButton.setText("Apply");
+        applyUnitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                applyUnitButtonActionPerformed(evt);
+            }
+        });
 
-		removeShapeButton.setText("X");
-		removeShapeButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				removeShapeButtonActionPerformed(evt);
-			}
-		});
+        jLabel1.setText("Shape:");
 
-		applyUnitButton.setText("Apply");
-		applyUnitButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				applyUnitButtonActionPerformed(evt);
-			}
-		});
+        setTextButton.setText("Set");
+        setTextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setTextButtonActionPerformed(evt);
+            }
+        });
 
-		jLabel1.setText("Shape:");
+        scriptTextArea.setColumns(20);
+        scriptTextArea.setRows(5);
+        jScrollPane1.setViewportView(scriptTextArea);
 
-		setTextButton.setText("Set");
-		setTextButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				setTextButtonActionPerformed(evt);
-			}
-		});
+        scriptLabel.setText("Script:");
 
-		scriptTextArea.setColumns(20);
-		scriptTextArea.setRows(5);
-		jScrollPane1.setViewportView(scriptTextArea);
+        resetScriptButton.setText("Reset");
+        resetScriptButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetScriptButtonActionPerformed(evt);
+            }
+        });
 
-		scriptLabel.setText("Script:");
+        setScriptButton.setText("Set");
+        setScriptButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setScriptButtonActionPerformed(evt);
+            }
+        });
 
-		resetScriptButton.setText("Reset");
-		resetScriptButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				resetScriptButtonActionPerformed(evt);
-			}
-		});
+        javax.swing.GroupLayout shapePanelLayout = new javax.swing.GroupLayout(shapePanel);
+        shapePanel.setLayout(shapePanelLayout);
+        shapePanelLayout.setHorizontalGroup(
+            shapePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 404, Short.MAX_VALUE)
+        );
+        shapePanelLayout.setVerticalGroup(
+            shapePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 197, Short.MAX_VALUE)
+        );
 
-		setScriptButton.setText("Set");
-		setScriptButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				setScriptButtonActionPerformed(evt);
-			}
-		});
+        textInputTextArea.setColumns(20);
+        textInputTextArea.setRows(5);
+        jScrollPane2.setViewportView(textInputTextArea);
 
-		javax.swing.GroupLayout shapePanelLayout = new javax.swing.GroupLayout(shapePanel);
-		shapePanel.setLayout(shapePanelLayout);
-		shapePanelLayout.setHorizontalGroup(shapePanelLayout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 404, Short.MAX_VALUE));
-		shapePanelLayout.setVerticalGroup(shapePanelLayout
-				.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGap(0, 197, Short.MAX_VALUE));
+        gridLabel.setText("Grid");
 
-		textInputTextArea.setColumns(20);
-		textInputTextArea.setRows(5);
-		jScrollPane2.setViewportView(textInputTextArea);
+        rowLabel.setText("Rows:");
 
-		gridLabel.setText("Grid");
+        columnLabel.setText("Columns:");
 
-		rowLabel.setText("Rows:");
+        setGridButton.setText("Set");
+        setGridButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                setGridButtonActionPerformed(evt);
+            }
+        });
 
-		columnLabel.setText("Columns:");
+        gridShapeList.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        rectangleScrollPane1.setViewportView(gridShapeList);
 
-		setGridButton.setText("Set");
-		setGridButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				setGridButtonActionPerformed(evt);
-			}
-		});
+        jLabel2.setText("Grid:");
 
-		gridShapeList.setModel(new javax.swing.AbstractListModel() {
-			String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+        removeTextButton.setText("Remove");
+        removeTextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeTextButtonActionPerformed(evt);
+            }
+        });
 
-			public int getSize() {
-				return strings.length;
-			}
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGap(6, 6, 6)
+                                    .addComponent(typeLabel))
+                                .addComponent(unitValueLabel))
+                            .addComponent(jLabel2)
+                            .addComponent(scriptLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(rectangleScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(rectangleScrollPane, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(removeShapeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(unitRectangleSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(applyUnitButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(unitValueComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(unitTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(setScriptButton, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(resetScriptButton, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(valueLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(textValueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(setTextButton, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(removeTextButton, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(textValueDefaultCheckBox))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(214, 214, 214)
+                                .addComponent(unitLabel))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(212, 212, 212)
+                                .addComponent(textLabel))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(1, 1, 1)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(textInputAddButton, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(inputLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(noInputCheckBox))
+                            .addComponent(shapePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(rowLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jSeparator3)
+                                    .addComponent(setGridButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(gridRowTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(columnLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(gridColumnTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(201, 201, 201)
+                                .addComponent(gridLabel)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(gridLabel)
+                .addGap(76, 76, 76)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(gridColumnTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(gridRowTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(rowLabel)
+                    .addComponent(columnLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(setGridButton)
+                .addGap(11, 11, 11)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(shapePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(8, 8, 8)
+                .addComponent(textLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(noInputCheckBox)
+                        .addComponent(inputLabel))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(textInputAddButton)))
+                .addGap(14, 14, 14)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(textValueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(valueLabel)
+                    .addComponent(textValueDefaultCheckBox))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(setTextButton)
+                    .addComponent(removeTextButton))
+                .addGap(18, 18, 18)
+                .addComponent(unitLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(unitTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(typeLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(unitValueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(unitValueLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(applyUnitButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(unitRectangleSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(rectangleScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(removeShapeButton)))
+                .addGap(15, 15, 15)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2)
+                    .addComponent(rectangleScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scriptLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(setScriptButton)
+                    .addComponent(resetScriptButton))
+                .addContainerGap())
+        );
 
-			public Object getElementAt(int i) {
-				return strings[i];
-			}
-		});
-		rectangleScrollPane1.setViewportView(gridShapeList);
+        jScrollPane3.setViewportView(jPanel1);
 
-		jLabel2.setText("Grid:");
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 727, Short.MAX_VALUE)
+        );
 
-		removeTextButton.setText("Remove");
-		removeTextButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				removeTextButtonActionPerformed(evt);
-			}
-		});
-
-		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(
-				layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-						.addGroup(layout.createSequentialGroup().addContainerGap().addGroup(layout
-								.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout
-										.createSequentialGroup().addGroup(layout.createParallelGroup(
-												javax.swing.GroupLayout.Alignment.TRAILING).addComponent(jLabel1)
-												.addGroup(layout.createParallelGroup(
-														javax.swing.GroupLayout.Alignment.LEADING)
-														.addGroup(layout.createSequentialGroup().addGap(6, 6, 6)
-																.addComponent(typeLabel))
-														.addComponent(unitValueLabel))
-												.addComponent(jLabel2).addComponent(scriptLabel))
-										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-										.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-												.addGroup(layout.createSequentialGroup().addGroup(layout
-														.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING,
-																false)
-														.addComponent(rectangleScrollPane1,
-																javax.swing.GroupLayout.Alignment.LEADING)
-														.addComponent(
-																rectangleScrollPane,
-																javax.swing.GroupLayout.Alignment.LEADING)
-														.addComponent(
-																jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 349,
-																Short.MAX_VALUE))
-														.addPreferredGap(
-																javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-														.addComponent(removeShapeButton,
-																javax.swing.GroupLayout.DEFAULT_SIZE,
-																javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-												.addGroup(layout.createSequentialGroup().addGroup(layout
-														.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-														.addComponent(
-																unitRectangleSeparator,
-																javax.swing.GroupLayout.PREFERRED_SIZE, 349,
-																javax.swing.GroupLayout.PREFERRED_SIZE)
-														.addGroup(layout
-																.createParallelGroup(
-																		javax.swing.GroupLayout.Alignment.LEADING,
-																		false)
-																.addComponent(applyUnitButton,
-																		javax.swing.GroupLayout.DEFAULT_SIZE,
-																		javax.swing.GroupLayout.DEFAULT_SIZE,
-																		Short.MAX_VALUE)
-																.addComponent(unitValueComboBox, 0,
-																		javax.swing.GroupLayout.DEFAULT_SIZE,
-																		Short.MAX_VALUE)
-																.addComponent(unitTypeComboBox,
-																		javax.swing.GroupLayout.PREFERRED_SIZE, 349,
-																		javax.swing.GroupLayout.PREFERRED_SIZE))
-														.addGroup(layout.createSequentialGroup()
-																.addComponent(setScriptButton,
-																		javax.swing.GroupLayout.PREFERRED_SIZE, 177,
-																		javax.swing.GroupLayout.PREFERRED_SIZE)
-																.addPreferredGap(
-																		javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-																.addComponent(resetScriptButton,
-																		javax.swing.GroupLayout.PREFERRED_SIZE, 168,
-																		javax.swing.GroupLayout.PREFERRED_SIZE))
-														.addComponent(jSeparator1,
-																javax.swing.GroupLayout.PREFERRED_SIZE, 349,
-																javax.swing.GroupLayout.PREFERRED_SIZE))
-														.addGap(0, 0, Short.MAX_VALUE))))
-								.addGroup(layout.createSequentialGroup().addGap(214, 214, 214).addComponent(unitLabel))
-								.addGroup(layout.createSequentialGroup().addGap(212, 212, 212).addComponent(textLabel))
-								.addGroup(layout.createSequentialGroup().addGap(1, 1, 1).addGroup(layout
-										.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-										.addComponent(
-												textInputAddButton, javax.swing.GroupLayout.PREFERRED_SIZE, 344,
-												javax.swing.GroupLayout.PREFERRED_SIZE)
-										.addGroup(layout.createSequentialGroup().addComponent(inputLabel)
-												.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-												.addGroup(layout
-														.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING,
-																false)
-														.addComponent(jSeparator2,
-																javax.swing.GroupLayout.Alignment.TRAILING)
-														.addComponent(jScrollPane2,
-																javax.swing.GroupLayout.PREFERRED_SIZE, 344,
-																javax.swing.GroupLayout.PREFERRED_SIZE))))
-										.addPreferredGap(
-												javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(noInputCheckBox))
-								.addGroup(layout.createSequentialGroup().addComponent(valueLabel)
-										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-										.addGroup(layout
-												.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-												.addComponent(textValueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE,
-														344, javax.swing.GroupLayout.PREFERRED_SIZE)
-												.addGroup(layout.createSequentialGroup()
-														.addComponent(setTextButton,
-																javax.swing.GroupLayout.DEFAULT_SIZE,
-																javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-														.addPreferredGap(
-																javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-														.addComponent(removeTextButton,
-																javax.swing.GroupLayout.PREFERRED_SIZE, 165,
-																javax.swing.GroupLayout.PREFERRED_SIZE)))
-										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14,
-												Short.MAX_VALUE)
-										.addComponent(textValueDefaultCheckBox))
-								.addComponent(
-										shapePanel, javax.swing.GroupLayout.PREFERRED_SIZE,
-										javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-								.addGroup(layout.createSequentialGroup().addComponent(rowLabel)
-										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-										.addGroup(layout
-												.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-												.addComponent(jSeparator3)
-												.addComponent(setGridButton, javax.swing.GroupLayout.DEFAULT_SIZE,
-														javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-												.addGroup(layout.createSequentialGroup()
-														.addComponent(gridRowTextField,
-																javax.swing.GroupLayout.PREFERRED_SIZE, 115,
-																javax.swing.GroupLayout.PREFERRED_SIZE)
-														.addGap(18, 18, 18).addComponent(columnLabel)
-														.addPreferredGap(
-																javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-														.addComponent(gridColumnTextField,
-																javax.swing.GroupLayout.PREFERRED_SIZE, 116,
-																javax.swing.GroupLayout.PREFERRED_SIZE)))))
-								.addContainerGap())
-						.addGroup(layout.createSequentialGroup().addGap(213, 213, 213).addComponent(gridLabel)
-								.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
-		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addGroup(layout
-				.createSequentialGroup().addContainerGap().addComponent(gridLabel)
-				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-						.addComponent(gridColumnTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
-								javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-						.addComponent(gridRowTextField, javax.swing.GroupLayout.PREFERRED_SIZE,
-								javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-						.addComponent(rowLabel).addComponent(columnLabel))
-				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(setGridButton)
-				.addGap(11, 11, 11)
-				.addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10,
-						javax.swing.GroupLayout.PREFERRED_SIZE)
-				.addGap(18, 18, 18)
-				.addComponent(shapePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE,
-						javax.swing.GroupLayout.PREFERRED_SIZE)
-				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-				.addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10,
-						javax.swing.GroupLayout.PREFERRED_SIZE)
-				.addGap(8, 8, 8).addComponent(textLabel)
-				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-						.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-								.addComponent(noInputCheckBox).addComponent(inputLabel))
-						.addGroup(layout.createSequentialGroup()
-								.addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 109,
-										javax.swing.GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(textInputAddButton)))
-				.addGap(14, 14, 14)
-				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-						.addComponent(textValueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE,
-								javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-						.addComponent(valueLabel).addComponent(textValueDefaultCheckBox))
-				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-						.addComponent(setTextButton).addComponent(removeTextButton))
-				.addGap(18, 18, 18).addComponent(unitLabel)
-				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-						.addComponent(unitTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE,
-								javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-						.addComponent(typeLabel))
-				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-						.addComponent(unitValueComboBox, javax.swing.GroupLayout.PREFERRED_SIZE,
-								javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-						.addComponent(unitValueLabel))
-				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED).addComponent(applyUnitButton)
-				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-						javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-				.addComponent(unitRectangleSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 10,
-						javax.swing.GroupLayout.PREFERRED_SIZE)
-				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-						.addGroup(layout.createSequentialGroup().addGap(5, 5, 5)
-								.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-										.addComponent(jLabel1).addComponent(rectangleScrollPane,
-												javax.swing.GroupLayout.PREFERRED_SIZE, 159,
-												javax.swing.GroupLayout.PREFERRED_SIZE)))
-						.addGroup(javax.swing.GroupLayout.Alignment.TRAILING,
-								layout.createSequentialGroup()
-										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(removeShapeButton)))
-				.addGap(15, 15, 15)
-				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(jLabel2)
-						.addComponent(rectangleScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 157,
-								javax.swing.GroupLayout.PREFERRED_SIZE))
-				.addGap(6, 6, 6)
-				.addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 16,
-						javax.swing.GroupLayout.PREFERRED_SIZE)
-				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-						.addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 155,
-								javax.swing.GroupLayout.PREFERRED_SIZE)
-						.addComponent(scriptLabel))
-				.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-				.addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-						.addComponent(setScriptButton).addComponent(resetScriptButton))
-				.addGap(50, 50, 50)));
-
-		pack();
-	}// </editor-fold>//GEN-END:initComponents
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
 
 	private void removeTextButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_removeTextButtonActionPerformed
 		// TODO add your handling code here:
@@ -1311,49 +1279,51 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 		});
 	}
 
-	// Variables declaration - do not modify//GEN-BEGIN:variables
-	private javax.swing.JButton applyUnitButton;
-	private javax.swing.JLabel columnLabel;
-	private javax.swing.JTextField gridColumnTextField;
-	private javax.swing.JLabel gridLabel;
-	private javax.swing.JTextField gridRowTextField;
-	private javax.swing.JList gridShapeList;
-	private javax.swing.JLabel inputLabel;
-	private javax.swing.JLabel jLabel1;
-	private javax.swing.JLabel jLabel2;
-	private javax.swing.JScrollPane jScrollPane1;
-	private javax.swing.JScrollPane jScrollPane2;
-	private javax.swing.JSeparator jSeparator1;
-	private javax.swing.JSeparator jSeparator2;
-	private javax.swing.JSeparator jSeparator3;
-	private javax.swing.JTextField jTextField1;
-	private javax.swing.JCheckBox noInputCheckBox;
-	private javax.swing.JScrollPane rectangleScrollPane;
-	private javax.swing.JScrollPane rectangleScrollPane1;
-	private javax.swing.JButton removeShapeButton;
-	private javax.swing.JButton removeTextButton;
-	private javax.swing.JButton resetScriptButton;
-	private javax.swing.JLabel rowLabel;
-	private javax.swing.JLabel scriptLabel;
-	private javax.swing.JTextArea scriptTextArea;
-	private javax.swing.JButton setGridButton;
-	private javax.swing.JButton setScriptButton;
-	private javax.swing.JButton setTextButton;
-	private javax.swing.JList shapeList;
-	private com.meritoki.app.desktop.retina.view.panel.ShapePanel shapePanel;
-	private javax.swing.JButton textInputAddButton;
-	private javax.swing.JTextArea textInputTextArea;
-	private javax.swing.JLabel textLabel;
-	private javax.swing.JComboBox textValueComboBox;
-	private javax.swing.JCheckBox textValueDefaultCheckBox;
-	private javax.swing.JLabel typeLabel;
-	private javax.swing.JLabel unitLabel;
-	private javax.swing.JSeparator unitRectangleSeparator;
-	private javax.swing.JComboBox unitTypeComboBox;
-	private javax.swing.JComboBox unitValueComboBox;
-	private javax.swing.JLabel unitValueLabel;
-	private javax.swing.JLabel valueLabel;
-	// End of variables declaration//GEN-END:variables
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton applyUnitButton;
+    private javax.swing.JLabel columnLabel;
+    private javax.swing.JTextField gridColumnTextField;
+    private javax.swing.JLabel gridLabel;
+    private javax.swing.JTextField gridRowTextField;
+    private javax.swing.JList gridShapeList;
+    private javax.swing.JLabel inputLabel;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JCheckBox noInputCheckBox;
+    private javax.swing.JScrollPane rectangleScrollPane;
+    private javax.swing.JScrollPane rectangleScrollPane1;
+    private javax.swing.JButton removeShapeButton;
+    private javax.swing.JButton removeTextButton;
+    private javax.swing.JButton resetScriptButton;
+    private javax.swing.JLabel rowLabel;
+    private javax.swing.JLabel scriptLabel;
+    private javax.swing.JTextArea scriptTextArea;
+    private javax.swing.JButton setGridButton;
+    private javax.swing.JButton setScriptButton;
+    private javax.swing.JButton setTextButton;
+    private javax.swing.JList shapeList;
+    private com.meritoki.app.desktop.retina.view.panel.ShapePanel shapePanel;
+    private javax.swing.JButton textInputAddButton;
+    private javax.swing.JTextArea textInputTextArea;
+    private javax.swing.JLabel textLabel;
+    private javax.swing.JComboBox textValueComboBox;
+    private javax.swing.JCheckBox textValueDefaultCheckBox;
+    private javax.swing.JLabel typeLabel;
+    private javax.swing.JLabel unitLabel;
+    private javax.swing.JSeparator unitRectangleSeparator;
+    private javax.swing.JComboBox unitTypeComboBox;
+    private javax.swing.JComboBox unitValueComboBox;
+    private javax.swing.JLabel unitValueLabel;
+    private javax.swing.JLabel valueLabel;
+    // End of variables declaration//GEN-END:variables
 
 	@Override
 	public void mouseClicked(MouseEvent e) {

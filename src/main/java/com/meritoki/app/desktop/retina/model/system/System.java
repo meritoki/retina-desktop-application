@@ -60,6 +60,8 @@ public class System {
 	public File file = null;//The file that corresponds to the loaded document
 	@JsonIgnore
 	public String defaultFileName = "Untitled.json";
+	@JsonIgnore
+	public String defaultProjectFileName = "Untitled.ret";
 	@JsonIgnore 
 	public boolean machine = false;
 	@JsonIgnore

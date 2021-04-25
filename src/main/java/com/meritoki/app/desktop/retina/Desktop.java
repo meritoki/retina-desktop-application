@@ -21,6 +21,7 @@ import org.apache.logging.log4j.Logger;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 import com.meritoki.app.desktop.retina.view.window.SplashWindow;
+import com.meritoki.library.controller.node.NodeController;
 
 public class Desktop {
 
@@ -32,12 +33,16 @@ public class Desktop {
         final MainFrame mainFrame = new MainFrame(model);
         final SplashWindow splashWindow = new SplashWindow("/Splash.png", mainFrame, 4000);
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
+        	if(NodeController.isMac()) {
+        		javax.swing.UIManager.installLookAndFeel("Aqua","com.apple.laf.AquaLookAndFeel");
+        	} else {
+	            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+	                if ("Nimbus".equals(info.getName())) {
+	                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+	                    break;
+	                }
+	            }
+        	}
         } catch (ClassNotFoundException ex) {
             logger.error(ex);
         } catch (InstantiationException ex) {
