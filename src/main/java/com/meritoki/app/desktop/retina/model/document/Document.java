@@ -60,6 +60,17 @@ public class Document {
 	public Document() {
 		this.uuid = UUID.randomUUID().toString();
 	}
+	
+	@JsonIgnore
+	public List<Image> getImageList() {
+		List<Image> imageList = new ArrayList<>();
+		for(Page page:this.pageList) {
+			for(Image image:page.imageList) {
+				imageList.add(image);
+			}
+		}
+		return imageList;
+	}
 
 	@JsonIgnore
 	public Image getImage() {
@@ -97,7 +108,7 @@ public class Document {
 
 	@JsonIgnore
 	public Shape getShape() {
-		return getPage().getShape();
+		return (this.getPage() != null)?getPage().getShape():null;
 	}
 
 	@JsonIgnore

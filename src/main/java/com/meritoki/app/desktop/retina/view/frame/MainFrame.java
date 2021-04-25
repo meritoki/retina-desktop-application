@@ -52,6 +52,8 @@ import com.meritoki.app.desktop.retina.view.dialog.image.ImageImportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.meritoki.MeritokiExportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.meritoki.MeritokiImportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.microsoft.MicrosoftExportDialog;
+import com.meritoki.app.desktop.retina.view.dialog.project.ProjectExportDialog;
+import com.meritoki.app.desktop.retina.view.dialog.project.ProjectImportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.user.UserLoginDialog;
 import com.meritoki.app.desktop.retina.view.dialog.user.UserRegisterDialog;
 import com.meritoki.app.desktop.retina.view.dialog.zooniverse.ZooniverseCSVImportDialog;
@@ -82,6 +84,8 @@ public final class MainFrame extends JFrame {
 	public CommandDialog commandDialog = new CommandDialog(this, false);
 	public AttributionDialog attributionDialog = new AttributionDialog(this, false);
 	public ImageImportDialog imageImportDialog = null;
+	public ProjectImportDialog projectImportDialog = null;
+	public ProjectExportDialog projectExportDialog = null;
 	public ZooniverseExportDialog zooniverseExportDialog = new ZooniverseExportDialog(this, false);
 	public ZooniverseImportDialog zooniverseImportDialog = new ZooniverseImportDialog(this, false);
 	public ZooniverseCSVImportDialog zooniverseCSVImportDialog = null;
@@ -282,10 +286,12 @@ public final class MainFrame extends JFrame {
         saveAsMenuItem = new javax.swing.JMenuItem();
         importMenu = new javax.swing.JMenu();
         importImageMenuItem = new javax.swing.JMenuItem();
+        importProjectMenuItem = new javax.swing.JMenuItem();
         zooniverseImportMenuItem = new javax.swing.JMenuItem();
         zooniverseCSVImportMenuItem = new javax.swing.JMenuItem();
         importMeritokiMenuItem = new javax.swing.JMenuItem();
         exportMenu = new javax.swing.JMenu();
+        exportProjectMenuItem = new javax.swing.JMenuItem();
         zooniverseExportMenuItem = new javax.swing.JMenuItem();
         microsoftExportMenuItem = new javax.swing.JMenuItem();
         audioMenuItem = new javax.swing.JMenuItem();
@@ -427,6 +433,14 @@ public final class MainFrame extends JFrame {
         });
         importMenu.add(importImageMenuItem);
 
+        importProjectMenuItem.setText("Project");
+        importProjectMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importProjectMenuItemActionPerformed(evt);
+            }
+        });
+        importMenu.add(importProjectMenuItem);
+
         zooniverseImportMenuItem.setText("Zooniverse");
         zooniverseImportMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -454,6 +468,14 @@ public final class MainFrame extends JFrame {
         fileMenu.add(importMenu);
 
         exportMenu.setText("Export");
+
+        exportProjectMenuItem.setText("Project");
+        exportProjectMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportProjectMenuItemActionPerformed(evt);
+            }
+        });
+        exportMenu.add(exportProjectMenuItem);
 
         zooniverseExportMenuItem.setText("Zooniverse");
         zooniverseExportMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -624,8 +646,7 @@ public final class MainFrame extends JFrame {
             .addComponent(mainTabbedPane)
         );
 
-//        pack();
-        setSize(1024,512);
+        pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void exportMeritokiMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportMeritokiMenuItemActionPerformed
@@ -661,6 +682,14 @@ public final class MainFrame extends JFrame {
     private void toolMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toolMenuItemActionPerformed
         this.toolDialog.setVisible(true);
     }//GEN-LAST:event_toolMenuItemActionPerformed
+
+    private void importProjectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importProjectMenuItemActionPerformed
+        this.projectImportDialog = new ProjectImportDialog(this, false, this.model);
+    }//GEN-LAST:event_importProjectMenuItemActionPerformed
+
+    private void exportProjectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportProjectMenuItemActionPerformed
+    	this.projectExportDialog = new ProjectExportDialog(this, false, this.model);
+    }//GEN-LAST:event_exportProjectMenuItemActionPerformed
 
 	private void zooniverseCSVImportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_zooniverseCSVImportMenuItemActionPerformed
 		this.zooniverseCSVImportDialog = new com.meritoki.app.desktop.retina.view.dialog.zooniverse.ZooniverseCSVImportDialog(
@@ -854,10 +883,12 @@ public final class MainFrame extends JFrame {
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenu exportMenu;
     private javax.swing.JMenuItem exportMeritokiMenuItem;
+    private javax.swing.JMenuItem exportProjectMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuItem importImageMenuItem;
     private javax.swing.JMenu importMenu;
     private javax.swing.JMenuItem importMeritokiMenuItem;
+    private javax.swing.JMenuItem importProjectMenuItem;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuItem logInOutMenuItem;
     private com.meritoki.app.desktop.retina.view.panel.MachinePanel machinePanel;

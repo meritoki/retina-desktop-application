@@ -29,8 +29,10 @@ import com.meritoki.app.desktop.retina.model.command.AddPage;
 import com.meritoki.app.desktop.retina.model.command.AddSelector;
 import com.meritoki.app.desktop.retina.model.command.AddShape;
 import com.meritoki.app.desktop.retina.model.command.Command;
+import com.meritoki.app.desktop.retina.model.command.CreateProject;
 import com.meritoki.app.desktop.retina.model.command.MoveSelector;
 import com.meritoki.app.desktop.retina.model.command.MoveShape;
+import com.meritoki.app.desktop.retina.model.command.OpenProject;
 import com.meritoki.app.desktop.retina.model.command.RemoveImage;
 import com.meritoki.app.desktop.retina.model.command.RemovePage;
 import com.meritoki.app.desktop.retina.model.command.RemoveShape;
@@ -74,6 +76,14 @@ public class Pattern {
 	public Command getCommand(String name) throws Exception {
 		Command command = null;
 		switch(name) {
+		case "createProject": {
+			command = new CreateProject(this.model);
+			break;
+		}
+		case "openProject": {
+			command = new OpenProject(this.model);
+			break;
+		}
 		case "addPage": {
 			command = new AddPage(this.model);
 			break;
