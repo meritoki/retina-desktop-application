@@ -6,8 +6,8 @@
 				pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
 		</Console>
 		<RollingFile name="rollingFile"
-			fileName="logs/retina.log"
-			filePattern="logs/retina.%d{dd-MMM}.log.gz"
+			fileName="logs${sys:file.separator}retina.log"
+			filePattern="logs${sys:file.separator}retina.%d{dd-MMM}.log.gz"
 			ignoreExceptions="false">
 			<PatternLayout
 				pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />

@@ -5,7 +5,7 @@
 	<name>retina-desktop-application</name>
 	<groupId>com.meritoki.app.desktop</groupId>
 	<artifactId>retina</artifactId>
-	<version>0.17.202012-alpha</version>
+	<version>0.18.202104</version>
 	<packaging>jar</packaging>
 	<properties>
 		<cayenne.version>4.0.1</cayenne.version>

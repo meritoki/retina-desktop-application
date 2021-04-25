@@ -201,12 +201,12 @@ public class Image {
 	@JsonIgnore
 	public BufferedImage getBufferedImage(Model model) {
 
+		this.fileCache =  this.uuid + "." + this.getExtension();
 		if (this.bufferedImage == null) {
 			File directory = new File(NodeController.getDocumentCache(model.document.uuid));
 			if (!directory.exists()) {
 				directory.mkdirs();
 			}
-			this.fileCache =  this.uuid + "." + this.getExtension();
 			BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getDocumentCache(model.document.uuid),
 					this.fileCache);
 			if (bufferedImage == null) {

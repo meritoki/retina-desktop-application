@@ -24,7 +24,6 @@ public class OpenProject extends Command {
 		ZipFile zipFile = new ZipFile(fileName);
 	    Enumeration<? extends ZipEntry> entries = zipFile.entries();
 	    InputStream is;
-	    String documentUUID = null;
 	    String documentJSON = this.model.system.defaultFileName;
 	    ZipEntry documentEntry = null;
 	    while(entries.hasMoreElements()){
@@ -34,12 +33,25 @@ public class OpenProject extends Command {
 	        if(entryName.contains(".json")) {
 	        	documentEntry = entry;
 	        	documentJSON = file.getParent()+File.separatorChar+entryName;
-//	        	documentUUID = entryName.replace(".json", "");
 	        	Files.copy(zipFile.getInputStream(documentEntry), Paths.get(documentJSON));
 		    	this.model.openDocument(new File(documentJSON));
-	        } else {
-	        	if(documentUUID != null) {
-	        		Files.copy(is, Paths.get(NodeController.getDocumentCache(documentUUID)+File.separatorChar+entryName));
+	        } 
+//	        else {
+//	        	if(documentUUID != null) {
+//	        		Files.copy(is, Paths.get(NodeController.getDocumentCache(documentUUID)+File.separatorChar+entryName));
+//	        	}
+//	        }
+	    }
+	    entries = zipFile.entries();
+	    while(entries.hasMoreElements()){
+	        ZipEntry entry = entries.nextElement();
+	        String entryName = entry.getName();
+	        is = zipFile.getInputStream(entry);
+	        if(!entryName.contains(".json")) {
+	        	if(this.model.document != null) {
+	        		String imagePath = NodeController.getDocumentCache(this.model.document.uuid)+File.separatorChar+entryName;
+	        		System.out.println(this+".execute() imagePath="+imagePath);
+	        		Files.copy(is, Paths.get(imagePath));
 	        	}
 	        }
 	    }

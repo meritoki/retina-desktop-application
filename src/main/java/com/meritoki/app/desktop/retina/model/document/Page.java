@@ -540,7 +540,7 @@ public class Page {
 
 	@JsonIgnore
 	public BufferedImage joinImages(Model model) {
-		logger.debug("joinImages(" + imageList + ")");
+//		logger.debug("joinImages(" + imageList + ")");
 		BufferedImage bufferedImage = null;
 		double offset = 0;
 		for (int i = 0; i < imageList.size(); i++) {

@@ -23,7 +23,7 @@ public class CreateProject extends Command {
 		if(this.model.system.file != null) {
 			fileList.add(this.model.system.file);
 			for(Image image: this.model.document.getImageList()) {
-				fileList.add(new File(NodeController.getDocumentCache(model.document.uuid)+File.separatorChar+image.fileCache));
+				fileList.add(new File(NodeController.getDocumentCache(model.document.uuid)+File.separatorChar+image.uuid+"." + image.getExtension()));
 			}
 			NodeController.zip(fileList, file);
 		} else {
