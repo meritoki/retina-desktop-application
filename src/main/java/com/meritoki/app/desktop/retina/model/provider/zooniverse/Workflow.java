@@ -47,6 +47,11 @@ public class Workflow {
         this.uuid = uuid.toString();
     }
     
+    public boolean equals(Object object) {
+    	Workflow workflow = (object != null)?(Workflow)object:null;
+    	return (workflow != null)?this.id.equals(workflow.id):false;
+    }
+    
     public String getId() {
         return this.id;
     }
