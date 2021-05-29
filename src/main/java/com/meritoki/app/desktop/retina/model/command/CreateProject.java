@@ -18,6 +18,7 @@ public class CreateProject extends Command {
 	}
 	
 	public void execute() throws Exception {
+		if(this.model.cache.fileArray.length > 0) {
 		String file = this.model.cache.fileArray[0];
 		List<File> fileList = new ArrayList<>();
 		if(this.model.system.file != null) {
@@ -28,6 +29,9 @@ public class CreateProject extends Command {
 			NodeController.zip(fileList, file);
 		} else {
 			throw new Exception("Please Save Document First");
+		}
+		} else {
+			throw new Exception("File Is Null");
 		}
 	}
 }

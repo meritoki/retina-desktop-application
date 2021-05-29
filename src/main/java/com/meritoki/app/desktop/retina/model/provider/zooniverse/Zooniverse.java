@@ -88,10 +88,10 @@ public class Zooniverse extends Provider {
 		logger.info("getProjectList(" + query + ")");
 		List<Project> projectList = new ArrayList<>();
 		String command = null;
-		if (NodeController.isLinux()) {
+		if (NodeController.isLinux() || NodeController.isMac()) {
 			command = "panoptes project ls | grep " + query;
 		} else if (NodeController.isWindows()) {
-			command = "set PYTHONIOENCODING=utf-8 && panoptes project ls | findstr " + query;
+			command = "panoptes project ls | findstr " + query;
 		}
 		Exit exit = NodeController.executeCommand(command, 1440);
 		if (exit.value != 0) {
@@ -225,11 +225,11 @@ public class Zooniverse extends Provider {
 		} else {
 			List<String> stringList = exit.list;
 			if (stringList.size() > 0 && !stringList.get(0).equals("error")) {
-				String string = stringList.get(0);
 				for (String s : stringList) {
-					String[] stringArray = string.split(" ");
+					String[] stringArray = s.split(" ");
 					Workflow workflow = new Workflow(stringArray[0], this.convertArrayToStringMethod(stringArray, 1));
-					project.getWorkflowList().add(workflow);
+					if(!project.getWorkflowList().contains(workflow))
+						project.getWorkflowList().add(workflow);
 				}
 			}
 		}
