@@ -57,16 +57,16 @@ public class ProjectExportDialog extends javax.swing.JDialog {
 		this.imageFileChooser.setMultiSelectionEnabled(true);
 		int result = this.imageFileChooser.showSaveDialog(null);
 		if (result == JFileChooser.APPROVE_OPTION) {
-			File[] files = this.imageFileChooser.getSelectedFiles();
+			File file = this.imageFileChooser.getSelectedFile();
+			logger.info("result() file="+file);
 			if (this.model != null) {
-				String[] fileArray = new String[files.length];
-				for (int i = 0; i < files.length; i++) {
-				   fileArray[i] = files[i].getAbsolutePath();
-				}
+				String[] fileArray = new String[1];
+				fileArray[0] = file.getAbsolutePath();
 				this.model.cache.fileArray = fileArray;
 				try {
 					this.model.pattern.execute("createProject");
 				} catch (Exception e) {
+					e.printStackTrace();
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
 							JOptionPane.ERROR_MESSAGE);
 				}
@@ -79,6 +79,34 @@ public class ProjectExportDialog extends javax.swing.JDialog {
 			this.setVisible(false);
 		}
 	}
+	
+//	public void result() {
+//		this.imageFileChooser.setMultiSelectionEnabled(true);
+//		int result = this.imageFileChooser.showSaveDialog(null);
+//		if (result == JFileChooser.APPROVE_OPTION) {
+//			File[] files = this.imageFileChooser.getSelectedFiles();
+//			if (this.model != null) {
+//				String[] fileArray = new String[files.length];
+//				for (int i = 0; i < files.length; i++) {
+//				   fileArray[i] = files[i].getAbsolutePath();
+//				}
+//				this.model.cache.fileArray = fileArray;
+//				try {
+//					this.model.pattern.execute("createProject");
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+//							JOptionPane.ERROR_MESSAGE);
+//				}
+//				this.mainFrame.init();
+////				this.mainFrame.repaint();
+//			}
+//			this.setVisible(false);
+//		} else if (result == JFileChooser.CANCEL_OPTION) {
+//			logger.info("Cancel");
+//			this.setVisible(false);
+//		}
+//	}
 
 	/**
 	 * This method is called from within the constructor to initialize the form.
