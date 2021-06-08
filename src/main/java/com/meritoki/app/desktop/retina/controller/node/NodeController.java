@@ -71,7 +71,7 @@ public class NodeController extends com.meritoki.library.controller.node.NodeCon
 	public static File zip(List<File> files, String filename) {
 	    File zipfile = new File(filename);
 	    // Create a buffer for reading the files
-	    byte[] buf = new byte[1024];
+	    byte[] buf = new byte[4096];
 	    try {
 	        // create the ZIP file
 	        ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipfile));

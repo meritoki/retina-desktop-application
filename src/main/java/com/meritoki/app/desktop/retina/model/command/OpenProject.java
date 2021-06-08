@@ -19,14 +19,17 @@ public class OpenProject extends Command {
 	
 	public void execute() throws Exception {
 		String fileName = this.model.cache.fileArray[0];
+		System.out.println(this+".execute() fileName="+fileName);
 		File file = new File(fileName);
 		if(!fileName.contains(".ret")) {
 			throw new Exception("Not a Retina Project File (.ret)");
 		}
 		ZipFile zipFile = new ZipFile(fileName);
 	    Enumeration<? extends ZipEntry> entries = zipFile.entries();
+	    
 	    InputStream is;
-	    String documentJSON = this.model.system.defaultFileName;
+	    String documentPath = this.model.system.defaultFileName;
+	    System.out.println(this+".execute() documentJSON="+documentPath);
 	    ZipEntry documentEntry = null;
 	    while(entries.hasMoreElements()){
 	        ZipEntry entry = entries.nextElement();
@@ -34,9 +37,14 @@ public class OpenProject extends Command {
 	        is = zipFile.getInputStream(entry);
 	        if(entryName.contains(".json")) {
 	        	documentEntry = entry;
-	        	documentJSON = file.getParent()+File.separatorChar+entryName;
-	        	Files.copy(zipFile.getInputStream(documentEntry), Paths.get(documentJSON));
-		    	this.model.openDocument(new File(documentJSON));
+	        	documentPath = file.getParent()+File.separatorChar+entryName;
+	        	System.out.println(this+".execute() documentPath="+documentPath);
+	        	File documentFile = new File(documentPath);
+	        	if(!documentFile.exists()) {
+	        		Files.copy(zipFile.getInputStream(documentEntry), Paths.get(documentPath));
+	        	}
+	        	this.model.openDocument(documentFile);
+	        	
 	        } 
 	    }
 	    entries = zipFile.entries();
@@ -48,15 +56,13 @@ public class OpenProject extends Command {
 	        	if(this.model.document != null) {
 	        		String imagePath = NodeController.getDocumentCache(this.model.document.uuid)+File.separatorChar+entryName;
 	        		System.out.println(this+".execute() imagePath="+imagePath);
-	        		Files.copy(is, Paths.get(imagePath));
+	        		File imageFile = new File(imagePath);
+	        		if(!imageFile.exists()) {
+	        			Files.copy(is, Paths.get(imagePath));
+	        		}
 	        	}
 	        }
 	    }
-//	    if(documentEntry != null) {
-//		    System.out.println(documentJSON);
-//	    	Files.copy(zipFile.getInputStream(documentEntry), Paths.get(documentJSON));
-//	    	this.model.openDocument(new File(documentJSON));
-//	    }
 	    zipFile.close();
 	}
 }
