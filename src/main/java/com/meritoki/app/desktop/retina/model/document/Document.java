@@ -379,6 +379,7 @@ public class Document {
 
 				for (Shape shape : this.getGridShapeList()) {
 					if (uuid.equals(shape.uuid)) {
+						logger.info("importZooniverse(" + fileName + ") shape uuid match");
 						for (String value : valueList) {
 							Text text = new Text();
 							text.value = value;

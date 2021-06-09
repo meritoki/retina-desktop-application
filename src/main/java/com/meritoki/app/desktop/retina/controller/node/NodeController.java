@@ -77,6 +77,7 @@ public class NodeController extends com.meritoki.library.controller.node.NodeCon
 	        ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipfile));
 	        // compress the files
 	        for(int i=0; i<files.size(); i++) {
+	        	logger.info("zip("+files.size()+","+filename+") files.get("+i+")="+files.get(i));
 	            FileInputStream in = new FileInputStream(files.get(i).getCanonicalPath());
 	            // add ZIP entry to output stream
 	            out.putNextEntry(new ZipEntry(files.get(i).getName()));
@@ -86,13 +87,17 @@ public class NodeController extends com.meritoki.library.controller.node.NodeCon
 	                out.write(buf, 0, len);
 	            }
 	            // complete the entry
+	            out.finish();
+	            out.flush();
 	            out.closeEntry();
 	            in.close();
 	        }
 	        // complete the ZIP file
+	        out.finish();
 	        out.close();
 	        return zipfile;
 	    } catch (IOException ex) {
+	    	ex.printStackTrace();
 	        System.err.println(ex.getMessage());
 	    }
 	    return null;
