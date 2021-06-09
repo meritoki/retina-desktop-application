@@ -48,7 +48,7 @@ public class Zooniverse extends Provider {
 	}
 	
 	@JsonIgnore
-	public boolean isAvailable() throws Exception {
+	public boolean isAvailable()  {
 		logger.info("isAvailable()");
 		String command = null;
 		if (NodeController.isLinux() || NodeController.isMac()) {
@@ -56,12 +56,19 @@ public class Zooniverse extends Provider {
 		} else if (NodeController.isWindows()) {
 			command = "set PYTHONIOENCODING=utf-8 && panoptes";
 		}
-		Exit exit = NodeController.executeCommand(command, 1440);
-		if (exit.value != 0) {
-			return false;
-		} else {
-			return true;
-		}
+		
+		boolean flag = true;
+		Exit exit;
+		try {
+			exit = NodeController.executeCommand(command, 1440);
+			if (exit.value != 0) {
+				flag = false;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		return flag;
 	}
 
 	public Credential getCredential() {
