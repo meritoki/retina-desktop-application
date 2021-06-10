@@ -547,8 +547,10 @@ public class Page {
 			Image a = imageList.get(i);
 			if (bufferedImage == null) {
 				a.setOffset(offset);
-				int width = a.getBufferedImage(model).getWidth();
-				int height = (int) (a.getBufferedImage(model).getHeight() + a.position.margin);
+				BufferedImage aBufferedImage = a.getBufferedImage(model);
+				if(aBufferedImage != null) {
+				int width = aBufferedImage.getWidth();
+				int height = (int) (aBufferedImage.getHeight() + a.position.margin);
 				bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 				Graphics2D graphics2D = bufferedImage.createGraphics();
 				graphics2D.setPaint(Color.BLACK);
@@ -557,6 +559,7 @@ public class Page {
 				graphics2D.drawImage(a.getBufferedImage(model), null, 0, (int) (a.position.margin));
 				graphics2D.dispose();
 				offset = a.position.absoluteDimension.width;
+				}
 			}
 			if (i + 1 < imageList.size()) {
 				Image b = imageList.get(i + 1);

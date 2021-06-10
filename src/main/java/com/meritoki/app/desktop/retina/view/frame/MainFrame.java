@@ -148,8 +148,8 @@ public final class MainFrame extends JFrame {
 			this.loginDialog.setVisible(true);
 		}
 		this.toolDialog.setVisible(true);
-		this.shapeDialog.setVisible(true);
-		this.pageDialog.setVisible(true); 
+		this.shapeDialog.setVisible(false);
+		this.pageDialog.setVisible(false); 
 		if(this.model.system.machine) {
 			this.controlDialog.setModel(this.model);
 			this.controlDialog.setVisible(true);

@@ -124,6 +124,10 @@ public class Meritoki extends Provider {
 
 	public void update() {
 		this.setInputList(this.getInputList());
+		Input currentInput = this.getCurrentInput();
+		if(!this.inputList.contains(currentInput)) {
+			this.inputList.add(currentInput);
+		}
 
 	}
 
@@ -312,27 +316,36 @@ public class Meritoki extends Provider {
 		return bufferedImage;
 	}
 
+	public Input getCurrentInput() {
+		Input input = null;
+		if (this.model != null && this.model.document != null) {
+			Page page = this.model.document.getPage();
+			input = (page != null)?this.document.inputMap.get(page.uuid):null;
+			if (input == null) {
+				input = new Input();
+				input.scan = true;
+				input.uuid = (page != null)?page.uuid:null;
+				input.bufferedImage = (page != null)?page.getBufferedImage(model):null;
+				input.concept = new Concept();
+				inputList.add(input);// we want it in list if it has not been scanned;
+			} else {
+				input.scan = false;
+				input.bufferedImage = page.getBufferedImage(model);
+				
+			}
+		}
+//		System.out.println("getInputList() inputList.size()=" + inputList.size());
+		return input;
+	}
+
 	public List<Input> getInputList() {
 		List<Input> inputList = new ArrayList<>();
 		if (this.model != null && this.model.document != null) {
 			List<Page> pageList = this.model.document.pageList;
 			for (Page page : pageList) {
-				Input input = this.document.inputMap.get(page.uuid);
-				if (input == null) {
-					input = new Input();
-					input.scan = true;
-					input.uuid = page.uuid;
-					input.bufferedImage = page.getBufferedImage(model);
-					input.concept = new Concept();
-					inputList.add(input);// we want it in list if it has not been scanned;
-				} else {
-					input.scan = false;
-					input.bufferedImage = page.getBufferedImage(model);
-					inputList.add(input);
-				}
 				List<Shape> shapeList = page.getGridShapeList();
 				for (Shape shape : shapeList) {
-					input = this.document.inputMap.get(shape.uuid);
+					Input input = this.document.inputMap.get(shape.uuid);
 					if (input == null) {
 						input = new Input();
 						input.uuid = shape.uuid;

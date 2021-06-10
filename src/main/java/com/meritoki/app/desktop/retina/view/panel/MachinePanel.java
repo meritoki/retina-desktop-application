@@ -19,7 +19,6 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.HierarchyEvent;
@@ -28,6 +27,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 import javax.swing.JPanel;
 
@@ -39,7 +40,7 @@ import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 import com.meritoki.library.cortex.model.Point;
 
-public class MachinePanel extends JPanel implements MouseListener, KeyListener, Runnable, HierarchyListener, ComponentListener {
+public class MachinePanel extends JPanel implements MouseListener, MouseWheelListener, KeyListener, Runnable, HierarchyListener, ComponentListener {
 
 	private static final long serialVersionUID = 3989576625299550361L;
 	private static Logger logger = LogManager.getLogger(MachinePanel.class.getName());
@@ -55,6 +56,7 @@ public class MachinePanel extends JPanel implements MouseListener, KeyListener, 
 		this.addMouseListener(this);
 		this.addKeyListener(this);
 		this.addComponentListener(this);
+		this.addMouseWheelListener(this);
 //		this.addComponentListener(new ComponentAdapter() {
 //		      @Override
 //		      public void componentResized(ComponentEvent e) {
@@ -347,6 +349,31 @@ public class MachinePanel extends JPanel implements MouseListener, KeyListener, 
 	@Override
 	public void componentShown(ComponentEvent arg0) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		e.consume();
+		if (e.isControlDown())
+        {
+            if (e.getWheelRotation() < 0)
+            {
+                System.out.println("mouse wheel Up");
+                this.meritoki.zoom(zoomFactor);
+				this.mainFrame.init();
+            }
+            else
+            {
+                System.out.println("mouse wheel Down");
+                this.meritoki.zoom(-zoomFactor);
+				this.mainFrame.init();
+            }
+        }
+        else
+        {
+            getParent().dispatchEvent(e);
+        }
 		
 	}
 }

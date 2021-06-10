@@ -47,7 +47,7 @@ public class Input {
 	@JsonIgnore
 	public boolean equals(Object input) {
 		boolean flag = false;
-		if(input instanceof Input && this.uuid.equals(((Input)input).uuid)) {
+		if(input instanceof Input && this.uuid != null && ((Input)input).uuid != null && this.uuid.equals(((Input)input).uuid)) {
 			flag = true;
 		}
 		return flag;

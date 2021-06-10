@@ -104,6 +104,10 @@ public class System {
 	public Selection selection;
 
 	public System() {
+		this.init();
+	}
+	
+	public void init() {
 		this.initDirectories();
 		this.initUsers();
 		this.initProviders();

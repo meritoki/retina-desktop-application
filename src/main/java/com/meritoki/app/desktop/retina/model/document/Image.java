@@ -202,17 +202,32 @@ public class Image {
 	public BufferedImage getBufferedImage(Model model) {
 
 		this.fileCache =  this.uuid + "." + this.getExtension();
+		logger.info("getBufferedImage(model) this.fileCache="+this.fileCache);
 		if (this.bufferedImage == null) {
+			logger.info("getBufferedImage(model) this.bufferedImage == null A");
 			File directory = new File(NodeController.getDocumentCache(model.document.uuid));
 			if (!directory.exists()) {
 				directory.mkdirs();
 			}
-			BufferedImage bufferedImage = NodeController.openBufferedImage(NodeController.getDocumentCache(model.document.uuid),
-					this.fileCache);
+			BufferedImage bufferedImage = null;
+			File cache = new File(NodeController.getDocumentCache(model.document.uuid)+NodeController.getSeperator()+this.fileCache);
+			if(cache.exists())
+				bufferedImage = NodeController.openBufferedImage(cache);
 			if (bufferedImage == null) {
+				logger.info("getBufferedImage(model) this.bufferedImage == null B");
 				if (file == null) {
 					file = new File(this.filePath + NodeController.getSeperator() + this.fileName);
+					if(!file.exists()) {
+						this.file = null;
+					}
 				}
+				if (file == null) {
+					file = new File(NodeController.getDocumentCache(model.document.uuid) + NodeController.getSeperator() + this.fileName);
+					if(!file.exists()) {
+						this.file = null;
+					}
+				}
+				logger.info("getBufferedImage(model) this.file="+this.file);
 				if (this.file != null) {
 					bufferedImage = NodeController.openBufferedImage(this.file);
 					if (bufferedImage != null) {

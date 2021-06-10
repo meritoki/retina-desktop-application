@@ -62,12 +62,16 @@ public class Model {
 		this.newDocument();
 	}
 	
-	public void newDocument() {
-		this.system.newDocument = true;
+	public void setProviderModel() {
 		for(Entry<String, Provider> entry:this.system.providerMap.entrySet()) {
 			Provider provider = entry.getValue();
 			provider.setModel(this);
 		}
+	}
+	
+	public void newDocument() {
+		this.system.newDocument = true;
+		this.setProviderModel();
 	}
 	
 	public List<String> getDocumentList() {

@@ -253,7 +253,13 @@ public class ControlDialog extends javax.swing.JDialog {
 		DefaultListModel<String> defaultListModel = new DefaultListModel<>();
 		if (conceptList != null) {
 			for (int i = 0; i < conceptList.size(); i++) {
-				defaultListModel.addElement(conceptList.get(i).uuid);
+				Input concept = conceptList.get(i);
+				if(concept != null) {
+				String uuid = concept.uuid;
+				if(uuid != null) {
+					defaultListModel.addElement(uuid);
+				}
+				}
 			}
 		}
 		this.inputList.setModel(defaultListModel);
