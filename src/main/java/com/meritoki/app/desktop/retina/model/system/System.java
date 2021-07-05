@@ -108,6 +108,7 @@ public class System {
 	}
 	
 	public void init() {
+		logger.info("init()");
 		this.initDirectories();
 		this.initUsers();
 		this.initProviders();
@@ -147,6 +148,7 @@ public class System {
 	}
 	
 	public void initProviders() {
+		logger.info("initProviders()");
 //		this.providerList.add(new Zooniverse());
 		this.providerMap.put("zooniverse", new Zooniverse());
 		if(this.machine)

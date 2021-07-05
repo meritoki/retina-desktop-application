@@ -66,19 +66,19 @@ public class Resource {
 		}
 		if (!this.recentList.contains(recent)) {
 			this.recentList.add(recent);
-			NodeController.saveCsv(NodeController.getResourceCache(), "recent.csv", this.recentList);
+			NodeController.saveText(NodeController.getResourceCache(), "recent.csv", this.recentList);
 		}
 	}
 
 	public void removeRecent(String recent) {
 		if (this.recentList.contains(recent)) {
 			this.recentList.remove(recent);
-			NodeController.saveCsv(NodeController.getResourceCache(), "recent.csv", this.recentList);
+			NodeController.saveText(NodeController.getResourceCache(), "recent.csv", this.recentList);
 		}
 	}
 	
 	public void save() {
-		NodeController.saveCsv(NodeController.getResourceCache(), "recent.csv", this.recentList);
+		NodeController.saveText(NodeController.getResourceCache(), "recent.csv", this.recentList);
 	}
 
 	public void initRecentList() {
@@ -103,7 +103,7 @@ public class Resource {
 	public void initEnergyList() {
 		File file = new File(NodeController.getResourceCache() + NodeController.getSeperator() + "energy.csv");
 		if (!file.exists()) {
-			NodeController.saveCsv(file, Arrays.asList("temperature", "pressure"));
+			NodeController.saveText(file, Arrays.asList("temperature", "pressure"));
 		}
 		List<String[]> energyList = NodeController
 				.openCsv(NodeController.getResourceCache() + NodeController.getSeperator() + "energy.csv");
@@ -117,7 +117,7 @@ public class Resource {
 	public void initSpaceList() {
 		File file = new File(NodeController.getResourceCache() + NodeController.getSeperator() + "space.csv");
 		if (!file.exists()) {
-			NodeController.saveCsv(file, Arrays.asList("latitude", "longitude", "locale", "location"));
+			NodeController.saveText(file, Arrays.asList("latitude", "longitude", "locale", "location"));
 		}
 		List<String[]> spaceList = NodeController
 				.openCsv(NodeController.getResourceCache() + NodeController.getSeperator() + "space.csv");
@@ -131,7 +131,7 @@ public class Resource {
 	public void initTimeList() {
 		File file = new File(NodeController.getResourceCache() + NodeController.getSeperator() + "time.csv");
 		if (!file.exists()) {
-			NodeController.saveCsv(file,Arrays.asList("year", "month", "week", "day", "hour", "minute","second") );
+			NodeController.saveText(file,Arrays.asList("year", "month", "week", "day", "hour", "minute","second") );
 		}
 		List<String[]> timeList = NodeController
 				.openCsv(NodeController.getResourceCache() + NodeController.getSeperator() + "time.csv");
@@ -145,7 +145,7 @@ public class Resource {
 	public void initLanguageList() {
 		File file = new File(NodeController.getResourceCache() + NodeController.getSeperator() + "language.csv");
 		if (!file.exists()) {
-			NodeController.saveCsv(file, Arrays.asList("letter", "word", "sentance", "paragraph"));
+			NodeController.saveText(file, Arrays.asList("letter", "word", "sentance", "paragraph"));
 		}
 		List<String[]> laguageList = NodeController
 				.openCsv(NodeController.getResourceCache() + NodeController.getSeperator() + "language.csv");

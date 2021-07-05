@@ -100,6 +100,7 @@ public final class MainFrame extends JFrame {
 
 	public MainFrame(Model model) {
 		this.initComponents();
+		logger.info("MainFrame("+model+")");
 		this.setTitle("Retina Desktop Application");
 		this.setModel(model);
 		this.setMainFrame();

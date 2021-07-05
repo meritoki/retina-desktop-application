@@ -45,6 +45,7 @@ public class Zooniverse extends Provider {
 
 	public Zooniverse() {
 		super("zooniverse");
+		logger.info("Zooniverse()");
 	}
 	
 	@JsonIgnore
@@ -96,9 +97,10 @@ public class Zooniverse extends Provider {
 		List<Project> projectList = new ArrayList<>();
 		String command = null;
 		if (NodeController.isLinux() || NodeController.isMac()) {
-			command = "panoptes project ls | grep " + query;
+//			command = "panoptes project ls | grep " + query;
+			command = "panoptes project ls";
 		} else if (NodeController.isWindows()) {
-			command = "panoptes project ls | findstr " + query;
+			command = "set PYTHONIOENCODING=utf-8 && panoptes project ls";
 		}
 		Exit exit = NodeController.executeCommand(command, 1440);
 		if (exit.value != 0) {
@@ -107,11 +109,13 @@ public class Zooniverse extends Provider {
 			List<String> stringList = exit.list;
 			if (stringList.size() > 0 && !stringList.get(0).equals("error")) {
 				for (String s : stringList) {
-					String[] result = s.split(" ");
-					String id = result[0].replace("*", "");
-					String name = result[1];
-					String title = this.convertArrayToStringMethod(result, 2);
-					projectList.add(new Project(id, name, title));
+					if(s.contains(query)) {
+						String[] result = s.split(" ");
+						String id = result[0].replace("*", "");
+						String name = result[1];
+						String title = this.convertArrayToStringMethod(result, 2);
+						projectList.add(new Project(id, name, title));
+					}
 				}
 			}
 		}
@@ -194,10 +198,17 @@ public class Zooniverse extends Provider {
 			NodeController.saveYaml(this.getConfigPath(), "config.yml", data);
 			File file = new File(NodeController.getPanoptesHome());
 			file.mkdir();
-			String cpCommand = "cp " + this.getConfigPath() + NodeController.getSeperator() + "config.yml "
+			String cpCommand = "";
+			if(NodeController.isWindows()) {
+				cpCommand += "copy ";
+			} else {
+				cpCommand = "cp ";
+			}
+			cpCommand += this.getConfigPath() + NodeController.getSeperator() + "config.yml "
 					+ NodeController.getPanoptesHome() + NodeController.getSeperator();
 			Exit exit = NodeController.executeCommand(cpCommand);
 			if (exit.value != 0) {
+				logger.error("setConfig("+credential+") exit.output="+exit.getOutput());
 				throw new Exception("Non-Zero Exit Value: " + exit.value);
 			}
 		}
@@ -231,7 +242,7 @@ public class Zooniverse extends Provider {
 			throw new Exception("Non-Zero Exit Value: " + exit.value);
 		} else {
 			List<String> stringList = exit.list;
-			if (stringList.size() > 0 && !stringList.get(0).equals("error")) {
+			if (stringList.size() > 0) {
 				for (String s : stringList) {
 					String[] stringArray = s.split(" ");
 					Workflow workflow = new Workflow(stringArray[0], this.convertArrayToStringMethod(stringArray, 1));
@@ -316,7 +327,7 @@ public class Zooniverse extends Provider {
 			stringBuilder.append(shape.uuid + ".jpg");
 			stringBuilder.append("\n");
 		}
-		NodeController.saveCsv(manifestPath, "manifest.csv", stringBuilder);
+		NodeController.saveText(manifestPath, "manifest.csv", stringBuilder);
 	}
 
 	public SubjectSet getSubjectSet(String title, List<Shape> shapeList) throws Exception {
