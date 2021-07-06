@@ -152,6 +152,16 @@ public class Matrix {
 		}
 		return list;
 	}
+	
+	public Shape getShape(int row, int column) {
+		List<ArrayList<Shape>> shapeMatrix = this.getTableRowList();
+		List<Shape> shapeList = shapeMatrix.get(row);
+		Shape shape = null;
+		if(shapeList != null && column < shapeList.size()) {
+			shape = shapeList.get(column);
+		}
+		return shape;
+	}
 
 	@JsonIgnore
 	public List<ArrayList<Shape>> getArchiveRowList() {

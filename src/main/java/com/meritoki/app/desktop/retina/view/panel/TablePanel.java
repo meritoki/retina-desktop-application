@@ -15,13 +15,20 @@
  */
 package com.meritoki.app.desktop.retina.view.panel;
 
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Page;
+import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.Table;
+import com.meritoki.app.desktop.retina.model.document.Text;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 /**
@@ -43,11 +50,25 @@ public class TablePanel extends javax.swing.JPanel {
 	 */
 	public TablePanel() {
 		initComponents();
+		
 	}
 
 	public void setModel(Model model) {
 		this.model = model;
 		this.init();
+		Action action = new AbstractAction()
+		{
+		    public void actionPerformed(ActionEvent e)
+		    {
+		        TableCellListener tcl = (TableCellListener)e.getSource();
+		        int row = tcl.getRow();
+		        int column = tcl.getColumn();
+		        Shape shape = model.document.getPage().getMatrix().getShape(row, column);
+		        shape.addText(new Text((String)tcl.getNewValue()));
+		    }
+		};
+		TableCellListener tcl = new TableCellListener(this.dataTable, action);
+		this.dataTable.setDefaultRenderer(Object.class, new TableRenderer(this.model));
 	}
 
 	public void init() {
@@ -59,14 +80,14 @@ public class TablePanel extends javax.swing.JPanel {
 		logger.debug("initDataTable()");
 		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
-		Table table = (page != null)? page.getTable(): null;
+		Table table = (page != null) ? page.getTable() : null;
 		if (table != null) {
 			this.dataTable.setModel(table.getDefaultTableMode());
 		} else {
 			this.dataTable.setModel(new javax.swing.table.DefaultTableModel(new Object[0][0], new Object[0]));
 		}
-	}	
-	
+	}
+
 	/**
 	 * This method is called from within the constructor to initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is always
@@ -74,47 +95,36 @@ public class TablePanel extends javax.swing.JPanel {
 	 */
 	@SuppressWarnings("unchecked")
 	// <editor-fold defaultstate="collapsed" desc="Generated
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+	// <editor-fold defaultstate="collapsed" desc="Generated
+	// Code">//GEN-BEGIN:initComponents
+	private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        dataTable = new javax.swing.JTable();
+		jScrollPane1 = new javax.swing.JScrollPane();
+		dataTable = new javax.swing.JTable();
 
-        dataTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(dataTable);
+		dataTable
+				.setModel(new javax.swing.table.DefaultTableModel(
+						new Object[][] { { null, null, null, null }, { null, null, null, null },
+								{ null, null, null, null }, { null, null, null, null } },
+						new String[] { "Title 1", "Title 2", "Title 3", "Title 4" }));
+		jScrollPane1.setViewportView(dataTable);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 954, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-    }// </editor-fold>//GEN-END:initComponents
+		javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+		this.setLayout(layout);
+		layout.setHorizontalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(layout.createSequentialGroup().addContainerGap()
+						.addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 954, Short.MAX_VALUE)
+						.addContainerGap()));
+		layout.setVerticalGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+				.addGroup(layout.createSequentialGroup().addContainerGap()
+						.addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
+						.addContainerGap()));
+	}// </editor-fold>//GEN-END:initComponents
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable dataTable;
-    private javax.swing.JScrollPane jScrollPane1;
-    // End of variables declaration//GEN-END:variables
+	// Variables declaration - do not modify//GEN-BEGIN:variables
+	private javax.swing.JTable dataTable;
+	private javax.swing.JScrollPane jScrollPane1;
+	// End of variables declaration//GEN-END:variables
 }
 //
 //public void initDataTable() {

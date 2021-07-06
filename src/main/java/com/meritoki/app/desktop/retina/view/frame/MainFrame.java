@@ -126,7 +126,6 @@ public final class MainFrame extends JFrame {
 		logger.debug("setModel(" + model + ")");
 		this.model = model;
 		this.pagePanel.setModel(this.model);
-		this.matrixPanel.setModel(this.model);
 		this.tablePanel.setModel(this.model);
 		this.archivePanel.setModel(this.model);
 		this.toolDialog.setModel(this.model);
@@ -164,7 +163,6 @@ public final class MainFrame extends JFrame {
 		logger.debug("init()");
 		this.repaint();
 		this.pagePanel.init();
-		this.matrixPanel.init();
 		this.tablePanel.init();
 		this.archivePanel.init();
 		this.machinePanel.init();
@@ -281,8 +279,6 @@ public final class MainFrame extends JFrame {
         mainTabbedPane = new javax.swing.JTabbedPane();
         pageScrollPane = new javax.swing.JScrollPane();
         pagePanel = new com.meritoki.app.desktop.retina.view.panel.PagePanel();
-        matrixScrollPane = new javax.swing.JScrollPane();
-        matrixPanel = new com.meritoki.app.desktop.retina.view.panel.MatrixPanel();
         tableScrollPane = new javax.swing.JScrollPane();
         tablePanel = new com.meritoki.app.desktop.retina.view.panel.TablePanel();
         archiveScrollPane = new javax.swing.JScrollPane();
@@ -345,21 +341,6 @@ public final class MainFrame extends JFrame {
         pageScrollPane.setViewportView(pagePanel);
 
         mainTabbedPane.addTab("Page", pageScrollPane);
-
-        javax.swing.GroupLayout matrixPanelLayout = new javax.swing.GroupLayout(matrixPanel);
-        matrixPanel.setLayout(matrixPanelLayout);
-        matrixPanelLayout.setHorizontalGroup(
-            matrixPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1028, Short.MAX_VALUE)
-        );
-        matrixPanelLayout.setVerticalGroup(
-            matrixPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 562, Short.MAX_VALUE)
-        );
-
-        matrixScrollPane.setViewportView(matrixPanel);
-
-        mainTabbedPane.addTab("Matrix", matrixScrollPane);
 
         tableScrollPane.setViewportView(tablePanel);
 
@@ -660,7 +641,7 @@ public final class MainFrame extends JFrame {
             .addComponent(mainTabbedPane)
         );
 
-        pack();
+        this.setSize(1024, 512);
     }// </editor-fold>//GEN-END:initComponents
 
     private void exportMeritokiMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportMeritokiMenuItemActionPerformed
@@ -909,8 +890,6 @@ public final class MainFrame extends JFrame {
     private javax.swing.JScrollPane machineScrollPane;
     private javax.swing.JMenuBar mainMenuBar;
     private javax.swing.JTabbedPane mainTabbedPane;
-    private com.meritoki.app.desktop.retina.view.panel.MatrixPanel matrixPanel;
-    private javax.swing.JScrollPane matrixScrollPane;
     private javax.swing.JMenu meritokiDialogMenu;
     private javax.swing.JMenuItem microsoftExportMenuItem;
     private javax.swing.JMenuItem newMenuItem;

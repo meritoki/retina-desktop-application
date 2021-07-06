@@ -104,7 +104,7 @@ public class MicrosoftExportDialog extends javax.swing.JDialog {
 		System.out.println("Creating excel");
 		for (Page page : pageList) {
 			sheet = workbook.createSheet(page.uuid);
-			Object[][] datatypes = page.getTable().getExcelObjectArray();
+			Object[][] datatypes = page.getTable().getSpreadsheetObjectArray();
 			int rowNum = 0;
 			for (Object[] datatype : datatypes) {
 				Row row = sheet.createRow(rowNum++);

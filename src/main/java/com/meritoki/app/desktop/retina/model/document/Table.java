@@ -36,7 +36,7 @@ public class Table {
 		return new javax.swing.table.DefaultTableModel((Object[][])objectArray[1], (Object[])objectArray[0]);
 	}
 	
-	public Object[][] getExcelObjectArray() {
+	public Object[][] getSpreadsheetObjectArray() {
 		Object[][] dataMatrix = null;
 		if (matrix != null) {
 			List<ArrayList<Shape>> rowList = matrix.getTableRowList();
@@ -71,32 +71,15 @@ public class Table {
 			Data data;
 			String value;
 			if (rowList.size() > 0) {
-				shapeList = rowList.get(0);
-				columnArray = new Object[shapeList.size()];
-				for (int j = 0; j < shapeList.size(); j++) {
-					shape = shapeList.get(j);
-					data = shape.data;
-					value = data.text.value;
-					if(value != null) {
-						columnArray[j] = value;
-					} else {
-						value = data.unit.value;
-						if(value != null) {
-							columnArray[j] = value;
-						} else {
-							value = data.unit.type.toString();
-							columnArray[j] = value;
-						}
-					}
-				}
-				dataMatrix = new Object[rowList.size()-1][matrix.getShapeListMax()];
-				for (int i = 1; i < rowList.size(); i++) {
+				columnArray = this.getColumnNames(matrix.getShapeListMax()).toArray();
+				dataMatrix = new Object[rowList.size()][matrix.getShapeListMax()];
+				for (int i = 0; i < rowList.size(); i++) {
 					shapeList = rowList.get(i);
 					for (int j = 0; j < shapeList.size(); j++) {
 						shape = shapeList.get(j);
 						data = shape.data;
 						value = data.text.value;
-						dataMatrix[i-1][j] = value;
+						dataMatrix[i][j] = value;
 					}
 				}
 			}
@@ -105,4 +88,53 @@ public class Table {
 		}
 		return objectArray;
 	}
+	
+	public List<String> getColumnNames(int n) {
+		logger.info("getColumnNames("+n+")");
+	    List<String> result = new ArrayList<String>();
+
+	    String alphabets[] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+	    StringBuilder sb = new StringBuilder();
+	    for(int j = 0; j < n; j++){
+	        int index = j/26;   
+	            char ch = (char) (j % 26 + 'A');               
+	          sb.append(ch);
+	          String item = "";
+	          if(index > 0) {
+	              item += alphabets[index-1];
+	          }
+	          item += alphabets[j % 26];
+	          result.add(item);
+	    }
+	    sb.reverse();
+	    return result;
+	}
 }
+//shapeList = rowList.get(0);
+//columnArray = new Object[shapeList.size()];
+//for (int j = 0; j < shapeList.size(); j++) {
+//	shape = shapeList.get(j);
+//	data = shape.data;
+//	value = data.text.value;
+//	if(value != null) {
+//		columnArray[j] = value;
+//	} else {
+//		value = data.unit.value;
+//		if(value != null) {
+//			columnArray[j] = value;
+//		} else {
+//			value = data.unit.type.toString();
+//			columnArray[j] = value;
+//		}
+//	}
+//}
+//dataMatrix = new Object[rowList.size()-1][matrix.getShapeListMax()];
+//for (int i = 1; i < rowList.size(); i++) {
+//	shapeList = rowList.get(i);
+//	for (int j = 0; j < shapeList.size(); j++) {
+//		shape = shapeList.get(j);
+//		data = shape.data;
+//		value = data.text.value;
+//		dataMatrix[i-1][j] = value;
+//	}
+//}
