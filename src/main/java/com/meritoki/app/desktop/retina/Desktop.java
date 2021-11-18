@@ -32,42 +32,40 @@ import com.meritoki.library.controller.node.NodeController;
 public class Desktop {
 
     static Logger logger = LogManager.getLogger(Desktop.class.getName());
-	public static String versionNumber = "0.22.202111";
+	public static String versionNumber = "1.0.202111";
 	public static String vendor = "Meritoki";
-	public static String about = "Version " + versionNumber + " Copyright " + vendor + " 2020-2021";
+	public static String about = "Version " + versionNumber + " Copyright " + vendor + " 2019-2021";
 	public static Option helpOption = new Option("h", "help", false, "Print usage information");
 	public static Option versionOption = new Option("v", "version", false, "Print version information");
-	public static Option machineOption = new Option("m", "machine", false, "Load Machine Interface");
+	// public static Option machineOption = new Option("m", "machine", false, "Load Machine Interface");
 
     public static void main(String args[]) {
-        logger.info("Starting Retina Desktop Application..."); 
-        final Model model = new Model();
+
+
         Options options = new Options();
 		options.addOption(helpOption);
 		options.addOption(versionOption);
-		options.addOption(machineOption);
+		// options.addOption(machineOption);
 		CommandLineParser parser = new DefaultParser();
 		try {
 			CommandLine commandLine = parser.parse(options, args);
 			if (commandLine.hasOption("help")) {
 				logger.info("main(args) help");
 				HelpFormatter formatter = new HelpFormatter();
-				formatter.printHelp("sef", options, true);
+				formatter.printHelp("retina", options, true);
 			} else if (commandLine.hasOption("version")) {
 				System.out.println(about);
 			} else {
-				if (commandLine.hasOption("machine")) {
-					model.system.machine = true;
+//				if (commandLine.hasOption("machine")) {
+//					model.system.machine = true;
 //					batchPath = commandLine.getOptionValue("batch");
 //					logger.info("main(args) batch=" + batchPath);
-				}
-			}
-		} catch (org.apache.commons.cli.ParseException ex) {
-			logger.error(ex);
-		}
+//				}
+        logger.info("Starting Retina Desktop Application...");
+        final Model model = new Model();
         model.system.init();
         model.setProviderModel();
-        System.out.println("Hello world");
+        System.out.println("Hello World");
         final MainFrame mainFrame = new MainFrame(model);
         final SplashWindow splashWindow = new SplashWindow("/Splash.png", mainFrame, 4000);
         try {
@@ -95,5 +93,10 @@ public class Desktop {
                 mainFrame.setVisible(true);
            }
         });
+			}
+		} catch (org.apache.commons.cli.ParseException ex) {
+			logger.error(ex);
+		}
+
     }
 }
