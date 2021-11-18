@@ -1,8 +1,7 @@
 # Meritoki Retina
-## [Implementation](https://github.com/meritoki/retina-desktop-application/wiki/Implementation)
-The implemenation of Retina can be downloaded, installed, configured, and used. Click the link above for instructions.
+Retina can be downloaded, installed, configured, and used. Checkout the [Repo](https://github.com/meritoki/retina-desktop-application) for more information
 
-### Features
+## Features
 1. Save/Open Document Files in JSON Format
 2. Login/Logout Users Attribution
 3. Import Images (JPEG/PNG/PDF)
