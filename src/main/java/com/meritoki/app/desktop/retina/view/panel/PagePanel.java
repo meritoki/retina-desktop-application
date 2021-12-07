@@ -23,6 +23,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
@@ -46,7 +48,7 @@ import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.tool.Tool;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
-public class PagePanel extends JPanel implements MouseListener, KeyListener {
+public class PagePanel extends JPanel implements MouseListener, MouseWheelListener, KeyListener {
 
 	private static final long serialVersionUID = 3989576625299550361L;
 	private static Logger logger = LogManager.getLogger(PagePanel.class.getName());
@@ -57,6 +59,7 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 		super();
 		this.setBackground(Color.black);
 		this.addMouseListener(this);
+		this.addMouseWheelListener(this);
 		this.addKeyListener(this);
 
 	}
@@ -558,5 +561,24 @@ public class PagePanel extends JPanel implements MouseListener, KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		if (e.isControlDown()){
+			int wheelRotation = e.getWheelRotation();
+			
+			logger.info("mouseWheelMoved(e) wheelRotation="+wheelRotation);
+			try {
+				this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+				this.model.cache.scaleOperator = (wheelRotation == -1)?'/':'*';
+				this.model.cache.scaleFactor = 1.5;
+				this.model.pattern.execute("scalePage");
+				this.mainFrame.init();
+			} catch (Exception ex) {
+				JOptionPane.showMessageDialog(mainFrame, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			}
+        }
+		
 	}
 }
