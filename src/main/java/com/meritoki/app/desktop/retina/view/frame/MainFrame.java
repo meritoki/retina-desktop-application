@@ -758,12 +758,7 @@ public final class MainFrame extends JFrame {
 	}// GEN-LAST:event_newMenuItemActionPerformed
 
 	private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_saveMenuItemActionPerformed
-		if (this.model.system.newDocument) {
-			this.saveAsDialog = new com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog(this, false, this.model);
-		} else {
-			this.model.saveDocument();
-			this.init();
-		}
+		this.save();
 	}// GEN-LAST:event_saveMenuItemActionPerformed
 
 	private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_openMenuItemActionPerformed
