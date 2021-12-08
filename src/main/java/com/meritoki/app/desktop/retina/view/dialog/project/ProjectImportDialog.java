@@ -69,8 +69,6 @@ public class ProjectImportDialog extends javax.swing.JDialog {
 					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
 							JOptionPane.ERROR_MESSAGE);
 				}
-//				this.mainFrame.init();
-//				this.mainFrame.repaint();
 			}
 			this.setVisible(false);
 		} else if (result == JFileChooser.CANCEL_OPTION) {

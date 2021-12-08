@@ -48,7 +48,7 @@ public class ResizeShape extends Command {
 		
     	//Undo
 		Operation operation = new Operation();
-		operation.object = new Shape(pressedShape,true);
+		operation.object = (pressedShape instanceof Grid)?new Grid(((Grid)pressedShape),true):new Shape(pressedShape,true);
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);
@@ -59,7 +59,7 @@ public class ResizeShape extends Command {
 		}
 		//Redo
 		operation = new Operation();
-		operation.object = new Shape(pressedShape,true);
+		operation.object = (pressedShape instanceof Grid)?new Grid(((Grid)pressedShape),true):new Shape(pressedShape,true);
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);
@@ -75,7 +75,11 @@ public class ResizeShape extends Command {
 				}
 			} else if (operation.sign == 0) {
 				if (operation.object instanceof Shape) {
+					if(operation.object instanceof Grid) {
+						((Grid)operation.object).updateMatrix();
+					}
 					this.model.document.getPage().getImage().addShape((Shape) operation.object);
+					this.model.document.getPage().getImage().setShape(((Shape) operation.object).uuid);
 				}
 			}
 		}
@@ -87,14 +91,17 @@ public class ResizeShape extends Command {
 			Operation operation = this.operationList.get(i);
 			if (operation.sign == 1) {
 				if (operation.object instanceof Shape) {
+					if(operation.object instanceof Grid) {
+						((Grid)operation.object).updateMatrix();
+					}
 					this.model.document.getPage().getImage().addShape((Shape) operation.object);
 				}
 			} else if (operation.sign == 0) {
 				if (operation.object instanceof Shape) {
 					this.model.document.getPage().getImage().removeShape((Shape) operation.object);
+					this.model.document.getPage().getImage().setShape(((Shape) operation.object).uuid);
 				}
 			}
 		}
-		
 	}
 }
