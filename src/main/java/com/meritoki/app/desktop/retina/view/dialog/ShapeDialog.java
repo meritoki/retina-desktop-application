@@ -363,6 +363,12 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 
 	public void setShapeListSelectedIndex(int index) {
 		logger.debug("setShapeListSelectedIndex(" + index + ")");
+		int size = this.shapeList.getModel().getSize();
+		if(index < 0) {
+			index = (size - 1);
+		} else if(index == size){
+			index = 0;
+		}
 		this.shapeList.setSelectedIndex(index);
 	}
 
@@ -372,6 +378,12 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 
 	public void setGridListSelectedIndex(int index) {
 		logger.info("setGridListSelectedIndex(" + index + ")");
+		int size = this.gridShapeList.getModel().getSize();
+		if(index < 0) {
+			index = (size - 1);
+		} else if(index == size){
+			index = 0;
+		}
 		this.gridShapeList.setSelectedIndex(index);
 	}
 
