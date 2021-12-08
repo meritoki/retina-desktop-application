@@ -266,7 +266,14 @@ public final class MainFrame extends JFrame {
 		this.shareDialog.setVisible(true);
 	}// GEN-LAST:event_pageMenuItemActionPerformed
 	
-	
+	public void save() {
+		if (this.model.system.newDocument) {
+			this.saveAsDialog = new com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog(this, false, this.model);
+		} else {
+			this.model.saveDocument();
+			this.init();
+		}
+	}
 
 	/**
 	 * This method is called from within the constructor to initialize the form.
@@ -757,7 +764,6 @@ public final class MainFrame extends JFrame {
 			this.model.saveDocument();
 			this.init();
 		}
-
 	}// GEN-LAST:event_saveMenuItemActionPerformed
 
 	private void openMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_openMenuItemActionPerformed

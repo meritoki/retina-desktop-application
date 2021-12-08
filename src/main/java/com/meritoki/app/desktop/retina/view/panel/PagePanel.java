@@ -343,7 +343,6 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 			}
 		}
 		this.mainFrame.init();
-
 	}
 
 	@Override
@@ -364,6 +363,11 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 		ke.consume();
 		if (ke.isControlDown()) {
 			switch (ke.getKeyCode()) {
+			case KeyEvent.VK_S: {
+				logger.debug("keyPressed(e) KeyEvent.VK_S");
+				this.mainFrame.save();
+				break;
+			}
 			case KeyEvent.VK_EQUALS: {
 				logger.debug("keyPressed(e) KeyEvent.VK_EQUALS");
 				try {
