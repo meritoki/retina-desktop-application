@@ -15,11 +15,46 @@
  */
 package com.meritoki.app.desktop.retina.model.vendor;
 
+import java.util.Map;
+import java.util.TreeMap;
+
+import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.view.frame.MainFrame;
+
 public class Vendor {
 
 	public String name;
+	public MainFrame mainFrame;
+	public Model model;
+	public Map<String,Product> productMap = new TreeMap<>();
 	
 	public Vendor(String name) {
 		this.name = name;
 	}
+	
+	public void setMainFrame(MainFrame mainFrame) {
+		this.mainFrame = mainFrame;
+	}
+	
+	public void setModel(Model model) {
+		this.model = model;
+	}
+	
+	public boolean isAvailable() throws Exception{
+		return true;
+	}
+	
+	public void initialize() {
+		
+	}
+	
+	public void execute() throws Exception {
+		
+	}
+	
+	public void save() {
+		
+	}
+	
+
 }

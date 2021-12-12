@@ -15,11 +15,15 @@
  */
 package com.meritoki.app.desktop.retina.model.provider;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 import com.meritoki.app.desktop.retina.model.Model;
 
 public class Provider {
 	public String name;
 	public Model model;
+	public Map<String,Object> serviceMap = new TreeMap<>();
 	
 	public Provider(String name) {
 		this.name = name;
@@ -27,7 +31,6 @@ public class Provider {
 	
 	public void setModel(Model model) {
 		this.model = model;
-		
 	}
 	
 	public boolean isAvailable() throws Exception{
@@ -41,5 +44,4 @@ public class Provider {
 	public void init() {
 		
 	}
-
 }
