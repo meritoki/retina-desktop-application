@@ -27,6 +27,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.controller.user.UserController;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
@@ -39,8 +40,7 @@ import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.app.desktop.retina.model.provider.zooniverse.Zooniverse;
 import com.meritoki.app.desktop.retina.model.tool.Tool;
 import com.meritoki.app.desktop.retina.model.vendor.Vendor;
-import com.meritoki.app.desktop.retina.model.vendor.microsoft.Microsoft;
-import com.meritoki.app.desktop.retina.controller.node.NodeController;
+import com.meritoki.app.desktop.retina.model.vendor.google.Google;
 
 public class System {
 	private static final Logger logger = LogManager.getLogger(System.class.getName());
@@ -49,9 +49,9 @@ public class System {
 	@JsonProperty
 	public Map<String,Provider> providerMap = new HashMap<>();
 	@JsonProperty
-	public Tool tool = null;
+	public Map<String,Vendor> vendorMap = new HashMap<>();
 	@JsonProperty
-	public List<Vendor> vendorList = new ArrayList<>();
+	public Tool tool = null;
 	@JsonIgnore
 	public List<User> userList = new ArrayList<User>();
 	@JsonIgnore
@@ -156,6 +156,6 @@ public class System {
 	}
 	
 	public void initVendors() {
-		this.vendorList.add(new Microsoft());
+		this.vendorMap.put("google", new Google());
 	}
 }

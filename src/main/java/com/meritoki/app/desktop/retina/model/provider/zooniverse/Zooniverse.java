@@ -192,7 +192,7 @@ public class Zooniverse extends Provider {
 				stringBuilder.append(",");
 				BufferedImage image = this.model.document.getShapeBufferedImage(p.getScaledBufferedImage(this.model), s);
 				if(image != null) {
-					NodeController.saveJpg(manifestPath, s.uuid + ".jpg", this.model.document.getShapeBufferedImage(p.getScaledBufferedImage(this.model), s));
+					NodeController.saveJpg(manifestPath, s.uuid + ".jpg", image);
 				} else {
 					this.report.append("Page "+p.uuid+" Null Shape "+s.uuid+"\n");
 				}

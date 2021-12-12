@@ -356,6 +356,16 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 		}
 		this.gridShapeList.setModel(defaultListModel);
 	}
+	
+	public void setShapeData(Shape shape) {
+		Data data = (shape != null) ? shape.getData() : null;
+		if (data != null) {
+			String selectedItem = (String) this.unitTypeComboBox.getSelectedItem();
+			UnitType unitType = UnitType.valueOf(selectedItem);
+			data.unit.type = unitType;
+			data.unit.value = (String) this.unitValueComboBox.getSelectedItem();
+		}
+	}
 
 	public void setShapeListSelectedUUID(String uuid) {
 		this.shapeList.setSelectedValue(uuid, true);
@@ -1158,24 +1168,20 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 		logger.info("applyUnitButtonActionPerformed(...)");
 		Document document = (this.model != null) ? this.model.document : null;
 		Page page = (document != null) ? document.getPage() : null;
+		List<Shape> shapeList;
 		Shape shape = (page != null) ? page.getImage().getShape() : null;
 		if (shape != null && shape instanceof Grid) {
 			Grid grid = (Grid) shape;
-			shape = grid.getShape();
+			shapeList = grid.getShapeList();
+			for(Shape s: shapeList) {
+				this.setShapeData(s);
+			}
+		} else {
+			this.setShapeData(shape);
 		}
-		Data data = (shape != null) ? shape.getData() : null;
-		if (data != null) {
-			String selectedItem = (String) this.unitTypeComboBox.getSelectedItem();
-			UnitType unitType = UnitType.valueOf(selectedItem);
-			data.unit.type = unitType;
-			data.unit.value = (String) this.unitValueComboBox.getSelectedItem();
-			logger.info("applyUnitButtonActionPerformed(e) data.unit.value=" + data.unit.value);
-			logger.info("applyUnitButtonActionPerformed(e) data.unit.type=" + data.unit.type);
-		}
-//		this.mainFrame.repaint();
 		this.mainFrame.init();
 	}// GEN-LAST:event_applyUnitButtonActionPerformed
-
+	
 	private void rectangleButtonActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_rectangleButtonActionPerformed
 		this.model.cache.type = com.meritoki.app.desktop.retina.model.document.ShapeType.RECTANGLE;
 	}// GEN-LAST:event_rectangleButtonActionPerformed
