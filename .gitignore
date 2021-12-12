@@ -1,3 +1,4 @@
+
 .classpath
 .project
 archive/
@@ -5,6 +6,7 @@ target/
 error
 output
 logs/
+*.traineddata
 *.xlsx
 *.docx
 *.wav
