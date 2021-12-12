@@ -22,7 +22,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
@@ -33,9 +32,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.controller.client.ClientController;
 import com.meritoki.app.desktop.retina.model.Model;
-import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
+import com.meritoki.app.desktop.retina.model.vendor.google.Google;
 import com.meritoki.app.desktop.retina.view.dialog.AttributionDialog;
 import com.meritoki.app.desktop.retina.view.dialog.CommandDialog;
 import com.meritoki.app.desktop.retina.view.dialog.ControlDialog;
@@ -274,6 +273,8 @@ public final class MainFrame extends JFrame {
 			this.init();
 		}
 	}
+	
+//	this.setSize(1024, 512);
 
 	/**
 	 * This method is called from within the constructor to initialize the form.
@@ -328,6 +329,10 @@ public final class MainFrame extends JFrame {
         startMeritokiMenuItem = new javax.swing.JMenuItem();
         stopMeritokiMenuItem = new javax.swing.JMenuItem();
         resetMeritokiMenuItem = new javax.swing.JMenuItem();
+        vendorMenu = new javax.swing.JMenu();
+        googleVendorMenu = new javax.swing.JMenu();
+        tesseractGoogleMenu = new javax.swing.JMenu();
+        executeTesseractMenuItem = new javax.swing.JMenuItem();
         windowMenu = new javax.swing.JMenu();
         dialogMenu = new javax.swing.JMenu();
         toolMenuItem = new javax.swing.JMenuItem();
@@ -584,6 +589,26 @@ public final class MainFrame extends JFrame {
 
         mainMenuBar.add(providerMenu);
 
+        vendorMenu.setText("Vendor");
+
+        googleVendorMenu.setText("Google");
+
+        tesseractGoogleMenu.setText("Tesseract");
+
+        executeTesseractMenuItem.setText("Execute");
+        executeTesseractMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                executeTesseractMenuItemActionPerformed(evt);
+            }
+        });
+        tesseractGoogleMenu.add(executeTesseractMenuItem);
+
+        googleVendorMenu.add(tesseractGoogleMenu);
+
+        vendorMenu.add(googleVendorMenu);
+
+        mainMenuBar.add(vendorMenu);
+
         windowMenu.setText("Window");
 
         dialogMenu.setText("Dialog");
@@ -697,6 +722,19 @@ public final class MainFrame extends JFrame {
     private void exportProjectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportProjectMenuItemActionPerformed
     	this.projectExportDialog = new ProjectExportDialog(this, false, this.model);
     }//GEN-LAST:event_exportProjectMenuItemActionPerformed
+
+    private void executeTesseractMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeTesseractMenuItemActionPerformed
+        Google google = (Google)this.model.system.vendorMap.get("google");
+        google.setModel(this.model);
+        google.setMainFrame(this);
+        google.setProduct("Tesseract");
+        try {
+        	google.execute();
+        } catch(Exception e) {
+        	e.printStackTrace();
+        	JOptionPane.showMessageDialog(this,e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_executeTesseractMenuItemActionPerformed
 
 	private void zooniverseCSVImportMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_zooniverseCSVImportMenuItemActionPerformed
 		this.zooniverseCSVImportDialog = new com.meritoki.app.desktop.retina.view.dialog.zooniverse.ZooniverseCSVImportDialog(
@@ -883,15 +921,21 @@ public final class MainFrame extends JFrame {
     private javax.swing.JMenuItem controlMenuItem;
     private javax.swing.JMenu dialogMenu;
     private javax.swing.JMenu editMenu;
+    private javax.swing.JMenuItem executeTesseractMenuItem;
     private javax.swing.JMenu exportMenu;
     private javax.swing.JMenuItem exportMeritokiMenuItem;
     private javax.swing.JMenuItem exportProjectMenuItem;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JMenu googleVendorMenu;
     private javax.swing.JMenuItem importImageMenuItem;
     private javax.swing.JMenu importMenu;
     private javax.swing.JMenuItem importMeritokiMenuItem;
     private javax.swing.JMenuItem importProjectMenuItem;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem logInOutMenuItem;
     private com.meritoki.app.desktop.retina.view.panel.MachinePanel machinePanel;
     private javax.swing.JScrollPane machineScrollPane;
@@ -917,8 +961,10 @@ public final class MainFrame extends JFrame {
     private com.meritoki.app.desktop.retina.view.panel.TablePanel table1;
     private com.meritoki.app.desktop.retina.view.panel.TablePanel tablePanel;
     private javax.swing.JScrollPane tableScrollPane;
+    private javax.swing.JMenu tesseractGoogleMenu;
     private javax.swing.JMenuItem toolMenuItem;
     private javax.swing.JMenuItem undoMenuItem;
+    private javax.swing.JMenu vendorMenu;
     private javax.swing.JMenu windowMenu;
     private javax.swing.JMenuItem zooniverseCSVImportMenuItem;
     private javax.swing.JMenuItem zooniverseExportMenuItem;

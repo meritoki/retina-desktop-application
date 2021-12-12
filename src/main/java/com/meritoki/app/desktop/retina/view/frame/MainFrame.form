@@ -236,6 +236,35 @@
             </Menu>
           </SubComponents>
         </Menu>
+        <Menu class="javax.swing.JMenu" name="vendorMenu">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Vendor"/>
+          </Properties>
+          <SubComponents>
+            <Menu class="javax.swing.JMenu" name="googleVendorMenu">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Google"/>
+              </Properties>
+              <SubComponents>
+                <Menu class="javax.swing.JMenu" name="tesseractGoogleMenu">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Tesseract"/>
+                  </Properties>
+                  <SubComponents>
+                    <MenuItem class="javax.swing.JMenuItem" name="executeTesseractMenuItem">
+                      <Properties>
+                        <Property name="text" type="java.lang.String" value="Execute"/>
+                      </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="executeTesseractMenuItemActionPerformed"/>
+                      </Events>
+                    </MenuItem>
+                  </SubComponents>
+                </Menu>
+              </SubComponents>
+            </Menu>
+          </SubComponents>
+        </Menu>
         <Menu class="javax.swing.JMenu" name="windowMenu">
           <Properties>
             <Property name="text" type="java.lang.String" value="Window"/>

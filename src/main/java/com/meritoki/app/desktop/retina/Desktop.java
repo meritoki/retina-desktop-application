@@ -63,6 +63,7 @@ public class Desktop {
 //				}
         logger.info("Starting Retina Desktop Application...");
         final Model model = new Model();
+//        model.system.machine = true;
         model.system.init();
         model.setProviderModel();
         System.out.println("Hello World");
