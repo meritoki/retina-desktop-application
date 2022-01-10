@@ -16,6 +16,7 @@
 package com.meritoki.app.desktop.retina.model.provider.zooniverse;
 
 import java.io.IOException;
+import java.util.TreeMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,7 +29,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 public class Data {
 	private static Logger logger = LogManager.getLogger(Data.class.getName());
 	@JsonProperty
-	public String retired;
+	public Retired retired;
 	@JsonProperty("my_own_id")
 	public String id;
 	@JsonProperty("the_image") 
