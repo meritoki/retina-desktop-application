@@ -32,9 +32,9 @@ import com.meritoki.library.controller.node.NodeController;
 public class Desktop {
 
     static Logger logger = LogManager.getLogger(Desktop.class.getName());
-	public static String versionNumber = "1.0.202112";
+	public static String versionNumber = "1.0.202204";
 	public static String vendor = "Meritoki";
-	public static String about = "Version " + versionNumber + " Copyright " + vendor + " 2019-2021";
+	public static String about = "Version " + versionNumber + " Copyright " + vendor + " 2019-2022";
 	public static Option helpOption = new Option("h", "help", false, "Print usage information");
 	public static Option versionOption = new Option("v", "version", false, "Print version information");
 	// public static Option machineOption = new Option("m", "machine", false, "Load Machine Interface");

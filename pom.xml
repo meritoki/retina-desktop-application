@@ -5,10 +5,9 @@
 	<name>retina-desktop-application</name>
 	<groupId>com.meritoki.app.desktop</groupId>
 	<artifactId>retina</artifactId>
-	<version>1.0.20220110</version>
+	<version>1.0.202204</version>
 	<packaging>jar</packaging>
 	<properties>
-		<cayenne.version>4.0.1</cayenne.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
@@ -39,12 +38,12 @@
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
-			<version>2.13.3</version>
+			<version>2.17.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.13.3</version>
+			<version>2.17.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -93,12 +92,12 @@
 		<dependency>
 			<groupId>org.apache.cayenne</groupId>
 			<artifactId>cayenne-server</artifactId>
-			<version>${cayenne.version}</version>
+			<version>4.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.cayenne</groupId>
 			<artifactId>cayenne-java8</artifactId>
-			<version>${cayenne.version}</version>
+			<version>4.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
