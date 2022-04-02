@@ -354,7 +354,7 @@ public class Document {
 		boolean flag = false;
 		for (int i = 1; i < stringArrayList.size(); i++) {
 			String[] stringArray = stringArrayList.get(i);
-			logger.info("importZooniverse(" + fileName + ") stringArray.length=" + stringArray.length);
+//			logger.info("importZooniverse(" + fileName + ") stringArray.length=" + stringArray.length);
 			List<String> valueList = new ArrayList<>();
 			String uuid = null;
 			String annotationString = stringArray[11];
@@ -401,8 +401,7 @@ public class Document {
 			}
 
 			if (uuid != null && valueList.size() > 0) {
-				logger.info("importZooniverse(" + fileName + ") valueList=" + valueList + " uuid=" + uuid);
-
+//				logger.info("importZooniverse(" + fileName + ") valueList=" + valueList + " uuid=" + uuid);
 				for (Shape shape : this.getGridShapeList()) {
 					if (uuid.equals(shape.uuid)) {
 						logger.info("importZooniverse(" + fileName + ") shape uuid match");
@@ -415,12 +414,11 @@ public class Document {
 						shape.getData().setText(shape.getDefaultText());
 					}
 				}
-
 			} else {
-				logger.error("importZooniverse(" + fileName + ") valueList=" + valueList + " uuid=" + uuid);
+//				logger.error("importZooniverse(" + fileName + ") valueList=" + valueList + " uuid=" + uuid);
 			}
 		}
-		logger.error("importZooniverse(" + fileName + ") flag=" + flag);
+//		logger.error("importZooniverse(" + fileName + ") flag=" + flag);
 		return flag;
 	}
 
