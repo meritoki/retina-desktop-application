@@ -54,7 +54,12 @@ public class Grid extends Shape {
 		super((Shape)grid,flag);
 		this.row = grid.row;
 		this.column = grid.column;
-		this.matrix = grid.matrix;//this.copyShapeMatrix(grid.matrix);
+		if(flag) {
+			this.matrix = grid.matrix;//this.copyShapeMatrix(grid.matrix);
+		} else {
+			this.initMatrix();
+			this.updateMatrix();
+		}
 		this.index = grid.index;
 	}
 	
