@@ -86,7 +86,6 @@ public class Image {
 		this.file = image.file;
 		this.filePath = image.filePath;
 		this.fileName = image.fileName;
-		this.fileCache = this.uuid + "." + this.getExtension(this.fileName);
 		this.position = new Position(image.position);
 		this.index = image.index;
 		for (Shape shape : image.shapeList) {
@@ -103,7 +102,7 @@ public class Image {
 		this.file = file;
 		this.filePath = this.file.getParent();
 		this.fileName = this.file.getName();
-		this.fileCache = this.uuid + "." + this.getExtension(this.fileName);
+//		this.fileCache = this.uuid + "." + this.getExtension(this.fileName);
 	}
 
 	@JsonIgnore
@@ -213,9 +212,11 @@ public class Image {
 				directory.mkdirs();
 			}
 			BufferedImage bufferedImage = null;
+			this.fileCache = this.uuid + "." + this.getExtension(this.fileName);
 			File cache = new File(NodeController.getDocumentCache(model.document.uuid) + NodeController.getSeperator()
 					+ this.fileCache);
 			if (cache.exists()) {
+				logger.info("getBufferedImage(model) this.fileCache Exists");
 				bufferedImage = NodeController.openBufferedImage(cache);
 			} else {
 				logger.info("getBufferedImage(model) this.fileCache Exists Not");
