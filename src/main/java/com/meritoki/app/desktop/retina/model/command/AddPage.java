@@ -70,6 +70,7 @@ public class AddPage extends Command {
 				page.imageList.add(new Image(file));
 	    		this.model.document.addPage(page);
 //	    		meritoki.input(page);
+	    		page.getBufferedImage(this.model);
 	    		page.setBufferedImageNull();
 	    		MemoryController.log();
     		}
