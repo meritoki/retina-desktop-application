@@ -60,7 +60,7 @@ public class OpenProject extends Command {
 				if (entryName.contains(".json")) {
 					documentEntry = entry;
 					documentPath = file.getParent() + File.separatorChar + entryName;
-					System.out.println(this + ".execute() documentPath=" + documentPath);
+//					System.out.println(this + ".execute() documentPath=" + documentPath);
 					File documentFile = new File(documentPath);
 					if (!documentFile.exists()) {
 						Files.copy(zipFile.getInputStream(documentEntry), Paths.get(documentPath));
@@ -77,7 +77,7 @@ public class OpenProject extends Command {
 					if (this.model.document != null) {
 						String imagePath = NodeController.getDocumentCache(this.model.document.uuid)
 								+ File.separatorChar + entryName;
-						System.out.println(this + ".execute() imagePath=" + imagePath);
+//						System.out.println(this + ".execute() imagePath=" + imagePath);
 						File imageFile = new File(imagePath);
 						if (!imageFile.exists()) {
 							Files.copy(is, Paths.get(imagePath));

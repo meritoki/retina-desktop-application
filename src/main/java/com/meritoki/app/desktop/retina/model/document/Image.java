@@ -221,6 +221,10 @@ public class Image {
 			} else {
 				logger.info("getBufferedImage(model) this.fileCache Exists Not");
 				this.file = new File(this.filePath + NodeController.getSeperator() + this.fileName);// load local file
+				if(!this.file.exists()) {
+					this.file = new File(NodeController.getDocumentCache(model.document.uuid) + NodeController.getSeperator()
+					+ this.fileName);
+				}
 				if (this.file.exists()) {
 					logger.info("getBufferedImage(model) this.file Exists");
 					bufferedImage = NodeController.openBufferedImage(this.file);
