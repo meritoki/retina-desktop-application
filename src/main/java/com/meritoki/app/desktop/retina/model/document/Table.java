@@ -90,7 +90,7 @@ public class Table {
 	}
 	
 	public List<String> getColumnNames(int n) {
-		logger.info("getColumnNames("+n+")");
+//		logger.info("getColumnNames("+n+")");
 	    List<String> result = new ArrayList<String>();
 
 	    String alphabets[] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
