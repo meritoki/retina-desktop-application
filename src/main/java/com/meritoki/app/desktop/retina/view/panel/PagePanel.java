@@ -23,6 +23,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
@@ -45,10 +46,9 @@ import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Position;
 import com.meritoki.app.desktop.retina.model.document.Shape;
-import com.meritoki.app.desktop.retina.model.tool.Tool;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
-public class PagePanel extends JPanel implements MouseListener, MouseWheelListener, KeyListener {
+public class PagePanel extends JPanel implements MouseListener, MouseWheelListener, MouseMotionListener, KeyListener {
 
 	private static final long serialVersionUID = 3989576625299550361L;
 	private static Logger logger = LogManager.getLogger(PagePanel.class.getName());
@@ -60,6 +60,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 		this.setBackground(Color.black);
 		this.addMouseListener(this);
 		this.addMouseWheelListener(this);
+		this.addMouseMotionListener(this);
 		this.addKeyListener(this);
 
 	}
@@ -132,6 +133,25 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 					graphics2D.draw(rectangle);
 					selectorShapeList = this.model.cache.selector.shapeList;
 				}
+				if(this.model.system.shape != null) {
+					graphics2D.setColor(Color.GREEN);
+					Shape s = this.model.system.shape;
+					Position position = s.position;
+					switch (s.type) {
+					case ELLIPSE: {
+						Ellipse2D.Double ellipse = new Ellipse2D.Double(position.point.x, position.point.y,
+								position.dimension.width, position.dimension.height);
+						graphics2D.draw(ellipse);
+						break;
+					}
+					case RECTANGLE: {
+						Rectangle2D.Double rectangle = new Rectangle2D.Double(position.point.x, position.point.y,
+								position.dimension.width, position.dimension.height);
+						graphics2D.draw(rectangle);
+					}
+					}
+					this.model.system.shape = null;
+				}
 				List<Shape> shapeList = page.getSortedShapeList();
 				Shape shape = page.getShape();
 				Shape gridShape = page.getGridShape();
@@ -162,6 +182,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 								for (int i = 0; i < matrix.length; i++) {
 									for (int j = 0; j < matrix[i].length; j++) {
 										Shape gs = matrix[i][j];
+//										logger.info("paint(...) gs.position="+gs.position);
 										if (gridShape != null && gs.uuid.equals(gridShape.uuid)) {
 											graphics2D.setColor(Color.YELLOW);
 										} else {
@@ -356,6 +377,69 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 
 	@Override
 	public void mouseExited(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent me) {
+		this.model.system.releasedPoint = new Point(me.getX(), me.getY());
+		if (this.model.system.tool != null) {
+			switch (this.model.system.tool) {
+			case DRAW: {
+				Point pressedPoint = this.model.system.pressedPoint;
+				Point releasedPoint = this.model.system.releasedPoint;
+				Page page = this.model.document.getPage();
+				double scale = page.position.scale;
+				Image pressedImage = this.model.document.getImage();
+				Shape shape = new Shape();
+				shape.position = new Position(new Point(pressedPoint), new Point(releasedPoint),
+						pressedImage.position.relativeScale, scale, pressedImage.position.offset, pressedImage.position.margin);
+				this.model.system.shape = shape;
+//				this.model.document.addShape(shape);
+//				shape.bufferedImage = this.model.document.getShapeBufferedImage(page.getScaledBufferedImage(this.model), shape);
+				break;
+			}
+			case SELECT: {
+				Point pressedPoint = this.model.system.pressedPoint;
+				Point releasedPoint = this.model.system.releasedPoint;
+				Page page = this.model.document.getPage();
+				double scale = page.position.scale;
+				Image pressedImage = this.model.document.getImage();
+				Shape shape = new Shape();
+				shape.position = new Position(new Point(pressedPoint), new Point(releasedPoint),
+						pressedImage.position.relativeScale, scale, pressedImage.position.offset, pressedImage.position.margin);
+				this.model.system.shape = shape;
+				break;
+			}
+			case RESIZE: {
+				if (this.model.document.getShape() != null) {
+					this.model.system.selection = this.model.document.getPage()
+							.intersectShape(this.model.system.pressedPoint);
+					if (this.model.system.selection != null) {
+						try {
+							this.model.cache.selection = this.model.system.selection;
+							this.model.cache.pressedShapeUUID = this.model.document.getShape().uuid;
+							this.model.cache.releasedPoint = this.model.system.releasedPoint;
+							this.model.pattern.execute("resizeShape");
+						} catch (NullPointerException e) {
+							e.printStackTrace();
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				}
+				break;
+			}
+			}
+			this.repaint();
+		}
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override

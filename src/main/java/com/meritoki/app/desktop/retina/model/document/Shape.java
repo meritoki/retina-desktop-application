@@ -92,6 +92,13 @@ public class Shape {
 		return flag;
 	}
 	
+	public boolean contains(Point point) {
+		boolean flag = this.position.contains(point);
+//		logger.info("contains("+point+") this.position="+this.position);
+//		logger.info("contains("+point+") flag="+flag);
+		return flag;
+	}
+	
 	public void setScale(double scale) {
 		logger.debug("setScale("+scale+")");
 		this.position.setScale(scale);

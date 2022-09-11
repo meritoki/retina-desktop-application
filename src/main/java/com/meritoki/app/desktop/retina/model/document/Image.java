@@ -165,8 +165,12 @@ public class Image {
 	@JsonIgnore
 	public Shape getShape(Point point) {
 		for (Shape shape : this.shapeList) {
-			if (shape.position.contains((point))) {
-				logger.debug("getShape(" + point + ") shape=" + shape);
+			if (shape.contains(point)) {
+//				logger.info("getShape(" + point + ") shape=" + shape);
+				if(shape instanceof Grid) {
+					Grid grid = (Grid)shape;
+					grid.setShape(point);
+				}
 				return shape;
 			}
 		}

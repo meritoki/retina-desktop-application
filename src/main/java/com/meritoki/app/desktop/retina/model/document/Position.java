@@ -119,6 +119,7 @@ public class Position {
 		this.scale();
 	}
 	
+	@JsonIgnore
 	public boolean containsPosition(Position position) {
 		logger.info("containsPosition("+position+") this="+this);
 		if(this.point.x <= position.point.x && this.point.y <= position.point.y) {
@@ -296,13 +297,13 @@ public class Position {
 
 	@JsonIgnore
 	public Point getStartPoint() {
-		this.scale();
+//		this.scale();
 		return this.point;
 	}
 
 	@JsonIgnore
 	public Point getStopPoint() {
-		this.scale();
+//		this.scale();
 		return new Point((this.point.x + this.dimension.width), (this.point.y + this.dimension.height));
 	}
 
@@ -311,13 +312,15 @@ public class Position {
 		boolean flag = false;
 		Point startPoint = this.getStartPoint();
 		Point stopPoint = this.getStopPoint();
+//		logger.info("contains(" + point + ") startPoint=" + startPoint);
+//		logger.info("contains(" + point + ") stopPoint=" + stopPoint);
 		if (startPoint.x < stopPoint.x && startPoint.y < stopPoint.y) {
 			if (startPoint.x <= point.x && point.x <= stopPoint.x && startPoint.y <= point.y
 					&& point.y <= stopPoint.y) {
 				flag = true;
 			}
 		}
-		logger.debug("contains(" + point + ") flag=" + flag);
+//		logger.info("contains(" + point + ") flag=" + flag);
 		return flag;
 	}
 
@@ -424,17 +427,17 @@ public class Position {
 	public String toString() {
 		String string = "";
 		ObjectWriter ow = new ObjectMapper().writer();
-		if (logger.isDebugEnabled()) {
+//		if (logger.isDebugEnabled()) {
 			// .withDefaultPrettyPrinter();
 			try {
 				string = ow.writeValueAsString(this);
 			} catch (IOException ex) {
 				logger.error("IOException " + ex.getMessage());
 			}
-		} else if (logger.isInfoEnabled()) {
-//			string = "{\"relativeScale\":"+this.relativeScale+",\"offset\":"+this.offset+",\"margin\":"+this.margin+", \"relativePoint\":"+this.relativePoint+"\",\"point\":" + this.point + ", \"center\":"+this.center+", \"dimension\":" + this.dimension + "}";
-			string = "{\"scale\":"+this.scale+", \"relativeScale\":"+this.relativeScale+", \"point\":" + this.point + ", \"center\":"+this.center+", \"dimension\":" + this.dimension + "}";
-		}
+//		} else if (logger.isInfoEnabled()) {
+////			string = "{\"relativeScale\":"+this.relativeScale+",\"offset\":"+this.offset+",\"margin\":"+this.margin+", \"relativePoint\":"+this.relativePoint+"\",\"point\":" + this.point + ", \"center\":"+this.center+", \"dimension\":" + this.dimension + "}";
+//			string = "{\"scale\":"+this.scale+", \"relativeScale\":"+this.relativeScale+", \"point\":" + this.point + ", \"center\":"+this.center+", \"dimension\":" + this.dimension + "}";
+//		}
 		return string;
 	}
 }

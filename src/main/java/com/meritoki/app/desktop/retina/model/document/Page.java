@@ -347,6 +347,11 @@ public class Page {
 		return shapeList;
 	}
 
+	@JsonIgnore
+	public List<Shape> getSortedShapeList() {
+		return new Matrix(this.getShapeList(), null, this.threshold).getShapeList();
+	}
+
 	/**
 	 * Function returns bufferedImage with one or more File bufferedImages from the
 	 * fileList
@@ -381,11 +386,6 @@ public class Page {
 		AffineTransformOp affineTransformOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
 		after = affineTransformOp.filter(before, after);
 		return after;
-	}
-
-	@JsonIgnore
-	public List<Shape> getSortedShapeList() {
-		return new Matrix(this.getShapeList(), null, this.threshold).getShapeList();
 	}
 
 	@JsonIgnore
