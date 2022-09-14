@@ -15,12 +15,14 @@
  */
 package com.meritoki.app.desktop.retina.model.command;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.document.Guide;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
@@ -28,6 +30,7 @@ import com.meritoki.app.desktop.retina.model.document.Position;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.ShapeType;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
+import com.meritoki.app.desktop.retina.model.tool.Tool;
 
 public class AddShape extends Command {
 
@@ -56,6 +59,11 @@ public class AddShape extends Command {
 		shape.type = type;
 		shape.position = new Position(new Point(pressedPoint), new Point(releasedPoint),
 				pressedImage.position.relativeScale, scale, pressedImage.position.offset, pressedImage.position.margin);
+		
+		List<Guide> guideList = page.getGuideList();
+		for(Guide guide: guideList) {
+			guide.snapShape(shape, Tool.DRAW);
+		}
 		this.model.document.addShape(shape);
 		shape.bufferedImage = this.model.document.getShapeBufferedImage(page.getScaledBufferedImage(this.model), shape);
     	Meritoki meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");

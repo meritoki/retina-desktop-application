@@ -15,9 +15,9 @@ public class Tesseract extends Product {
 	public Tesseract() {
 		tesseract = new net.sourceforge.tess4j.Tesseract();
 		tesseract.setDatapath("./lib/");
-		tesseract.setLanguage("eng");
-		tesseract.setTessVariable("tessedit_char_whitelist", ".,0123456789");
-		tesseract.setTessVariable("tessedit_char_blacklist", "!?@#$%&*()<>_-+=/:;'\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
+		tesseract.setLanguage("digits");
+//		tesseract.setTessVariable("tessedit_char_whitelist", ".,0123456789");
+//		tesseract.setTessVariable("tessedit_char_blacklist", "!?@#$%&*()<>_-+=/:;'\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
 	}
 	
 	@Override

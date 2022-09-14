@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Grid extends Shape {
-	
+
 	@JsonIgnore
 	static Logger logger = LogManager.getLogger(Grid.class.getName());
 	@JsonProperty
@@ -36,110 +36,98 @@ public class Grid extends Shape {
 	public Shape[][] matrix = new Shape[row][column];
 	@JsonProperty
 	public int index = 0;
-	
+
 	public Grid() {
 		super();
-		initMatrix();
+//		this.initMatrix();
 	}
-	
+
 	public Grid(Shape shape, int row, int column) {
-		super(shape,true);
+		super(shape, true);
 		this.row = row;
 		this.column = column;
-		this.initMatrix();
+		this.matrix = new Shape[row][column];
+//		this.initMatrix();
 		this.updateMatrix();
 	}
 
 	public Grid(Grid grid, boolean flag) {
-		super((Shape)grid,flag);
+		super((Shape) grid, flag);
 		this.row = grid.row;
 		this.column = grid.column;
-		this.matrix = grid.matrix;//this.copyShapeMatrix(grid.matrix);
 		this.index = grid.index;
+		this.matrix = this.copyShapeMatrix(grid.matrix);// this.copyShapeMatrix(grid.matrix);
+		this.updateMatrix();
 	}
 	
-//	public Shape[][] copyShapeMatrix(Shape[][] matrix) {
-//		Shape[][] m = new Shape[matrix.length][matrix[0].length];
-//		for(int i=0;i<matrix.length;i++) {
-//			for(int j=0;j<matrix[i].length;j++) {
-//				m[i][j] = new Shape(matrix[i][j],true);
-//			}
-//		}
-//		return m;
-//	}
-	
-	public List<Shape> getShapeList() {
-		
-		List<Shape> shapeList = new ArrayList<Shape>();
+	public Shape[][] copyShapeMatrix(Shape[][] matrix) {
+		Shape[][] m = new Shape[matrix.length][matrix[0].length];
 		for(int i=0;i<matrix.length;i++) {
 			for(int j=0;j<matrix[i].length;j++) {
-				shapeList.add(matrix[i][j]);
+				m[i][j] = new Shape(matrix[i][j],true);
 			}
 		}
-		return shapeList;
+		return m;
 	}
-	
-	public void initMatrix() {
-		matrix = new Shape[row][column];
-		for(int i=0;i<matrix.length;i++) {
-			for(int j=0;j<matrix[i].length;j++) {
-				matrix[i][j] = new Shape();
-			}
-		}
-	}
-	
+
 	public void updateMatrix() {
 		Point point = this.position.point;
 		Dimension dimension = this.position.dimension;
-		double width = dimension.width/column;
-		double height = dimension.height/row;
-		for(int i=0;i<matrix.length;i++) {
-			for(int j=0;j<matrix[i].length;j++) {
-				matrix[i][j].position.point.x = point.x+(j*width);
-				matrix[i][j].position.point.y = point.y+(i*height);
+		double width = dimension.width / column;
+		double height = dimension.height / row;
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix[i].length; j++) {
+				if(matrix[i][j] == null) {
+					matrix[i][j] = new Shape();
+				}
+				matrix[i][j].position.point.x = point.x + (j * width);
+				matrix[i][j].position.point.y = point.y + (i * height);
 				matrix[i][j].position.dimension.width = width;
 				matrix[i][j].position.dimension.height = height;
-				matrix[i][j].position.center = new Point(matrix[i][j].position.point.x + (matrix[i][j].position.dimension.width / 2),matrix[i][j].position.point.y + (matrix[i][j].position.dimension.height / 2));
+				matrix[i][j].position.center = new Point(
+						matrix[i][j].position.point.x + (matrix[i][j].position.dimension.width / 2),
+						matrix[i][j].position.point.y + (matrix[i][j].position.dimension.height / 2));
 			}
 		}
 	}
-	
+
 	public void setRow(int row) {
 		this.row = row;
 	}
-	
+
 	public void setColumn(int column) {
 		this.column = column;
 	}
-	
+
 	public void setScale(double scale) {
 		super.setScale(scale);
 		this.updateMatrix();
-		
+
 	}
-	
+
 	public void setRelativeScale(double scale) {
 		super.setRelativeScale(scale);
 		this.updateMatrix();
 	}
-	
+
 	public void setMargin(double margin) {
 		super.setMargin(margin);
 		this.updateMatrix();
 	}
-	
+
 	public void setOffset(double offset) {
 		super.setOffset(offset);
 		this.updateMatrix();
 	}
-	
+
 	@JsonIgnore
 	public boolean setShape(String uuid) {
 		logger.info("setShape(" + uuid + ")");
 		boolean flag = false;
+		List<Shape> shapeList = this.getShapeList();
 		Shape shape = null;
-		for (int i = 0; i < this.getShapeList().size(); i++) {
-			shape = this.getShapeList().get(i);
+		for (int i = 0; i < shapeList.size(); i++) {
+			shape = shapeList.get(i);
 			if (shape.uuid.equals(uuid)) {
 				flag = true;
 				this.index = i;
@@ -148,12 +136,68 @@ public class Grid extends Shape {
 		}
 		return flag;
 	}
+
+	@JsonIgnore
+	public boolean setShape(Point point) {
+		boolean flag = false;
+		List<Shape> shapeList = this.getShapeList();
+		Shape shape = null;
+		for (int i = 0; i < shapeList.size(); i++) {
+			shape = shapeList.get(i);
+			if (shape.contains(point)) {
+				flag = true;
+				this.index = i;
+				break;
+			}
+		}
+//		logger.info("setShape(" + point + ") flag=" + flag);
+		return flag;
+	}
+
 	@JsonIgnore
 	public Shape getShape() {
 		Shape shape = null;
-		if (this.index >= 0 && this.index < this.getShapeList().size()) {
-			shape = this.getShapeList().get(this.index);
+		List<Shape> shapeList = this.getShapeList();
+		if (this.index >= 0 && this.index < shapeList.size()) {
+			shape = shapeList.get(this.index);
 		}
 		return shape;
 	}
+
+	public List<Shape> getShapeList() {
+		List<Shape> shapeList = new ArrayList<Shape>();
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix[i].length; j++) {
+				Shape s = matrix[i][j];
+				shapeList.add(s);
+			}
+		}
+		return shapeList;
+	}
 }
+//public void printMatrix() {
+////matrix = new Shape[row][column];
+//System.out.println("printMatrix()");
+//for (int i = 0; i < matrix.length; i++) {
+//	for (int j = 0; j < matrix[i].length; j++) {
+//		System.out.println(matrix[i][j]);
+//	}
+//}
+//}
+//public void initMatrix() {
+//matrix = new Shape[row][column];
+//for(int i=0;i<matrix.length;i++) {
+//	for(int j=0;j<matrix[i].length;j++) {
+//		matrix[i][j] = new Shape();
+//	}
+//}
+//}
+//public Shape[][] copyShapeMatrix(Shape[][] matrix) {
+//Shape[][] m = new Shape[matrix.length][matrix[0].length];
+//for(int i=0;i<matrix.length;i++) {
+//	for(int j=0;j<matrix[i].length;j++) {
+//		m[i][j] = new Shape(matrix[i][j],true);
+//	}
+//}
+//return m;
+//}

@@ -26,7 +26,7 @@ public class Selector extends Shape {
 	
 	public Selector(Selector selector,boolean flag) {
 		super(selector,flag);
-		shapeList = selector.shapeList;
+		this.shapeList = this.copyShapeList(selector.shapeList);
 	}
 	
 	public void addShape(Shape shape) {
@@ -34,4 +34,20 @@ public class Selector extends Shape {
 			shapeList.add(shape);
 		}
 	}
+
+	public List<Shape> copyShapeList(List<Shape> shapeList) {
+		List<Shape> sList = new ArrayList<>();
+		for(Shape shape: shapeList) {
+			if(shape instanceof Grid) {
+				Grid grid = (Grid)shape;
+				shape = new Grid(grid,true);
+			} else {
+				shape = new Shape(shape,true);
+			}
+			sList.add(shape);
+		}
+		return sList;
+	}
+	
+	//Consider putting global move function
 }

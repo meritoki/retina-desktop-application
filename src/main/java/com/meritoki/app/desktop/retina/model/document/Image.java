@@ -102,6 +102,7 @@ public class Image {
 		this.file = file;
 		this.filePath = this.file.getParent();
 		this.fileName = this.file.getName();
+//		this.fileCache = this.uuid + "." + this.getExtension(this.fileName);
 	}
 
 	@JsonIgnore
@@ -110,8 +111,9 @@ public class Image {
 	}
 
 	@JsonIgnore
-	public String getExtension() {
-		return this.fileName.substring(this.fileName.lastIndexOf(".") + 1);
+	public String getExtension(String fileName) {
+		fileName = fileName.toLowerCase();
+		return fileName.substring(fileName.lastIndexOf(".") + 1);
 	}
 
 	/**
@@ -162,13 +164,27 @@ public class Image {
 	 */
 	@JsonIgnore
 	public Shape getShape(Point point) {
+		List<Guide> guideList = new ArrayList<>();
+		Shape s = null;
 		for (Shape shape : this.shapeList) {
-			if (shape.position.contains((point))) {
-				logger.debug("getShape(" + point + ") shape=" + shape);
-				return shape;
+			if (shape.contains(point)) {
+				if(shape instanceof Guide) {
+					guideList.add((Guide)shape);
+				} else if(shape instanceof Grid) {
+					Grid grid = (Grid)shape;
+					grid.setShape(point);
+					s = shape;
+					break;
+				} else {
+					s = shape;
+					break;
+				}
 			}
 		}
-		return null;
+		if(s == null && guideList.size() > 0) {
+			s = guideList.get(0);
+		}
+		return s;
 	}
 
 	/**
@@ -181,6 +197,17 @@ public class Image {
 		List<Shape> shapeList = new ArrayList<>();
 		for (Shape s : this.shapeList) {
 			shapeList.add(s);
+		}
+		return shapeList;
+	}
+	
+	@JsonIgnore
+	public List<Shape> getGuideList() {
+		List<Shape> shapeList = new ArrayList<>();
+		for (Shape s : this.shapeList) {
+			if (s instanceof Guide) {
+				shapeList.add(s);
+			}
 		}
 		return shapeList;
 	}
@@ -201,86 +228,58 @@ public class Image {
 //Original Revert to this state
 	@JsonIgnore
 	public BufferedImage getBufferedImage(Model model) {
-		MemoryController.log();
+//		MemoryController.log();
 		if (this.bufferedImage == null) {
-			logger.info("getBufferedImage(model) this.bufferedImage == null");
+//			logger.info("getBufferedImage(model) this.bufferedImage == null");
+			// make document cache
 			File directory = new File(NodeController.getDocumentCache(model.document.uuid));
 			if (!directory.exists()) {
 				directory.mkdirs();
 			}
 			BufferedImage bufferedImage = null;
-			this.fileCache =  this.uuid + "." + this.getExtension();
-			File cache = new File(NodeController.getDocumentCache(model.document.uuid)+NodeController.getSeperator()+this.fileCache);
-			if(cache.exists())
+			this.fileCache = this.uuid + "." + this.getExtension(this.fileName);
+			File cache = new File(NodeController.getDocumentCache(model.document.uuid) + NodeController.getSeperator()
+					+ this.fileCache);
+			if (cache.exists()) {
+//				logger.info("getBufferedImage(model) this.fileCache Exists");
 				bufferedImage = NodeController.openBufferedImage(cache);
-			if (bufferedImage == null) {
-				logger.debug("getBufferedImage(model) this.bufferedImage == null B");
-				if (file == null) {
-					file = new File(this.filePath + NodeController.getSeperator() + this.fileName);
-					if(!file.exists()) {
-						this.file = null;
-					}
+			} else {
+				logger.info("getBufferedImage(model) this.fileCache Exists Not");
+				this.file = new File(this.filePath + NodeController.getSeperator() + this.fileName);// load local file
+				if(!this.file.exists()) {
+					this.file = new File(NodeController.getDocumentCache(model.document.uuid) + NodeController.getSeperator()
+					+ this.fileName);
 				}
-				if (file == null) {
-					file = new File(NodeController.getDocumentCache(model.document.uuid) + NodeController.getSeperator() + this.fileName);
-					if(!file.exists()) {
-						this.file = null;
-					}
-				}
-				logger.debug("getBufferedImage(model) this.file="+this.file);
-				if (this.file != null) {
+				if (this.file.exists()) {
+					logger.info("getBufferedImage(model) this.file Exists");
 					bufferedImage = NodeController.openBufferedImage(this.file);
 					if (bufferedImage != null) {
-						this.setBufferedImage(bufferedImage);
-						if (this.getExtension().equals("jpg") || this.getExtension().equals("jpeg")) {
-							try {
+						logger.info("getBufferedImage(model) bufferedImage Not Null");
+						try {
+							if (this.fileCache.toLowerCase().contains("jpg") || this.fileCache.toLowerCase().contains("jpeg")) {
+								logger.info("getBufferedImage(model) JPG");
 								NodeController.saveJpg(NodeController.getDocumentCache(model.document.uuid),
 										this.fileCache, bufferedImage);
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						} else if(this.getExtension().equals("jpeg")) {
-							try {
-								NodeController.saveJpg(NodeController.getDocumentCache(model.document.uuid),
-										this.fileCache, bufferedImage);
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						} else if(this.getExtension().equals("png")) {
-							try {
+
+							} else if (this.fileCache.toLowerCase().contains("png")) {
+								logger.info("getBufferedImage(model) PNG");
 								NodeController.savePng(NodeController.getDocumentCache(model.document.uuid),
 										this.fileCache, bufferedImage);
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-					} else if (model.system.multiUser) {
-						ClientController clientController = new ClientController(model);
-						if (clientController.fileClient.checkHealth()) {
-							if (!clientController.fileClient.checkFile(this.uuid)) {
-								clientController.fileClient.markFile(this.uuid);
+
 							} else {
-								clientController.fileClient.downloadFile(
-										NodeController.getDocumentCache(model.document.uuid),
-										this.uuid + "." + this.getExtension());
-								clientController.fileClient.unmarkFile(this.uuid);
+								logger.info("getBufferedImage(model) ERROR");
 							}
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							logger.error("Could Not Create File Cache");
+							e.printStackTrace();
+							
 						}
-					}
-				}
-			} else if (model.system.multiUser) {
-				ClientController clientController = new ClientController(model);
-				if (clientController.fileClient.checkHealth()) {
-					if (clientController.fileClient.checkFile(this.uuid)) {
-						clientController.fileClient.uploadFile(NodeController.getDocumentCache(model.document.uuid),
-								this.uuid + "." + this.getExtension());
 					}
 				}
 			}
 			if (bufferedImage != null) {
+				this.setBufferedImage(bufferedImage);
 				BufferedImage beforeBufferedImage = bufferedImage;
 				int w = beforeBufferedImage.getWidth();
 				int h = beforeBufferedImage.getHeight();
@@ -294,8 +293,95 @@ public class Image {
 				this.position.setAbsoluteDimension(
 						new Dimension(this.bufferedImage.getWidth(), this.bufferedImage.getHeight()));
 			}
+				
 		}
-		MemoryController.log();
+//			if (bufferedImage == null) {
+//				logger.info("getBufferedImage(model) this.bufferedImage == null B");
+//				if (file == null) {
+//					file = new File(this.filePath + NodeController.getSeperator() + this.fileName);// load local file
+//					if (!file.exists()) {
+//						this.file = null;
+//
+//					}
+//				}
+//				if (file == null) {
+//					// load fil
+//					file = new File(NodeController.getDocumentCache(model.document.uuid) + NodeController.getSeperator()
+//							+ this.fileName);
+//					if (!file.exists()) {
+////						file.createNewFile();
+//						this.file = null;
+//					}
+//				}
+//				logger.info("getBufferedImage(model) this.file=" + this.file);
+//				if (this.file != null) {
+//					bufferedImage = NodeController.openBufferedImage(this.file);
+//					if (bufferedImage != null) {
+//						this.setBufferedImage(bufferedImage);
+//						if (this.getExtension().equals("jpg") || this.getExtension().equals("jpeg")) {
+//							try {
+//								NodeController.saveJpg(NodeController.getDocumentCache(model.document.uuid),
+//										this.fileCache, bufferedImage);
+//							} catch (Exception e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
+//							}
+//						} else if (this.getExtension().equals("jpeg")) {
+//							try {
+//								NodeController.saveJpg(NodeController.getDocumentCache(model.document.uuid),
+//										this.fileCache, bufferedImage);
+//							} catch (Exception e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
+//							}
+//						} else if (this.getExtension().equals("png")) {
+//							try {
+//								NodeController.savePng(NodeController.getDocumentCache(model.document.uuid),
+//										this.fileCache, bufferedImage);
+//							} catch (Exception e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
+//							}
+//						}
+//					} else if (model.system.multiUser) {
+//						ClientController clientController = new ClientController(model);
+//						if (clientController.fileClient.checkHealth()) {
+//							if (!clientController.fileClient.checkFile(this.uuid)) {
+//								clientController.fileClient.markFile(this.uuid);
+//							} else {
+//								clientController.fileClient.downloadFile(
+//										NodeController.getDocumentCache(model.document.uuid),
+//										this.uuid + "." + this.getExtension());
+//								clientController.fileClient.unmarkFile(this.uuid);
+//							}
+//						}
+//					}
+//				}
+//			} else if (model.system.multiUser) {
+//				ClientController clientController = new ClientController(model);
+//				if (clientController.fileClient.checkHealth()) {
+//					if (clientController.fileClient.checkFile(this.uuid)) {
+//						clientController.fileClient.uploadFile(NodeController.getDocumentCache(model.document.uuid),
+//								this.uuid + "." + this.getExtension());
+//					}
+//				}
+//			}
+//			if (bufferedImage != null) {
+//				BufferedImage beforeBufferedImage = bufferedImage;
+//				int w = beforeBufferedImage.getWidth();
+//				int h = beforeBufferedImage.getHeight();
+//				BufferedImage afterBufferedImage = new BufferedImage((int) (w * this.position.relativeScale),
+//						(int) (h * this.position.relativeScale), BufferedImage.TYPE_INT_ARGB);
+//				AffineTransform at = new AffineTransform();
+//				at.scale(this.position.relativeScale, this.position.relativeScale);
+//				AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+//				afterBufferedImage = scaleOp.filter(beforeBufferedImage, afterBufferedImage);
+//				this.bufferedImage = afterBufferedImage;
+//				this.position.setAbsoluteDimension(
+//						new Dimension(this.bufferedImage.getWidth(), this.bufferedImage.getHeight()));
+//			}
+//		}
+//		MemoryController.log();
 		return this.bufferedImage;
 	}
 
@@ -313,7 +399,7 @@ public class Image {
 
 	@JsonIgnore
 	public void setScale(double scale) {
-		logger.info("setScale(" + scale + ")");
+//		logger.info("setScale(" + scale + ")");
 		this.position.setScale(scale);
 		for (Shape shape : this.shapeList) {
 			shape.setScale(scale);

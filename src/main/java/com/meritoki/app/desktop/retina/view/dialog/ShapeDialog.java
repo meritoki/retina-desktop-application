@@ -1071,6 +1071,7 @@ public class ShapeDialog extends javax.swing.JDialog implements KeyListener, Mou
 			this.model.pattern.execute("addGrid");
 			mainFrame.init();
 		} catch (Exception e) {
+			e.printStackTrace();
 			JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}// GEN-LAST:event_setGridButtonActionPerformed

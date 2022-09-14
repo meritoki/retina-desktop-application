@@ -39,7 +39,8 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 include = JsonTypeInfo.As.PROPERTY,
 property = "type")
 @JsonSubTypes({
-@Type(value = Grid.class)
+@Type(value = Grid.class),
+@Type(value = Guide.class)
 })
 public class Shape {
 
@@ -89,6 +90,13 @@ public class Shape {
 		if(this.uuid.equals(shape.uuid)) {
 			flag = true;
 		}
+		return flag;
+	}
+	
+	public boolean contains(Point point) {
+		boolean flag = this.position.contains(point);
+//		logger.info("contains("+point+") this.position="+this.position);
+//		logger.info("contains("+point+") flag="+flag);
 		return flag;
 	}
 	

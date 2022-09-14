@@ -29,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.controller.user.UserController;
+import com.meritoki.app.desktop.retina.model.document.Guide;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
@@ -88,6 +89,8 @@ public class System {
 	public Image image;
 	@JsonIgnore
 	public Shape shape;
+	@JsonIgnore
+	public Guide guide;
 	@JsonIgnore
 	public Page pressedPage;
 	@JsonIgnore

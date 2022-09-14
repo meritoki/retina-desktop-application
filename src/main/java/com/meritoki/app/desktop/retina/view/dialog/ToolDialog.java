@@ -71,7 +71,16 @@ public class ToolDialog extends javax.swing.JDialog {
 		if(tool != null) {
 			JButton defaultButton = new JButton();
 			switch(tool) {
+			case GUIDE: {
+				this.guideButton.setBackground(Color.GREEN);
+				this.drawButton.setBackground(defaultButton.getBackground());
+				this.selectButton.setBackground(defaultButton.getBackground());
+				this.moveButton.setBackground(defaultButton.getBackground());
+				this.resizeButton.setBackground(defaultButton.getBackground());
+				break;
+			}
 			case DRAW:{
+				this.guideButton.setBackground(defaultButton.getBackground());
 				this.drawButton.setBackground(Color.GREEN);
 				this.selectButton.setBackground(defaultButton.getBackground());
 				this.moveButton.setBackground(defaultButton.getBackground());
@@ -79,6 +88,7 @@ public class ToolDialog extends javax.swing.JDialog {
 				break;
 			}
 			case SELECT: {
+				this.guideButton.setBackground(defaultButton.getBackground());
 				this.drawButton.setBackground(defaultButton.getBackground());
 				this.selectButton.setBackground(Color.GREEN);
 				this.moveButton.setBackground(defaultButton.getBackground());
@@ -86,6 +96,7 @@ public class ToolDialog extends javax.swing.JDialog {
 				break;
 			}
 			case MOVE: {
+				this.guideButton.setBackground(defaultButton.getBackground());
 				this.drawButton.setBackground(defaultButton.getBackground());
 				this.selectButton.setBackground(defaultButton.getBackground());
 				this.moveButton.setBackground(Color.GREEN);
@@ -93,6 +104,7 @@ public class ToolDialog extends javax.swing.JDialog {
 				break;
 			}
 			case RESIZE: {
+				this.guideButton.setBackground(defaultButton.getBackground());
 				this.drawButton.setBackground(defaultButton.getBackground());
 				this.selectButton.setBackground(defaultButton.getBackground());
 				this.moveButton.setBackground(defaultButton.getBackground());
@@ -116,6 +128,7 @@ public class ToolDialog extends javax.swing.JDialog {
         selectButton = new javax.swing.JButton();
         moveButton = new javax.swing.JButton();
         resizeButton = new javax.swing.JButton();
+        guideButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -127,6 +140,9 @@ public class ToolDialog extends javax.swing.JDialog {
         });
 
         selectButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Selector.png"))); // NOI18N
+        selectButton.setMaximumSize(new java.awt.Dimension(32, 32));
+        selectButton.setMinimumSize(new java.awt.Dimension(32, 32));
+        selectButton.setPreferredSize(new java.awt.Dimension(32, 32));
         selectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 selectButtonActionPerformed(evt);
@@ -147,26 +163,36 @@ public class ToolDialog extends javax.swing.JDialog {
             }
         });
 
+        guideButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Guide.png"))); // NOI18N
+        guideButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                guideButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(guideButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(drawButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(selectButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(moveButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(selectButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(drawButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(resizeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(drawButton)
+                .addComponent(guideButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(selectButton)
+                .addComponent(drawButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(selectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(moveButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -196,6 +222,11 @@ public class ToolDialog extends javax.swing.JDialog {
         this.model.system.tool = Tool.RESIZE;
         this.init();
     }//GEN-LAST:event_resizeButtonActionPerformed
+
+    private void guideButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guideButtonActionPerformed
+        this.model.system.tool = Tool.GUIDE;
+        this.init();
+    }//GEN-LAST:event_guideButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -241,6 +272,7 @@ public class ToolDialog extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton drawButton;
+    private javax.swing.JButton guideButton;
     private javax.swing.JButton moveButton;
     private javax.swing.JButton resizeButton;
     private javax.swing.JButton selectButton;

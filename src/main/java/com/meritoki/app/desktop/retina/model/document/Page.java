@@ -289,6 +289,18 @@ public class Page {
 		}
 		return shapeList;
 	}
+	
+	@JsonIgnore
+	public List<Guide> getGuideList() {
+		List<Shape> shapeList = this.getShapeList();
+		List<Guide> guideList = new ArrayList<>();
+		for(Shape shape:shapeList) {
+			if(shape instanceof Guide) {
+				guideList.add((Guide)shape);
+			}
+		}
+		return guideList;
+	}
 
 	@JsonIgnore
 	public List<Shape> getGridShapeList() {
@@ -347,6 +359,11 @@ public class Page {
 		return shapeList;
 	}
 
+	@JsonIgnore
+	public List<Shape> getSortedShapeList() {
+		return new Matrix(this.getShapeList(), null, this.threshold).getShapeList();
+	}
+
 	/**
 	 * Function returns bufferedImage with one or more File bufferedImages from the
 	 * fileList
@@ -381,11 +398,6 @@ public class Page {
 		AffineTransformOp affineTransformOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);
 		after = affineTransformOp.filter(before, after);
 		return after;
-	}
-
-	@JsonIgnore
-	public List<Shape> getSortedShapeList() {
-		return new Matrix(this.getShapeList(), null, this.threshold).getShapeList();
 	}
 
 	@JsonIgnore
@@ -465,7 +477,7 @@ public class Page {
 	 */
 	@JsonIgnore
 	public void setScale(double scale) {
-		logger.info("setScale(" + scale + ")");
+//		logger.info("setScale(" + scale + ")");
 		this.position.setScale(scale);
 		for (Image image : this.imageList) {
 			image.setScale(scale);

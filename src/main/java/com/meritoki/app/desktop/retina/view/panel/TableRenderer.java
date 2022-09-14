@@ -58,7 +58,11 @@ public class TableRenderer extends DefaultTableCellRenderer {
 					Grid g = (Grid)s;
 					List<Shape> shapeList = g.getShapeList();
 					if(shapeList.contains(shape)) {
-						c.setBackground(Color.RED);
+						if(g.getShape().uuid.equals(shape.uuid)) {
+							c.setBackground(Color.YELLOW);
+						} else {
+							c.setBackground(Color.RED);
+						}
 					}
 				} else {
 					if(shape.uuid.equals(s.uuid)) {

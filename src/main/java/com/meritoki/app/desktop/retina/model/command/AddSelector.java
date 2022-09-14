@@ -22,6 +22,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.document.Guide;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
@@ -60,7 +61,9 @@ public class AddSelector extends Command {
 				pressedImage.position.relativeScale, scale, pressedImage.position.offset, pressedImage.position.margin);
 		List<Shape> shapeList = page.getShapeList();
 		for(Shape shape:shapeList) {
-			selector.addShape(shape);
+			if(!(shape instanceof Guide)) {
+				selector.addShape(shape);
+			}
 		}
 		this.model.cache.selector = selector;
 		selector.bufferedImage = this.model.document.getShapeBufferedImage(page.getScaledBufferedImage(this.model), selector);
