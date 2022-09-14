@@ -230,7 +230,7 @@ public class Image {
 	public BufferedImage getBufferedImage(Model model) {
 //		MemoryController.log();
 		if (this.bufferedImage == null) {
-			logger.info("getBufferedImage(model) this.bufferedImage == null");
+//			logger.info("getBufferedImage(model) this.bufferedImage == null");
 			// make document cache
 			File directory = new File(NodeController.getDocumentCache(model.document.uuid));
 			if (!directory.exists()) {
@@ -241,7 +241,7 @@ public class Image {
 			File cache = new File(NodeController.getDocumentCache(model.document.uuid) + NodeController.getSeperator()
 					+ this.fileCache);
 			if (cache.exists()) {
-				logger.info("getBufferedImage(model) this.fileCache Exists");
+//				logger.info("getBufferedImage(model) this.fileCache Exists");
 				bufferedImage = NodeController.openBufferedImage(cache);
 			} else {
 				logger.info("getBufferedImage(model) this.fileCache Exists Not");
