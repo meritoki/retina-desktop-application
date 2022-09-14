@@ -41,11 +41,15 @@ import org.apache.logging.log4j.Logger;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
 import com.meritoki.app.desktop.retina.model.document.Grid;
+import com.meritoki.app.desktop.retina.model.document.Guide;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Position;
+import com.meritoki.app.desktop.retina.model.document.Selection;
+import com.meritoki.app.desktop.retina.model.document.Selector;
 import com.meritoki.app.desktop.retina.model.document.Shape;
+import com.meritoki.app.desktop.retina.model.tool.Tool;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 
 public class PagePanel extends JPanel implements MouseListener, MouseWheelListener, MouseMotionListener, KeyListener {
@@ -122,7 +126,6 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 								p.dimension.height);
 						graphics2D.draw(rectangle);
 					}
-
 				}
 				List<Shape> selectorShapeList = null;
 				if (this.model.cache.selector != null) {
@@ -148,6 +151,37 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 						Rectangle2D.Double rectangle = new Rectangle2D.Double(position.point.x, position.point.y,
 								position.dimension.width, position.dimension.height);
 						graphics2D.draw(rectangle);
+						if (s instanceof Grid) {
+							Shape[][] matrix = ((Grid) s).matrix;
+							for (int i = 0; i < matrix.length; i++) {
+								for (int j = 0; j < matrix[i].length; j++) {
+									Shape gs = matrix[i][j];
+									rectangle = new Rectangle2D.Double(gs.position.point.x, gs.position.point.y,
+											gs.position.dimension.width, gs.position.dimension.height);
+									graphics2D.draw(rectangle);
+								}
+							}
+						} else if(s instanceof Selector) {
+							Selector selector = (Selector)s;
+							List<Shape> shapeList = selector.shapeList;
+							for(Shape shape: shapeList) {
+								position = shape.position; 
+								rectangle = new Rectangle2D.Double(position.point.x, position.point.y,
+										position.dimension.width, position.dimension.height);
+								graphics2D.draw(rectangle);
+								if (shape instanceof Grid) {
+									Shape[][] matrix = ((Grid) shape).matrix;
+									for (int i = 0; i < matrix.length; i++) {
+										for (int j = 0; j < matrix[i].length; j++) {
+											Shape gs = matrix[i][j];
+											rectangle = new Rectangle2D.Double(gs.position.point.x, gs.position.point.y,
+													gs.position.dimension.width, gs.position.dimension.height);
+											graphics2D.draw(rectangle);
+										}
+									}
+								} 
+							}
+						}
 					}
 					}
 					this.model.system.shape = null;
@@ -159,7 +193,9 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				if (shapeList != null) {
 					for (Shape s : shapeList) {
 						Position position = s.position;
-						if (selectorShapeList != null && selectorShapeList.contains(s)) {
+						if(s instanceof Guide) {
+							graphics2D.setColor(Color.MAGENTA);
+						} else if (selectorShapeList != null && selectorShapeList.contains(s)) {
 							graphics2D.setColor(Color.GREEN);
 						} else if (shape != null && s.uuid.equals(shape.uuid)) {
 							graphics2D.setColor(Color.RED);
@@ -201,12 +237,14 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 							break;
 						}
 						}
-						if (previousShape != null) {
-							Position p = previousShape.position;
-							graphics2D.drawLine((int) (p.center.x), (int) (p.center.y), (int) (position.center.x),
-									(int) (position.center.y));
+						if(!(s instanceof Guide) && !(previousShape instanceof Guide)) {
+							if (previousShape != null) {
+								Position p = previousShape.position;
+								graphics2D.drawLine((int) (p.center.x), (int) (p.center.y), (int) (position.center.x),
+										(int) (position.center.y));
+							}
+							previousShape = s;
 						}
-						previousShape = s;
 					}
 				}
 				graphics2D.setColor(Color.BLUE);
@@ -242,7 +280,6 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 		pressedPoint.x = me.getX();
 		pressedPoint.y = me.getY();
 		this.model.system.pressedPoint = pressedPoint;
-		logger.trace("mousePressed(me) pressedPoint=" + pressedPoint);
 		this.model.system.pressedImage = this.model.document.getImage(pressedPoint);
 		Image image = this.model.document.getImage();
 		if (this.model.system.pressedImage != null && image != null && !image.equals(this.model.system.pressedImage)) {
@@ -303,6 +340,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 							.intersectShape(this.model.system.pressedPoint);
 					if (this.model.system.selection != null) {
 						try {
+							this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
 							this.model.cache.selection = this.model.system.selection;
 							this.model.cache.pressedShapeUUID = this.model.document.getShape().uuid;
 							this.model.cache.releasedPoint = this.model.system.releasedPoint;
@@ -358,6 +396,20 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				}
 				break;
 			}
+			case GUIDE: {
+				try {
+					this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
+					this.model.cache.pressedImageUUID = this.model.system.pressedImage.uuid;
+					this.model.cache.pressedPoint = this.model.system.pressedPoint;
+					this.model.cache.releasedPoint = this.model.system.releasedPoint;
+					this.model.pattern.execute("addGuide");
+				} catch (NullPointerException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				break;
+			}
 			default: {
 
 			}
@@ -393,6 +445,24 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				Shape shape = new Shape();
 				shape.position = new Position(new Point(pressedPoint), new Point(releasedPoint),
 						pressedImage.position.relativeScale, scale, pressedImage.position.offset, pressedImage.position.margin);
+				List<Guide> guideList = page.getGuideList();
+				for(Guide guide: guideList) {
+					guide.snapShape(shape, Tool.DRAW);
+				}
+				this.model.system.shape = shape;
+//				this.model.document.addShape(shape);
+//				shape.bufferedImage = this.model.document.getShapeBufferedImage(page.getScaledBufferedImage(this.model), shape);
+				break;
+			}
+			case GUIDE: {
+				Point pressedPoint = this.model.system.pressedPoint;
+				Point releasedPoint = this.model.system.releasedPoint;
+				Page page = this.model.document.getPage();
+				double scale = page.position.scale;
+				Image pressedImage = this.model.document.getImage();
+				Shape shape = new Shape();
+				shape.position = new Position(new Point(pressedPoint), new Point(releasedPoint),
+						pressedImage.position.relativeScale, scale, pressedImage.position.offset, pressedImage.position.margin);
 				this.model.system.shape = shape;
 //				this.model.document.addShape(shape);
 //				shape.bufferedImage = this.model.document.getShapeBufferedImage(page.getScaledBufferedImage(this.model), shape);
@@ -411,24 +481,80 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				break;
 			}
 			case RESIZE: {
-				if (this.model.document.getShape() != null) {
-					this.model.system.selection = this.model.document.getPage()
-							.intersectShape(this.model.system.pressedPoint);
-					if (this.model.system.selection != null) {
-						try {
-							this.model.cache.selection = this.model.system.selection;
-							this.model.cache.pressedShapeUUID = this.model.document.getShape().uuid;
-							this.model.cache.releasedPoint = this.model.system.releasedPoint;
-							this.model.pattern.execute("resizeShape");
-						} catch (NullPointerException e) {
-							e.printStackTrace();
-						} catch (Exception e) {
-							JOptionPane.showMessageDialog(mainFrame, e.getMessage(), "Error",
-									JOptionPane.ERROR_MESSAGE);
-						}
+				Point pressedPoint = this.model.system.pressedPoint;
+				Point releasedPoint = this.model.system.releasedPoint;
+				Page page = this.model.document.getPage();
+				Shape shape = page.getShape();
+				if(shape instanceof Grid) {
+					Grid grid = (Grid)shape;
+					shape = new Grid(grid,true);
+				} else {
+					shape = new Shape(shape,true);
+				}
+				Selection selection = page.intersectShape(pressedPoint);
+				if(selection != null) {
+					shape.position.resize(new Point(releasedPoint), selection);
+					List<Guide> guideList = page.getGuideList();
+					for(Guide guide: guideList) {
+						guide.snapShape(shape, Tool.RESIZE);
+					}
+					if(shape instanceof Grid) {
+						((Grid)shape).updateMatrix();
 					}
 				}
+				this.model.system.shape = shape;
 				break;
+			}
+			case MOVE: {
+				if (this.model.cache.selector != null) {
+					Point pressedPoint = this.model.system.pressedPoint;
+					Point releasedPoint = this.model.system.releasedPoint;
+					Page page = this.model.document.getPage();
+					Selector selector = new Selector(this.model.cache.selector, true);
+					if(page.contains(releasedPoint)) {
+						selector.position.move(Position.getMovedPoint(new Point(releasedPoint), new Point(pressedPoint)));
+						for(Shape shape: selector.shapeList) {
+							try {
+								shape = page.moveShape(shape, pressedPoint, releasedPoint);
+//								List<Guide> guideList = page.getGuideList();
+//								for(Guide guide: guideList) {
+//									guide.snapShape(shape, Tool.MOVE);
+//								}
+//								if(shape instanceof Grid) {
+//									((Grid)shape).updateMatrix();
+//								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					}
+					this.model.system.shape = selector;
+				} else if (this.model.document.getShape() != null) {
+					Point pressedPoint = this.model.system.pressedPoint;
+					Point releasedPoint = this.model.system.releasedPoint;
+					Page page = this.model.document.getPage();
+					Shape shape = page.getShape();
+					if(shape instanceof Grid) {
+						Grid grid = (Grid)shape;
+						shape = new Grid(grid,true);
+					} else {
+						shape = new Shape(shape,true);
+					}
+					try {
+						shape = page.moveShape(shape, pressedPoint, releasedPoint);
+						List<Guide> guideList = page.getGuideList();
+						for(Guide guide: guideList) {
+							guide.snapShape(shape, Tool.MOVE);
+						}
+						if(shape instanceof Grid) {
+							((Grid)shape).updateMatrix();
+						}
+						this.model.system.shape = shape;
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			}
 			}
 			this.repaint();
@@ -437,9 +563,8 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public void mouseMoved(MouseEvent me) {
+
 	}
 
 	@Override

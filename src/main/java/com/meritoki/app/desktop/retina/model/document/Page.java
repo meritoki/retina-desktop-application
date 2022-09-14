@@ -289,6 +289,18 @@ public class Page {
 		}
 		return shapeList;
 	}
+	
+	@JsonIgnore
+	public List<Guide> getGuideList() {
+		List<Shape> shapeList = this.getShapeList();
+		List<Guide> guideList = new ArrayList<>();
+		for(Shape shape:shapeList) {
+			if(shape instanceof Guide) {
+				guideList.add((Guide)shape);
+			}
+		}
+		return guideList;
+	}
 
 	@JsonIgnore
 	public List<Shape> getGridShapeList() {

@@ -46,21 +46,28 @@ public class Grid extends Shape {
 		super(shape, true);
 		this.row = row;
 		this.column = column;
+		this.matrix = new Shape[row][column];
 //		this.initMatrix();
-//		this.updateMatrix();
+		this.updateMatrix();
 	}
 
 	public Grid(Grid grid, boolean flag) {
 		super((Shape) grid, flag);
 		this.row = grid.row;
 		this.column = grid.column;
-		if (flag) {
-			this.matrix = grid.matrix;// this.copyShapeMatrix(grid.matrix);
-		} else {
-//			this.initMatrix();
-//			this.updateMatrix();
-		}
 		this.index = grid.index;
+		this.matrix = this.copyShapeMatrix(grid.matrix);// this.copyShapeMatrix(grid.matrix);
+		this.updateMatrix();
+	}
+	
+	public Shape[][] copyShapeMatrix(Shape[][] matrix) {
+		Shape[][] m = new Shape[matrix.length][matrix[0].length];
+		for(int i=0;i<matrix.length;i++) {
+			for(int j=0;j<matrix[i].length;j++) {
+				m[i][j] = new Shape(matrix[i][j],true);
+			}
+		}
+		return m;
 	}
 
 	public void updateMatrix() {
@@ -70,6 +77,9 @@ public class Grid extends Shape {
 		double height = dimension.height / row;
 		for (int i = 0; i < matrix.length; i++) {
 			for (int j = 0; j < matrix[i].length; j++) {
+				if(matrix[i][j] == null) {
+					matrix[i][j] = new Shape();
+				}
 				matrix[i][j].position.point.x = point.x + (j * width);
 				matrix[i][j].position.point.y = point.y + (i * height);
 				matrix[i][j].position.dimension.width = width;

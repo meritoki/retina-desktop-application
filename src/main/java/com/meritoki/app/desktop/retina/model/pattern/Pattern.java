@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.meritoki.app.desktop.retina.controller.client.ClientController;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.command.AddGrid;
+import com.meritoki.app.desktop.retina.model.command.AddGuide;
 import com.meritoki.app.desktop.retina.model.command.AddPage;
 import com.meritoki.app.desktop.retina.model.command.AddSelector;
 import com.meritoki.app.desktop.retina.model.command.AddShape;
@@ -85,6 +86,10 @@ public class Pattern {
 		}
 		case "addPage": {
 			command = new AddPage(this.model);
+			break;
+		}
+		case "addGuide" : {
+			command = new AddGuide(this.model);
 			break;
 		}
 		case "addShape": {

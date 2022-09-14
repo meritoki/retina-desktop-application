@@ -31,21 +31,18 @@ import com.meritoki.library.controller.node.NodeController;
 
 public class Desktop {
 
-    static Logger logger = LogManager.getLogger(Desktop.class.getName());
-	public static String versionNumber = "1.0.202208";
+	static Logger logger = LogManager.getLogger(Desktop.class.getName());
+	public static String versionNumber = "1.0.202209";
 	public static String vendor = "Meritoki";
 	public static String about = "Version " + versionNumber + " Copyright " + vendor + " 2019-2022";
 	public static Option helpOption = new Option("h", "help", false, "Print usage information");
 	public static Option versionOption = new Option("v", "version", false, "Print version information");
-	// public static Option machineOption = new Option("m", "machine", false, "Load Machine Interface");
 
-    public static void main(String args[]) {
-
-
-        Options options = new Options();
+	public static void main(String args[]) {
+		System.out.println("Hello World");
+		Options options = new Options();
 		options.addOption(helpOption);
 		options.addOption(versionOption);
-		// options.addOption(machineOption);
 		CommandLineParser parser = new DefaultParser();
 		try {
 			CommandLine commandLine = parser.parse(options, args);
@@ -56,48 +53,51 @@ public class Desktop {
 			} else if (commandLine.hasOption("version")) {
 				System.out.println(about);
 			} else {
-//				if (commandLine.hasOption("machine")) {
-//					model.system.machine = true;
-//					batchPath = commandLine.getOptionValue("batch");
-//					logger.info("main(args) batch=" + batchPath);
-//				}
-        logger.info("Starting Retina Desktop Application...");
-        final Model model = new Model();
-//        model.system.machine = true;
-        model.system.init();
-        model.setProviderModel();
-        System.out.println("Hello World");
-        final MainFrame mainFrame = new MainFrame(model);
-        final SplashWindow splashWindow = new SplashWindow("/Splash.png", mainFrame, 4000);
-        try {
-        	if(NodeController.isMac()) {
-        		javax.swing.UIManager.installLookAndFeel("Aqua","com.apple.laf.AquaLookAndFeel");
-        	} else {
-	            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-	                if ("Nimbus".equals(info.getName())) {
-	                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-	                    break;
-	                }
-	            }
-        	}
-        } catch (ClassNotFoundException ex) {
-            logger.error(ex);
-        } catch (InstantiationException ex) {
-            logger.error(ex);
-        } catch (IllegalAccessException ex) {
-            logger.error(ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.error(ex);
-        }
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                mainFrame.setVisible(true);
-           }
-        });
+				logger.info("Starting Retina Desktop Application...");
+				final Model model = new Model();
+				model.system.init();
+				model.setProviderModel();
+				final MainFrame mainFrame = new MainFrame(model);
+				final SplashWindow splashWindow = new SplashWindow("/Splash.png", mainFrame, 4000);
+				try {
+					if (NodeController.isMac()) {
+						javax.swing.UIManager.installLookAndFeel("Aqua", "com.apple.laf.AquaLookAndFeel");
+					} else {
+						for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager
+								.getInstalledLookAndFeels()) {
+							if ("Nimbus".equals(info.getName())) {
+								javax.swing.UIManager.setLookAndFeel(info.getClassName());
+								break;
+							}
+						}
+					}
+				} catch (ClassNotFoundException ex) {
+					logger.error(ex);
+				} catch (InstantiationException ex) {
+					logger.error(ex);
+				} catch (IllegalAccessException ex) {
+					logger.error(ex);
+				} catch (javax.swing.UnsupportedLookAndFeelException ex) {
+					logger.error(ex);
+				}
+				java.awt.EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						mainFrame.setVisible(true);
+					}
+				});
 			}
 		} catch (org.apache.commons.cli.ParseException ex) {
 			logger.error(ex);
 		}
 
-    }
+	}
 }
+// public static Option machineOption = new Option("m", "machine", false, "Load
+// Machine Interface");
+// options.addOption(machineOption);
+//if (commandLine.hasOption("machine")) {
+//model.system.machine = true;
+//batchPath = commandLine.getOptionValue("batch");
+//logger.info("main(args) batch=" + batchPath);
+//}
+//model.system.machine = true;

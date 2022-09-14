@@ -15,6 +15,7 @@
  */
 package com.meritoki.app.desktop.retina.model.command;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
@@ -22,11 +23,13 @@ import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Grid;
+import com.meritoki.app.desktop.retina.model.document.Guide;
 import com.meritoki.app.desktop.retina.model.document.Image;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Position;
 import com.meritoki.app.desktop.retina.model.document.Shape;
+import com.meritoki.app.desktop.retina.model.tool.Tool;
 
 public class MoveShape extends Command {
 	private static Logger logger = LogManager.getLogger(MoveShape.class.getName());
@@ -64,6 +67,13 @@ public class MoveShape extends Command {
 		this.operationList.push(operation);
 		
 		Shape newShape = pressedPage.moveShape(pressedShape, pressedPoint, releasedPoint);
+		List<Guide> guideList = pressedPage.getGuideList();
+		for(Guide guide: guideList) {
+			guide.snapShape(newShape, Tool.MOVE);
+		}
+		if(newShape instanceof Grid) {
+			((Grid)newShape).updateMatrix();
+		}
 		// Logic
 		// Redo
 		if(newShape instanceof Grid) {

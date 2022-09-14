@@ -39,7 +39,8 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 include = JsonTypeInfo.As.PROPERTY,
 property = "type")
 @JsonSubTypes({
-@Type(value = Grid.class)
+@Type(value = Grid.class),
+@Type(value = Guide.class)
 })
 public class Shape {
 

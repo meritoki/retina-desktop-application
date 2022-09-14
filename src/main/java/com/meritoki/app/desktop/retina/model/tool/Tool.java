@@ -19,5 +19,6 @@ public enum Tool {
 	DRAW,
 	MOVE,
 	RESIZE,
-	SELECT
+	SELECT,
+	GUIDE
 }

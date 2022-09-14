@@ -64,25 +64,25 @@ public class Document {
 	public Document() {
 		this.uuid = UUID.randomUUID().toString();
 	}
-	
+
 	@JsonIgnore
 	public void setQuery(Query query) throws Exception {
-		if(query != null) {
+		if (query != null) {
 			this.query = query;
 			this.indexList = this.query.getIndexList();
 		} else {
 			this.indexList = null;
-			for(Page p:this.pageList) {
+			for (Page p : this.pageList) {
 				p.setQuery(null);
 			}
 		}
 	}
-	
+
 	@JsonIgnore
 	public List<Image> getImageList() {
 		List<Image> imageList = new ArrayList<>();
-		for(Page page:this.pageList) {
-			for(Image image:page.imageList) {
+		for (Page page : this.pageList) {
+			for (Image image : page.imageList) {
 				imageList.add(image);
 			}
 		}
@@ -125,7 +125,7 @@ public class Document {
 
 	@JsonIgnore
 	public Shape getShape() {
-		return (this.getPage() != null)?getPage().getShape():null;
+		return (this.getPage() != null) ? getPage().getShape() : null;
 	}
 
 	@JsonIgnore
@@ -153,6 +153,10 @@ public class Document {
 		}
 		return shape;
 	}
+
+//	public List<Guide> getGuideList() {
+//		
+//	}
 
 	/**
 	 * Get the index of the current Page, used by Dialogs
@@ -218,9 +222,9 @@ public class Document {
 	 */
 	@JsonIgnore
 	public List<Page> getPageList() {
-		if(this.indexList != null && this.indexList.size() > 0) {
+		if (this.indexList != null && this.indexList.size() > 0) {
 			List<Page> pageList = new ArrayList<>();
-			for(Integer i:indexList) {
+			for (Integer i : indexList) {
 				Page p = this.getPage(i);
 				p.setQuery(this.query);
 				pageList.add(p);
@@ -309,26 +313,29 @@ public class Document {
 	}
 
 	@JsonIgnore
-		public List<Shape> getGridShapeList() {
-			List<Shape> shapeList = new ArrayList<>();
-			for (Page page : this.pageList) {
-				shapeList.addAll(page.getGridShapeList());
+	public List<Shape> getGridShapeList() {
+		List<Shape> shapeList = new ArrayList<>();
+		for (Page page : this.pageList) {
+			shapeList.addAll(page.getGridShapeList());
 //				page.setBufferedImageNull();
-			}
-			return shapeList;
 		}
+		return shapeList;
+	}
 
 	@JsonIgnore
 	public BufferedImage getShapeBufferedImage(BufferedImage bufferedImage, Shape shape) {
-		logger.debug("getShapeBufferedImage("+shape+")");
+		logger.debug("getShapeBufferedImage(" + shape + ")");
 		BufferedImage shapeBufferedImage = null;
 		if (bufferedImage != null) {
 //			logger.info("getShapeBufferedImage("+shape+") bufferedImage == "+bufferedImage);
 //			logger.info("getShapeBufferedImage("+shape+") "+shape.position.dimension.height+" "+shape.position.dimension.width);
-			if(shape.position.point.x >= 0 && shape.position.point.y >= 0 && (int)shape.position.dimension.height > 0 && (int)shape.position.dimension.width > 0) {
-				shapeBufferedImage = bufferedImage.getSubimage((int)shape.position.point.x, (int)shape.position.point.y, (int)shape.position.dimension.width, (int)shape.position.dimension.height);
+			if (shape.position.point.x >= 0 && shape.position.point.y >= 0 && (int) shape.position.dimension.height > 0
+					&& (int) shape.position.dimension.width > 0) {
+				shapeBufferedImage = bufferedImage.getSubimage((int) shape.position.point.x,
+						(int) shape.position.point.y, (int) shape.position.dimension.width,
+						(int) shape.position.dimension.height);
 			} else {
-				logger.error("MAJOR ERROR THAT NEEDS TO BE FIXED shape.position="+shape.position);
+				logger.error("MAJOR ERROR THAT NEEDS TO BE FIXED shape.position=" + shape.position);
 			}
 		}
 		return shapeBufferedImage;
@@ -346,7 +353,7 @@ public class Document {
 		}
 		return null;
 	}
-	
+
 	@JsonIgnore
 	public boolean importZooniverse(String fileName) {
 		List<String[]> stringArrayList = NodeController.openCsv(fileName);

@@ -27,10 +27,11 @@ import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.controller.user.UserController;
 import com.meritoki.app.desktop.retina.model.cache.Cache;
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Grid;
+import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 import com.meritoki.app.desktop.retina.model.pattern.Pattern;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
-import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.app.desktop.retina.model.resource.Resource;
 import com.meritoki.app.desktop.retina.model.system.System;
 
@@ -96,6 +97,7 @@ public class Model {
 		logger.info("openDocument("+file+")");
 		this.system.file = file;
 		this.document = NodeController.openDocument(this.system.file);
+		this.report(this.document);
 		this.system.newDocument = false;
 		this.resource.addRecent(this.system.file.getAbsolutePath());
 		File directory = new File(NodeController.getDocumentCache(this.document.uuid));
@@ -106,6 +108,51 @@ public class Model {
 			Provider provider = entry.getValue();
 			provider.init();
 		}
+	}
+	
+	public void report(Document document) {
+		int pageCount = document.getPageList().size();
+		List<Shape> shapeList = document.getShapeList();
+		int shapeCount = shapeList.size();
+		int gridCount = 0;
+		int dataTextCount = 0;
+		int emptyTextCount = 0;
+		int nullTextCount = 0;
+		
+		for(Shape shape: shapeList) {
+			if(shape instanceof Grid) {
+				gridCount++;
+				shapeCount--;
+				List<Shape> gridShapeList = ((Grid)shape).getShapeList();
+				shapeCount += gridShapeList.size();
+				for(Shape gridShape:gridShapeList) {
+					if(gridShape.getData().getText().value != null) {
+						dataTextCount++;
+						if(gridShape.getData().getText().value.trim().isEmpty()) {
+							emptyTextCount++;
+						}
+					} else {
+						nullTextCount++;
+					}
+				}
+			} else {
+				if(shape.getData().getText().value != null) {
+					dataTextCount++;
+					if(shape.getData().getText().value.trim().isEmpty()) {
+						emptyTextCount++;
+					}
+				}else {
+					nullTextCount++;
+				}
+			}
+		}
+		logger.info("report("+document.uuid+") Report");
+		logger.info("report("+document.uuid+") pageCount="+pageCount);
+		logger.info("report("+document.uuid+") shapeCount="+shapeCount);
+		logger.info("report("+document.uuid+") gridCount="+gridCount);
+		logger.info("report("+document.uuid+") dataTextCount="+dataTextCount);
+		logger.info("report("+document.uuid+") emptyTextCount="+emptyTextCount);
+		logger.info("report("+document.uuid+") nullTextCount="+nullTextCount);
 	}
 	
 	public void saveDocument(File file) {

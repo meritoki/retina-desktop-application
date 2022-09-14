@@ -35,9 +35,10 @@ public class MoveSelector extends Command {
 	public MoveSelector(Model model) {
 		super(model, "moveSelector");
 	}
-	
+
 	@Override
 	public void execute() throws Exception {
+		logger.info("execute()");
 		String pressedPageUUID = this.model.cache.pressedPageUUID;
 		Page pressedPage = this.model.document.getPage(pressedPageUUID);
 		Point releasedPoint = this.model.cache.releasedPoint;
@@ -50,85 +51,87 @@ public class MoveSelector extends Command {
 		Shape newShape = null;
 		Selector newSelector = null;
 		Operation operation = new Operation();
-		operation.object = this.model.cache.selector;
+		operation.object = new Selector(this.model.cache.selector, true);
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);
-		newSelector = new Selector(this.model.cache.selector, true);
-		Point movedPoint = this.getMovedPoint(new Point(releasedPoint), new Point(pressedPoint));
-		newSelector.position.move(movedPoint);
-		this.model.cache.selector = newSelector;
-		operation = new Operation();
-		operation.object = newSelector;
-		operation.sign = 1;
-		operation.id = UUID.randomUUID().toString();
-		this.operationList.push(operation);
-		// operation.uuid = this.document.cache.pressedShape.uuid;
-//		this.operationList.push(operation);
-		for(Shape pressedShape:shapeList) {
-			
-			if(pressedShape instanceof Grid) {
-				Grid pressedGrid = (Grid)pressedShape;
-				undoShape = new Grid(pressedGrid,true);
-			} else {
-				undoShape = new Shape(pressedShape,true);
-			}
-			// Undo
+		newSelector = this.model.cache.selector;
+//		newSelector = new Selector(this.model.cache.selector, true);
+		if (page.contains(releasedPoint)) {
+			Point movedPoint = this.getMovedPoint(new Point(releasedPoint), new Point(pressedPoint));
+			newSelector.position.move(movedPoint);
+//		this.model.cache.selector = newSelector;
 			operation = new Operation();
-			operation.object = undoShape;
-			operation.sign = 0;
-			operation.id = UUID.randomUUID().toString();
-			// operation.uuid = this.document.cache.pressedShape.uuid;
-			this.operationList.push(operation);
-			newShape = pressedPage.moveShape(pressedShape, pressedPoint, releasedPoint);
-			// Logic
-
-			// Redo
-			if(newShape instanceof Grid) {
-				logger.info("execute() (newShape instanceof Grid)");
-				Grid newGrid = (Grid)newShape;
-				redoShape = new Grid(newGrid,true);
-			} else {
-				redoShape = new Shape(newShape,true);
-			}
-			operation = new Operation();
-			operation.object = redoShape;//new Shape(newShape, true);
+			operation.object = newSelector;
 			operation.sign = 1;
 			operation.id = UUID.randomUUID().toString();
-			// operation.uuid = this.document.cache.pressedShape.uuid;
 			this.operationList.push(operation);
+			// operation.uuid = this.document.cache.pressedShape.uuid;
+//		this.operationList.push(operation);
+			for (Shape pressedShape : shapeList) {
+
+				if (pressedShape instanceof Grid) {
+					Grid pressedGrid = (Grid) pressedShape;
+					undoShape = new Grid(pressedGrid, true);
+				} else {
+					undoShape = new Shape(pressedShape, true);
+				}
+				// Undo
+				operation = new Operation();
+				operation.object = undoShape;
+				operation.sign = 0;
+				operation.id = UUID.randomUUID().toString();
+				// operation.uuid = this.document.cache.pressedShape.uuid;
+				this.operationList.push(operation);
+				newShape = pressedPage.moveShape(pressedShape, pressedPoint, releasedPoint);
+				// Logic
+
+				// Redo
+				if (newShape instanceof Grid) {
+					logger.info("execute() (newShape instanceof Grid)");
+					Grid newGrid = (Grid) newShape;
+					redoShape = new Grid(newGrid, true);
+				} else {
+					redoShape = new Shape(newShape, true);
+				}
+				operation = new Operation();
+				operation.object = redoShape;// new Shape(newShape, true);
+				operation.sign = 1;
+				operation.id = UUID.randomUUID().toString();
+				// operation.uuid = this.document.cache.pressedShape.uuid;
+				this.operationList.push(operation);
+			}
 		}
-		
+
 	}
-	
+
 	public void selectorAddShape(Page page, Selector selector) {
 		List<Shape> shapeList = page.getShapeList();
-		for(Shape shape:shapeList) {
+		for (Shape shape : shapeList) {
 			selector.addShape(shape);
 		}
 	}
-	
+
 	public Point getMovedPoint(Point a, Point b) {
 		return new Point(a.x - b.x, a.y - b.y);
 	}
-	
+
 	@Override
 	public void undo() {
 		for (int i = 0; i < this.operationList.size(); i++) {
 			Operation operation = this.operationList.get(i);
 			if (operation.sign == 1) {
 				if (operation.object instanceof Shape) {
-					Shape shape = (Shape)operation.object;
+					Shape shape = (Shape) operation.object;
 					this.model.document.getPage().removeShape(shape);
 				}
-			} else 
-			if (operation.sign == 0) {
+			} else if (operation.sign == 0) {
 				if (operation.object instanceof Selector) {
-					this.model.cache.selector = (Selector)operation.object;
-					this.selectorAddShape(this.model.document.getPage(),this.model.cache.selector);
+					this.model.cache.selector = (Selector) operation.object;
+					this.selectorAddShape(this.model.document.getPage(), this.model.cache.selector);
 				} else if (operation.object instanceof Shape) {
-					Shape shape = (Shape)operation.object;
-					if(shape instanceof Grid) {
+					Shape shape = (Shape) operation.object;
+					if (shape instanceof Grid) {
 						Grid grid = (Grid) shape;
 						grid.updateMatrix();
 					}
@@ -137,31 +140,29 @@ public class MoveSelector extends Command {
 			}
 		}
 	}
-	
+
 	@Override
 	public void redo() {
 		for (int i = 0; i < this.operationList.size(); i++) {
 			Operation operation = this.operationList.get(i);
 			if (operation.sign == 1) {
 				if (operation.object instanceof Selector) {
-					this.model.cache.selector = (Selector)operation.object;
-					this.selectorAddShape(this.model.document.getPage(),this.model.cache.selector);
+					this.model.cache.selector = (Selector) operation.object;
+					this.selectorAddShape(this.model.document.getPage(), this.model.cache.selector);
 				} else if (operation.object instanceof Shape) {
-					Shape shape = (Shape)operation.object;
-					if(shape instanceof Grid) {
+					Shape shape = (Shape) operation.object;
+					if (shape instanceof Grid) {
 						Grid grid = (Grid) shape;
 						grid.updateMatrix();
 					}
 					this.model.document.getPage().getImage().addShape((Shape) operation.object);
 				}
-			} 
-			else if (operation.sign == 0) {
+			} else if (operation.sign == 0) {
 				if (operation.object instanceof Shape) {
-					Shape shape = (Shape)operation.object;
+					Shape shape = (Shape) operation.object;
 					this.model.document.getPage().getImage().removeShape(shape);
 				}
 			}
 		}
 	}
 }
-

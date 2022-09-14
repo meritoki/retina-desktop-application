@@ -164,17 +164,27 @@ public class Image {
 	 */
 	@JsonIgnore
 	public Shape getShape(Point point) {
+		List<Guide> guideList = new ArrayList<>();
+		Shape s = null;
 		for (Shape shape : this.shapeList) {
 			if (shape.contains(point)) {
-//				logger.info("getShape(" + point + ") shape=" + shape);
-				if(shape instanceof Grid) {
+				if(shape instanceof Guide) {
+					guideList.add((Guide)shape);
+				} else if(shape instanceof Grid) {
 					Grid grid = (Grid)shape;
 					grid.setShape(point);
+					s = shape;
+					break;
+				} else {
+					s = shape;
+					break;
 				}
-				return shape;
 			}
 		}
-		return null;
+		if(s == null && guideList.size() > 0) {
+			s = guideList.get(0);
+		}
+		return s;
 	}
 
 	/**
@@ -187,6 +197,17 @@ public class Image {
 		List<Shape> shapeList = new ArrayList<>();
 		for (Shape s : this.shapeList) {
 			shapeList.add(s);
+		}
+		return shapeList;
+	}
+	
+	@JsonIgnore
+	public List<Shape> getGuideList() {
+		List<Shape> shapeList = new ArrayList<>();
+		for (Shape s : this.shapeList) {
+			if (s instanceof Guide) {
+				shapeList.add(s);
+			}
 		}
 		return shapeList;
 	}
