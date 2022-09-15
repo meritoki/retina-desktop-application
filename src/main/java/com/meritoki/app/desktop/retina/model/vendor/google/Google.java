@@ -12,7 +12,6 @@ public class Google extends Vendor implements Runnable {
 	
 	public Google() {
 		super("google");
-		logger.info("Google()");
 		this.productMap.put("Tesseract", new Tesseract()); 
 	}
 	

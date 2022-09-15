@@ -338,7 +338,6 @@ public class MachinePanel extends JPanel implements MouseListener, MouseWheelLis
 
 	@Override
 	public void componentResized(ComponentEvent arg0) {
-		System.out.println("componentResize()");
 		Dimension dimension = new Dimension(this.getWidth(), this.getHeight());
 		if(this.meritoki != null) {
 			this.meritoki.setDimension(dimension);
