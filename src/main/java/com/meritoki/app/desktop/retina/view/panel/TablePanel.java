@@ -50,30 +50,34 @@ public class TablePanel extends javax.swing.JPanel {
 	 */
 	public TablePanel() {
 		initComponents();
-		
+
 	}
 
-	public void setModel(Model model) {
-		this.model = model;
+	public void setModel(Model m) {
+		this.model = m;
 		this.init();
-		Action action = new AbstractAction()
-		{
-		    public void actionPerformed(ActionEvent e)
-		    {
-		        TableCellListener tcl = (TableCellListener)e.getSource();
-		        int row = tcl.getRow();
-		        int column = tcl.getColumn();
-		        Shape shape = model.document.getPage().getMatrix().getShape(row, column);
-		        shape.addText(new Text((String)tcl.getNewValue()));
-		    }
-		};
-		TableCellListener tcl = new TableCellListener(this.dataTable, action);
-		this.dataTable.setDefaultRenderer(Object.class, new TableRenderer(this.model));
+
 	}
 
 	public void init() {
 		logger.debug("init()");
 		this.initDataTable();
+		System.out.println(this.model.document.getPage());
+		if (this.model.document.getPage() != null) {
+			this.model.system.matrix = this.model.document.getPage().getMatrix();
+			Action action = new AbstractAction() {
+				public void actionPerformed(ActionEvent e) {
+					TableCellListener tcl = (TableCellListener) e.getSource();
+					int row = tcl.getRow();
+					int column = tcl.getColumn();
+					Shape shape = model.document.getPage().getMatrix().getShape(row, column);
+					shape.addText(new Text((String) tcl.getNewValue()));
+				}
+			};
+			TableCellListener tcl = new TableCellListener(this.dataTable, action);
+			this.dataTable.setDefaultRenderer(Object.class, new TableRenderer(this.model));
+		}
+
 	}
 
 	public void initDataTable() {

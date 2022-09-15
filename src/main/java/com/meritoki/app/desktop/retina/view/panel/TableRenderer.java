@@ -43,7 +43,7 @@ public class TableRenderer extends DefaultTableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
 			int row, int column) {
 		Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-		Shape shape = model.document.getPage().getMatrix().getShape(row, column);
+		Shape shape = model.system.matrix.getShape(row, column);
 		if(shape != null) {
 			String text = shape.getData().getText().value;
 			if(text != null) {

@@ -302,7 +302,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 	@Override
 	public void mouseReleased(MouseEvent me) {
 		this.model.system.releasedPoint = new Point(me.getX(), me.getY());
-		if (this.model.system.tool != null) {
+		if (this.model.system.tool != null && this.model.document.getPage() != null) {
 			switch (this.model.system.tool) {
 			case SELECT: {
 				if (this.model.system.pressedPoint.equals(this.model.system.releasedPoint)) {
@@ -434,7 +434,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 	@Override
 	public void mouseDragged(MouseEvent me) {
 		this.model.system.releasedPoint = new Point(me.getX(), me.getY());
-		if (this.model.system.tool != null) {
+		if (this.model.system.tool != null && this.model.document.getPage() != null) {
 			Page page = this.model.document.getPage();
 			if(page != null) {
 			switch (this.model.system.tool) {

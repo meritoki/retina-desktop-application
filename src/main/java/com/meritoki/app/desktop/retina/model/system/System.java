@@ -31,6 +31,7 @@ import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.controller.user.UserController;
 import com.meritoki.app.desktop.retina.model.document.Guide;
 import com.meritoki.app.desktop.retina.model.document.Image;
+import com.meritoki.app.desktop.retina.model.document.Matrix;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Point;
 import com.meritoki.app.desktop.retina.model.document.Selection;
@@ -91,6 +92,8 @@ public class System {
 	public Shape shape;
 	@JsonIgnore
 	public Guide guide;
+	@JsonIgnore
+	public Matrix matrix;
 	@JsonIgnore
 	public Page pressedPage;
 	@JsonIgnore

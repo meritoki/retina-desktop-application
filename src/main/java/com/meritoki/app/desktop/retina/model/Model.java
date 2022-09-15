@@ -74,6 +74,7 @@ public class Model {
 	public void newDocument() {
 		this.document = new Document();
 		this.system.newDocument = true;
+		this.system.tool = null;
 		this.system.file = null;
 		this.setProviderModel();
 	}

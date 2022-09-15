@@ -44,7 +44,7 @@ public class Matrix {
 	public Script script = new Script();
 
 //	@JsonProperty 
-	public Position position = null; //new Position(0,0,1024, 512);
+//	public Position position = null; //new Position(0,0,1024, 512);
 	
 	@JsonIgnore
 	public int width = 128;
@@ -59,23 +59,22 @@ public class Matrix {
 		this.shapeList = shapeList;
 		this.script = script;
 		this.threshold = threshold;
-		this.position = this.getPosition();
 	}
 
-	@JsonIgnore
-	public void setScale(double scale) {
-		this.position.setScale(scale);
-	}
+//	@JsonIgnore
+//	public void setScale(double scale) {
+//		this.position.setScale(scale);
+//	}
 	
-	@JsonIgnore
-	public Position getPosition() {
-		List<ArrayList<Shape>> rowList = this.getTableRowList();
-		double absoluteHeight = rowList.size() * height;
-		double absoluteWidth = 0;
-		if(rowList.size()>0) 
-			absoluteWidth = rowList.get(0).size() * width;
-		return new Position(0,0,(int)absoluteWidth,(int)absoluteHeight);
-	}
+//	@JsonIgnore
+//	public Position getPosition() {
+//		List<ArrayList<Shape>> rowList = this.getTableRowList();
+//		double absoluteHeight = rowList.size() * height;
+//		double absoluteWidth = 0;
+//		if(rowList.size()>0) 
+//			absoluteWidth = rowList.get(0).size() * width;
+//		return new Position(0,0,(int)absoluteWidth,(int)absoluteHeight);
+//	}
 
 	@JsonIgnore
 	public List<ArrayList<Shape>> getPageRowList() {
@@ -423,58 +422,58 @@ public class Matrix {
 		shapeMatrix.get(i).add(j, one);
 	}
 
-	public void paint(Graphics graphics) {
-		graphics.setColor(Color.black);
-		List<ArrayList<Shape>> rowList = this.getTableRowList();
-		List<Shape> shapeList;
-		int width = this.width;//(int) (this.position.dimension.width * 0.10);
-		int height = this.height;//(int) (this.position.dimension.height * 0.10);
-		int widthIndex = 0;
-		int heightIndex = 0;
-		graphics.setFont(new Font("default", Font.BOLD, (int) (8 * this.position.scale)));
-		Data data;
-		Shape s;
-		for (int i = 0; i < rowList.size(); i++) {
-			shapeList = rowList.get(i);
-			heightIndex = (int) (i * height);
-			for (int j = 0; j < shapeList.size(); j++) {
-				graphics.setColor(Color.BLACK);
-				widthIndex = (int) (j * width);
-				graphics.drawRect(widthIndex, heightIndex, width, height);
-				s = shapeList.get(j);
-				data = s.data;
-				if (data != null) {
-					Text text = data.text;
-					switch (data.unit.type) {
-					case DATA: {
-						graphics.setColor(Color.BLACK);
-						graphics.drawString("D", widthIndex + (width / 2), heightIndex + (height / 2));
-						break;
-					}
-					case TIME: {
-						graphics.drawString("T", widthIndex + (width / 2), heightIndex + (height / 2));
-						break;
-					}
-					case SPACE: {
-						graphics.drawString("S", widthIndex + (width / 2), heightIndex + (height / 2));
-						break;
-					}
-					case ENERGY: {
-						graphics.drawString("E", widthIndex + (width / 2), heightIndex + (height / 2));
-						break;
-					}
-					}
-//					if(text.value == null) {
-						String id = s.uuid.substring(0,7);
-						int z = graphics.getFontMetrics().stringWidth(id);
-						graphics.drawString(id, widthIndex + (width/2) - (z / 2), heightIndex + (height*3/4));
-//					} else {
-//						String id = text.value;
+//	public void paint(Graphics graphics) {
+//		graphics.setColor(Color.black);
+//		List<ArrayList<Shape>> rowList = this.getTableRowList();
+//		List<Shape> shapeList;
+//		int width = this.width;//(int) (this.position.dimension.width * 0.10);
+//		int height = this.height;//(int) (this.position.dimension.height * 0.10);
+//		int widthIndex = 0;
+//		int heightIndex = 0;
+//		graphics.setFont(new Font("default", Font.BOLD, (int) (8 * this.position.scale)));
+//		Data data;
+//		Shape s;
+//		for (int i = 0; i < rowList.size(); i++) {
+//			shapeList = rowList.get(i);
+//			heightIndex = (int) (i * height);
+//			for (int j = 0; j < shapeList.size(); j++) {
+//				graphics.setColor(Color.BLACK);
+//				widthIndex = (int) (j * width);
+//				graphics.drawRect(widthIndex, heightIndex, width, height);
+//				s = shapeList.get(j);
+//				data = s.data;
+//				if (data != null) {
+//					Text text = data.text;
+//					switch (data.unit.type) {
+//					case DATA: {
+//						graphics.setColor(Color.BLACK);
+//						graphics.drawString("D", widthIndex + (width / 2), heightIndex + (height / 2));
+//						break;
+//					}
+//					case TIME: {
+//						graphics.drawString("T", widthIndex + (width / 2), heightIndex + (height / 2));
+//						break;
+//					}
+//					case SPACE: {
+//						graphics.drawString("S", widthIndex + (width / 2), heightIndex + (height / 2));
+//						break;
+//					}
+//					case ENERGY: {
+//						graphics.drawString("E", widthIndex + (width / 2), heightIndex + (height / 2));
+//						break;
+//					}
+//					}
+////					if(text.value == null) {
+//						String id = s.uuid.substring(0,7);
 //						int z = graphics.getFontMetrics().stringWidth(id);
 //						graphics.drawString(id, widthIndex + (width/2) - (z / 2), heightIndex + (height*3/4));
-//					}
-				}
-			}
-		}
-	}
+////					} else {
+////						String id = text.value;
+////						int z = graphics.getFontMetrics().stringWidth(id);
+////						graphics.drawString(id, widthIndex + (width/2) - (z / 2), heightIndex + (height*3/4));
+////					}
+//				}
+//			}
+//		}
+//	}
 }
