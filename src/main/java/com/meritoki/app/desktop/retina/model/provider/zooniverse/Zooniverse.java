@@ -49,7 +49,7 @@ public class Zooniverse extends Provider {
 
 	public Zooniverse() {
 		super("zooniverse");
-		logger.info("Zooniverse()");
+//		logger.info("Zooniverse()");
 	}
 	
 	@Override

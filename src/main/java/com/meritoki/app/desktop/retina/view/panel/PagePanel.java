@@ -435,11 +435,12 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 	public void mouseDragged(MouseEvent me) {
 		this.model.system.releasedPoint = new Point(me.getX(), me.getY());
 		if (this.model.system.tool != null) {
+			Page page = this.model.document.getPage();
+			if(page != null) {
 			switch (this.model.system.tool) {
 			case DRAW: {
 				Point pressedPoint = this.model.system.pressedPoint;
 				Point releasedPoint = this.model.system.releasedPoint;
-				Page page = this.model.document.getPage();
 				double scale = page.position.scale;
 				Image pressedImage = this.model.document.getImage();
 				Shape shape = new Shape();
@@ -457,7 +458,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 			case GUIDE: {
 				Point pressedPoint = this.model.system.pressedPoint;
 				Point releasedPoint = this.model.system.releasedPoint;
-				Page page = this.model.document.getPage();
+//				Page page = this.model.document.getPage();
 				double scale = page.position.scale;
 				Image pressedImage = this.model.document.getImage();
 				Shape shape = new Shape();
@@ -471,7 +472,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 			case SELECT: {
 				Point pressedPoint = this.model.system.pressedPoint;
 				Point releasedPoint = this.model.system.releasedPoint;
-				Page page = this.model.document.getPage();
+//				Page page = this.model.document.getPage();
 				double scale = page.position.scale;
 				Image pressedImage = this.model.document.getImage();
 				Shape shape = new Shape();
@@ -483,7 +484,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 			case RESIZE: {
 				Point pressedPoint = this.model.system.pressedPoint;
 				Point releasedPoint = this.model.system.releasedPoint;
-				Page page = this.model.document.getPage();
+//				Page page = this.model.document.getPage();
 				Shape shape = page.getShape();
 				if(shape instanceof Grid) {
 					Grid grid = (Grid)shape;
@@ -509,7 +510,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				if (this.model.cache.selector != null) {
 					Point pressedPoint = this.model.system.pressedPoint;
 					Point releasedPoint = this.model.system.releasedPoint;
-					Page page = this.model.document.getPage();
+//					Page page = this.model.document.getPage();
 					Selector selector = new Selector(this.model.cache.selector, true);
 					if(page.contains(releasedPoint)) {
 						selector.position.move(Position.getMovedPoint(new Point(releasedPoint), new Point(pressedPoint)));
@@ -532,7 +533,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				} else if (this.model.document.getShape() != null) {
 					Point pressedPoint = this.model.system.pressedPoint;
 					Point releasedPoint = this.model.system.releasedPoint;
-					Page page = this.model.document.getPage();
+//					Page page = this.model.document.getPage();
 					Shape shape = page.getShape();
 					if(shape instanceof Grid) {
 						Grid grid = (Grid)shape;
@@ -555,6 +556,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 						e.printStackTrace();
 					}
 				}
+			}
 			}
 			}
 			this.repaint();
