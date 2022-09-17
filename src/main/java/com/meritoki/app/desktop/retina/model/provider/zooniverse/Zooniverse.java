@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Guide;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
@@ -188,17 +189,19 @@ public class Zooniverse extends Provider {
 		this.report = new StringBuilder();
 		for(Page p:document.getPageList()) {
 			for(Shape s:p.getGridShapeList()) {
-				stringBuilder.append(index);
-				stringBuilder.append(",");
-				BufferedImage image = this.model.document.getShapeBufferedImage(p.getScaledBufferedImage(this.model), s);
-				if(image != null) {
-					NodeController.saveJpg(manifestPath, s.uuid + ".jpg", image);
-				} else {
-					this.report.append("Page "+p.uuid+" Null Shape "+s.uuid+"\n");
+				if(!(s instanceof Guide)) {
+					stringBuilder.append(index);
+					stringBuilder.append(",");
+					BufferedImage image = this.model.document.getShapeBufferedImage(p.getScaledBufferedImage(this.model), s);
+					if(image != null) {
+						NodeController.saveJpg(manifestPath, s.uuid + ".jpg", image);
+					} else {
+						this.report.append("Page "+p.uuid+" Null Shape "+s.uuid+"\n");
+					}
+					stringBuilder.append(s.uuid + ".jpg");
+					stringBuilder.append("\n");
+					index++;
 				}
-				stringBuilder.append(s.uuid + ".jpg");
-				stringBuilder.append("\n");
-				index++;
 			}
 		}
 		MemoryController.log();
