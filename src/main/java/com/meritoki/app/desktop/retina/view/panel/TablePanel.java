@@ -15,16 +15,20 @@
  */
 package com.meritoki.app.desktop.retina.view.panel;
 
-import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
+import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableModel;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Document;
+import com.meritoki.app.desktop.retina.model.document.Grid;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.Table;
@@ -35,7 +39,7 @@ import com.meritoki.app.desktop.retina.view.frame.MainFrame;
  *
  * @author osvaldo.rodriguez
  */
-public class TablePanel extends javax.swing.JPanel {
+public class TablePanel extends javax.swing.JPanel implements TableModelListener {
 
 	/**
 	 * 
@@ -43,7 +47,7 @@ public class TablePanel extends javax.swing.JPanel {
 	private static final long serialVersionUID = -4834508823328218806L;
 	private static Logger logger = LogManager.getLogger(TablePanel.class.getName());
 	private Model model = null;
-	private MainFrame main = null;
+	private MainFrame mainFrame = null;
 
 	/**
 	 * Creates new form Table
@@ -51,6 +55,10 @@ public class TablePanel extends javax.swing.JPanel {
 	public TablePanel() {
 		initComponents();
 
+	}
+	
+	public void setMainFrame(MainFrame main) {
+		this.mainFrame = main;
 	}
 
 	public void setModel(Model m) {
@@ -62,20 +70,34 @@ public class TablePanel extends javax.swing.JPanel {
 	public void init() {
 		logger.debug("init()");
 		this.initDataTable();
-		System.out.println(this.model.document.getPage());
 		if (this.model.document.getPage() != null) {
 			this.model.system.matrix = this.model.document.getPage().getMatrix();
-			Action action = new AbstractAction() {
-				public void actionPerformed(ActionEvent e) {
-					TableCellListener tcl = (TableCellListener) e.getSource();
-					int row = tcl.getRow();
-					int column = tcl.getColumn();
-					Shape shape = model.document.getPage().getMatrix().getShape(row, column);
-					shape.addText(new Text((String) tcl.getNewValue()));
-				}
-			};
-			TableCellListener tcl = new TableCellListener(this.dataTable, action);
 			this.dataTable.setDefaultRenderer(Object.class, new TableRenderer(this.model));
+			this.dataTable.addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					if (e.getClickCount() == 1) {
+						JTable target = (JTable) e.getSource();
+						int row = target.getSelectedRow();
+						int column = target.getSelectedColumn();
+						if(row > -1 && column > -1) {
+							System.out.println("mouseClicked(e) row="+row+" column="+column);
+							Page page = model.document.getPage();
+							Shape matrixShape = model.system.matrix.getShape(row, column);
+							Grid grid = (matrixShape != null)?page.getGrid(matrixShape.uuid):null;
+							Shape shape = (grid != null)? grid.getShape():null;
+							Shape currentShape = (page != null) ? page.getShape() : null;
+							if (shape != null && currentShape != null && !shape.uuid.equals(currentShape.uuid)) {
+								page.setShape(grid.uuid);
+								page.setGridShape(matrixShape.uuid);
+							} else if(matrixShape != null){
+								page.setShape(matrixShape.uuid);
+							}
+							mainFrame.init();
+						}
+					}
+				}
+			});
+			this.dataTable.getModel().addTableModelListener(this);
 		}
 
 	}
@@ -129,6 +151,37 @@ public class TablePanel extends javax.swing.JPanel {
 	private javax.swing.JTable dataTable;
 	private javax.swing.JScrollPane jScrollPane1;
 	// End of variables declaration//GEN-END:variables
+
+	@Override
+	public void tableChanged(TableModelEvent e) {
+		logger.info("tableChanged(e)");
+		int row = e.getFirstRow();
+		int column = e.getColumn();
+		TableModel tableModel = (TableModel) e.getSource();
+		Object data = tableModel.getValueAt(row, column);
+		Page page = this.model.document.getPage();
+		Shape matrixShape = model.system.matrix.getShape(row, column);
+		Grid grid = (matrixShape != null)?page.getGrid(matrixShape.uuid):null;
+		Shape gridShape = (grid != null)? grid.getShape():null;
+		Shape currentShape = (page != null) ? page.getShape() : null;
+		Shape shape = (gridShape != null)? gridShape: currentShape;
+//		Shape currentShape = (page != null) ? page.getShape() : null;
+//		Shape matrixShape = this.model.system.matrix.getShape(row, column);
+//		if (currentShape != null && !matrixShape.uuid.equals(currentShape.uuid)) {
+//			page.setGridShape(matrixShape.uuid);
+//			currentShape = page.getGridShape();
+//		}
+//		Shape shape = currentShape;
+		logger.info("tableChanged(e) data=" + data);
+		logger.info("tableChanged(e) shape=" + shape);
+		if (shape != null && data instanceof String) {
+			
+			String s = (String) data;
+			shape.addText(new Text(s));
+			shape.data.setText(new Text(s));
+			mainFrame.init();
+		}
+	}
 }
 //
 //public void initDataTable() {

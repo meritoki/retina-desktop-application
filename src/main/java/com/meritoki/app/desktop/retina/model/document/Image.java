@@ -186,6 +186,22 @@ public class Image {
 		}
 		return s;
 	}
+	
+	@JsonIgnore
+	public Grid getGrid(String uuid) {
+		List<Shape> shapeList = this.getShapeList();
+		for(Shape shape: shapeList) {
+			if(shape instanceof Grid) {
+				Grid g = (Grid)shape;
+				if(g.uuid.equals(uuid)) {
+					return g;
+				} else if(g.setShape(uuid)) {
+					return g;
+				}
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Function returns list of Shape objects
