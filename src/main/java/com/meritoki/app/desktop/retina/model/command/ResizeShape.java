@@ -53,7 +53,13 @@ public class ResizeShape extends Command {
 		
     	//Undo
 		Operation operation = new Operation();
-		operation.object = (pressedShape instanceof Grid)?new Grid(((Grid)pressedShape),true):new Shape(pressedShape,true);
+		if(pressedShape instanceof Grid) {
+			operation.object = new Grid((Grid)pressedShape,true);
+		} else if(pressedShape instanceof Guide) {
+			operation.object = new Guide((Guide)pressedShape,true);
+		} else {
+			operation.object = (pressedShape != null)?new Shape(pressedShape,true):null;
+		}
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);
@@ -68,7 +74,13 @@ public class ResizeShape extends Command {
 		}
 		//Redo
 		operation = new Operation();
-		operation.object = (pressedShape instanceof Grid)?new Grid(((Grid)pressedShape),true):new Shape(pressedShape,true);
+		if(pressedShape instanceof Grid) {
+			operation.object = new Grid((Grid)pressedShape,true);
+		} else if(pressedShape instanceof Guide) {
+			operation.object = new Guide((Guide)pressedShape,true);
+		} else {
+			operation.object = (pressedShape != null)?new Shape(pressedShape,true):null;
+		}
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);

@@ -118,6 +118,7 @@ public final class MainFrame extends JFrame {
 
 	public void setMainFrame() {
 		this.pagePanel.setMainFrame(this);
+		this.tablePanel.setMainFrame(this);
 		this.machinePanel.setMainFrame(this);
 	}
 

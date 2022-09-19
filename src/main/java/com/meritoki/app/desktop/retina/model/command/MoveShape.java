@@ -55,7 +55,9 @@ public class MoveShape extends Command {
 		if(pressedShape instanceof Grid) {
 			Grid pressedGrid = (Grid)pressedShape;
 			undoShape = new Grid(pressedGrid,true);
-		} else {
+		}if(pressedShape instanceof Guide) {
+			undoShape = new Guide((Guide)pressedShape,true);
+		}else {
 			undoShape = new Shape(pressedShape,true);
 		}
 		// Undo
@@ -80,6 +82,8 @@ public class MoveShape extends Command {
 			logger.info("execute() (newShape instanceof Grid)");
 			Grid newGrid = (Grid)newShape;
 			redoShape = new Grid(newGrid,true);
+		} else if(newShape instanceof Guide) {
+			redoShape = new Guide((Guide)newShape,true);
 		} else {
 			redoShape = new Shape(newShape,true);
 		}

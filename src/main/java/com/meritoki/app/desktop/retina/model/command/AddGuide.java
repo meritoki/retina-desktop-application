@@ -64,7 +64,7 @@ public class AddGuide extends Command {
 			meritoki.update();
 		}
 		Operation operation = new Operation();
-		operation.object = new Shape(shape, true);
+		operation.object = new Guide(shape, true);
 		operation.sign = 1;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);

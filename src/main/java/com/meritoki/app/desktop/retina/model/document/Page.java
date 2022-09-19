@@ -270,6 +270,17 @@ public class Page {
 	}
 
 	@JsonIgnore
+	public Grid getGrid(String uuid) {
+		for (Image image : this.imageList) {
+			Grid g = image.getGrid(uuid);
+			if(g != null) {
+				return g;
+			}
+		}
+		return null;
+	}
+	
+	@JsonIgnore
 	public Shape getGridShape() {
 		Shape shape = this.getShape();
 		if (shape instanceof Grid) {

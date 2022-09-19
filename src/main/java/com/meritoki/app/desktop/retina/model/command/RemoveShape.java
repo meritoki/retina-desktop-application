@@ -21,6 +21,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.meritoki.app.desktop.retina.model.Model;
+import com.meritoki.app.desktop.retina.model.document.Grid;
+import com.meritoki.app.desktop.retina.model.document.Guide;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 
 public class RemoveShape extends Command {
@@ -39,7 +41,13 @@ public class RemoveShape extends Command {
     	Shape pressedShape = (pressedShapeUUID != null)?this.model.document.getShape(pressedShapeUUID):null;
 		//undo
 		Operation operation = new Operation();
-		operation.object = (pressedShape != null)?new Shape(pressedShape,true):null;
+		if(pressedShape instanceof Grid) {
+			operation.object = new Grid((Grid)pressedShape,true);
+		} else if(pressedShape instanceof Guide) {
+			operation.object = new Guide((Guide)pressedShape,true);
+		} else {
+			operation.object = (pressedShape != null)?new Shape(pressedShape,true):null;
+		}
 		operation.sign = 0;
 		operation.id = UUID.randomUUID().toString();
 		this.operationList.push(operation);

@@ -54,6 +54,7 @@ public class ZooniverseCSVImportDialog extends javax.swing.JDialog {
 		if (result == JFileChooser.APPROVE_OPTION) {
 			File file = this.jFileChooser1.getSelectedFile();
 			this.model.document.importZooniverse(file.getAbsolutePath());
+			this.model.report(this.model.document);
 			this.mainFrame.init();
 			this.setVisible(false);
 		} else if (result == JFileChooser.CANCEL_OPTION) {
