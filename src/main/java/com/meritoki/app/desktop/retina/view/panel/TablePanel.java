@@ -54,7 +54,6 @@ public class TablePanel extends javax.swing.JPanel implements TableModelListener
 	 */
 	public TablePanel() {
 		initComponents();
-
 	}
 	
 	public void setMainFrame(MainFrame main) {
@@ -80,7 +79,7 @@ public class TablePanel extends javax.swing.JPanel implements TableModelListener
 						int row = target.getSelectedRow();
 						int column = target.getSelectedColumn();
 						if(row > -1 && column > -1) {
-							System.out.println("mouseClicked(e) row="+row+" column="+column);
+//							System.out.println("mouseClicked(e) row="+row+" column="+column);
 							Page page = model.document.getPage();
 							Shape matrixShape = model.system.matrix.getShape(row, column);
 							Grid grid = (matrixShape != null)?page.getGrid(matrixShape.uuid):null;
@@ -154,7 +153,6 @@ public class TablePanel extends javax.swing.JPanel implements TableModelListener
 
 	@Override
 	public void tableChanged(TableModelEvent e) {
-		logger.info("tableChanged(e)");
 		int row = e.getFirstRow();
 		int column = e.getColumn();
 		TableModel tableModel = (TableModel) e.getSource();
@@ -165,17 +163,7 @@ public class TablePanel extends javax.swing.JPanel implements TableModelListener
 		Shape gridShape = (grid != null)? grid.getShape():null;
 		Shape currentShape = (page != null) ? page.getShape() : null;
 		Shape shape = (gridShape != null)? gridShape: currentShape;
-//		Shape currentShape = (page != null) ? page.getShape() : null;
-//		Shape matrixShape = this.model.system.matrix.getShape(row, column);
-//		if (currentShape != null && !matrixShape.uuid.equals(currentShape.uuid)) {
-//			page.setGridShape(matrixShape.uuid);
-//			currentShape = page.getGridShape();
-//		}
-//		Shape shape = currentShape;
-		logger.info("tableChanged(e) data=" + data);
-		logger.info("tableChanged(e) shape=" + shape);
 		if (shape != null && data instanceof String) {
-			
 			String s = (String) data;
 			shape.addText(new Text(s));
 			shape.data.setText(new Text(s));
@@ -183,6 +171,15 @@ public class TablePanel extends javax.swing.JPanel implements TableModelListener
 		}
 	}
 }
+//Shape currentShape = (page != null) ? page.getShape() : null;
+//Shape matrixShape = this.model.system.matrix.getShape(row, column);
+//if (currentShape != null && !matrixShape.uuid.equals(currentShape.uuid)) {
+//	page.setGridShape(matrixShape.uuid);
+//	currentShape = page.getGridShape();
+//}
+//Shape shape = currentShape;
+//logger.info("tableChanged(e) data=" + data);
+//logger.info("tableChanged(e) shape=" + shape);
 //
 //public void initDataTable() {
 //	logger.debug("initDataTable()");
