@@ -32,7 +32,7 @@ import com.meritoki.library.controller.node.NodeController;
 public class Desktop {
 
 	static Logger logger = LogManager.getLogger(Desktop.class.getName());
-	public static String versionNumber = "1.1.20230111";
+	public static String versionNumber = "1.1.202301";
 	public static String vendor = "Meritoki";
 	public static String about = "Version " + versionNumber + " Copyright " + vendor + " 2019-2022";
 	public static Option helpOption = new Option("h", "help", false, "Print usage information");
