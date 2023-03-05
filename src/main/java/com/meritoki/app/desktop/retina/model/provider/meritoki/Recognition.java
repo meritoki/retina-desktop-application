@@ -71,7 +71,7 @@ public class Recognition extends Node {
 				object = new Inference(id.intValue(), this, this.model);
 			}
 			else {
-				logger.warning("load(" + id + ", " + object + ")");
+				logger.warn("load(" + id + ", " + object + ")");
 				object = null;
 			}
 
@@ -103,10 +103,10 @@ public class Recognition extends Node {
 				this.moduleMapStart(this.moduleMap);
 				try {
 					
-					logger.fine("defaultState(" + object + ") (countDownLatch.await())");
+					logger.debug("defaultState(" + object + ") (countDownLatch.await())");
 					countDownLatch.await();
 				} catch (InterruptedException ie) {
-					logger.warning("defaultState(" + object + ") InterruptedException");
+					logger.warn("defaultState(" + object + ") InterruptedException");
 				}
 			} else {
 				moduleMapStart(this.moduleMap);

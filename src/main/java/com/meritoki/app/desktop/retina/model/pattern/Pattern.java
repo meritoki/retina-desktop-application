@@ -45,6 +45,7 @@ import com.meritoki.app.desktop.retina.model.command.SetImage;
 import com.meritoki.app.desktop.retina.model.command.SetPage;
 import com.meritoki.app.desktop.retina.model.command.SetShape;
 import com.meritoki.app.desktop.retina.model.command.ShiftImage;
+import com.meritoki.app.desktop.retina.model.document.Document;
 
 public class Pattern {
 
@@ -67,7 +68,7 @@ public class Pattern {
 	}
 	
 	public void setModel(Model model) {
-		logger.info("setModel("+model+")");
+		//logger.info("setModel("+model+")");
 		this.model = model;
 
 		this.clientController = new ClientController(this.model);
@@ -195,7 +196,7 @@ public class Pattern {
 				this.model.system.page = this.model.document.getPage();
 				this.model.system.image = this.model.document.getImage();
 				this.model.system.shape = this.model.document.getShape();
-				this.model.document = this.clientController.retinaClient.postDocumentCommand(this.model.document, command, this.model.cache);
+				this.model.document = new Document();//this.clientController.retinaClient.postDocumentCommand(this.model.document, command, this.model.cache);
 				if(this.model.document.setPage(this.model.system.page.uuid)) {
 					if(this.model.document.setImage(this.model.system.image.uuid)) {
 						

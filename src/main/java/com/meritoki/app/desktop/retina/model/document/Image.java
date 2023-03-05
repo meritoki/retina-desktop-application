@@ -138,7 +138,7 @@ public class Image {
 	 */
 	@JsonIgnore
 	public int getIndex() {
-		logger.debug("getIndex() this.index=" + this.index);
+		//logger.debug("getIndex() this.index=" + this.index);
 		return this.index;
 	}
 
@@ -260,14 +260,14 @@ public class Image {
 //				logger.info("getBufferedImage(model) this.fileCache Exists");
 				bufferedImage = NodeController.openBufferedImage(cache);
 			} else {
-				logger.info("getBufferedImage(model) this.fileCache Exists Not");
+				//logger.info("getBufferedImage(model) this.fileCache Exists Not");
 				this.file = new File(this.filePath + NodeController.getSeperator() + this.fileName);// load local file
 				if(!this.file.exists()) {
 					this.file = new File(NodeController.getDocumentCache(model.document.uuid) + NodeController.getSeperator()
 					+ this.fileName);
 				}
 				if (this.file.exists()) {
-					logger.info("getBufferedImage(model) this.file Exists");
+					//logger.info("getBufferedImage(model) this.file Exists");
 					bufferedImage = NodeController.openBufferedImage(this.file);
 					if (bufferedImage != null) {
 						logger.info("getBufferedImage(model) bufferedImage Not Null");

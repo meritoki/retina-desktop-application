@@ -201,7 +201,7 @@ public class Page {
 	public Image getImage() {
 		int size = this.imageList.size();
 		Image image = (this.index < size && size > 0) ? this.imageList.get(this.index) : null;
-		logger.debug("getImage() image=" + image);
+		//logger.debug("getImage() image=" + image);
 		return image;
 	}
 
@@ -209,7 +209,7 @@ public class Page {
 	public Image getImage(int index) {
 		int size = this.imageList.size();
 		Image image = (index < size && size > 0) ? this.imageList.get(index) : null;
-		logger.debug("getImage() image=" + image);
+		//logger.debug("getImage() image=" + image);
 		return image;
 	}
 
@@ -433,7 +433,7 @@ public class Page {
 
 	@JsonIgnore
 	public void setBufferedImage(BufferedImage bufferedImage) {
-		logger.debug("setBufferedImage(" + bufferedImage + ")");
+		//logger.debug("setBufferedImage(" + bufferedImage + ")");
 		this.bufferedImage = bufferedImage;
 	}
 
@@ -466,7 +466,7 @@ public class Page {
 
 	@JsonIgnore
 	public boolean setImage(String uuid) {
-		logger.debug("setImage(" + uuid + ")");
+		//logger.debug("setImage(" + uuid + ")");
 		boolean flag = false;
 		Image image = null;
 		List<Image> imageList = this.getImageList();
@@ -522,7 +522,7 @@ public class Page {
 
 	@JsonIgnore
 	public void addImage(Image image) {
-		logger.info("addImage(" + image + ")");
+		//logger.info("addImage(" + image + ")");
 		this.imageList.add(image);
 		image.setScale(this.position.scale);
 		image.setOffset(this.position.absoluteDimension.width);
@@ -589,7 +589,7 @@ public class Page {
 	 */
 	@JsonIgnore
 	public Shape removeShape(Shape shape) {
-		logger.info("removeShape(" + shape + ")");
+		//logger.info("removeShape(" + shape + ")");
 		Shape s = null;
 		if (shape != null) {
 			for (Image image : this.getImageList()) {
@@ -615,7 +615,7 @@ public class Page {
 	@JsonIgnore
 	public boolean contains(Point point) {
 		boolean flag = this.position.contains(point);
-		logger.debug("contains(" + point + ") flag=" + flag);
+		//logger.debug("contains(" + point + ") flag=" + flag);
 		return flag;
 	}
 
