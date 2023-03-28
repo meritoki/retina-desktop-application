@@ -28,11 +28,12 @@ import com.meritoki.app.desktop.retina.controller.node.NodeController;
 import com.meritoki.library.controller.node.Exit;
 
 public class Panoptes {
-	
+
 	static org.apache.logging.log4j.Logger logger = LogManager.getLogger(Panoptes.class.getName());
-	
+	public static int defaultTimeout = 10800;
+
 	@JsonIgnore
-	public boolean isAvailable()  {
+	public boolean isAvailable() {
 		logger.info("isAvailable()");
 		String command = null;
 		if (NodeController.isLinux() || NodeController.isMac()) {
@@ -43,17 +44,17 @@ public class Panoptes {
 		boolean flag = true;
 		Exit exit;
 		try {
-			exit = NodeController.executeCommand(command, 1440);
+			exit = NodeController.executeCommand(command, defaultTimeout);
 			if (exit.value != 0) {
 				flag = false;
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 		return flag;
 	}
-	
+
 	public static List<Project> listProject(String query) throws Exception {
 		logger.info("listProject(" + query + ")");
 		List<Project> projectList = new ArrayList<>();
@@ -63,14 +64,14 @@ public class Panoptes {
 		} else if (NodeController.isWindows()) {
 			command = "set PYTHONIOENCODING=utf-8 && panoptes project ls";
 		}
-		Exit exit = NodeController.executeCommand(command, 1440);
+		Exit exit = NodeController.executeCommand(command, defaultTimeout);
 		if (exit.value != 0) {
 			throw new Exception("Non-Zero Exit Value: " + exit.value);
 		} else {
 			List<String> stringList = exit.list;
 			if (stringList.size() > 0 && !stringList.get(0).equals("error")) {
 				for (String s : stringList) {
-					if(s.contains(query)) {
+					if (s.contains(query)) {
 						String[] result = s.split(" ");
 						String id = result[0].replace("*", "");
 						String name = result[1];
@@ -82,11 +83,11 @@ public class Panoptes {
 		}
 		return projectList;
 	}
-	
+
 	@JsonIgnore
 	public static List<Workflow> listWorkflow(Project project) throws Exception {
 		String panoptesCommand = "panoptes workflow ls -p " + project.getId();
-		Exit exit = NodeController.executeCommand(panoptesCommand, 60);
+		Exit exit = NodeController.executeCommand(panoptesCommand, defaultTimeout);
 		List<Workflow> workflowList = new ArrayList<>();
 		if (exit.value != 0) {
 			throw new Exception("Failed Command: " + panoptesCommand);
@@ -102,7 +103,7 @@ public class Panoptes {
 		}
 		return workflowList;
 	}
-	
+
 	@JsonIgnore
 	public static void setConfig(Credential credential) throws Exception {
 		if (credential != null) {
@@ -111,35 +112,34 @@ public class Panoptes {
 			data.put("password", credential.password);
 			data.put("endpoint", "https://www.zooniverse.org");
 			File configFile = new File(ZooniverseController.getConfigPath());
-			if(!configFile.exists()) {
+			if (!configFile.exists()) {
 				configFile.mkdirs();
 			}
 			NodeController.saveYaml(ZooniverseController.getConfigPath(), "config.yml", data);
 			File panoptesHome = new File(NodeController.getPanoptesHome());
-			if(!panoptesHome.exists()) {
+			if (!panoptesHome.exists()) {
 				panoptesHome.mkdir();
 			}
 			String cpCommand = "";
-			if(NodeController.isWindows()) {
+			if (NodeController.isWindows()) {
 				cpCommand += "copy ";
 			} else {
 				cpCommand = "cp ";
 			}
 			cpCommand += ZooniverseController.getConfigPath() + NodeController.getSeperator() + "config.yml "
 					+ NodeController.getPanoptesHome() + NodeController.getSeperator();
-			Exit exit = NodeController.executeCommand(cpCommand);
+			Exit exit = NodeController.executeCommand(cpCommand, defaultTimeout);
 			if (exit.value != 0) {
-				logger.error("setConfig("+credential+") exit.output="+exit.getOutput());
+				logger.error("setConfig(" + credential + ") exit.output=" + exit.getOutput());
 				throw new Exception("Failed Command: " + cpCommand);
 			}
 		}
 	}
-	
+
 	@JsonIgnore
 	public static Project createProject(Project project) throws Exception {
-		String panoptesCommand = "panoptes project create " + project.getTitle() + " "
-				+ project.getDescription();
-		Exit exit = NodeController.executeCommand(panoptesCommand);
+		String panoptesCommand = "panoptes project create " + project.getTitle() + " " + project.getDescription();
+		Exit exit = NodeController.executeCommand(panoptesCommand, defaultTimeout);
 		if (exit.value != 0) {
 			throw new Exception("Failed Command: " + panoptesCommand);
 		} else {
@@ -149,18 +149,16 @@ public class Panoptes {
 				String[] stringArray = string.split(" ");
 				project.setId(stringArray[0]);
 				project.setName(stringArray[1]);
-//				this.projectList.add(project);
-//				this.project = project;
 			}
 		}
 		return project;
 	}
-	
+
 	@JsonIgnore
 	public static void uploadSubjectSet(SubjectSet subjectSet, String filePath, String fileName) throws Exception {
-		String panoptesCommand = "panoptes subject-set upload-subjects " + subjectSet.getId() + " " + filePath + "/"
-				+ fileName;
-		Exit exit = NodeController.executeCommand(panoptesCommand, 2880);
+		String panoptesCommand = "panoptes subject-set upload-subjects " + subjectSet.getId() + " " + filePath
+				+ File.separatorChar + fileName;
+		Exit exit = NodeController.executeCommand(panoptesCommand, defaultTimeout);
 		if (exit.value != 0) {
 			throw new Exception("Failed Command: " + panoptesCommand);
 		}
@@ -169,7 +167,7 @@ public class Panoptes {
 	@JsonIgnore
 	public static void workflowUploadSubjectSet(Workflow workflow, SubjectSet subjectSet) throws Exception {
 		String panoptesCommand = "panoptes workflow add-subject-sets " + workflow.getId() + " " + subjectSet.getId();
-		Exit exit = NodeController.executeCommand(panoptesCommand);
+		Exit exit = NodeController.executeCommand(panoptesCommand, defaultTimeout);
 		if (exit.value != 0) {
 			throw new Exception("Failed Command: " + panoptesCommand);
 		}
@@ -177,19 +175,19 @@ public class Panoptes {
 
 	public static void downloadClassification(Project project, String fileName) throws Exception {
 		String panoptesCommand = "panoptes project download --generate " + project.id + " " + fileName;
-		Exit exit = NodeController.executeCommand(panoptesCommand, 1440);
+		Exit exit = NodeController.executeCommand(panoptesCommand, defaultTimeout);
 		if (exit.value != 0) {
 			throw new Exception("Failed Command: " + panoptesCommand);
 		}
 	}
-	
+
 	@JsonIgnore
 	public static void createSubjectSet(String projectId, SubjectSet subjectSet) throws Exception {
-		logger.info("createSubjectSet("+projectId+", "+subjectSet+")");
+		logger.info("createSubjectSet(" + projectId + ", " + subjectSet + ")");
 		String panoptesCommand = "panoptes subject-set create " + projectId + " " + subjectSet.getTitle();
-		Exit exit = NodeController.executeCommand(panoptesCommand);
+		Exit exit = NodeController.executeCommand(panoptesCommand, defaultTimeout);
 		if (exit.value != 0) {
-			throw new Exception("Non-Zero Exit Value: " + exit.value);
+			throw new Exception("Failed Command: " + panoptesCommand);
 		} else {
 			List<String> stringList = exit.list;
 			if (stringList.size() > 0 && !stringList.get(0).equals("error")) {
@@ -204,7 +202,6 @@ public class Panoptes {
 		}
 	}
 
-	
 	@JsonIgnore
 	public static String convertArrayToStringMethod(String[] strArray, int start) {
 		StringBuilder stringBuilder = new StringBuilder();

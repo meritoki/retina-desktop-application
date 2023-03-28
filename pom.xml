@@ -5,7 +5,7 @@
 	<name>retina-desktop-application</name>
 	<groupId>com.meritoki.app.desktop</groupId>
 	<artifactId>retina</artifactId>
-	<version>1.0.20220918</version>
+	<version>1.1.202301</version>
 	<packaging>jar</packaging>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -64,9 +64,9 @@
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			<version>[4.1.1,)</version>
-			<!-- <version>4.1.0</version>
-		 -->
+			<!--<version>[4.1.1,)</version> -->
+			<version>4.1.0</version>
+	
 		</dependency>
 		<dependency>
 			<groupId>net.sourceforge.tess4j</groupId>
@@ -211,7 +211,7 @@
 		</repository>
 		<repository>
 			<id>JBoss repository</id>
-			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
+			<url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
 		</repository>
 		<repository>
 			<id>sonatype-oss-public</id>
