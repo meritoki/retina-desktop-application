@@ -21,14 +21,14 @@ import com.meritoki.library.controller.Controller;
 public class ClientController extends Controller {
 	
 	private Model model;
-	public RetinaClient retinaClient;
-	public FileClient fileClient;
-	public UserClient userClient;
+//	public RetinaClient retinaClient;
+//	public FileClient fileClient;
+//	public UserClient userClient;
 	
 	public ClientController(Model model) {
 		this.model = model;
-		this.retinaClient = new RetinaClient(this.model);
-		this.fileClient = new FileClient(this.model);
-		this.userClient = new UserClient(this.model);
+//		this.retinaClient = new RetinaClient(this.model);
+//		this.fileClient = new FileClient(this.model);
+//		this.userClient = new UserClient(this.model);
 	}
 }

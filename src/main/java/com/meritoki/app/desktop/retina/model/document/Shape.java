@@ -101,28 +101,28 @@ public class Shape {
 	}
 	
 	public void setScale(double scale) {
-		logger.debug("setScale("+scale+")");
+		//logger.debug("setScale("+scale+")");
 		this.position.setScale(scale);
 	}
 	
 	public void setRelativeScale(double scale) {
-		logger.debug("setRelativeScale("+scale+")");
+		//logger.debug("setRelativeScale("+scale+")");
 		this.position.setRelativeScale(scale);
 	}
 	
 	public void setMargin(double margin) {
-		logger.debug("setMargin("+margin+")");
+		//logger.debug("setMargin("+margin+")");
 		this.position.setMargin(margin);
 	}
 	
 	public void setOffset(double offset) {
-		logger.debug("setOffset("+offset+")");
+		//logger.debug("setOffset("+offset+")");
 		this.position.setOffset(offset);
 	}
 
 	@JsonProperty
 	public void addText(Text text) {
-		logger.debug("addText(" + text.value + ")");
+		//logger.debug("addText(" + text.value + ")");
 		this.textList.add(text);
 	}
 

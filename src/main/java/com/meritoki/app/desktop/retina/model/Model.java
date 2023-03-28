@@ -16,6 +16,7 @@
 package com.meritoki.app.desktop.retina.model;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -81,13 +82,13 @@ public class Model {
 	
 	public List<String> getDocumentList() {
 		ClientController clientController = new ClientController(this);
-		List<String> stringList = clientController.retinaClient.getDocumentList();
+		List<String> stringList = new ArrayList<>();//clientController.retinaClient.getDocumentList();
 		return stringList;
 	}
 	
 	public void openDocument(String uuid) {
 		ClientController clientController = new ClientController(this);
-		this.document = clientController.retinaClient.getDocument(uuid);
+		this.document = new Document();//clientController.retinaClient.getDocument(uuid);
 		File directory = new File(NodeController.getDocumentCache(this.document.uuid));
 		if(!directory.exists()) {
 			directory.mkdirs();
@@ -188,7 +189,7 @@ public class Model {
 			User user = new User();
 			user.name = name;
 			user.password = password;
-			this.system.loggedIn = clientController.userClient.login(user);
+			this.system.loggedIn = false;//clientController.userClient.login(user);
 		} else {
 			this.system.loggedIn = userController.loginUser(name, password);	
 		}
