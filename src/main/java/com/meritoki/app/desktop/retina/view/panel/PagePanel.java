@@ -650,7 +650,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				break;
 			}
 			case KeyEvent.VK_LEFT: {
-				logger.info("keyPressed(e) KeyEvent.VK_LEFT");
+				logger.debug("keyPressed(e) KeyEvent.VK_LEFT");
 
 				try {
 					this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
@@ -667,7 +667,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 				break;
 			}
 			case KeyEvent.VK_RIGHT: {
-				logger.info("keyPressed(e) KeyEvent.VK_RIGHT");
+				logger.debug("keyPressed(e) KeyEvent.VK_RIGHT");
 				try {
 					this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
 					this.model.cache.pressedImageUUID = this.model.document.getImage().uuid;
@@ -783,7 +783,7 @@ public class PagePanel extends JPanel implements MouseListener, MouseWheelListen
 		if (e.isControlDown()){
 			int wheelRotation = e.getWheelRotation();
 			
-			logger.info("mouseWheelMoved(e) wheelRotation="+wheelRotation);
+			logger.debug("mouseWheelMoved(e) wheelRotation="+wheelRotation);
 			try {
 				this.model.cache.pressedPageUUID = this.model.document.getPage().uuid;
 				this.model.cache.scaleOperator = (wheelRotation == -1)?'/':'*';
