@@ -33,7 +33,7 @@ public class ScalePage extends Command {
 	
     @Override // Command
     public void execute() {
-    	logger.info("execute()");
+    	logger.debug("execute()");
     	//Variables
     	String pressedPageUUID = this.model.cache.pressedPageUUID;
 		double scaleFactor = this.model.cache.scaleFactor;

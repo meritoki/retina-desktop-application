@@ -135,7 +135,7 @@ public class Document {
 		if (this.getPage() != null) {
 			shape = this.getPage().getShape(point);
 		}
-		logger.info("getShape(" + point + ") shape=" + shape);
+		//logger.info("getShape(" + point + ") shape=" + shape);
 		return shape;
 	}
 
@@ -200,7 +200,7 @@ public class Document {
 	public Page getPage(int index) {
 		int size = this.pageList.size();
 		Page page = (index < size && size > 0) ? this.pageList.get(index) : null;
-		logger.debug("getPage(" + index + ") page=" + page);
+		//logger.debug("getPage(" + index + ") page=" + page);
 		return page;
 	}
 
@@ -247,7 +247,7 @@ public class Document {
 
 	@JsonIgnore
 	public boolean setPage(String uuid) {
-		logger.info("setPage(" + uuid + ")");
+		//logger.info("setPage(" + uuid + ")");
 		boolean flag = false;
 		if (uuid != null) {
 			Page page = null;
@@ -266,13 +266,13 @@ public class Document {
 
 	@JsonIgnore
 	public void setPageList(List<Page> pageList) {
-		logger.info("setPageList(" + pageList + ")");
+		//logger.info("setPageList(" + pageList + ")");
 		this.pageList = pageList;
 	}
 
 	@JsonIgnore
 	public void setImage(int index) {
-		logger.debug("setImage(" + index + ")");
+		//logger.debug("setImage(" + index + ")");
 		if (this.getPage() != null) {
 			this.getPage().setIndex(index);
 		}
@@ -290,14 +290,14 @@ public class Document {
 
 	@JsonIgnore
 	public void addPage(Page page) {
-		logger.info("addPage(" + page + ")");
+		//logger.info("addPage(" + page + ")");
 //		this.setBufferedImage(page);
 		this.pageList.add(page);
 	}
 
 	@JsonIgnore
 	public void addShape(Shape shape) {
-		logger.info("addShape(" + shape + ")");
+		//logger.info("addShape(" + shape + ")");
 		Page page = this.getPage();
 		if (page != null) {
 			page.addShape(shape);
@@ -325,7 +325,7 @@ public class Document {
 
 	@JsonIgnore
 	public BufferedImage getShapeBufferedImage(BufferedImage bufferedImage, Shape shape) {
-		logger.debug("getShapeBufferedImage(" + shape + ")");
+		//logger.debug("getShapeBufferedImage(" + shape + ")");
 		BufferedImage shapeBufferedImage = null;
 		if (bufferedImage != null) {
 //			logger.info("getShapeBufferedImage("+shape+") bufferedImage == "+bufferedImage);

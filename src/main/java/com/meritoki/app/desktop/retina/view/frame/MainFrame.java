@@ -745,9 +745,9 @@ public final class MainFrame extends JFrame {
 	private void connectMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_connectMenuItemActionPerformed
 		if(this.model.system.multiUser) {
 			ClientController clientController = new ClientController(this.model);
-			boolean fileFlag = clientController.fileClient.checkHealth();
-			boolean userFlag = clientController.userClient.checkHealth();
-			boolean retinaFlag = clientController.retinaClient.checkHealth();
+			boolean fileFlag = false;//clientController.fileClient.checkHealth();
+			boolean userFlag = false;//clientController.userClient.checkHealth();
+			boolean retinaFlag = false;//clientController.retinaClient.checkHealth();
 			if (fileFlag && userFlag && retinaFlag) {
 				this.model.system.isConnected = true;
 				JOptionPane.showMessageDialog(this, "Connected", "Message", JOptionPane.INFORMATION_MESSAGE);

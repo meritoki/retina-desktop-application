@@ -42,7 +42,7 @@ public class AddShape extends Command {
 
 	@Override
 	public void execute() throws Exception {
-		logger.info("execute()");
+//		logger.info("execute()");
 		// variable
 		String pressedPageUUID = this.model.cache.pressedPageUUID;
 		String pressedImageUUID = this.model.cache.pressedImageUUID;

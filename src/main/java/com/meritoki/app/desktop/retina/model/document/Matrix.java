@@ -102,7 +102,7 @@ public class Matrix {
 				this.sortShapeMatrix(list);
 
 			}
-			this.print(list);
+//			this.print(list);
 		}
 		if (this.script != null && !this.script.value.equals("")) {
 			try {
@@ -140,7 +140,7 @@ public class Matrix {
 					this.sortShapeMatrix(list);
 				}
 			}
-			this.print(list);
+//			this.print(list);
 		}
 		if (this.script != null && !this.script.value.equals("")) {
 			try {
@@ -188,7 +188,7 @@ public class Matrix {
 					this.sortShapeMatrix(list);
 				}
 			}
-			this.print(list);
+//			this.print(list);
 		}
 		if (this.script != null && !this.script.value.equals("")) {
 			try {
@@ -243,9 +243,9 @@ public class Matrix {
 				}
 			}
 		}
-		if (string != null) {
-			logger.debug(string);
-		}
+//		if (string != null) {
+//			logger.debug(string);
+//		}
 	}
 
 	@JsonIgnore
@@ -349,7 +349,7 @@ public class Matrix {
 	 * @throws Exception
 	 */
 	public void sortShapeMatrix(List<ArrayList<Shape>> shapeMatrix, String value) {
-		logger.info("sortShapeMatrix(shapeMatrix, " + value + ")");
+		//logger.info("sortShapeMatrix(shapeMatrix, " + value + ")");
 		if (shapeMatrix != null && value != null && !value.equals("null")) {
 			value = value.replace("\n", "").replace("\r", "");
 			String[] instructions = value.split(";");

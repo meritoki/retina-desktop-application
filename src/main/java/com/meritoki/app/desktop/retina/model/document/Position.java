@@ -150,14 +150,14 @@ public class Position {
 
 	@JsonIgnore
 	public void setAbsolutePoint(Point point) {
-		logger.debug("setAbsolutePoint(" + point + ")");
+		//logger.debug("setAbsolutePoint(" + point + ")");
 		this.absolutePoint = point;
 		this.scale();
 	}
 
 	@JsonIgnore
 	public void setAbsolutePoint(double x, double y) {
-		logger.debug("setAbsolutePoint(" + point + ")");
+		//logger.debug("setAbsolutePoint(" + point + ")");
 		this.absolutePoint.x = x;
 		this.absolutePoint.y = y;
 		this.scale();
@@ -165,7 +165,7 @@ public class Position {
 
 	@JsonIgnore
 	public void setAbsoluteDimension(Dimension dimension) {
-		logger.debug("setAbsoluteDimension(" + dimension + ")");
+		//logger.debug("setAbsoluteDimension(" + dimension + ")");
 		this.absoluteDimension = dimension;
 		this.scale();
 	}
@@ -174,7 +174,7 @@ public class Position {
 	public void addAbsoluteDimension(Dimension dimension) {
 		this.absoluteDimension.width += dimension.width;
 		this.absoluteDimension.height += dimension.height;
-		logger.debug("addAbsoluteDimension(" + dimension + ") this.absoluteDimension=" + this.absoluteDimension);
+		//logger.debug("addAbsoluteDimension(" + dimension + ") this.absoluteDimension=" + this.absoluteDimension);
 		this.scale();
 	}
 
@@ -203,7 +203,7 @@ public class Position {
 			point.x += this.offset*this.addScale;
 			point.y += this.margin*this.addScale;
 			Point absolutePoint = new Point(point);
-			logger.debug("getAbsolutePoint("+point+") absolutePoint="+absolutePoint);
+			//logger.debug("getAbsolutePoint("+point+") absolutePoint="+absolutePoint);
 			return absolutePoint;
 		}
 
@@ -249,41 +249,41 @@ public class Position {
 	@JsonIgnore
 	public void move(Point point) {
 		Point startPoint = this.getStartPoint();
-		logger.trace("move("+point+") A startPoint="+startPoint);
+		//logger.trace("move("+point+") A startPoint="+startPoint);
 		Point movePoint = new Point(startPoint.x + point.x, startPoint.y + point.y);
-		logger.trace("move("+point+") B movePoint="+movePoint);
+		//logger.trace("move("+point+") B movePoint="+movePoint);
 		Point absolutePoint = this.getAbsolutePoint(new Point(movePoint));
-		logger.trace("move("+point+") C absolutePoint="+absolutePoint);
+		//logger.trace("move("+point+") C absolutePoint="+absolutePoint);
 		this.absolutePoint = new Point(absolutePoint);
 		this.relativePoint = this.getRelativePoint();
 		this.scale();
-		logger.trace("move("+point+") D this.point="+this.point);
-		logger.trace("move("+point+") (this.point==movePoint)="+this.point.equals(movePoint));
+		//logger.trace("move("+point+") D this.point="+this.point);
+		//logger.trace("move("+point+") (this.point==movePoint)="+this.point.equals(movePoint));
 	}
 	
 	@JsonIgnore
 	public void setScale(double scale) {
 		this.scale = (this.addScale > 0) ? scale / this.addScale : scale;
-		logger.debug("setScale(" + scale + ") this.scale=" + this.scale);
+		//logger.debug("setScale(" + scale + ") this.scale=" + this.scale);
 		this.scale();
 	}
 
 	@JsonIgnore
 	public void setRelativeScale(double scale) {
 		this.relativeScale = (this.addRelativeScale > 0) ? scale / this.addRelativeScale : scale;
-		logger.info("setRelativeScale(" + scale + ") this.relativeScale=" + this.relativeScale);
+		//logger.info("setRelativeScale(" + scale + ") this.relativeScale=" + this.relativeScale);
 		this.scale();
 	}
 
 	@JsonIgnore
 	public void setAddScale(double addScale) {
-		logger.info("setAddScale(" + addScale + ")");
+		//logger.info("setAddScale(" + addScale + ")");
 		this.addScale = addScale;
 	}
 
 	@JsonIgnore
 	public void setOffset(double offset) {
-		logger.debug("setOffset(" + offset + ")");
+		//logger.debug("setOffset(" + offset + ")");
 		this.offset = offset;
 		this.scale();
 	}
@@ -373,7 +373,7 @@ public class Position {
 				&& point.y < stopPoint.y) {
 			selection = Selection.RIGHT;
 		}
-		logger.debug("selection(" + point + ") selection=" + selection);
+		//logger.debug("selection(" + point + ") selection=" + selection);
 		return selection;
 	}
 
