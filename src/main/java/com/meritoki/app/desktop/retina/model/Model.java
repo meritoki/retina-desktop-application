@@ -61,10 +61,10 @@ public class Model {
 
 	public Model() {
 		this.pattern.setModel(this);
-		this.newDocument();
+//		this.newDocument();
 	}
 	
-	public void setProviderModel() {
+	public void initProvider() {
 		for(Entry<String, Provider> entry:this.system.providerMap.entrySet()) {
 			Provider provider = entry.getValue();
 			provider.setModel(this);
@@ -72,12 +72,20 @@ public class Model {
 		}
 	}
 	
+	public void saveProvider() {
+		for(Entry<String, Provider> entry:this.system.providerMap.entrySet()) {
+			Provider provider = entry.getValue();
+			provider.save();
+		}
+	}
+	
 	public void newDocument() {
+		logger.info("newDocument()");
 		this.document = new Document();
 		this.system.newDocument = true;
 		this.system.tool = null;
 		this.system.file = null;
-		this.setProviderModel();
+		this.initProvider();
 	}
 	
 	public List<String> getDocumentList() {
@@ -106,10 +114,11 @@ public class Model {
 		if(!directory.exists()) {
 			directory.mkdirs();
 		}
-		for(Entry<String, Provider> entry:this.system.providerMap.entrySet()) {
-			Provider provider = entry.getValue();
-			provider.init();
-		}
+		this.initProvider();
+//		for(Entry<String, Provider> entry:this.system.providerMap.entrySet()) {
+//			Provider provider = entry.getValue();
+//			provider.init();
+//		}
 	}
 	
 	public void report(Document document) {
@@ -164,10 +173,11 @@ public class Model {
 		NodeController.saveDocument(this.system.file, this.document);
 		this.resource.addRecent(this.system.file.getAbsolutePath());
 		this.system.newDocument = false;
-		for(Entry<String, Provider> entry:this.system.providerMap.entrySet()) {
-			Provider provider = entry.getValue();
-			provider.save();
-		}
+		this.saveProvider();
+//		for(Entry<String, Provider> entry:this.system.providerMap.entrySet()) {
+//			Provider provider = entry.getValue();
+//			provider.save();
+//		}
 	}
 	public void saveDocument() {
 		logger.info("saveDocument()");
@@ -175,10 +185,11 @@ public class Model {
 		NodeController.saveDocument(this.system.file, this.document);
 		this.resource.addRecent(this.system.file.getAbsolutePath());
 		this.system.newDocument = false;
-		for(Entry<String, Provider> entry:this.system.providerMap.entrySet()) {
-			Provider provider = entry.getValue();
-			provider.save();
-		}
+		this.saveProvider();
+//		for(Entry<String, Provider> entry:this.system.providerMap.entrySet()) {
+//			Provider provider = entry.getValue();
+//			provider.save();
+//		}
 
 	}
 	

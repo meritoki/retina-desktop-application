@@ -65,7 +65,7 @@ public class System {
 	@JsonIgnore
 	public String defaultProjectFileName = "Untitled.ret";
 	@JsonIgnore 
-	public boolean machine = false;
+	public boolean machine = true;
 	@JsonIgnore
 	public boolean multiUser = false;
 	@JsonIgnore

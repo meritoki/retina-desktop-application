@@ -19,12 +19,16 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.UUID;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.meritoki.library.controller.node.NodeController;
-import com.meritoki.library.cortex.model.*;
+import com.meritoki.library.cortex.model.Concept;
 
 public class Input {
+	private static Logger logger = LogManager.getLogger(Input.class.getName());
 	@JsonProperty
 	public String uuid;
 	@JsonIgnore
@@ -55,7 +59,7 @@ public class Input {
 	
 	public BufferedImage getBufferedImage() {
 		if (this.bufferedImage == null) {
-			System.out.println("getBufferedImage() filePath="+filePath+" fileName="+fileName);
+			logger.info("getBufferedImage() filePath="+filePath+" fileName="+fileName);
 			this.file = new File(filePath + NodeController.getSeperator() + fileName);
 			if (this.file.exists()) {
 				this.bufferedImage = NodeController.openBufferedImage(this.file);

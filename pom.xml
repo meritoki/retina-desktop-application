@@ -76,7 +76,7 @@
 		<dependency>
 			<groupId>com.meritoki.library</groupId>
 			<artifactId>cortex</artifactId>
-			<version>0.5.202008-alpha</version>
+			<version>0.6.202305-alpha</version>
 			<exclusions>
 				<exclusion>
 					<groupId>com.meritoki.library</groupId>

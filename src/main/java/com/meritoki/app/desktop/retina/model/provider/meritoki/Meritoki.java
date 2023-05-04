@@ -21,27 +21,23 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.meritoki.app.desktop.retina.controller.node.NodeController;
-import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
 import com.meritoki.library.cortex.model.Belief;
 import com.meritoki.library.cortex.model.Concept;
-import com.meritoki.library.cortex.model.Node;
 import com.meritoki.library.cortex.model.Point;
+import com.meritoki.library.cortex.model.network.Color;
+import com.meritoki.library.cortex.model.network.hexagon.Hexagonal;
 import com.meritoki.library.cortex.model.retina.Retina;
-import com.meritoki.library.cortex.model.retina.*;
+import com.meritoki.library.cortex.model.retina.State;
 
 /**
  * As a provider there are several things that need to be stored in the provider
@@ -89,7 +85,7 @@ public class Meritoki extends Provider {
 	}
 
 	public void input(Object object) {// Point point) {
-		System.out.println("input(" + object + ")");
+		logger.info("input(" + object + ")");
 		if (object instanceof Point) {
 			Point point = (Point) object;
 			this.retina.setOrigin(point);
@@ -105,18 +101,16 @@ public class Meritoki extends Provider {
 
 	@Override
 	public void init() {// String documentUUID) {
-		logger.info("open()");
+		logger.info("init()");
 		String uuid = this.model.document.uuid;
 		File directory = new File(getCortexHome(uuid));
 		this.file = new File(directory + NodeController.getSeperator() + "cortex.json");
-		logger.info("open() defaultFile=" + file);
 		if (this.file.exists()) {
-			// not functional
+			logger.info("init() defaultFile=" + file);
 			this.document = (Document) NodeController.openJson(this.file, Document.class);
 		} else {
 			this.document = new Document();
-			directory.mkdirs();
-			NodeController.saveJson(this.file, this.document);
+			this.document.cortex = new Hexagonal(Color.BRIGHTNESS, 0, 0, 27, 1, 0);
 		}
 		this.document.cortex.load();// ?
 		this.document.cortex.update();
@@ -142,7 +136,7 @@ public class Meritoki extends Provider {
 	}
 
 	public void reset() {
-		System.out.println("reset()");
+		logger.info("reset()");
 		this.document = new Document();
 		this.retina = new Retina(this.getBufferedImage(), this.document.cortex);
 		this.retina.setDimension(this.dimension);
@@ -150,7 +144,7 @@ public class Meritoki extends Provider {
 	}
 
 	public void paint(Graphics graphics) {
-//		System.out.println("paint(" + String.valueOf(graphics != null) + ")");
+//		logger.info("paint(" + String.valueOf(graphics != null) + ")");
 		Graphics2D graphics2D = null;
 		if (graphics != null) {
 			graphics2D = (Graphics2D) graphics.create();
@@ -169,7 +163,7 @@ public class Meritoki extends Provider {
 					concept = override;
 				}
 			}
-//		System.out.println("paint(" + String.valueOf(graphics != null) + ") concept="+concept);
+//		logger.info("paint(" + String.valueOf(graphics != null) + ") concept="+concept);
 			// Difference is call iterate over input directly;
 			// When loop is true, call iterate;
 			this.bufferedImage = this.getBufferedImage();
@@ -182,7 +176,7 @@ public class Meritoki extends Provider {
 				this.retina.iterate(graphics2D, concept);// bufferedImage, this.document.cortex,
 				// Passing bufferedImage and cortex.
 				if (this.retina.state == State.COMPLETE) {
-					System.out.println("COMPLETE");
+					logger.info("COMPLETE");
 					input.scan = false;
 					this.document.inputMap.put(input.uuid, input);
 					this.update();
@@ -201,9 +195,17 @@ public class Meritoki extends Provider {
 
 	public void save() {
 		logger.info("save()");
+		String uuid = this.model.document.uuid;
+		File directory = new File(getCortexHome(uuid));
+		this.file = new File(directory + NodeController.getSeperator() + "cortex.json");
+		logger.info("init() defaultFile=" + file);
+		if (!this.file.exists()) {
+			directory.mkdirs();
+			NodeController.saveJson(this.file, this.document);
+		}
 		for (Belief b : this.document.cortex.beliefList) {
 			if (b.file == null) {
-				File directory = new File(getBeliefHome() + NodeController.getSeperator());
+				directory = new File(getBeliefHome() + NodeController.getSeperator());
 				if (!directory.exists()) {
 					directory.mkdirs();
 				}
@@ -219,14 +221,14 @@ public class Meritoki extends Provider {
 			}
 			b.filePath = b.file.getParent();
 			b.fileName = b.file.getName();
-			// System.out.println("getBufferedImage() b.filePath="+b.filePath+"
+			// logger.info("getBufferedImage() b.filePath="+b.filePath+"
 			// b.fileName="+b.fileName);
 		}
 		NodeController.saveJson(this.file, this.document);
 	}
 
 	public void setVisible(boolean visible) {
-		System.out.println("setVisible(" + visible + ")");
+		logger.info("setVisible(" + visible + ")");
 		this.visible = visible;
 		if (!visible) {
 			if (this.loop) {
@@ -261,7 +263,7 @@ public class Meritoki extends Provider {
 
 	@JsonIgnore
 	public boolean setIndex(String uuid) {
-		System.out.println("setIndex(" + uuid + ")");
+		logger.info("setIndex(" + uuid + ")");
 		boolean flag = false;
 		for (int i = 0; i < this.inputList.size(); i++) {
 			Input input = this.inputList.get(i);
@@ -275,7 +277,7 @@ public class Meritoki extends Provider {
 
 	@JsonIgnore
 	public boolean setIndex(int index) {
-		System.out.println("setIndex(" + index + ")");
+		logger.info("setIndex(" + index + ")");
 		boolean flag = false;
 		if (index >= 0 && index < this.inputList.size()) {
 			this.index = index;
@@ -335,7 +337,7 @@ public class Meritoki extends Provider {
 				
 			}
 		}
-//		System.out.println("getInputList() inputList.size()=" + inputList.size());
+//		logger.info("getInputList() inputList.size()=" + inputList.size());
 		return input;
 	}
 
@@ -368,12 +370,12 @@ public class Meritoki extends Provider {
 				}
 			}
 		}
-//		System.out.println("getInputList() inputList.size()=" + inputList.size());
+//		logger.info("getInputList() inputList.size()=" + inputList.size());
 		return inputList;
 	}
 
 	public void setInputList(List<Input> inputList) {
-//		System.out.println("setInputList(" + inputList.size() + ")");
+//		logger.info("setInputList(" + inputList.size() + ")");
 		this.inputList = inputList;
 	}
 
@@ -411,7 +413,7 @@ public class Meritoki extends Provider {
 //if (flag) {
 //	if (pointStack.size() > 0) {
 //		Point point = this.pointStack.pop();
-//		System.out.println(point);
+//		logger.info(point);
 //		this.retina.setOrigin(point.x, point.y);
 //		this.retina.input(graphics2D);
 //		List<Node> nodeList = point.getChildren();
@@ -423,37 +425,37 @@ public class Meritoki extends Provider {
 //		for (Node n : nodeList) {
 //			Point p = (Point) n;
 //			if(this.retina.getDistance(point, p)>minDistance) {
-//				System.out.println("node point" + p);
+//				logger.info("node point" + p);
 //				pointStack.push(p);
 //			}
 ////			random = min + (int)(Math.random() * ((max - min) + 1));
 ////			if(random == value) {
 ////				Point p = (Point) n;
-////				System.out.println("node point" + p);
+////				logger.info("node point" + p);
 ////				pointStack.push(p);
 ////			}
 //		}
-//		System.out.println("this.pointStack.size()=" + this.pointStack.size());
+//		logger.info("this.pointStack.size()=" + this.pointStack.size());
 //
 //	} else {
 //		this.retina.setBufferedImage(this.getBufferedImage());
 //		this.retina.setCortex(this.document.cortex);
-//		System.out.println("this.retina.getMagnification()=" + this.retina.getMagnification());
+//		logger.info("this.retina.getMagnification()=" + this.retina.getMagnification());
 //		if (this.distance == 0) {
-//			System.out.println("this.distance == 0");
+//			logger.info("this.distance == 0");
 //			this.retina.maxDistance = this.retina.getMaxDistance();
 //			this.distance = this.retina.maxDistance;
 //			this.size = (int) (this.retina.getMaxDistance() - this.retina.focalLength);
-//			System.out.println("size=" + size);
+//			logger.info("size=" + size);
 //			this.index = 0;
 //			this.retina.setDistance(this.distance);
 //			this.retina.input(graphics2D);
 ////			this.pointStack = this.retina.getPointList();
-//			System.out.println("this.pointStack.size()=" + this.pointStack.size());
+//			logger.info("this.pointStack.size()=" + this.pointStack.size());
 //		} else {
 //			this.interval = this.size / 12;
 //			if ((index * this.interval) < this.size) {
-//				System.out.println("index=" + index);
+//				logger.info("index=" + index);
 //				this.distance = size;
 //				this.distance -= index * this.interval;
 //				this.index++;
@@ -464,7 +466,7 @@ public class Meritoki extends Provider {
 //				} else {
 ////					this.pointStack = this.retina.getPointList();
 //				}
-//				System.out.println("this.pointStack.size()=" + this.pointStack.size());
+//				logger.info("this.pointStack.size()=" + this.pointStack.size());
 //			} else {
 //				flag = false;
 //			}
@@ -544,24 +546,24 @@ public class Meritoki extends Provider {
 //NodeController.saveJson(this.outputFile, this.outputList);
 //}
 
-//System.out.println(concept);
+//logger.info(concept);
 //if (this.retina.cortex != null) {
 //	Belief belief = this.retina.cortex.getBelief();
 //	if (belief != null) {
 //		List<Concept> conceptList = belief.getConceptList();
-//		System.out.println(conceptList);
+//		logger.info(conceptList);
 //		if (conceptList != null && conceptList.size() > 0) {
 //			concept = conceptList.get(0);
 //		}
 //	}
 //}
 
-//System.out.println("B concept="+concept);
+//logger.info("B concept="+concept);
 //Belief belief = this.retina.cortex.getBelief();
-//System.out.println(belief);
+//logger.info(belief);
 //if (belief != null) {
 //	List<Concept> conceptList = belief.getConceptList();
-//	System.out.println(conceptList);
+//	logger.info(conceptList);
 //	if (conceptList != null && conceptList.size() > 1) {
 //		concept = conceptList.get(conceptList.size());
 //	}
@@ -585,7 +587,7 @@ public class Meritoki extends Provider {
 //}
 //b.filePath = b.file.getParent();
 //b.fileName = b.file.getName();
-//// System.out.println("getBufferedImage() b.filePath="+b.filePath+"
+//// logger.info("getBufferedImage() b.filePath="+b.filePath+"
 //// b.fileName="+b.fileName);
 //}
 
@@ -623,13 +625,13 @@ public class Meritoki extends Provider {
 //}
 
 //if (concept != null && concept.value.isEmpty()) {
-//	System.out.println("A concept=" + concept);
+//	logger.info("A concept=" + concept);
 //	concept = new Concept();
 //}
 //if (!this.loop) {
 //	concept = this.model.cache.concept;
 //	if (concept != null && concept.value.isEmpty()) {
-//		System.out.println("A concept=" + concept);
+//		logger.info("A concept=" + concept);
 //		concept = new Concept();
 //	}
 //} else {
@@ -640,7 +642,7 @@ public class Meritoki extends Provider {
 //if (!this.loop) {
 //	concept = this.model.cache.concept;
 //	if (concept != null && concept.value.isEmpty()) {
-//		System.out.println("A concept=" + concept);
+//		logger.info("A concept=" + concept);
 //		concept = new Concept();
 //	}
 //} else {

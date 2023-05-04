@@ -37,11 +37,10 @@ import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.app.desktop.retina.model.vendor.google.Google;
 import com.meritoki.app.desktop.retina.view.dialog.AttributionDialog;
 import com.meritoki.app.desktop.retina.view.dialog.CommandDialog;
-import com.meritoki.app.desktop.retina.view.dialog.ControlDialog;
+
 import com.meritoki.app.desktop.retina.view.dialog.OpenDialog;
 import com.meritoki.app.desktop.retina.view.dialog.PageDialog;
 import com.meritoki.app.desktop.retina.view.dialog.PropertyDialog;
-import com.meritoki.app.desktop.retina.view.dialog.RecognitionDialog;
 import com.meritoki.app.desktop.retina.view.dialog.SaveAsDialog;
 import com.meritoki.app.desktop.retina.view.dialog.ShapeDialog;
 import com.meritoki.app.desktop.retina.view.dialog.ShareDialog;
@@ -50,6 +49,7 @@ import com.meritoki.app.desktop.retina.view.dialog.audio.AudioExportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.image.ImageImportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.meritoki.MeritokiExportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.meritoki.MeritokiImportDialog;
+import com.meritoki.app.desktop.retina.view.dialog.meritoki.MeritokiControlDialog;
 import com.meritoki.app.desktop.retina.view.dialog.microsoft.MicrosoftExportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.project.ProjectExportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.project.ProjectImportDialog;
@@ -79,7 +79,6 @@ public final class MainFrame extends JFrame {
 	public PageDialog pageDialog = new PageDialog(this, false);
 	public ShapeDialog shapeDialog = new ShapeDialog(this, false);
 	public ToolDialog toolDialog = new ToolDialog(this,false);
-	public RecognitionDialog recognitionDialog = new RecognitionDialog(this, false);
 	public CommandDialog commandDialog = new CommandDialog(this, false);
 	public AttributionDialog attributionDialog = new AttributionDialog(this, false);
 	public ImageImportDialog imageImportDialog = null;
@@ -91,10 +90,11 @@ public final class MainFrame extends JFrame {
 	public MicrosoftExportDialog microsoftExportDialog = new MicrosoftExportDialog(this, false);
 	public MeritokiExportDialog meritokiExportDialog = new MeritokiExportDialog(this,false);
 	public MeritokiImportDialog meritokiImportDialog = new MeritokiImportDialog(this,false);
+	public MeritokiControlDialog meritokiControlDialog = new MeritokiControlDialog(this,false);
 	public AudioExportDialog audioExportDialog = new AudioExportDialog(this, false);
 	public PropertyDialog propertyDialog = new PropertyDialog(this, false);
 	public ShareDialog shareDialog = new ShareDialog(this, false);
-	public ControlDialog controlDialog = new ControlDialog(this,false);
+	
 	public JMenuItem shareMenuItem;
 
 	public MainFrame(Model model) {
@@ -151,9 +151,10 @@ public final class MainFrame extends JFrame {
 		this.shapeDialog.setVisible(false);
 		this.pageDialog.setVisible(false); 
 		if(this.model.system.machine) {
-			this.controlDialog.setModel(this.model);
-			this.controlDialog.setVisible(true);
+			this.meritokiControlDialog.setModel(this.model);
+			this.meritokiControlDialog.setVisible(true);
 			this.machinePanel.setModel(this.model);
+			this.mainTabbedPane.setSelectedIndex(this.mainTabbedPane.getTabCount()-1);
 		} else {
 			this.mainTabbedPane.remove(this.machineScrollPane);
 		}
@@ -177,7 +178,7 @@ public final class MainFrame extends JFrame {
 		this.commandDialog.init();
 		this.attributionDialog.init();
 		if(this.model.system.machine)
-			this.controlDialog.init();
+			this.meritokiControlDialog.init();
 		if (this.model.system.loggedIn) {
 			this.logInOutMenuItem.setText("Logout");
 		} else {
@@ -709,7 +710,7 @@ public final class MainFrame extends JFrame {
     }//GEN-LAST:event_resetMeritokiMenuItemActionPerformed
 
     private void controlMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_controlMenuItemActionPerformed
-        this.controlDialog.setVisible(true);
+        this.meritokiControlDialog.setVisible(true);
     }//GEN-LAST:event_controlMenuItemActionPerformed
 
     private void toolMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toolMenuItemActionPerformed
@@ -761,18 +762,6 @@ public final class MainFrame extends JFrame {
 	private void attributionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_attributionMenuItemActionPerformed
 		this.attributionDialog.setVisible(true);
 	}// GEN-LAST:event_attributionMenuItemActionPerformed
-
-	private void recognitionStartMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_recognitionStartMenuItemActionPerformed
-		
-	}// GEN-LAST:event_recognitionStartMenuItemActionPerformed
-
-	private void recognitionStopMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_recognitionStopMenuItemActionPerformed
-		
-	}// GEN-LAST:event_recognitionStopMenuItemActionPerformed
-
-	private void recognitionMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_recognitionMenuItemActionPerformed
-		this.recognitionDialog.setVisible(true);
-	}// GEN-LAST:event_recognitionMenuItemActionPerformed
 
 	private void propertyMenuItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_propertyMenuItemActionPerformed
 		this.propertyDialog.setVisible(true);

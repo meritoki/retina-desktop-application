@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.meritoki.app.desktop.retina.view.dialog;
+package com.meritoki.app.desktop.retina.view.dialog.meritoki;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -42,13 +42,13 @@ import com.meritoki.library.cortex.model.cortex.Cortex;
  *
  * @author jorodriguez
  */
-public class ControlDialog extends javax.swing.JDialog {
+public class MeritokiControlDialog extends javax.swing.JDialog {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 7676357082487259494L;
-	private static Logger logger = LogManager.getLogger(ControlDialog.class.getName());
+	private static Logger logger = LogManager.getLogger(MeritokiControlDialog.class.getName());
 	public Model model = null;
 	public MainFrame mainFrame = null;
 	private Meritoki meritoki;
@@ -56,7 +56,7 @@ public class ControlDialog extends javax.swing.JDialog {
 	/**
 	 * Creates new form Control
 	 */
-	public ControlDialog(java.awt.Frame parent, boolean modal) {
+	public MeritokiControlDialog(java.awt.Frame parent, boolean modal) {
 		super(parent, modal);
 		this.initComponents();
 		this.inputListAddMouseListener();
@@ -170,7 +170,7 @@ public class ControlDialog extends javax.swing.JDialog {
 			public void mouseClicked(MouseEvent me) {
 				String uuid = (String)beliefList.getSelectedValue();
 				Document document = (meritoki != null) ? meritoki.document : null;
-				Cortex cortex = (document != null) ? document.cortex : null;
+				Cortex cortex = (document != null) ? (Cortex)document.cortex : null;
 				if (cortex != null) {
 					cortex.setIndex(uuid);
 				}
@@ -196,7 +196,7 @@ public class ControlDialog extends javax.swing.JDialog {
 	}
 
 	public void init() {
-		System.out.println("init()");
+		logger.info("init()");
 		this.revalidate();
 		this.initButton();
 		this.initList();
@@ -214,7 +214,7 @@ public class ControlDialog extends javax.swing.JDialog {
 
 	public void initLabel() {
 		Document document = (this.model != null) ? this.meritoki.document : null;
-		Cortex cortex = (document != null) ? document.cortex : null;
+		Cortex cortex = (document != null) ? (Cortex)document.cortex : null;
 		if (cortex != null) {
 			this.xLabel.setText(Double.toString(cortex.origin.x));
 			this.yLabel.setText(Double.toString(cortex.origin.y));
@@ -223,10 +223,10 @@ public class ControlDialog extends javax.swing.JDialog {
 
 	public void initList() {
 		Document document = (this.meritoki != null) ? this.meritoki.document : null;
-		Cortex cortex = (document != null) ? document.cortex : null;
+		Cortex cortex = (document != null) ? (Cortex)document.cortex : null;
 		if (cortex != null) {
 			Belief belief = cortex.getBelief();
-//			System.out.println("initList() belief="+belief);
+//			logger.info("initList() belief="+belief);
 			if (belief != null) {
 				List<Belief> beliefList = cortex.beliefList;
 				List<Concept> conceptList = belief.conceptList;
@@ -618,18 +618,22 @@ public class ControlDialog extends javax.swing.JDialog {
 				}
 			}
 		} catch (ClassNotFoundException ex) {
-			java.util.logging.Logger.getLogger(ControlDialog.class.getName()).log(java.util.logging.Level.SEVERE, null,
+			java.util.logging.Logger.getLogger(MeritokiControlDialog.class.getName()).log(java.util.logging.Level.SEVERE, null,
 					ex);
 		} catch (InstantiationException ex) {
-			java.util.logging.Logger.getLogger(ControlDialog.class.getName()).log(java.util.logging.Level.SEVERE, null,
+			java.util.logging.Logger.getLogger(MeritokiControlDialog.class.getName()).log(java.util.logging.Level.SEVERE, null,
 					ex);
 		} catch (IllegalAccessException ex) {
-			java.util.logging.Logger.getLogger(ControlDialog.class.getName()).log(java.util.logging.Level.SEVERE, null,
+			java.util.logging.Logger.getLogger(MeritokiControlDialog.class.getName()).log(java.util.logging.Level.SEVERE, null,
 					ex);
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
-			java.util.logging.Logger.getLogger(ControlDialog.class.getName()).log(java.util.logging.Level.SEVERE, null,
+			java.util.logging.Logger.getLogger(MeritokiControlDialog.class.getName()).log(java.util.logging.Level.SEVERE, null,
 					ex);
 		}
+		// </editor-fold>
+		// </editor-fold>
+		// </editor-fold>
+		// </editor-fold>
 		// </editor-fold>
 		// </editor-fold>
 		// </editor-fold>
@@ -638,7 +642,7 @@ public class ControlDialog extends javax.swing.JDialog {
 		/* Create and display the dialog */
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				ControlDialog dialog = new ControlDialog(new javax.swing.JFrame(), true);
+				MeritokiControlDialog dialog = new MeritokiControlDialog(new javax.swing.JFrame(), true);
 				dialog.addWindowListener(new java.awt.event.WindowAdapter() {
 					@Override
 					public void windowClosing(java.awt.event.WindowEvent e) {

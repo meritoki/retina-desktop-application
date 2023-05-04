@@ -55,8 +55,8 @@ public class Desktop {
 			} else {
 				logger.info("Starting Retina Desktop Application...");
 				final Model model = new Model();
-				model.system.init();
-				model.setProviderModel();
+//				model.system.init();
+				model.initProvider();
 				final MainFrame mainFrame = new MainFrame(model);
 				final SplashWindow splashWindow = new SplashWindow("/Splash.png", mainFrame, 4000);
 				try {

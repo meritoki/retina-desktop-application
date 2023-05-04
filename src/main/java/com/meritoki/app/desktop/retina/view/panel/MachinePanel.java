@@ -155,7 +155,7 @@ public class MachinePanel extends JPanel implements MouseListener, MouseWheelLis
 		super.paint(graphics);
 		this.meritoki.paint(graphics);
 		if(this.mainFrame != null)
-			this.mainFrame.controlDialog.init();
+			this.mainFrame.meritokiControlDialog.init();
 	}
 
 	public void hierarchyChanged(HierarchyEvent e) {

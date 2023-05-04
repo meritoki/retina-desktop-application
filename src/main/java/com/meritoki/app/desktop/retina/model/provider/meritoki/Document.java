@@ -21,23 +21,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.meritoki.library.cortex.model.cortex.Cortex;
-import com.meritoki.library.cortex.model.network.Color;
-import com.meritoki.library.cortex.model.network.hexagon.Hexagonal;
-import com.meritoki.library.cortex.model.retina.Retina;
 
 public class Document {
 
 	@JsonProperty
-	public Cortex cortex = new Hexagonal(Color.BRIGHTNESS, 0, 0, 27, 1, 0);
+	public Cortex cortex = null;//new Hexagonal(Color.BRIGHTNESS, 0, 0, 27, 1, 0);
 	// Retains inputs that have been completed;
 	@JsonProperty
 	public Map<String, Input> inputMap = new HashMap<>();
 
 	public Document() {
-		this.cortex.load();
+//		this.cortex.load();
 	}
 
 	public List<Input> getInputList() {
