@@ -339,7 +339,7 @@ public class MeritokiControlDialog extends javax.swing.JDialog {
         yLabel = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        retinaPanel = new com.meritoki.app.desktop.retina.view.panel.RetinaPanel();
+        retinaPanel = new com.meritoki.app.desktop.retina.view.panel.meritoki.RetinaPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         conceptTextArea = new javax.swing.JTextArea();
         doButton = new javax.swing.JButton();
@@ -675,7 +675,7 @@ public class MeritokiControlDialog extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator3;
-    private com.meritoki.app.desktop.retina.view.panel.RetinaPanel retinaPanel;
+    private com.meritoki.app.desktop.retina.view.panel.meritoki.RetinaPanel retinaPanel;
     private javax.swing.JButton startButton;
     private javax.swing.JLabel stateLabel;
     private javax.swing.JButton trainButton;

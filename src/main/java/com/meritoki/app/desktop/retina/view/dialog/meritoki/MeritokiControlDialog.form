@@ -247,7 +247,7 @@
         <Property name="text" type="java.lang.String" value="y:"/>
       </Properties>
     </Component>
-    <Container class="com.meritoki.app.desktop.retina.view.panel.RetinaPanel" name="retinaPanel">
+    <Container class="com.meritoki.app.desktop.retina.view.panel.meritoki.RetinaPanel" name="retinaPanel">
 
       <Layout>
         <DimensionLayout dim="0">

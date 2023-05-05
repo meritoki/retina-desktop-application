@@ -436,7 +436,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Container class="com.meritoki.app.desktop.retina.view.panel.MachinePanel" name="machinePanel">
+            <Container class="com.meritoki.app.desktop.retina.view.panel.meritoki.MachinePanel" name="machinePanel">
 
               <Layout>
                 <DimensionLayout dim="0">

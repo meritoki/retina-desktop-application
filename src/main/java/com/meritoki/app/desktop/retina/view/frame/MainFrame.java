@@ -58,7 +58,7 @@ import com.meritoki.app.desktop.retina.view.dialog.user.UserRegisterDialog;
 import com.meritoki.app.desktop.retina.view.dialog.zooniverse.ZooniverseCSVImportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.zooniverse.ZooniverseExportDialog;
 import com.meritoki.app.desktop.retina.view.dialog.zooniverse.ZooniverseImportDialog;
-import com.meritoki.app.desktop.retina.view.panel.MachinePanel;
+import com.meritoki.app.desktop.retina.view.panel.meritoki.MachinePanel;
 
 /**
  *
@@ -299,7 +299,7 @@ public final class MainFrame extends JFrame {
         archiveScrollPane = new javax.swing.JScrollPane();
         archivePanel = new com.meritoki.app.desktop.retina.view.panel.ArchivePanel();
         machineScrollPane = new javax.swing.JScrollPane();
-        machinePanel = new com.meritoki.app.desktop.retina.view.panel.MachinePanel();
+        machinePanel = new com.meritoki.app.desktop.retina.view.panel.meritoki.MachinePanel();
         mainMenuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         connectMenuItem = new javax.swing.JMenuItem();
@@ -927,7 +927,7 @@ public final class MainFrame extends JFrame {
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem logInOutMenuItem;
-    private com.meritoki.app.desktop.retina.view.panel.MachinePanel machinePanel;
+    private com.meritoki.app.desktop.retina.view.panel.meritoki.MachinePanel machinePanel;
     private javax.swing.JScrollPane machineScrollPane;
     private javax.swing.JMenuBar mainMenuBar;
     private javax.swing.JTabbedPane mainTabbedPane;
