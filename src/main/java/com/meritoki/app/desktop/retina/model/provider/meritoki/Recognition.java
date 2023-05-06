@@ -27,9 +27,9 @@ import com.meritoki.module.library.model.State;
 
 public class Recognition extends Node {
 	public String name = "Recognition";
-	public String version = "0.1.202006";
+	public String version = "0.2.202305";
 	public String vendor = "Meritoki";
-	public String year = "2020";
+	public String year = "2020-2023";
 	public Model model;
 	private Meritoki meritoki;
 	
@@ -43,12 +43,6 @@ public class Recognition extends Node {
 	public void initialize() {
 		super.initialize();
 		this.meritoki = (Meritoki)this.model.system.providerMap.get("meritoki");
-//        for (Provider provider : this.model.system.providerList) {
-//            if (provider instanceof Meritoki) {
-//                this.meritoki = (Meritoki) provider;
-//                this.meritoki.init();
-//            }
-//        }
         this.filter = false;
         this.setState(State.DEFAULT);
 	}
@@ -129,3 +123,9 @@ public class Recognition extends Node {
 //		this.meritoki.saveCortex();
 	}
 }
+//for (Provider provider : this.model.system.providerList) {
+//if (provider instanceof Meritoki) {
+//  this.meritoki = (Meritoki) provider;
+//  this.meritoki.init();
+//}
+//}
