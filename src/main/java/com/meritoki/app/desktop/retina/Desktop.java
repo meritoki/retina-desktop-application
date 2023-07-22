@@ -32,9 +32,9 @@ import com.meritoki.library.controller.node.NodeController;
 public class Desktop {
 
 	static Logger logger = LogManager.getLogger(Desktop.class.getName());
-	public static String versionNumber = "1.1.202301";
+	public static String versionNumber = "1.3.202305";
 	public static String vendor = "Meritoki";
-	public static String about = "Version " + versionNumber + " Copyright " + vendor + " 2019-2022";
+	public static String about = "Version " + versionNumber + " Copyright " + vendor + " 2019-2023";
 	public static Option helpOption = new Option("h", "help", false, "Print usage information");
 	public static Option versionOption = new Option("v", "version", false, "Print version information");
 
@@ -53,7 +53,7 @@ public class Desktop {
 			} else if (commandLine.hasOption("version")) {
 				System.out.println(about);
 			} else {
-				logger.info("Starting Retina Desktop Application...");
+				logger.info("Starting Retina Desktop Application "+about);
 				final Model model = new Model();
 //				model.system.init();
 				model.initProvider();

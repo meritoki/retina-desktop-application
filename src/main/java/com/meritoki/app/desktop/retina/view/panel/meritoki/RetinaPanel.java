@@ -67,7 +67,7 @@ public class RetinaPanel extends JPanel {
 		super.paint(graphics);
 		if (this.model != null) {
 			Graphics2D graphics2D = (Graphics2D) graphics.create();
-			Belief belief = this.meritoki.document.cortex.getBelief();
+			Belief belief = (this.meritoki.document != null)?this.meritoki.document.cortex.getBelief(): null;
 			if(belief != null) {
 				AffineTransform affineTransform = new AffineTransform();
 				affineTransform.scale(1, 1);// this handles scaling the

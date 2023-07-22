@@ -71,7 +71,10 @@ public class Meritoki extends Provider {
 		}
 	}
 
-	// Meritoki can know the size of the JPanel
+	/**
+	 * Meritoki can know the size of the JPanel
+	 * @param dimension
+	 */
 	public void setDimension(Dimension dimension) {
 		this.dimension = dimension;
 		this.retina.setDimension(dimension);
@@ -110,7 +113,7 @@ public class Meritoki extends Provider {
 			this.document = (Document) NodeController.openJson(this.file, Document.class);
 		} else {
 			this.document = new Document();
-			this.document.cortex = new Hexagonal(Color.BRIGHTNESS, 0, 0, 27, 1, 0);
+			this.document.cortex = new Hexagonal(Color.RED, 0, 0, 27, 1, 0);
 		}
 		this.document.cortex.load();// ?
 		this.document.cortex.update();
@@ -167,7 +170,7 @@ public class Meritoki extends Provider {
 			// Difference is call iterate over input directly;
 			// When loop is true, call iterate;
 			this.bufferedImage = this.getBufferedImage();
-			if (this.bufferedImage != this.retina.bufferedImage) {
+			if (this.document != null && this.bufferedImage != this.retina.bufferedImage) {
 				this.retina = new Retina(this.bufferedImage, this.document.cortex);
 				this.retina.setDimension(this.dimension);
 			}

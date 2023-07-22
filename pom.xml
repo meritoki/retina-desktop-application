@@ -5,7 +5,7 @@
 	<name>retina-desktop-application</name>
 	<groupId>com.meritoki.app.desktop</groupId>
 	<artifactId>retina</artifactId>
-	<version>1.2.202303</version>
+	<version>1.3.202305</version>
 	<packaging>jar</packaging>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
