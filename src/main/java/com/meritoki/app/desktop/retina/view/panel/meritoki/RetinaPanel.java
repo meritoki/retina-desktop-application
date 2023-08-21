@@ -33,7 +33,7 @@ import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 import com.meritoki.library.cortex.model.Belief;
 import com.meritoki.library.cortex.model.network.Level;
 import com.meritoki.library.cortex.model.network.Network;
-import com.meritoki.library.cortex.model.network.shape.Shape;
+import com.meritoki.library.cortex.model.network.Shape;
 
 /**
  *

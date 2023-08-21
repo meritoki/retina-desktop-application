@@ -25,7 +25,7 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.meritoki.library.controller.node.NodeController;
-import com.meritoki.library.cortex.model.Concept;
+import com.meritoki.library.cortex.model.unit.Concept;
 
 public class Input {
 	private static Logger logger = LogManager.getLogger(Input.class.getName());

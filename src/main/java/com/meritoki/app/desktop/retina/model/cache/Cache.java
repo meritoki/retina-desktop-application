@@ -29,8 +29,8 @@ import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.document.ShapeType;
 import com.meritoki.app.desktop.retina.model.document.user.User;
 import com.meritoki.library.cortex.model.Belief;
-import com.meritoki.library.cortex.model.Concept;
-import com.meritoki.library.cortex.model.cortex.Cortex;
+import com.meritoki.library.cortex.model.network.Cortex;
+import com.meritoki.library.cortex.model.unit.Concept;
 
 public class Cache {
 	@JsonProperty

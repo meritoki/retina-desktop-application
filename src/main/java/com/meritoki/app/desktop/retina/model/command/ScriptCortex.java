@@ -34,10 +34,10 @@ import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.library.cortex.model.Belief;
-import com.meritoki.library.cortex.model.Concept;
-import com.meritoki.library.cortex.model.cortex.Cortex;
+import com.meritoki.library.cortex.model.network.Cortex;
 import com.meritoki.library.cortex.model.network.Level;
 import com.meritoki.library.cortex.model.network.Network;
+import com.meritoki.library.cortex.model.unit.Concept;
 
 public class ScriptCortex extends Command {
 	private Logger logger = LogManager.getLogger(ScriptPage.class.getName());

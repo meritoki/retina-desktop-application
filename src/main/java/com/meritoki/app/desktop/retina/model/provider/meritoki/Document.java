@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.meritoki.library.cortex.model.cortex.Cortex;
+import com.meritoki.library.cortex.model.network.Cortex;
 
 public class Document {
 

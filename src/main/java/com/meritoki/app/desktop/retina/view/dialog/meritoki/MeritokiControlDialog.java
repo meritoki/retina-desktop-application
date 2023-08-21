@@ -35,8 +35,8 @@ import com.meritoki.app.desktop.retina.model.provider.meritoki.Input;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
 import com.meritoki.library.cortex.model.Belief;
-import com.meritoki.library.cortex.model.Concept;
-import com.meritoki.library.cortex.model.cortex.Cortex;
+import com.meritoki.library.cortex.model.network.Cortex;
+import com.meritoki.library.cortex.model.unit.Concept;
 
 /**
  *
@@ -292,7 +292,7 @@ public class MeritokiControlDialog extends javax.swing.JDialog {
 		if (conceptList != null) {
 			for (int i = 0; i < conceptList.size(); i++) {
 				defaultListModel.addElement(
-						i + ":" + String.format("%.2f", conceptList.get(i).rank) + ":" + conceptList.get(i).value);
+						i + ":" + String.format("%.2f", conceptList.get(i).rank) + ":" + conceptList.get(i).uuid);
 			}
 		}
 		this.conceptList.setModel(defaultListModel);
@@ -303,7 +303,7 @@ public class MeritokiControlDialog extends javax.swing.JDialog {
 		DefaultListModel<String> defaultListModel = new DefaultListModel<>();
 		if (conceptList != null) {
 			for (int i = 0; i < conceptList.size(); i++) {
-				defaultListModel.addElement(conceptList.get(i).rank + ":" + conceptList.get(i).value);
+				defaultListModel.addElement(conceptList.get(i).rank + ":" + conceptList.get(i).uuid);
 			}
 		}
 //		this.predictionConceptList.setModel(defaultListModel);

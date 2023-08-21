@@ -38,7 +38,7 @@ import org.apache.logging.log4j.Logger;
 import com.meritoki.app.desktop.retina.model.Model;
 import com.meritoki.app.desktop.retina.model.provider.meritoki.Meritoki;
 import com.meritoki.app.desktop.retina.view.frame.MainFrame;
-import com.meritoki.library.cortex.model.Point;
+import com.meritoki.library.cortex.model.unit.Point;
 
 public class MachinePanel extends JPanel implements MouseListener, MouseWheelListener, KeyListener, Runnable, HierarchyListener, ComponentListener {
 

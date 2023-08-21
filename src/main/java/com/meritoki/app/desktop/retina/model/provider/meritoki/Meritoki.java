@@ -32,12 +32,12 @@ import com.meritoki.app.desktop.retina.model.document.Page;
 import com.meritoki.app.desktop.retina.model.document.Shape;
 import com.meritoki.app.desktop.retina.model.provider.Provider;
 import com.meritoki.library.cortex.model.Belief;
-import com.meritoki.library.cortex.model.Concept;
-import com.meritoki.library.cortex.model.Point;
-import com.meritoki.library.cortex.model.network.Color;
-import com.meritoki.library.cortex.model.network.hexagon.Hexagonal;
-import com.meritoki.library.cortex.model.retina.Retina;
-import com.meritoki.library.cortex.model.retina.State;
+import com.meritoki.library.cortex.model.eye.retina.Retina;
+import com.meritoki.library.cortex.model.eye.retina.State;
+import com.meritoki.library.cortex.model.network.ColorType;
+import com.meritoki.library.cortex.model.network.square.Squared;
+import com.meritoki.library.cortex.model.unit.Concept;
+import com.meritoki.library.cortex.model.unit.Point;
 
 /**
  * As a provider there are several things that need to be stored in the provider
@@ -56,7 +56,7 @@ public class Meritoki extends Provider {
 	public File file;
 	private boolean visible = true;
 	public Retina retina = new Retina(null, null);
-	private Recognition recognition;
+//	private Recognition recognition;
 	public Dimension dimension;
 	public boolean loop = false;
 	public List<Input> inputList;
@@ -83,13 +83,14 @@ public class Meritoki extends Provider {
 	public void zoom(double factor) {
 		this.retina.deltaDistance(factor);
 		Point origin = new Point(this.retina.getInputCenterX(), this.retina.getInputCenterY());
-		origin.center = true;
+//		origin.center = true;
 		this.retina.setOrigin(origin);
 	}
 
 	public void input(Object object) {// Point point) {
 		logger.info("input(" + object + ")");
 		if (object instanceof Point) {
+//			logger.info("input(" + object + ") instanceof Point");
 			Point point = (Point) object;
 			this.retina.setOrigin(point);
 		}
@@ -98,7 +99,7 @@ public class Meritoki extends Provider {
 	public void scale() {
 		this.retina.setDistance(this.retina.minDistance);
 		Point origin = new Point(this.retina.getInputCenterX(), this.retina.getInputCenterY());
-		origin.center = true;
+//		origin.center = true;
 		this.retina.setOrigin(origin);
 	}
 
@@ -113,10 +114,11 @@ public class Meritoki extends Provider {
 			this.document = (Document) NodeController.openJson(this.file, Document.class);
 		} else {
 			this.document = new Document();
-			this.document.cortex = new Hexagonal(Color.RED, 0, 0, 27, 1, 0);
+			this.document.cortex = new Squared(new ColorType[]{ ColorType.BRIGHTNESS, ColorType.RED, ColorType.GREEN, ColorType.BLUE }, 0, 0, 27, 10, 0);
 		}
 		this.document.cortex.load();// ?
 		this.document.cortex.update();
+		this.retina = new Retina(this.document.cortex);
 		this.update();
 	}
 
@@ -160,7 +162,7 @@ public class Meritoki extends Provider {
 			if (!loop) {
 				if (override == null) {
 					concept = null;
-				} else if (override.value.isEmpty()) {
+				} else if (override.uuid.isEmpty()) {
 					concept = new Concept();
 				} else {
 					concept = override;
@@ -170,8 +172,9 @@ public class Meritoki extends Provider {
 			// Difference is call iterate over input directly;
 			// When loop is true, call iterate;
 			this.bufferedImage = this.getBufferedImage();
-			if (this.document != null && this.bufferedImage != this.retina.bufferedImage) {
-				this.retina = new Retina(this.bufferedImage, this.document.cortex);
+			if (this.bufferedImage != this.retina.bufferedImage) {
+//				this.retina = new Retina(this.bufferedImage, this.document.cortex);
+				this.retina.setBufferedImage(this.bufferedImage);
 				this.retina.setDimension(this.dimension);
 			}
 			if (this.loop) {
@@ -191,7 +194,7 @@ public class Meritoki extends Provider {
 					}
 				}
 			} else {
-				this.retina.input(graphics2D, concept);// bufferedImage, this.document.cortex,
+				this.retina.input(graphics2D, this.retina.getOrigin(), concept);// bufferedImage, this.document.cortex,
 			}
 		}
 	}
@@ -234,13 +237,13 @@ public class Meritoki extends Provider {
 		logger.info("setVisible(" + visible + ")");
 		this.visible = visible;
 		if (!visible) {
-			if (this.loop) {
-				if (recognition != null)
-					recognition.start();
-			} else {
-				if (recognition != null && recognition.getRun())
-					recognition.destroy();
-			}
+//			if (this.loop) {
+//				if (recognition != null)
+//					recognition.start();
+//			} else {
+//				if (recognition != null && recognition.getRun())
+//					recognition.destroy();
+//			}
 		}
 	}
 
