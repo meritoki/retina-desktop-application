@@ -34,7 +34,7 @@ import com.meritoki.app.desktop.retina.model.provider.Provider;
 import com.meritoki.library.cortex.model.Belief;
 import com.meritoki.library.cortex.model.eye.retina.Retina;
 import com.meritoki.library.cortex.model.eye.retina.State;
-import com.meritoki.library.cortex.model.network.ColorType;
+import com.meritoki.library.cortex.model.network.Type;
 import com.meritoki.library.cortex.model.network.square.Squared;
 import com.meritoki.library.cortex.model.unit.Concept;
 import com.meritoki.library.cortex.model.unit.Point;
@@ -114,7 +114,7 @@ public class Meritoki extends Provider {
 			this.document = (Document) NodeController.openJson(this.file, Document.class);
 		} else {
 			this.document = new Document();
-			this.document.cortex = new Squared(new ColorType[]{ ColorType.BRIGHTNESS, ColorType.RED, ColorType.GREEN, ColorType.BLUE }, 0, 0, 27, 10, 0);
+			this.document.cortex = new Squared(new Type[]{ Type.BRIGHTNESS, Type.RED, Type.GREEN, Type.BLUE }, 0, 0, 27, 1, 0);
 		}
 		this.document.cortex.load();// ?
 		this.document.cortex.update();

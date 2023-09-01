@@ -143,7 +143,7 @@ public class ScriptCortex extends Command {
 		
 		if(cortex instanceof Network) {
 			Network network = (Network)cortex;
-			Level level = network.getRootLevel();
+			Level level = network.getRoot();
 			level.removeCoincidenceConceptList(belief.coincidence, conceptList);
 		}
 		
@@ -173,7 +173,7 @@ public class ScriptCortex extends Command {
 		
 		if(cortex instanceof Network) {
 			Network network = (Network)cortex;
-			Level level = network.getRootLevel();
+			Level level = network.getRoot();
 			level.addCoincidenceConceptList(belief.coincidence, belief.conceptList);
 		}
 		
