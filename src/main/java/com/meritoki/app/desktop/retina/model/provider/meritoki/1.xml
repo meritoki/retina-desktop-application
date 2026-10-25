@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>Train</comment>
+<entry key="idSet">0,2</entry>
+<entry key="inputDelay">2.0</entry>
+</properties>
